@@ -66,137 +66,137 @@
    * - Spacing: className="space-y-4 p-6"
   */
   :root {
-    /* Elegant light mode with pristine white and refined indigo */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* 2025 Minimalist Light Mode - Ultra Clean & Breathable */
+    --background: 0 0% 99%;
+    --foreground: 220 13% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 220 13% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 220 13% 13%;
 
-    /* Sophisticated indigo primary - more refined */
-    --primary: 239 75% 62%;
+    /* Refined primary - softer, more elegant */
+    --primary: 234 72% 58%;
     --primary-foreground: 0 0% 100%;
 
-    /* Subtle secondary tones */
-    --secondary: 240 10% 97%;
-    --secondary-foreground: 222 47% 11%;
+    /* Subtle secondary with warmth */
+    --secondary: 220 8% 97%;
+    --secondary-foreground: 220 13% 13%;
 
-    /* Ultra-refined muted palette */
-    --muted: 240 8% 96%;
-    --muted-foreground: 240 4% 46%;
+    /* Ultra-minimal muted palette */
+    --muted: 220 6% 97%;
+    --muted-foreground: 220 9% 52%;
 
-    /* Delicate accent */
-    --accent: 250 95% 97%;
-    --accent-foreground: 239 65% 50%;
+    /* Whisper-soft accent */
+    --accent: 220 6% 98%;
+    --accent-foreground: 234 68% 54%;
 
-    /* Refined destructive */
-    --destructive: 0 65% 55%;
+    /* Balanced destructive */
+    --destructive: 0 60% 56%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Minimal borders with subtle opacity */
-    --border: 240 8% 92%;
-    --input: 240 8% 94%;
-    --ring: 239 75% 62%;
+    /* Almost invisible borders - 2025 trend */
+    --border: 220 8% 94%;
+    --input: 220 6% 96%;
+    --ring: 234 72% 58%;
 
-    --radius: 0.875rem;
+    --radius: 1rem;
 
-    /* Harmonious chart colors */
-    --chart-1: 239 84% 67%;
-    --chart-2: 200 98% 39%;
-    --chart-3: 271 91% 65%;
-    --chart-4: 142 76% 36%;
-    --chart-5: 24 95% 53%;
+    /* Harmonious chart colors - muted */
+    --chart-1: 234 72% 58%;
+    --chart-2: 195 85% 42%;
+    --chart-3: 270 80% 62%;
+    --chart-4: 142 65% 38%;
+    --chart-5: 24 85% 56%;
 
-    /* Vibrant success green */
-    --success: 142 76% 36%;
+    /* Elegant success green */
+    --success: 142 65% 38%;
     --success-foreground: 0 0% 100%;
 
-    /* Warm warning amber */
-    --warning: 38 92% 50%;
+    /* Soft warning amber */
+    --warning: 38 85% 52%;
     --warning-foreground: 0 0% 100%;
 
-    /* Cool info cyan */
-    --info: 199 89% 48%;
+    /* Clear info cyan */
+    --info: 195 90% 46%;
     --info-foreground: 0 0% 100%;
 
-    /* Premium sidebar */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 239 84% 67%;
+    /* Seamless sidebar */
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 220 13% 13%;
+    --sidebar-primary: 234 72% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 20% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 240 15% 92%;
-    --sidebar-ring: 239 84% 67%;
+    --sidebar-accent: 220 6% 97%;
+    --sidebar-accent-foreground: 220 13% 13%;
+    --sidebar-border: 220 8% 94%;
+    --sidebar-ring: 234 72% 58%;
   }
 
   .dark {
-    /* Sophisticated dark mode with refined slate */
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
+    /* 2025 Minimalist Dark Mode - Rich & Refined */
+    --background: 220 20% 6%;
+    --foreground: 220 8% 96%;
 
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 18% 8%;
+    --card-foreground: 220 8% 96%;
 
-    --popover: 222 47% 6%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 18% 7%;
+    --popover-foreground: 220 8% 96%;
 
-    /* Luminous indigo primary */
-    --primary: 239 80% 65%;
+    /* Luminous yet refined primary */
+    --primary: 234 75% 64%;
     --primary-foreground: 0 0% 100%;
 
-    /* Subtle secondary elevation */
-    --secondary: 240 12% 14%;
-    --secondary-foreground: 210 40% 98%;
+    /* Subtle elevation */
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 220 8% 96%;
 
-    /* Minimal muted tones */
-    --muted: 240 8% 12%;
-    --muted-foreground: 240 4% 64%;
+    /* Gentle muted tones */
+    --muted: 220 12% 11%;
+    --muted-foreground: 220 8% 60%;
 
-    /* Refined accent for dark */
-    --accent: 240 12% 16%;
-    --accent-foreground: 239 80% 65%;
+    /* Soft accent */
+    --accent: 220 15% 14%;
+    --accent-foreground: 234 75% 64%;
 
     /* Balanced destructive */
-    --destructive: 0 68% 54%;
+    --destructive: 0 62% 54%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Elegant dark borders */
-    --border: 240 8% 16%;
-    --input: 240 8% 14%;
-    --ring: 239 80% 65%;
+    /* Subtle dark borders */
+    --border: 220 12% 15%;
+    --input: 220 12% 12%;
+    --ring: 234 75% 64%;
 
-    /* Vibrant chart colors for dark mode */
-    --chart-1: 239 84% 67%;
-    --chart-2: 189 94% 43%;
-    --chart-3: 271 91% 65%;
-    --chart-4: 142 76% 45%;
-    --chart-5: 31 97% 72%;
+    /* Harmonious chart colors for dark */
+    --chart-1: 234 75% 64%;
+    --chart-2: 195 82% 46%;
+    --chart-3: 270 78% 64%;
+    --chart-4: 142 68% 42%;
+    --chart-5: 24 88% 58%;
 
-    /* Bright success for dark */
-    --success: 142 76% 45%;
+    /* Elegant success */
+    --success: 142 68% 42%;
     --success-foreground: 0 0% 100%;
 
-    /* Vivid warning */
-    --warning: 38 92% 50%;
+    /* Warm warning */
+    --warning: 38 88% 52%;
     --warning-foreground: 0 0% 100%;
 
     /* Clear info */
-    --info: 199 89% 48%;
+    --info: 195 86% 48%;
     --info-foreground: 0 0% 100%;
 
-    /* Premium dark sidebar */
-    --sidebar-background: 222 47% 5%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 239 84% 67%;
+    /* Seamless dark sidebar */
+    --sidebar-background: 220 20% 6%;
+    --sidebar-foreground: 220 8% 96%;
+    --sidebar-primary: 234 75% 64%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 15% 15%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 240 10% 18%;
-    --sidebar-ring: 239 84% 67%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 220 8% 96%;
+    --sidebar-border: 220 12% 15%;
+    --sidebar-ring: 234 75% 64%;
   }
 }
 
@@ -280,24 +280,19 @@
     pointer-events: none;
     background:
       radial-gradient(
-        circle 1400px at 15% 25%,
-        hsl(var(--primary) / 0.06),
-        transparent 65%
+        ellipse 1600px 800px at 15% 20%,
+        hsl(var(--primary) / 0.025),
+        transparent 50%
       ),
       radial-gradient(
-        circle 1200px at 85% 15%,
-        hsl(var(--chart-3) / 0.05),
-        transparent 65%
+        ellipse 1400px 700px at 85% 10%,
+        hsl(var(--chart-3) / 0.02),
+        transparent 50%
       ),
       radial-gradient(
-        circle 1000px at 50% 95%,
-        hsl(var(--chart-2) / 0.04),
-        transparent 70%
-      ),
-      linear-gradient(
-        180deg,
-        hsl(var(--background)) 0%,
-        hsl(var(--background)) 100%
+        ellipse 1200px 600px at 50% 100%,
+        hsl(var(--chart-2) / 0.015),
+        transparent 50%
       );
     z-index: -1;
   }
@@ -322,23 +317,25 @@
     border: 1px solid hsl(var(--border));
   }
 
-  /* Elevated card effect - Simple */
+  /* 2025 Minimalist Card - Ultra Clean */
   .elevated-card {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: calc(var(--radius) + 2px);
+    border: 1px solid hsl(var(--border) / 0.6);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.02);
   }
 
-  /* Modern card variant */
+  /* Modern card variant - Breathable */
   .card-modern {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: calc(var(--radius) + 2px);
-    transition: border-color 0.2s ease;
+    border: 1px solid hsl(var(--border) / 0.5);
+    border-radius: var(--radius);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-modern:hover {
-    border-color: hsl(var(--border));
+    border-color: hsl(var(--border) / 0.8);
+    box-shadow: 0 2px 4px hsl(var(--foreground) / 0.03);
   }
 
   /* Elegant gradient text */
@@ -785,32 +782,36 @@
     background-size: 200% 100%;
   }
 
-  /* Minimal Button Style */
+  /* 2025 Minimalist Button - Clean & Elegant */
   .btn-refined {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border) / 0.4);
-    border-radius: calc(var(--radius));
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
+    border: 1px solid hsl(var(--border) / 0.5);
+    border-radius: var(--radius);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     letter-spacing: -0.008em;
-    box-shadow: 
-      0 1px 2px hsl(var(--foreground) / 0.04),
-      0 0 0 1px hsl(var(--border) / 0.3);
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.02);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Minimal Input Style */
+  .btn-refined:hover {
+    border-color: hsl(var(--border) / 0.8);
+    box-shadow: 0 2px 4px hsl(var(--foreground) / 0.04);
+    transform: translateY(-1px);
+  }
+
+  /* 2025 Minimal Input - Whisper Soft */
   .input-minimal {
-    border: 1px solid hsl(var(--border) / 0.3);
-    background: hsl(var(--background) / 0.5);
+    border: 1px solid hsl(var(--border) / 0.5);
+    background: hsl(var(--background));
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .input-minimal:focus {
-    border-color: hsl(var(--primary) / 0.4);
-    background: hsl(var(--background));
-    box-shadow: 
-      0 0 0 3px hsl(var(--primary) / 0.08),
-      0 1px 2px hsl(var(--foreground) / 0.05);
+    border-color: hsl(var(--primary) / 0.5);
+    background: hsl(var(--card));
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.06);
   }
 
   /* Sophisticated Badge */

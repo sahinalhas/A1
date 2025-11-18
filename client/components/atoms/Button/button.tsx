@@ -5,25 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold ring-offset-background ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden",
+"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium tracking-tight transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
  {
  variants: {
  variant: {
  default:
-"bg-gradient-to-br from-primary to-primary/90 text-primary-foreground before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] before: before:",
+"bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow active:scale-[0.98]",
  destructive:
-"bg-gradient-to-br from-destructive to-destructive/90 text-destructive-foreground",
+"bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow active:scale-[0.98]",
  outline:
-"border-2 border-border/60 bg-background/80",
+"border border-border/60 bg-background hover:bg-accent hover:border-border active:scale-[0.98]",
  secondary:
-"bg-gradient-to-br from-secondary to-secondary/95 text-secondary-foreground",
- ghost:"",
- link:"text-primary underline-offset-4",
+"bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-[0.98]",
+ ghost:"hover:bg-accent hover:text-accent-foreground",
+ link:"text-primary underline-offset-4 hover:underline",
  },
  size: {
- default:"h-10 px-6 py-2.5",
+ default:"h-10 px-5 py-2.5",
  sm:"h-9 rounded-lg px-4 text-xs",
- lg:"h-12 rounded-xl px-8 text-base",
+ lg:"h-11 rounded-xl px-7 text-base",
  icon:"h-10 w-10 rounded-lg",
  },
  },

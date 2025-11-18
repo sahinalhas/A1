@@ -59,35 +59,33 @@ import { useIsMobile } from "@/hooks/utils/mobile.utils";
 import { cn } from "@/lib/utils";
 import { prefetchRoute } from "@/hooks/usePrefetchRoutes";
 
-// Modern minimalist logo
+// 2025 Ultra Minimalist Logo
 function AppLogo({ collapsed }: { collapsed?: boolean }) {
  return (
  <Link
  to="/"
  className={cn(
-"flex items-center gap-2 px-2 py-3 group relative",
-" rounded-lg",
-""
+"flex items-center gap-3 px-3 py-4 group transition-all duration-300",
+"hover:bg-accent/50 rounded-xl"
  )}
  >
  <div className={cn(
-"size-8 rounded-lg bg-gradient-to-br from-primary via-primary/90 to-chart-2",
-"flex items-center justify-center text-primary-foreground font-bold text-sm",
-"shrink-0",
-" group- group-",
-"relative overflow-hidden"
+"size-9 rounded-xl bg-primary",
+"flex items-center justify-center text-primary-foreground font-bold text-base",
+"shrink-0 transition-all duration-300",
+"shadow-sm group-hover:shadow"
  )}>
- <div className="relative z-10">R</div>
+ R
  </div>
  
  <div className={cn(
-"flex flex-col leading-none relative z-10 overflow-hidden",
- collapsed ?"opacity-0 w-0" :"opacity-100 w-auto delay-75"
+"flex flex-col leading-none transition-all duration-300",
+ collapsed ?"opacity-0 w-0" :"opacity-100 w-auto"
  )}>
- <span className="text-sm font-semibold tracking-tight text-sidebar-foreground group- whitespace-nowrap">
+ <span className="text-base font-semibold tracking-tight text-foreground whitespace-nowrap">
  Rehber360
  </span>
- <span className="text-[9px] text-muted-foreground mt-0.5 font-medium group- whitespace-nowrap">
+ <span className="text-[10px] text-muted-foreground mt-1 font-medium whitespace-nowrap">
  Dijital Rehberlik
  </span>
  </div>
