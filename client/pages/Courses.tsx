@@ -111,8 +111,8 @@ export default function Courses() {
  };
 
  const filteredSubjects = useMemo(() => {
- if (selectedCategory ==="School") {
- return subjects.filter((s) => !s.category);
+ if (selectedCategory === "School") {
+ return subjects.filter((s) => s.category === "School" || !s.category);
  }
  return subjects.filter((s) => s.category === selectedCategory);
  }, [subjects, selectedCategory]);
@@ -281,7 +281,7 @@ function AddSubjectForm({
  const newSubject: StudySubject = {
  id: crypto.randomUUID(),
  name: trimmedName,
- category: category ==="School" ? undefined : category,
+ category: category,
  };
 
  try {

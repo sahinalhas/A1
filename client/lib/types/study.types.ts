@@ -4,7 +4,7 @@ export type StudySubject = {
  code?: string;
  description?: string;
  color?: string;
- category?:"LGS" |"YKS" |"TYT" |"AYT" |"YDT";
+ category?:"School" |"LGS" |"YKS" |"TYT" |"AYT" |"YDT";
 };
 
 export type StudyTopic = {
