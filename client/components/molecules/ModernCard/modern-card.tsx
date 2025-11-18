@@ -31,22 +31,12 @@ export function ModernCard({
  delay = 0,
  onClick,
 }: ModernCardProps) {
- const CardWrapper = delay > 0 ? motion.div : 'div';
- const animationProps = delay > 0 
- ? {
- initial: ANIMATION_VARIANTS.fadeIn.initial,
- animate: ANIMATION_VARIANTS.fadeIn.animate,
- transition: { delay },
- }
- : {};
-
  return (
- <CardWrapper {...animationProps}>
  <Card 
  className={cn(
  'relative overflow-hidden',
  MODERN_SHADOWS[shadow],
- onClick && 'cursor-pointer',
+ onClick && 'cursor-pointer transition-colors',
  className
  )}
  onClick={onClick}
@@ -80,6 +70,5 @@ export function ModernCard({
  {children}
  </CardContent>
  </Card>
- </CardWrapper>
  );
 }

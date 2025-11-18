@@ -334,6 +334,11 @@
     background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
     border-radius: calc(var(--radius) + 2px);
+    transition: border-color 0.2s ease;
+  }
+
+  .card-modern:hover {
+    border-color: hsl(var(--border));
   }
 
   /* Elegant gradient text */
