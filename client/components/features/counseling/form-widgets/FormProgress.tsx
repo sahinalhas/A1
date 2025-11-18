@@ -22,7 +22,7 @@ export default function FormProgress({ currentStep, totalSteps }: FormProgressPr
  </div>
  <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
  <div
- className="h-full bg-gradient-to-r from-violet-500 to-purple-600 transition-all duration-500 ease-out"
+ className="h-full bg-gradient-to-r from-violet-500 to-purple-600 ease-out"
  style={{ width: `${progress}%` }}
  />
  </div>

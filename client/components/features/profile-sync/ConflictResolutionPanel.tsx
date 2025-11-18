@@ -72,7 +72,7 @@ export default function ConflictResolutionPanel({ studentId }: ConflictResolutio
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="animate-pulse h-20 bg-gray-200 rounded"></div>
+ <div className=" h-20 bg-gray-200 rounded"></div>
  </CardContent>
  </Card>
  );

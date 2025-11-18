@@ -47,7 +47,7 @@ export function StudentCard({
 
  return (
  <Card
- className={` transition-all ${
+ className={` ${
  isSelected ? 'ring-2 ring-primary' : ''
  } ${getRiskColor(student.risk)}`}
  >

@@ -30,25 +30,25 @@ export function StudentStats({
  const riskLevel = student?.risk || (devamsiz30 >= 2 ?"Orta" :"Düşük");
 
  return (
- <Card className="shadow-md transition-shadow">
+ <Card className="">
  <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6">
- <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20 transition-colors">
+ <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20">
  <div className="text-xs font-medium text-muted-foreground">Risk</div>
  <div className="mt-2">
  <RiskPill risk={riskLevel} />
  </div>
  </div>
- <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20 transition-colors">
+ <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20">
  <div className="text-xs font-medium text-muted-foreground">Son Anket</div>
  <div className="mt-2 text-lg font-bold">
  {typeof lastSurvey?.score ==="number" ? `${lastSurvey.score}` :"-"}
  </div>
  </div>
- <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20 transition-colors">
+ <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20">
  <div className="text-xs font-medium text-muted-foreground">30 Günde Devamsız</div>
  <div className="mt-2 text-lg font-bold">{devamsiz30}</div>
  </div>
- <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20 transition-colors">
+ <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-background to-muted/20">
  <div className="text-xs font-medium text-muted-foreground">Müdahaleler</div>
  <div className="mt-2 text-lg font-bold">{interventions.length}</div>
  </div>

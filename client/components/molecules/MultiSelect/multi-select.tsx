@@ -110,7 +110,7 @@ export function MultiSelect({
  </div>
  {open && (
  <div className="absolute w-full z-10 top-full mt-1">
- <CommandList className="bg-popover text-popover-foreground shadow-md rounded-md border">
+ <CommandList className="bg-popover text-popover-foreground rounded-md border">
  <CommandEmpty>Sonuç bulunamadı.</CommandEmpty>
  {Object.entries(groupedOptions).map(([category, items]) => (
  <CommandGroup key={category} heading={category !== '' ? category : undefined}>

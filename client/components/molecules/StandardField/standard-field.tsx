@@ -76,7 +76,7 @@ export function StandardField({
  {children}
 
  {showDetail && (
- <div className="animate-in slide-in-from-top-2 duration-200">
+ <div className=" slide-in-from-top-2">
  <Label className="text-xs text-muted-foreground">
  Detay & Açıklama (Opsiyonel)
  </Label>

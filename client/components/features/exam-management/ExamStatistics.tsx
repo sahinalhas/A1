@@ -245,7 +245,7 @@ export function ExamStatistics({
  {statistics.subject_stats.map((stat) => (
  <div
  key={stat.subject_id}
- className="p-4 border rounded-lg transition-colors"
+ className="p-4 border rounded-lg"
  >
  <div className="flex items-center justify-between mb-3">
  <h4 className="font-semibold text-lg">{stat.subject_name}</h4>

@@ -31,7 +31,7 @@ export function StudentHeader({ student }: StudentHeaderProps) {
  <Button 
  asChild 
  variant="ghost" 
- className="mb-3 transition-colors"
+ className="mb-3"
  >
  <Link to="/ogrenci" className="gap-2">
  <ArrowLeft className="h-4 w-4" />
@@ -40,14 +40,14 @@ export function StudentHeader({ student }: StudentHeaderProps) {
  </Button>
 
  {/* Minimal Modern Header */}
- <Card className="relative overflow-hidden border border-border/50 shadow-lg bg-gradient-to-br from-background via-background to-primary/5">
+ <Card className="relative overflow-hidden border border-border/50 bg-gradient-to-br from-background via-background to-primary/5">
  {/* Subtle Background Accent */}
  <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -z-10"></div>
  
  <CardHeader className="p-4 md:p-6">
  <div className="flex items-start gap-4">
  {/* Compact Avatar */}
- <Avatar className={`h-16 w-16 md:h-20 md:w-20 border-2 border-white shadow-lg bg-gradient-to-br ${getGenderColor(student.gender)} flex-shrink-0`}>
+ <Avatar className={`h-16 w-16 md:h-20 md:w-20 border-2 border-white bg-gradient-to-br ${getGenderColor(student.gender)} flex-shrink-0`}>
  <AvatarFallback className="text-xl md:text-2xl font-bold text-white">
  {initials}
  </AvatarFallback>
@@ -72,7 +72,7 @@ export function StudentHeader({ student }: StudentHeaderProps) {
  <Button 
  asChild 
  size="sm"
- className="gap-1.5 shadow-md transition-all flex-shrink-0"
+ className="gap-1.5 flex-shrink-0"
  >
  <Link to={`/ogrenci/${student.id}/gelismis-analiz`}>
  <Sparkles className="h-4 w-4" />

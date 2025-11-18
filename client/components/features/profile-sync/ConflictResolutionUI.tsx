@@ -133,7 +133,7 @@ export default function ConflictResolutionUI({ studentId }: ConflictResolutionUI
  return (
  <Card className="border-orange-200">
  <CardContent className="p-6">
- <div className="animate-pulse h-20 bg-gray-200 rounded"></div>
+ <div className=" h-20 bg-gray-200 rounded"></div>
  </CardContent>
  </Card>
  );

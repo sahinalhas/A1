@@ -85,7 +85,7 @@ export function TrendAnalysisTab({ examTypes }: TrendAnalysisTabProps) {
  };
 
  return (
- <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+ <div className="space-y-6 fade-in slide-in-from-bottom-4">
  <div>
  <h2 className="text-3xl font-bold flex items-center gap-3">
  <div className="p-2 bg-primary/10 rounded-lg">
@@ -139,7 +139,7 @@ export function TrendAnalysisTab({ examTypes }: TrendAnalysisTabProps) {
  </Card>
 
  {isLoading && (
- <div className="space-y-4 animate-in fade-in duration-300">
+ <div className="space-y-4 fade-in">
  <Skeleton className="h-48 rounded-xl" />
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <Skeleton className="h-32 rounded-xl" />
@@ -295,7 +295,7 @@ export function TrendAnalysisTab({ examTypes }: TrendAnalysisTabProps) {
  {trendData.data_points.map((point, idx) => (
  <div
  key={point.session_id}
- className="flex items-center justify-between p-3 border rounded-lg transition-colors"
+ className="flex items-center justify-between p-3 border rounded-lg"
  >
  <div className="flex items-center gap-3">
  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">

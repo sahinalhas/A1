@@ -83,7 +83,7 @@ export default function StandardizedHealthSection({
  });
 
  return (
- <Card className="border-none shadow-sm">
+ <Card className="border-none">
  <CardHeader className="pb-4">
  <div className="flex items-center gap-3">
  <div className="p-2 rounded-lg bg-red-50 dark:bg-red-950/20">

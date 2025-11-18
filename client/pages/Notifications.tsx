@@ -123,7 +123,7 @@ export default function Notifications() {
  disabled={retryMutation.isPending}
  variant="outline"
  >
- <RefreshCw className={`h-4 w-4 mr-2 ${retryMutation.isPending ? 'animate-spin' : ''}`} />
+ <RefreshCw className="h-4 w-4 mr-2" />
  Başarısızları Yeniden Gönder
  </Button>
  </div>

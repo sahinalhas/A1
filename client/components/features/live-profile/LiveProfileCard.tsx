@@ -58,7 +58,7 @@ export default function LiveProfileCard({ studentId, compact = false }: LiveProf
  </CardHeader>
  <CardContent>
  <Button onClick={() => refresh()} disabled={isRefreshing}>
- <RefreshCw className={cn("h-4 w-4 mr-2", isRefreshing &&"animate-spin")} />
+ <RefreshCw className={cn("h-4 w-4 mr-2", isRefreshing &&"")} />
  Profil Oluştur
  </Button>
  </CardContent>
@@ -83,7 +83,7 @@ export default function LiveProfileCard({ studentId, compact = false }: LiveProf
  const PriorityIcon = priorityIcons[identity.interventionPriority];
 
  return (
- <Card className="relative overflow-hidden border border-border/50 shadow-lg bg-gradient-to-br from-background via-background to-primary/5">
+ <Card className="relative overflow-hidden border border-border/50 bg-gradient-to-br from-background via-background to-primary/5">
  {/* Subtle Background Accent */}
  <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -z-10"></div>
  
@@ -147,7 +147,7 @@ export default function LiveProfileCard({ studentId, compact = false }: LiveProf
  disabled={isRefreshing}
  className="h-8 w-8 p-0"
  >
- <RefreshCw className={cn("h-4 w-4", isRefreshing &&"animate-spin")} />
+ <RefreshCw className={cn("h-4 w-4", isRefreshing &&"")} />
  </Button>
  </div>
  </div>

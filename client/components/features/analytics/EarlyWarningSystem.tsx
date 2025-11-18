@@ -639,7 +639,7 @@ const EarlyWarningSystem = React.memo(function EarlyWarningSystem() {
  return (
  <div className="flex items-center justify-center min-h-[400px]">
  <div className="text-center space-y-2">
- <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+ <Loader2 className="h-8 w-8 mx-auto text-primary" />
  <p className="text-muted-foreground">Erken uyarı sistemi yükleniyor...</p>
  <p className="text-xs text-muted-foreground">Risk profilleri hesaplanıyor...</p>
  </div>
@@ -664,7 +664,7 @@ const EarlyWarningSystem = React.memo(function EarlyWarningSystem() {
  disabled={isCreatingInterventions}
  >
  {isCreatingInterventions ? (
- <Loader2 className="h-4 w-4 animate-spin" />
+ <Loader2 className="h-4 w-4" />
  ) : (
  <Zap className="h-4 w-4" />
  )}

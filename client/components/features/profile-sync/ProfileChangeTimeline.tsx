@@ -83,7 +83,7 @@ export default function ProfileChangeTimeline({ studentId }: ProfileChangeTimeli
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="animate-pulse space-y-3">
+ <div className=" space-y-3">
  {[1, 2, 3].map((i) => (
  <div key={i} className="h-16 bg-gray-200 rounded"></div>
  ))}
@@ -112,7 +112,7 @@ export default function ProfileChangeTimeline({ studentId }: ProfileChangeTimeli
  ) : (
  <div className="space-y-3">
  {logs.map((log) => (
- <div key={log.id} className="border rounded-lg p-3 transition-colors">
+ <div key={log.id} className="border rounded-lg p-3">
  <div className="flex items-start justify-between mb-2">
  <div className="flex items-center gap-2">
  {log.action === 'updated' ? (

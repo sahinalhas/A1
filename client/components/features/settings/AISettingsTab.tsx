@@ -318,9 +318,9 @@ export default function AISettingsTab() {
  return (
  <Card
  key={key}
- className={`cursor-pointer transition-all duration-200 ${
+ className={`cursor-pointer ${
  isSelected 
- ? 'ring-2 ring-primary shadow-lg scale-[1.02]' 
+ ? 'ring-2 ring-primary'
  : ''
  }`}
  onClick={() => handleProviderChange(key)}
@@ -496,7 +496,7 @@ export default function AISettingsTab() {
  >
  {isChecking ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  Kontrol ediliyor...
  </>
  ) : (
@@ -574,7 +574,7 @@ export default function AISettingsTab() {
  >
  {isSaving ? (
  <>
- <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+ <Loader2 className="mr-2 h-5 w-5" />
  Kaydediliyor...
  </>
  ) : (
@@ -610,7 +610,7 @@ export default function AISettingsTab() {
  ].map((feature, index) => (
  <div 
  key={index} 
- className="flex items-start gap-3 p-3 border rounded-lg transition-colors"
+ className="flex items-start gap-3 p-3 border rounded-lg"
  >
  <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded">
  <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />

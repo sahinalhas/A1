@@ -85,7 +85,7 @@ const ScoreCard = ({
  const scoreInfo = getScoreLabel(score);
 
  return (
- <Card className="relative overflow-hidden transition-shadow">
+ <Card className="relative overflow-hidden">
  <div className={`absolute inset-0 opacity-5 ${scoreInfo.gradient}`} />
  <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
  <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -200,7 +200,7 @@ export function ProfileDashboard({
  <CardTitle>Profil Analizi Yükleniyor...</CardTitle>
  </CardHeader>
  <CardContent>
- <div className="animate-pulse space-y-3">
+ <div className=" space-y-3">
  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
  </div>
@@ -233,7 +233,7 @@ export function ProfileDashboard({
  className="gap-2"
  >
  {analyzingRisk ? (
- <Loader2 className="h-4 w-4 animate-spin" />
+ <Loader2 className="h-4 w-4" />
  ) : (
  <Shield className="h-4 w-4" />
  )}
@@ -349,7 +349,7 @@ export function ProfileDashboard({
  content={({ payload }) => {
  if (payload && payload.length > 0) {
  return (
- <div className="bg-background border rounded-lg p-2 shadow-lg">
+ <div className="bg-background border rounded-lg p-2">
  <p className="text-sm font-semibold">{payload[0].payload.subject}</p>
  <p className="text-sm text-primary">{payload[0].value}/100</p>
  </div>

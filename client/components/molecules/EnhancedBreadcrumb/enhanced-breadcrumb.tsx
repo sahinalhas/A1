@@ -76,7 +76,7 @@ export function EnhancedBreadcrumb({
  to={item.href}
  className={cn(
 "flex items-center gap-1.5 text-muted-foreground",
-" transition-colors duration-200",
+"",
 " underline-offset-4"
  )}
  >
@@ -112,7 +112,7 @@ export function CompactBreadcrumb({
  <nav aria-label="Breadcrumb" className={cn("flex items-center gap-2 text-sm", className)}>
  <Link
  to={firstItem.href}
- className="flex items-center gap-1.5 text-muted-foreground transition-colors"
+ className="flex items-center gap-1.5 text-muted-foreground"
  >
  {firstItem.icon}
  {firstItem.label}
@@ -122,7 +122,7 @@ export function CompactBreadcrumb({
 
  <button
  type="button"
- className="px-2 py-1 text-muted-foreground rounded transition-colors"
+ className="px-2 py-1 text-muted-foreground rounded"
  title={`${hiddenCount} gizli öğe`}
  >
  ...
@@ -146,7 +146,7 @@ export function CompactBreadcrumb({
  ) : (
  <Link
  to={item.href}
- className="flex items-center gap-1.5 text-muted-foreground transition-colors"
+ className="flex items-center gap-1.5 text-muted-foreground"
  >
  {item.icon}
  {item.label}

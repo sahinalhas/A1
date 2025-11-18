@@ -82,11 +82,11 @@ export function TagInput({
  onFocus={() => setShowSuggestions(true)}
  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
  placeholder={tags.length === 0 ? placeholder :""}
- className="flex-1 border-0 shadow-none focus-visible:ring-0 p-0 h-6"
+ className="flex-1 border-0 focus-visible:ring-0 p-0 h-6"
  />
  </div>
  {showSuggestions && filteredSuggestions.length > 0 && (
- <div className="absolute z-10 w-full mt-1 bg-popover border rounded-md shadow-md max-h-60 overflow-y-auto">
+ <div className="absolute z-10 w-full mt-1 bg-popover border rounded-md max-h-60 overflow-y-auto">
  {filteredSuggestions.map((suggestion) => (
  <button
  key={suggestion}

@@ -53,7 +53,7 @@ export default function SessionCardView({
  transition={{ delay: index * 0.05 }}
  >
  <Card 
- className=" transition-shadow cursor-pointer h-full flex flex-col"
+ className=" cursor-pointer h-full flex flex-col"
  onClick={() => onSelectSession(session)}
  >
  <CardHeader className="pb-3">

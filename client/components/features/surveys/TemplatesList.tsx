@@ -239,7 +239,7 @@ export default function TemplatesList({
  initial={{ opacity: 0, x: -20 }}
  animate={{ opacity: 1, x: 0 }}
  transition={{ delay: index * 0.03 }}
- className="group bg-card border rounded-lg p-4 transition-all duration-200"
+ className="group bg-card border rounded-lg p-4"
  >
  <div className="flex items-start justify-between gap-4">
  <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onEdit(template)}>
@@ -248,7 +248,7 @@ export default function TemplatesList({
  <FileText className="h-5 w-5 text-primary" />
  </div>
  <div className="flex-1 min-w-0">
- <h3 className="font-semibold text-base mb-1 group- transition-colors">
+ <h3 className="font-semibold text-base mb-1 group-">
  {template.title}
  </h3>
  {template.description && (

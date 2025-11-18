@@ -179,7 +179,7 @@ export default function UnifiedMeetingsSection({ studentId, onUpdate }: UnifiedM
  {filteredMeetings.map((meeting) => (
  <div
  key={meeting.id}
- className="rounded-lg border p-4 transition-colors"
+ className="rounded-lg border p-4"
  >
  <div className="flex items-start justify-between mb-2">
  <div className="flex items-center gap-2">

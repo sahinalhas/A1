@@ -33,7 +33,7 @@ export default function StudentInsightCard({
  };
 
  return (
- <Card className="border border-violet-200/40 dark:border-violet-800/30 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md shadow-sm transition-shadow">
+ <Card className="border border-violet-200/40 dark:border-violet-800/30 bg-white/40 dark:bg-slate-900/40">
  <CardHeader className="pb-3">
  <CardTitle className="text-sm flex items-center gap-2">
  <div className="p-1 rounded-lg bg-violet-100/50 dark:bg-violet-900/20">

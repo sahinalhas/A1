@@ -135,7 +135,7 @@ export default function SessionOutcomeDialog({
  type="button"
  onClick={() => handleRatingChange(value)}
  className={cn(
-"p-2 transition-colors rounded",
+"p-2 rounded",
  rating && rating >= value
  ?"text-yellow-500"
  :"text-gray-300"
@@ -315,7 +315,7 @@ export default function SessionOutcomeDialog({
  İptal
  </Button>
  <Button type="submit" disabled={isPending}>
- {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+ {isPending && <Loader2 className="mr-2 h-4 w-4" />}
  {initialData?.id ?"Güncelle" :"Kaydet"}
  </Button>
  </DialogFooter>

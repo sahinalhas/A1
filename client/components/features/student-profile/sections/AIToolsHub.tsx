@@ -113,7 +113,7 @@ export default function AIToolsHub({ studentId, studentName, onUpdate }: AITools
  className="gap-2"
  >
  {analyzingRisk ? (
- <Loader2 className="h-4 w-4 animate-spin" />
+ <Loader2 className="h-4 w-4" />
  ) : (
  <Shield className="h-4 w-4" />
  )}

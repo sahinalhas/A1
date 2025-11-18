@@ -165,7 +165,7 @@ const EnhancedTextarea = React.forwardRef<HTMLTextAreaElement, EnhancedTextareaP
  <div className="relative w-full">
  <textarea
  className={cn(
-"flex min-h-[80px] w-full rounded-lg border border-input bg-background/80 supports-[backdrop-filter]:bg-background/60 backdrop-blur-sm px-3.5 py-2.5 text-sm ring-offset-background transition-all duration-200 placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-1 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none",
+"flex min-h-[80px] w-full rounded-lg border border-input bg-background/80 supports-[backdrop-filter]:bg-background/60 px-3.5 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-1 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none",
  enableAIPolish &&"pr-12",
  enableVoice &&"pr-24", // Reserve space for voice button and status
  className,
@@ -183,7 +183,7 @@ const EnhancedTextarea = React.forwardRef<HTMLTextAreaElement, EnhancedTextareaP
  variant="ghost"
  size="sm"
  className={cn(
-"h-8 w-8 p-0 transition-all duration-200",
+"h-8 w-8 p-0",
  isPolishing &&"text-primary"
  )}
  onClick={handleAIPolish}
@@ -192,7 +192,7 @@ const EnhancedTextarea = React.forwardRef<HTMLTextAreaElement, EnhancedTextareaP
  title="AI ile temizle ve düzelt"
  >
  {isPolishing ? (
- <Loader2 className="h-4 w-4 animate-spin" />
+ <Loader2 className="h-4 w-4" />
  ) : (
  <Sparkles className="h-4 w-4" />
  )}

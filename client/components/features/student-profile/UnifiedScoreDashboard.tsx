@@ -118,7 +118,7 @@ export function UnifiedScoreDashboard({ scores, studentName }: UnifiedScoreDashb
  <div className="relative">
  <Progress value={overallScore} className="h-4" />
  <div 
- className={`absolute top-0 left-0 h-4 rounded-full transition-all ${getScoreColor(overallScore).bg}`}
+ className={`absolute top-0 left-0 h-4 rounded-full ${getScoreColor(overallScore).bg}`}
  style={{ width: `${overallScore}%` }}
  />
  </div>
@@ -152,7 +152,7 @@ export function UnifiedScoreDashboard({ scores, studentName }: UnifiedScoreDashb
  <div className="relative">
  <Progress value={card.score} className="h-3" />
  <div 
- className={`absolute top-0 left-0 h-3 rounded-full transition-all ${colors.bg}`}
+ className={`absolute top-0 left-0 h-3 rounded-full ${colors.bg}`}
  style={{ width: `${card.score}%` }}
  />
  </div>
@@ -196,7 +196,7 @@ export function UnifiedScoreDashboard({ scores, studentName }: UnifiedScoreDashb
  <div className="relative">
  <Progress value={scores.riskSkoru} className="h-3" />
  <div 
- className={`absolute top-0 left-0 h-3 rounded-full transition-all ${getScoreColor(scores.riskSkoru).bg}`}
+ className={`absolute top-0 left-0 h-3 rounded-full ${getScoreColor(scores.riskSkoru).bg}`}
  style={{ width: `${scores.riskSkoru}%` }}
  />
  </div>

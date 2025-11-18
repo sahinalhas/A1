@@ -17,11 +17,11 @@ export default function FormStepper({ steps, currentStep, onStepClick }: FormSte
  return (
  <div className="w-full py-5 px-2">
  <div className="flex items-center justify-between relative max-w-2xl mx-auto">
- <div className="absolute top-6 left-0 right-0 h-1.5 bg-slate-200/60 dark:bg-slate-700/60 rounded-full backdrop-blur-sm" style={{ zIndex: 0 }} />
+ <div className="absolute top-6 left-0 right-0 h-1.5 bg-slate-200/60 dark:bg-slate-700/60 rounded-full" style={{ zIndex: 0 }} />
  
  <div 
  className={cn(
-"absolute top-6 left-0 h-1.5 rounded-full transition-all duration-700 ease-in-out",
+"absolute top-6 left-0 h-1.5 rounded-full ease-in-out",
  currentStep === 1 &&"bg-violet-400/80",
  currentStep === 2 &&"bg-emerald-400/80"
  )}
@@ -46,8 +46,8 @@ export default function FormStepper({ steps, currentStep, onStepClick }: FormSte
  onClick={() => isClickable && onStepClick(step.id)}
  disabled={!isClickable}
  className={cn(
-"w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500",
-"border-2 font-semibold text-base shadow-sm backdrop-blur-sm",
+"w-14 h-14 rounded-full flex items-center justify-center",
+"border-2 font-semibold text-base",
  isCompleted &&"border-violet-400/60 bg-violet-400/80 text-white",
  isCurrent &&"bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 border-violet-400/80 ring-2 ring-violet-400/20",
  !isCompleted && !isCurrent &&"bg-slate-100/60 dark:bg-slate-800/60 border-slate-300/50 dark:border-slate-600/50 text-slate-400",
@@ -56,7 +56,7 @@ export default function FormStepper({ steps, currentStep, onStepClick }: FormSte
  )}
  >
  {isCompleted ? (
- <Check className="h-6 w-6 animate-in zoom-in-50 duration-200" />
+ <Check className="h-6 w-6 zoom-in-50" />
  ) : (
  <span className="text-lg">{step.id}</span>
  )}
@@ -64,7 +64,7 @@ export default function FormStepper({ steps, currentStep, onStepClick }: FormSte
 
  <div className="mt-3 text-center max-w-[140px]">
  <p className={cn(
-"text-sm font-semibold transition-all duration-300",
+"text-sm font-semibold",
  (isCurrent || isCompleted) ?"text-slate-700 dark:text-slate-200" :"text-slate-500 dark:text-slate-400"
  )}>
  {step.title}

@@ -69,7 +69,7 @@ export default function RiskSummaryWidget() {
  }
 
  return (
- <Card className="border-orange-200 dark:border-orange-900 shadow-md transition-shadow">
+ <Card className="border-orange-200 dark:border-orange-900">
  <CardHeader>
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">

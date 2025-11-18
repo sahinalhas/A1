@@ -22,9 +22,9 @@ export function EnhancedSkeleton({
  }[rounded];
 
  const variantClass = {
- default:"animate-pulse",
+ default:"",
  shimmer:"shimmer-effect",
- pulse:"animate-pulse",
+ pulse:"",
  wave:"shimmer-effect",
  }[variant];
 

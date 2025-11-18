@@ -354,7 +354,7 @@ export default function StudentExamResultsSection({ studentId }: StudentExamResu
  {statistics.subject_performance.map((subject) => (
  <div
  key={subject.subject_id}
- className="p-4 border rounded-lg transition-colors"
+ className="p-4 border rounded-lg"
  >
  <div className="flex items-center justify-between mb-3">
  <h4 className="font-semibold text-lg">{subject.subject_name}</h4>

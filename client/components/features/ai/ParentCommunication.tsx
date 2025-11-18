@@ -132,7 +132,7 @@ export default function ParentCommunication({ studentId, studentName }: ParentCo
  <Button onClick={generateMessage} disabled={loading} className="flex-1">
  {loading ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  Oluşturuluyor...
  </>
  ) : (

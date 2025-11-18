@@ -79,7 +79,7 @@ export function EnhancedRiskCard({ studentId }: EnhancedRiskCardProps) {
  </CardHeader>
  <CardContent>
  <div className="flex items-center justify-center h-40">
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+ <div className=" rounded-full h-8 w-8 border-b-2 border-primary"></div>
  </div>
  </CardContent>
  </Card>
@@ -105,7 +105,7 @@ export function EnhancedRiskCard({ studentId }: EnhancedRiskCardProps) {
  }
 
  return (
- <Card className="relative overflow-hidden shadow-lg transition-shadow">
+ <Card className="relative overflow-hidden">
  {/* Gradient Background */}
  <div className={cn(
 "absolute inset-0 opacity-5",
@@ -119,7 +119,7 @@ export function EnhancedRiskCard({ studentId }: EnhancedRiskCardProps) {
  <div className="flex items-center justify-between">
  <CardTitle className="flex items-center gap-2">
  <div className={cn(
-"p-2 rounded-lg shadow-md",
+"p-2 rounded-lg",
  riskScore.riskLevel === 'KRİTİK' ? 'bg-gradient-to-br from-red-500 to-orange-500' :
  riskScore.riskLevel === 'YÜKSEK' ? 'bg-gradient-to-br from-orange-500 to-yellow-500' :
  riskScore.riskLevel === 'ORTA' ? 'bg-gradient-to-br from-yellow-500 to-amber-500' :
@@ -129,7 +129,7 @@ export function EnhancedRiskCard({ studentId }: EnhancedRiskCardProps) {
  </div>
  Gelişmiş Risk Değerlendirmesi
  </CardTitle>
- <Badge className={cn("font-semibold shadow-sm", getRiskColor(riskScore.riskLevel),"text-white")}>
+ <Badge className={cn("font-semibold", getRiskColor(riskScore.riskLevel),"text-white")}>
  {riskScore.riskLevel}
  </Badge>
  </div>

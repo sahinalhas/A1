@@ -85,7 +85,7 @@ export function EnhancedEmptyState({
  compact ?"p-4" :"p-6"
  )}
  >
- <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-transparent animate-pulse" />
+ <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-transparent" />
  <Icon
  className={cn(
 "text-primary relative z-10",
@@ -125,8 +125,8 @@ export function EnhancedEmptyState({
  onClick={action.onClick}
  variant={action.variant ||"default"}
  className={cn(
-"gap-2 shadow-lg transition-all",
-" active:scale-95"
+"gap-2",
+""
  )}
  size={compact ?"sm" :"default"}
  >
@@ -331,7 +331,7 @@ export function EmptyStateWithIllustration({
  >
  <Button
  onClick={action.onClick}
- className="gap-2 shadow-lg transition-all"
+ className="gap-2"
  >
  {action.icon && <action.icon className="h-4 w-4" />}
  {action.label}

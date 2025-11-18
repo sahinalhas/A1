@@ -73,7 +73,7 @@ export default function SchoolWideAIInsights({ onHide, className }: SchoolWideAI
  </CardTitle>
  </CardHeader>
  <CardContent className="flex justify-center py-8">
- <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+ <Loader2 className="h-6 w-6 text-purple-600" />
  </CardContent>
  </Card>
  );

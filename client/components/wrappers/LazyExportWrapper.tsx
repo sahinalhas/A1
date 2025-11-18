@@ -9,7 +9,7 @@ interface LazyExportWrapperProps {
 
 const ExportSkeleton = () => (
  <div className="flex items-center justify-center p-4 bg-muted/10 rounded-lg">
- <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
+ <Loader2 className="h-5 w-5 text-muted-foreground mr-2" />
  <span className="text-sm text-muted-foreground">Yükleniyor...</span>
  </div>
 );

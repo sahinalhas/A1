@@ -720,8 +720,8 @@ export default function WeeklySchedule({ sid }: { sid: string }) {
  dropOn(d.value, m);
  }}
  style={{ height: ROW_H }}
- className={`border-t border-l last:border-r transition-colors ${
- isSuggested ?"animate-pulse bg-blue-100 dark:bg-blue-900/30" :""
+ className={`border-t border-l last:border-r ${
+ isSuggested ?" bg-blue-100 dark:bg-blue-900/30" :""
  }`}
  />
  );

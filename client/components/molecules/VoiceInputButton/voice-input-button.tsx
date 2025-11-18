@@ -139,9 +139,8 @@ export function VoiceInputButton({
  size="icon"
  className={cn(
  sizeClasses[size],
- 'transition-all duration-200 relative z-10',
- isListening && 'shadow-lg shadow-red-500/50 animate-pulse',
- variant === 'floating' && 'rounded-full shadow-lg',
+ 'relative z-10',
+ variant === 'floating' && 'rounded-full',
  className
  )}
  onClick={handleClick}
@@ -152,7 +151,7 @@ export function VoiceInputButton({
  <div className="relative">
  <Mic className={cn(iconSizes[size], 'text-white')} />
  <span className="absolute -top-1 -right-1 flex h-3 w-3">
- <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+ <span className=" absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
  </span>
  </div>
@@ -182,7 +181,7 @@ export function VoiceInputButton({
  {[0, 1, 2, 3].map((i) => (
  <div
  key={i}
- className="w-1 bg-red-500 rounded-full animate-bounce"
+ className="w-1 bg-red-500 rounded-full"
  style={{
  height: '8px',
  animationDelay: `${i * 150}ms`,
@@ -195,7 +194,7 @@ export function VoiceInputButton({
 
  {interimTranscript && isListening && (
  <div className="absolute top-full mt-2 left-0 right-0 z-50">
- <div className="bg-muted/95 backdrop-blur-sm px-3 py-2 rounded-md border shadow-lg">
+ <div className="bg-muted/95 px-3 py-2 rounded-md border">
  <p className="text-xs text-muted-foreground mb-1">Dinleniyor...</p>
  <p className="text-sm">{interimTranscript}</p>
  </div>

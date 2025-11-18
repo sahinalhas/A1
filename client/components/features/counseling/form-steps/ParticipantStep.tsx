@@ -61,12 +61,12 @@ export default function ParticipantStep({
  }, [selectedStudentId]);
 
  return (
- <div className="space-y-5 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+ <div className="space-y-5 fade-in-50 slide-in-from-bottom-4">
  <div className="relative pb-3">
  <div className="flex items-center gap-3">
  <div className="relative">
  <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl blur-md opacity-20" />
- <div className="relative p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-sm">
+ <div className="relative p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
  <UserCircle2 className="h-5 w-5 text-white" />
  </div>
  </div>
@@ -104,7 +104,7 @@ export default function ParticipantStep({
  variant="outline"
  role="combobox"
  className={cn(
-"justify-between h-10 text-left font-normal rounded-lg border bg-white dark:bg-slate-900 dark: transition-colors shadow-sm",
+"justify-between h-10 text-left font-normal rounded-lg border bg-white dark:bg-slate-900 dark:",
  !field.value &&"text-slate-400"
  )}
  >
@@ -121,7 +121,7 @@ export default function ParticipantStep({
  </Button>
  </FormControl>
  </PopoverTrigger>
- <PopoverContent className="w-[450px] p-0 rounded-lg shadow-lg border">
+ <PopoverContent className="w-[450px] p-0 rounded-lg border">
  <Command>
  <CommandInput placeholder="Öğrenci ara..." className="h-10" />
  <CommandList className="max-h-[320px]">
@@ -135,7 +135,7 @@ export default function ParticipantStep({
  field.onChange(student.id);
  setStudentSearchOpen(false);
  }}
- className="py-2 px-3 dark: transition-colors"
+ className="py-2 px-3 dark:"
  >
  <Check
  className={cn(
@@ -176,7 +176,7 @@ export default function ParticipantStep({
  type="button"
  variant="outline"
  role="combobox"
- className="justify-between h-10 text-left font-normal rounded-lg border bg-white dark:bg-slate-900 dark: transition-colors shadow-sm"
+ className="justify-between h-10 text-left font-normal rounded-lg border bg-white dark:bg-slate-900 dark:"
  >
  <div className="flex items-center gap-2">
  <Search className="h-4 w-4 text-slate-400" />
@@ -188,7 +188,7 @@ export default function ParticipantStep({
  </Button>
  </FormControl>
  </PopoverTrigger>
- <PopoverContent className="w-[450px] p-0 rounded-lg shadow-lg border">
+ <PopoverContent className="w-[450px] p-0 rounded-lg border">
  <Command>
  <CommandInput placeholder="Öğrenci ara..." className="h-10" />
  <CommandList className="max-h-[320px]">
@@ -210,7 +210,7 @@ export default function ParticipantStep({
  onSelectedStudentsChange(newStudents);
  field.onChange(newStudents.map(s => s.id));
  }}
- className="py-2 px-3 dark: transition-colors"
+ className="py-2 px-3 dark:"
  >
  <Check
  className={cn(
@@ -248,7 +248,7 @@ export default function ParticipantStep({
  </FormLabel>
  <Select onValueChange={field.onChange} defaultValue={field.value ||"öğrenci"}>
  <FormControl>
- <SelectTrigger className="h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm dark: transition-colors">
+ <SelectTrigger className="h-10 rounded-lg bg-white dark:bg-slate-900 dark:">
  <SelectValue />
  </SelectTrigger>
  </FormControl>
@@ -280,7 +280,7 @@ export default function ParticipantStep({
  <Input 
  {...field} 
  placeholder="Örn: 9-A Sınıfı Akran Arabuluculuğu" 
- className="h-10 rounded-lg border bg-white dark:bg-slate-900 shadow-sm focus:ring-2 focus:ring-purple-100 dark:focus:ring-purple-900/30 transition-shadow"
+ className="h-10 rounded-lg border bg-white dark:bg-slate-900 focus:ring-2 focus:ring-purple-100 dark:focus:ring-purple-900/30"
  />
  </FormControl>
  <FormMessage />
@@ -291,7 +291,7 @@ export default function ParticipantStep({
 
  {/* Veli Bilgileri */}
  {participantType ==="veli" && (
- <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3.5 border border-blue-200 dark:border-blue-800/50 rounded-lg bg-gradient-to-br from-blue-50/50 to-purple-50/30 dark:from-blue-950/20 dark:to-purple-950/10 shadow-sm animate-in fade-in-50 slide-in-from-top-2 duration-300">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3.5 border border-blue-200 dark:border-blue-800/50 rounded-lg bg-gradient-to-br from-blue-50/50 to-purple-50/30 dark:from-blue-950/20 dark:to-purple-950/10 fade-in-50 slide-in-from-top-2">
  <FormField
  control={form.control}
  name="parentName"
@@ -301,7 +301,7 @@ export default function ParticipantStep({
  Veli Adı <span className="text-rose-500">*</span>
  </FormLabel>
  <FormControl>
- <Input {...field} placeholder="Ad Soyad" className="h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm" />
+ <Input {...field} placeholder="Ad Soyad" className="h-10 rounded-lg bg-white dark:bg-slate-900" />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -317,7 +317,7 @@ export default function ParticipantStep({
  </FormLabel>
  <Select onValueChange={field.onChange} value={field.value}>
  <FormControl>
- <SelectTrigger className="h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm">
+ <SelectTrigger className="h-10 rounded-lg bg-white dark:bg-slate-900">
  <SelectValue placeholder="Seçin" />
  </SelectTrigger>
  </FormControl>
@@ -337,7 +337,7 @@ export default function ParticipantStep({
 
  {/* Öğretmen Bilgileri */}
  {participantType ==="öğretmen" && (
- <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3.5 border border-emerald-200 dark:border-emerald-800/50 rounded-lg bg-gradient-to-br from-emerald-50/50 to-teal-50/30 dark:from-emerald-950/20 dark:to-teal-950/10 shadow-sm animate-in fade-in-50 slide-in-from-top-2 duration-300">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3.5 border border-emerald-200 dark:border-emerald-800/50 rounded-lg bg-gradient-to-br from-emerald-50/50 to-teal-50/30 dark:from-emerald-950/20 dark:to-teal-950/10 fade-in-50 slide-in-from-top-2">
  <FormField
  control={form.control}
  name="teacherName"
@@ -347,7 +347,7 @@ export default function ParticipantStep({
  Öğretmen Adı <span className="text-rose-500">*</span>
  </FormLabel>
  <FormControl>
- <Input {...field} placeholder="Ad Soyad" className="h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm" />
+ <Input {...field} placeholder="Ad Soyad" className="h-10 rounded-lg bg-white dark:bg-slate-900" />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -360,7 +360,7 @@ export default function ParticipantStep({
  <FormItem>
  <FormLabel className="text-sm font-medium text-slate-700 dark:text-slate-300">Branş</FormLabel>
  <FormControl>
- <Input {...field} placeholder="Örn: Matematik" className="h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm" />
+ <Input {...field} placeholder="Örn: Matematik" className="h-10 rounded-lg bg-white dark:bg-slate-900" />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -371,7 +371,7 @@ export default function ParticipantStep({
 
  {/* Diğer Katılımcı */}
  {participantType ==="diğer" && (
- <div className="p-3.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50/50 dark:bg-slate-900/20 shadow-sm animate-in fade-in-50 slide-in-from-top-2 duration-300">
+ <div className="p-3.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50/50 dark:bg-slate-900/20 fade-in-50 slide-in-from-top-2">
  <FormField
  control={form.control}
  name="otherParticipantDescription"
@@ -381,7 +381,7 @@ export default function ParticipantStep({
  Katılımcı Açıklaması <span className="text-rose-500">*</span>
  </FormLabel>
  <FormControl>
- <Input {...field} placeholder="Katılımcı hakkında bilgi" className="h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm" />
+ <Input {...field} placeholder="Katılımcı hakkında bilgi" className="h-10 rounded-lg bg-white dark:bg-slate-900" />
  </FormControl>
  <FormMessage />
  </FormItem>

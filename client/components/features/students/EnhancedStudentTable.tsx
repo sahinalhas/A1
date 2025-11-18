@@ -68,7 +68,7 @@ const StudentRow = memo(
  };
 
  return (
- <TableRow className=" transition-colors group border-b">
+ <TableRow className=" group border-b">
  <TableCell className="py-2.5 w-8">
  <Checkbox checked={isSelected} onCheckedChange={onSelect} />
  </TableCell>
@@ -128,7 +128,7 @@ const StudentRow = memo(
  <Button
  size="sm"
  variant="ghost"
- className="h-8 w-8 p-0 transition-colors"
+ className="h-8 w-8 p-0"
  >
  <MoreVertical className="h-4 w-4" />
  </Button>

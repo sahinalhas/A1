@@ -528,7 +528,7 @@ const ComparativeReports = React.memo(function ComparativeReports() {
  {isLoadingDetails ? (
  <Card>
  <CardContent className="p-12 text-center">
- <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+ <div className=" h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
  <p className="text-muted-foreground">Demografik karşılaştırmalar yükleniyor...</p>
  </CardContent>
  </Card>
@@ -545,7 +545,7 @@ const ComparativeReports = React.memo(function ComparativeReports() {
  {isLoadingDetails ? (
  <Card>
  <CardContent className="p-12 text-center">
- <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+ <div className=" h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
  <p className="text-muted-foreground">Performans metrikleri hesaplanıyor...</p>
  </CardContent>
  </Card>
@@ -558,7 +558,7 @@ const ComparativeReports = React.memo(function ComparativeReports() {
  {isLoadingDetails ? (
  <Card>
  <CardContent className="p-12 text-center">
- <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+ <div className=" h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
  <p className="text-muted-foreground">Benchmark verileri analiz ediliyor...</p>
  </CardContent>
  </Card>

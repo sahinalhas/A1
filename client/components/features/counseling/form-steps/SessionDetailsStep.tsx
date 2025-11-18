@@ -26,7 +26,7 @@ export default function SessionDetailsStep({ form }: SessionDetailsStepProps) {
  const sessionMode = form.watch("sessionMode");
 
  return (
- <div className="space-y-6 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+ <div className="space-y-6 fade-in-50 slide-in-from-bottom-4">
  <div className="relative pb-4">
  <div className="flex items-center gap-3">
  <div className="relative">
@@ -138,7 +138,7 @@ export default function SessionDetailsStep({ form }: SessionDetailsStepProps) {
  />
  <Label
  htmlFor="yuz_yuze"
- className="flex flex-col items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 peer-data-[state=checked]:border-emerald-500 peer-data-[state=checked]:bg-emerald-50 dark:peer-data-[state=checked]:bg-emerald-950/30 cursor-pointer transition-all"
+ className="flex flex-col items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 peer-data-[state=checked]:border-emerald-500 peer-data-[state=checked]:bg-emerald-50 dark:peer-data-[state=checked]:bg-emerald-950/30 cursor-pointer"
  >
  <UsersIcon className="mb-2 h-6 w-6 text-emerald-600" />
  <span className="font-medium text-sm text-slate-700 dark:text-slate-200">Yüz Yüze</span>
@@ -152,7 +152,7 @@ export default function SessionDetailsStep({ form }: SessionDetailsStepProps) {
  />
  <Label
  htmlFor="online"
- className="flex flex-col items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 dark:peer-data-[state=checked]:bg-blue-950/30 cursor-pointer transition-all"
+ className="flex flex-col items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 dark:peer-data-[state=checked]:bg-blue-950/30 cursor-pointer"
  >
  <Video className="mb-2 h-6 w-6 text-blue-600" />
  <span className="font-medium text-sm text-slate-700 dark:text-slate-200">Online</span>
@@ -166,7 +166,7 @@ export default function SessionDetailsStep({ form }: SessionDetailsStepProps) {
  />
  <Label
  htmlFor="telefon"
- className="flex flex-col items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 peer-data-[state=checked]:border-orange-500 peer-data-[state=checked]:bg-orange-50 dark:peer-data-[state=checked]:bg-orange-950/30 cursor-pointer transition-all"
+ className="flex flex-col items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 peer-data-[state=checked]:border-orange-500 peer-data-[state=checked]:bg-orange-50 dark:peer-data-[state=checked]:bg-orange-950/30 cursor-pointer"
  >
  <Phone className="mb-2 h-6 w-6 text-orange-600" />
  <span className="font-medium text-sm text-slate-700 dark:text-slate-200">Telefon</span>

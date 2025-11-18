@@ -108,7 +108,7 @@ export default function AIAnalysisPreview({
  <div className="overflow-y-auto px-6 py-4 space-y-6">
  {isLoading ? (
  <div className="flex flex-col items-center justify-center py-12 space-y-4">
- <Loader2 className="h-8 w-8 animate-spin text-violet-600" />
+ <Loader2 className="h-8 w-8 text-violet-600" />
  <p className="text-sm text-muted-foreground">AI görüşme notlarını analiz ediyor...</p>
  </div>
  ) : analysis ? (

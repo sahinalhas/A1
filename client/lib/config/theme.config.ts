@@ -47,10 +47,10 @@ export const CARD_GRADIENTS = {
 
 // Modern Shadow System
 export const MODERN_SHADOWS = {
- sm:"shadow-sm transition-shadow",
- md:"shadow-md transition-shadow",
- lg:"shadow-lg transition-shadow",
- none:"shadow-none",
+ sm:"",
+ md:"",
+ lg:"",
+ none:"",
 } as const;
 
 // Animation Variants for Framer Motion
@@ -97,10 +97,10 @@ export const STAGGER_DELAYS = {
 } as const;
 
 export const GLASS_STYLES = {
- light:"bg-white/70 backdrop-blur-md border border-white/20",
- dark:"bg-gray-900/70 backdrop-blur-md border border-gray-700/20",
- primary:"bg-primary/10 backdrop-blur-md border border-primary/20",
- accent:"bg-accent/10 backdrop-blur-md border border-accent/20",
+ light:"bg-white/70 border border-white/20",
+ dark:"bg-gray-900/70 border border-gray-700/20",
+ primary:"bg-primary/10 border border-primary/20",
+ accent:"bg-accent/10 border border-accent/20",
 } as const;
 
 export const RISK_COLORS = {

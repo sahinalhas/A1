@@ -125,7 +125,7 @@ export default function BulkAnalysisDashboard() {
  <CardDescription>Okul geneli AI destekli analiz ve erken uyarı sistemi</CardDescription>
  </div>
  <Button variant="outline" size="sm" onClick={() => { loadSchoolAnalysis(); loadEarlyWarnings(); }} disabled={loading}>
- <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+ <RefreshCw className="h-4 w-4 mr-2" />
  Yenile
  </Button>
  </div>
@@ -232,7 +232,7 @@ export default function BulkAnalysisDashboard() {
  ) : (
  <Card>
  <CardContent className="py-12 text-center">
- <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-muted-foreground" />
+ <Loader2 className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
  <p className="text-sm text-muted-foreground">Analiz yükleniyor...</p>
  </CardContent>
  </Card>
@@ -351,7 +351,7 @@ export default function BulkAnalysisDashboard() {
  ) : (
  <Card>
  <CardContent className="py-12 text-center">
- <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-muted-foreground" />
+ <Loader2 className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
  <p className="text-sm text-muted-foreground">Erken uyarılar yükleniyor...</p>
  </CardContent>
  </Card>

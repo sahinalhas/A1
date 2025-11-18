@@ -287,7 +287,7 @@ export default function Index() {
  animate={{ opacity: 1, y: 0 }}
  className="mb-4"
  >
- <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg p-4 shadow-lg">
+ <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg p-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="bg-white/20 rounded-full p-2">
@@ -305,7 +305,7 @@ export default function Index() {
  >
  {isQuickLoginLoading ? (
  <>
- <Clock className="mr-2 h-4 w-4 animate-spin" />
+ <Clock className="mr-2 h-4 w-4" />
  Giriş yapılıyor...
  </>
  ) : (
@@ -536,31 +536,31 @@ export default function Index() {
  <CardContent className="space-y-2">
  <Button asChild className="w-full group justify-start text-base h-12 bg-gradient-to-r from-violet-500 to-purple-600 btn-ripple haptic-feedback focus-glow">
  <a href="/ogrenci">
- <Users2 className="mr-3 h-5 w-5 group- transition-transform" /> 
+ <Users2 className="mr-3 h-5 w-5 group-" /> 
  Öğrenciler
  </a>
  </Button>
  <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
  <a href="/gorusmeler">
- <CalendarDays className="mr-3 h-5 w-5 group- transition-transform" /> 
+ <CalendarDays className="mr-3 h-5 w-5 group-" /> 
  Görüşmeler
  </a>
  </Button>
  <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
  <a href="/anketler">
- <MessageSquare className="mr-3 h-5 w-5 group- transition-transform" /> 
+ <MessageSquare className="mr-3 h-5 w-5 group-" /> 
  Anketler
  </a>
  </Button>
  <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
  <a href="/raporlar">
- <FileText className="mr-3 h-5 w-5 group- transition-transform" /> 
+ <FileText className="mr-3 h-5 w-5 group-" /> 
  Raporlar
  </a>
  </Button>
  <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
  <a href="/ai-asistan">
- <Brain className="mr-3 h-5 w-5 group- transition-transform" /> 
+ <Brain className="mr-3 h-5 w-5 group-" /> 
  AI Asistan
  </a>
  </Button>

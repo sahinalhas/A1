@@ -208,7 +208,7 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  className="gap-2"
  >
  {loading ? (
- <><Loader2 className="h-4 w-4 animate-spin" /> Analiz Ediliyor...</>
+ <><Loader2 className="h-4 w-4" /> Analiz Ediliyor...</>
  ) : (
  <><Sparkles className="h-4 w-4" /> Analiz Başlat</>
  )}
@@ -252,7 +252,7 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  <ScrollArea className="h-[400px] pr-4">
  <div className="space-y-3">
  {(analysis.topMatches || []).map((match, index) => (
- <Card key={match.careerId} className=" transition-shadow">
+ <Card key={match.careerId} className="">
  <CardContent className="p-4">
  <div className="flex items-start justify-between gap-4">
  <div className="flex-1 space-y-2">
@@ -341,7 +341,7 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  {filteredCareers.map((career) => (
  <Card
  key={career.id}
- className="cursor-pointer transition-shadow"
+ className="cursor-pointer"
  onClick={() => setSelectedCareer(career)}
  >
  <CardContent className="p-4">
@@ -623,7 +623,7 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  className="gap-2"
  >
  {loading ? (
- <><Loader2 className="h-4 w-4 animate-spin" /> Yenileniyor...</>
+ <><Loader2 className="h-4 w-4" /> Yenileniyor...</>
  ) : (
  <><RefreshCw className="h-4 w-4" /> AI ile Yenile</>
  )}
@@ -916,7 +916,7 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  {analysisHistory.length > 0 ? (
  <div className="space-y-2">
  {analysisHistory.map((analysis, index) => (
- <Card key={index} className=" transition-shadow cursor-pointer">
+ <Card key={index} className=" cursor-pointer">
  <CardContent className="p-3">
  <div className="flex items-start justify-between gap-2">
  <div className="flex-1">
@@ -957,7 +957,7 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  {allRoadmaps.length > 0 ? (
  <div className="space-y-2">
  {allRoadmaps.map((rm) => (
- <Card key={rm.id} className=" transition-shadow">
+ <Card key={rm.id} className="">
  <CardContent className="p-3">
  <div className="flex items-start justify-between gap-2">
  <div className="flex-1 space-y-1">

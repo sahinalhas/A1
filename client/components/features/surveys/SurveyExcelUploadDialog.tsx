@@ -198,7 +198,7 @@ export default function SurveyExcelUploadDialog({
  <Card>
  <CardContent className="pt-6">
  <div
- className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+ className={`border-2 border-dashed rounded-lg p-8 text-center ${
  dragActive
  ? 'border-primary bg-primary/5'
  : 'border-gray-300 
@@ -345,7 +345,7 @@ export default function SurveyExcelUploadDialog({
  >
  {uploading ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  Yükleniyor...
  </>
  ) : (

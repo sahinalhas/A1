@@ -175,7 +175,7 @@ export function PracticeExamsTab({
  isLoading={isCreating}
  />
 
- <Card className="overflow-hidden shadow-md border-2">
+ <Card className="overflow-hidden border-2">
  <CardHeader className="bg-gradient-to-br from-primary/5 via-background to-accent/5 border-b">
  <div className="flex items-center justify-between">
  <CardTitle className="flex items-center gap-2 text-lg">
@@ -245,7 +245,7 @@ export function PracticeExamsTab({
  {filteredSessions.map((session, index) => (
  <tr
  key={session.id}
- className={`border-b transition-colors ${
+ className={`border-b ${
  index % 2 === 0 ? '' : 'bg-muted/5'
  }`}
  >
@@ -276,7 +276,7 @@ export function PracticeExamsTab({
  <Button
  onClick={() => handleShowEntryOptions(session)}
  size="sm"
- className="h-9 px-4 bg-gradient-to-r from-primary to-primary/80 shadow-sm"
+ className="h-9 px-4 bg-gradient-to-r from-primary to-primary/80"
  >
  <Zap className="h-4 w-4 mr-1.5" />
  <span className="text-xs font-medium">Sonuç Gir</span>

@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
  TabsListProps
 >(({ className, variant ="default", ...props }, ref) => {
  const variantStyles = {
- default:"bg-gradient-to-br from-slate-100/80 via-slate-50/50 to-slate-100/80 dark:from-slate-900/80 dark:via-slate-800/50 dark:to-slate-900/80 border border-slate-200/60 dark:border-slate-700/60 shadow-sm backdrop-blur-sm",
+ default:"bg-gradient-to-br from-slate-100/80 via-slate-50/50 to-slate-100/80 dark:from-slate-900/80 dark:via-slate-800/50 dark:to-slate-900/80 border border-slate-200/60 dark:border-slate-700/60",
  pills:"bg-transparent border-0 gap-2",
  underline:"bg-transparent border-b border-slate-200 dark:border-slate-800 rounded-none gap-1"
  };
@@ -25,7 +25,7 @@ const TabsList = React.forwardRef<
  <TabsPrimitive.List
  ref={ref}
  className={cn(
-"inline-flex h-auto items-center p-1 text-slate-600 dark:text-slate-400 rounded-lg transition-all duration-200",
+"inline-flex h-auto items-center p-1 text-slate-600 dark:text-slate-400 rounded-lg",
  variantStyles[variant],
  className,
  )}
@@ -49,43 +49,43 @@ const TabsTrigger = React.forwardRef<
  React.ElementRef<typeof TabsPrimitive.Trigger>,
  TabsTriggerProps
 >(({ className, children, icon: Icon, variant ="default", ...props }, ref) => {
- const baseStyles ="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 sm:px-4 py-2 sm:py-2.5 text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 min-h-[40px] sm:min-h-[44px] relative overflow-hidden group";
+ const baseStyles ="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 sm:px-4 py-2 sm:py-2.5 text-sm font-medium ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 min-h-[40px] sm:min-h-[44px] relative overflow-hidden group";
  
  const variantStyles = {
  default: cn(
 "text-slate-600 dark:text-slate-400",
-"transition-all duration-200",
+"",
 " dark:",
 " dark:",
 "",
-"active:scale-95",
+"",
 "data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800",
 "data-[state=active]:text-slate-900 dark:data-[state=active]:text-slate-50",
-"data-[state=active]:shadow-md data-[state=active]:scale-100",
+"data-[state=active]: data-[state=active]:",
 "data-[state=active]:border data-[state=active]:border-slate-200/60 dark:data-[state=active]:border-slate-700/60",
 "before:absolute before:inset-0 before:bg-gradient-to-br before:from-indigo-500/0 before:via-violet-500/0 before:to-purple-500/0",
 "data-[state=active]:before:from-indigo-500/10 data-[state=active]:before:via-violet-500/10 data-[state=active]:before:to-purple-500/10",
-"before:transition-all before:duration-300"
+"before: before:"
  ),
  pills: cn(
 "rounded-full px-4 sm:px-5",
 "text-slate-600 dark:text-slate-400",
 "bg-slate-100/50 dark:bg-slate-800/50",
-"transition-all duration-200",
+"",
 " dark:",
 " dark:",
 "",
-"active:translate-y-0",
+"",
 "data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:via-violet-500 data-[state=active]:to-purple-600",
 "data-[state=active]:text-white dark:data-[state=active]:text-white",
-"data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-500/30",
+"data-[state=active]: data-[state=active]:",
 "data-[state=active]:border data-[state=active]:border-white/20",
 "data-[state=active]:translate-y-0"
  ),
  underline: cn(
 "rounded-none px-4 border-b-2 border-transparent",
 "text-slate-600 dark:text-slate-400",
-"transition-all duration-200",
+"",
 " dark:",
 " dark:",
 "data-[state=active]:text-indigo-600 dark:data-[state=active]:text-indigo-400",
@@ -107,8 +107,8 @@ const TabsTrigger = React.forwardRef<
  {Icon && (
  <Icon 
  className={cn(
-"h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-200",
-"group-data-[state=active]:scale-105"
+"h-4 w-4 sm:h-5 sm:w-5",
+"group-data-[state=active]:"
  )} 
  />
  )}
@@ -126,7 +126,7 @@ const TabsContent = React.forwardRef<
  ref={ref}
  className={cn(
 "mt-3 sm:mt-4 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2",
-"animate-in fade-in-50 slide-in-from-bottom-2 duration-300",
+" fade-in-50 slide-in-from-bottom-2",
  className,
  )}
  {...props}

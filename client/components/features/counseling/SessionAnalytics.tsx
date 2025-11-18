@@ -133,7 +133,7 @@ export default function SessionAnalytics() {
  if (statsLoading || timeSeriesLoading || topicLoading || participantLoading || classLoading || modeLoading) {
  return (
  <div className="flex items-center justify-center h-64">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <Loader2 className="h-8 w-8 text-muted-foreground" />
  </div>
  );
  }
@@ -214,7 +214,7 @@ export default function SessionAnalytics() {
  const labels: Record<string, string> = {
  count: 'Toplam',
  completed: 'Tamamlanan',
- active: 'Aktif',
+ 'Aktif',
  };
  return [value, labels[name] || name];
  }}
@@ -224,7 +224,7 @@ export default function SessionAnalytics() {
  const labels: Record<string, string> = {
  count: 'Toplam',
  completed: 'Tamamlanan',
- active: 'Aktif',
+ 'Aktif',
  };
  return labels[value] || value;
  }}

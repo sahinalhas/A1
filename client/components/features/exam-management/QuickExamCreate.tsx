@@ -63,7 +63,7 @@ export function QuickExamCreate({
  };
 
  return (
- <Card className="overflow-hidden shadow-md border-2">
+ <Card className="overflow-hidden border-2">
  <CardHeader className="bg-gradient-to-br from-primary/10 via-background to-accent/10 border-b">
  <div className="flex items-center justify-between">
  <div>
@@ -149,7 +149,7 @@ export function QuickExamCreate({
  >
  {isLoading ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  Oluşturuluyor...
  </>
  ) : (

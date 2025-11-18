@@ -58,14 +58,14 @@ const SurveyTemplateCard = React.forwardRef<HTMLDivElement, SurveyTemplateCardPr
  className="h-full"
  >
  <Card 
- className="h-full flex flex-col overflow-hidden transition-shadow duration-300 ease-out cursor-pointer group"
+ className="h-full flex flex-col overflow-hidden ease-out cursor-pointer group"
  onClick={() => onEdit(template)}
  >
  <CardHeader className="pb-3">
  <div className="flex items-start justify-between gap-2 mb-3">
  <div className="flex items-start gap-2 flex-1 min-w-0">
  <FileText className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
- <h3 className="font-semibold text-sm leading-tight line-clamp-2 group- transition-colors">
+ <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-">
  {template.title}
  </h3>
  </div>

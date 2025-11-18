@@ -66,8 +66,8 @@ class ErrorBoundary extends Component<Props, State> {
  const isDev = process.env.NODE_ENV === 'development';
 
  return (
- <div className="min-h-screen bg-background flex items-center justify-center p-4 animate-in fade-in duration-300">
- <div className="max-w-md w-full space-y-4 animate-in slide-in-from-bottom-4 duration-500">
+ <div className="min-h-screen bg-background flex items-center justify-center p-4 fade-in">
+ <div className="max-w-md w-full space-y-4 slide-in-from-bottom-4">
  <Alert variant="destructive">
  <AlertCircle className="h-4 w-4" />
  <AlertTitle>Beklenmeyen Bir Hata Oluştu</AlertTitle>
@@ -83,14 +83,14 @@ class ErrorBoundary extends Component<Props, State> {
  className="flex-1 group"
  variant="outline"
  >
- <RefreshCw className="w-4 h-4 mr-2 hover- transition-transform duration-300" />
+ <RefreshCw className="w-4 h-4 mr-2 hover-" />
  Tekrar Dene
  </Button>
  <Button 
  onClick={this.handleGoHome}
  className="flex-1 group"
  >
- <Home className="w-4 h-4 mr-2 hover- transition-transform" />
+ <Home className="w-4 h-4 mr-2 hover-" />
  Ana Sayfa
  </Button>
  </div>

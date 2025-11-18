@@ -77,7 +77,7 @@ export function ResultEntryOptions({
  {totalStudents > 0 && (
  <div className="mt-4 w-full h-2 bg-muted rounded-full overflow-hidden">
  <div
- className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-500"
+ className="h-full bg-gradient-to-r from-primary to-primary/80"
  style={{ width: `${completionPercentage}%` }}
  />
  </div>
@@ -88,11 +88,11 @@ export function ResultEntryOptions({
  {/* Entry Methods Grid */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {/* Quick Table Entry */}
- <Card className="group relative overflow-hidden border-2 transition-all duration-300 cursor-pointer">
- <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group- transition-opacity" />
+ <Card className="group relative overflow-hidden border-2 cursor-pointer">
+ <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-" />
  <CardHeader className="relative">
  <div className="flex items-center justify-between">
- <div className="p-3 rounded-xl bg-primary/10 group- transition-colors">
+ <div className="p-3 rounded-xl bg-primary/10 group-">
  <Zap className="h-6 w-6 text-primary" />
  </div>
  <Badge variant="secondary" className="bg-primary/10 text-primary border-0">
@@ -121,20 +121,20 @@ export function ResultEntryOptions({
  </div>
  <Button
  onClick={onBulkTableEntry}
- className="w-full group- transition-shadow"
+ className="w-full group-"
  size="lg"
  >
  Başla
- <ArrowRight className="ml-2 h-4 w-4 group- transition-transform" />
+ <ArrowRight className="ml-2 h-4 w-4 group-" />
  </Button>
  </CardContent>
  </Card>
 
  {/* Excel Import */}
- <Card className="group relative overflow-hidden border-2 transition-all duration-300 cursor-pointer">
- <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent opacity-0 group- transition-opacity" />
+ <Card className="group relative overflow-hidden border-2 cursor-pointer">
+ <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent opacity-0 group-" />
  <CardHeader className="relative">
- <div className="p-3 rounded-xl bg-green-500/10 group- transition-colors w-fit">
+ <div className="p-3 rounded-xl bg-green-500/10 group- w-fit">
  <FileSpreadsheet className="h-6 w-6 text-green-600" />
  </div>
  <CardTitle className="text-xl mt-4">Excel'den İçe Aktar</CardTitle>
@@ -159,20 +159,20 @@ export function ResultEntryOptions({
  </div>
  <Button
  onClick={onExcelEntry}
- className="w-full bg-green-600 group- transition-shadow"
+ className="w-full bg-green-600 group-"
  size="lg"
  >
  Excel Yükle
- <ArrowRight className="ml-2 h-4 w-4 group- transition-transform" />
+ <ArrowRight className="ml-2 h-4 w-4 group-" />
  </Button>
  </CardContent>
  </Card>
 
  {/* Individual Entry */}
- <Card className="group relative overflow-hidden border-2 transition-all duration-300 cursor-pointer">
- <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-0 group- transition-opacity" />
+ <Card className="group relative overflow-hidden border-2 cursor-pointer">
+ <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-0 group-" />
  <CardHeader className="relative">
- <div className="p-3 rounded-xl bg-blue-500/10 group- transition-colors w-fit">
+ <div className="p-3 rounded-xl bg-blue-500/10 group- w-fit">
  <User className="h-6 w-6 text-blue-600" />
  </div>
  <CardTitle className="text-xl mt-4">Öğrenci Öğrenci</CardTitle>
@@ -197,11 +197,11 @@ export function ResultEntryOptions({
  </div>
  <Button
  onClick={onIndividualEntry}
- className="w-full bg-blue-600 group- transition-shadow"
+ className="w-full bg-blue-600 group-"
  size="lg"
  >
  Giriş Yap
- <ArrowRight className="ml-2 h-4 w-4 group- transition-transform" />
+ <ArrowRight className="ml-2 h-4 w-4 group-" />
  </Button>
  </CardContent>
  </Card>

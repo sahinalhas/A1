@@ -108,7 +108,7 @@ export function ComparisonAnalysisTab({ examTypes, sessions }: ComparisonAnalysi
  }, [comparisonData]);
 
  return (
- <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+ <div className="space-y-6 fade-in slide-in-from-bottom-4">
  <div>
  <h2 className="text-3xl font-bold flex items-center gap-3">
  <div className="p-2 bg-primary/10 rounded-lg">
@@ -200,7 +200,7 @@ export function ComparisonAnalysisTab({ examTypes, sessions }: ComparisonAnalysi
  return (
  <div
  key={session.id}
- className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+ className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer ${
  isSelected ? 'bg-primary/10 border-primary' : '
  }`}
  onClick={() => toggleSession(session.id)}

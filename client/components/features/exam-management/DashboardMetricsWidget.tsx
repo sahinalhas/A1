@@ -132,7 +132,7 @@ export function DashboardMetricsWidget() {
  {allCards.map((card, index) => {
  const Icon = card.icon;
  return (
- <Card key={index} className=" transition-shadow">
+ <Card key={index} className="">
  <CardHeader className="pb-2">
  <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
  <div className={`p-2 rounded-lg ${card.bgColor}`}>

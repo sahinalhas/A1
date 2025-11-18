@@ -292,8 +292,8 @@ export function EnhancedExcelImport({
  onDragLeave={handleDragLeave}
  onDrop={handleDrop}
  className={`
- border-2 border-dashed rounded-xl p-12 text-center transition-all
- ${isDragging ? 'border-primary bg-primary/5 scale-[1.02]' : 'border-border'}
+ border-2 border-dashed rounded-xl p-12 text-center 
+ ${isDragging ? 'border-primary bg-primary/5 : 'border-border'}
  ${isUploading ? 'opacity-50 pointer-events-none' : 'cursor-pointer 
  `}
  >
@@ -427,7 +427,7 @@ export function EnhancedExcelImport({
  <TabsContent value="result" className="flex-1 overflow-auto space-y-4">
  {isUploading && (
  <div className="flex flex-col items-center justify-center py-12 space-y-4">
- <Loader2 className="h-16 w-16 text-primary animate-spin" />
+ <Loader2 className="h-16 w-16 text-primary" />
  <div className="w-full max-w-md space-y-2">
  <Progress value={uploadProgress} className="h-2" />
  <p className="text-center text-sm font-medium text-primary">

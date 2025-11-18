@@ -446,7 +446,7 @@ export default function PublicSurvey() {
  return (
  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50 flex items-center justify-center">
  <div className="text-center space-y-4">
- <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-primary mx-auto"></div>
+ <div className=" rounded-full h-14 w-14 border-b-2 border-primary mx-auto"></div>
  <p className="text-muted-foreground font-medium">Anket yükleniyor...</p>
  </div>
  </div>
@@ -456,7 +456,7 @@ export default function PublicSurvey() {
  if (error) {
  return (
  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50 flex items-center justify-center p-4">
- <Card className="w-full max-w-md border-border/40 shadow-lg">
+ <Card className="w-full max-w-md border-border/40">
  <CardHeader className="text-center pb-4">
  <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
  <AlertCircle className="h-8 w-8 text-destructive" />
@@ -465,7 +465,7 @@ export default function PublicSurvey() {
  </CardHeader>
  <CardContent className="text-center space-y-6">
  <p className="text-muted-foreground">{error}</p>
- <Button onClick={() => navigate('/')} variant="outline" className="gap-2 shadow-sm transition-shadow">
+ <Button onClick={() => navigate('/')} variant="outline" className="gap-2">
  <ArrowLeft className="h-4 w-4" />
  Ana Sayfaya Dön
  </Button>
@@ -478,7 +478,7 @@ export default function PublicSurvey() {
  if (isSubmitted) {
  return (
  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50 flex items-center justify-center p-4">
- <Card className="w-full max-w-md border-border/40 shadow-lg">
+ <Card className="w-full max-w-md border-border/40">
  <CardHeader className="text-center pb-4">
  <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
  <CheckCircle className="h-8 w-8 text-emerald-600" />
@@ -489,7 +489,7 @@ export default function PublicSurvey() {
  <p className="text-muted-foreground text-base">
  Anket yanıtınız başarıyla gönderildi. Katılımınız için teşekkür ederiz.
  </p>
- <Button onClick={() => navigate('/')} variant="outline" className="gap-2 shadow-sm transition-shadow">
+ <Button onClick={() => navigate('/')} variant="outline" className="gap-2">
  <ArrowLeft className="h-4 w-4" />
  Ana Sayfaya Dön
  </Button>
@@ -502,7 +502,7 @@ export default function PublicSurvey() {
  if (!distribution || !template || questions.length === 0) {
  return (
  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50 flex items-center justify-center p-4">
- <Card className="w-full max-w-md border-border/40 shadow-lg">
+ <Card className="w-full max-w-md border-border/40">
  <CardHeader className="text-center pb-4">
  <div className="mx-auto w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mb-4">
  <AlertCircle className="h-8 w-8 text-amber-600" />
@@ -513,7 +513,7 @@ export default function PublicSurvey() {
  <p className="text-muted-foreground">
  Aranan anket bulunamadı veya artık aktif değil.
  </p>
- <Button onClick={() => navigate('/')} variant="outline" className="gap-2 shadow-sm transition-shadow">
+ <Button onClick={() => navigate('/')} variant="outline" className="gap-2">
  <ArrowLeft className="h-4 w-4" />
  Ana Sayfaya Dön
  </Button>
@@ -530,7 +530,7 @@ export default function PublicSurvey() {
  <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50 py-8 md:py-12">
  <div className="max-w-3xl mx-auto px-4 sm:px-6">
  {/* Header */}
- <Card className="mb-6 border-border/40 shadow-sm">
+ <Card className="mb-6 border-border/40">
  <CardHeader className="space-y-3">
  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
  <div className="flex-1">
@@ -559,7 +559,7 @@ export default function PublicSurvey() {
  </Card>
 
  {/* Progress */}
- <Card className="mb-6 border-border/40 shadow-sm">
+ <Card className="mb-6 border-border/40">
  <CardContent className="pt-6 pb-5">
  <div className="flex items-center justify-between mb-3">
  <span className="text-sm font-medium text-foreground">İlerleme</span>
@@ -576,7 +576,7 @@ export default function PublicSurvey() {
  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
  {/* Student Info (if not anonymous) */}
  {currentQuestionIndex === 0 && !distribution.allowAnonymous && (
- <Card className="border-border/40 shadow-sm">
+ <Card className="border-border/40">
  <CardHeader className="pb-4">
  <CardTitle className="text-xl font-semibold">Öğrenci Bilgileri</CardTitle>
  <CardDescription className="text-base">
@@ -642,7 +642,7 @@ export default function PublicSurvey() {
  )}
 
  {/* Current Question */}
- <Card className="border-border/40 shadow-sm">
+ <Card className="border-border/40">
  <CardHeader className="pb-4">
  <div className="flex items-start justify-between">
  <div className="flex-1">
@@ -688,7 +688,7 @@ export default function PublicSurvey() {
  variant="outline"
  onClick={handlePreviousQuestion}
  disabled={currentQuestionIndex === 0}
- className="gap-2 shadow-sm transition-shadow"
+ className="gap-2"
  >
  <ArrowLeft className="h-4 w-4" />
  Önceki
@@ -698,11 +698,11 @@ export default function PublicSurvey() {
  <Button
  type="submit"
  disabled={isSubmitting}
- className="gap-2 bg-emerald-600 shadow-sm transition-all"
+ className="gap-2 bg-emerald-600"
  >
  {isSubmitting ? (
  <>
- <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+ <div className=" rounded-full h-4 w-4 border-b-2 border-white" />
  Gönderiliyor...
  </>
  ) : (
@@ -716,7 +716,7 @@ export default function PublicSurvey() {
  <Button
  type="button"
  onClick={handleNextQuestion}
- className="gap-2 shadow-sm transition-shadow"
+ className="gap-2"
  >
  Sonraki
  <ArrowRight className="h-4 w-4" />

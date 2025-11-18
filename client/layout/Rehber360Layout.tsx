@@ -65,29 +65,29 @@ function AppLogo({ collapsed }: { collapsed?: boolean }) {
  <Link
  to="/"
  className={cn(
-"flex items-center gap-2 px-2 py-3 transition-all duration-200 group relative",
+"flex items-center gap-2 px-2 py-3 group relative",
 " rounded-lg",
-" active:scale-95"
+""
  )}
  >
  <div className={cn(
 "size-8 rounded-lg bg-gradient-to-br from-primary via-primary/90 to-chart-2",
 "flex items-center justify-center text-primary-foreground font-bold text-sm",
-"shrink-0 shadow-sm shadow-sidebar-foreground/10",
-"transition-all duration-200 group- group-",
+"shrink-0",
+" group- group-",
 "relative overflow-hidden"
  )}>
  <div className="relative z-10">R</div>
  </div>
  
  <div className={cn(
-"flex flex-col leading-none relative z-10 overflow-hidden transition-opacity duration-150",
+"flex flex-col leading-none relative z-10 overflow-hidden",
  collapsed ?"opacity-0 w-0" :"opacity-100 w-auto delay-75"
  )}>
- <span className="text-sm font-semibold tracking-tight text-sidebar-foreground transition-colors duration-200 group- whitespace-nowrap">
+ <span className="text-sm font-semibold tracking-tight text-sidebar-foreground group- whitespace-nowrap">
  Rehber360
  </span>
- <span className="text-[9px] text-muted-foreground mt-0.5 font-medium transition-colors duration-200 group- whitespace-nowrap">
+ <span className="text-[9px] text-muted-foreground mt-0.5 font-medium group- whitespace-nowrap">
  Dijital Rehberlik
  </span>
  </div>
@@ -227,7 +227,7 @@ export default function Rehber360Layout() {
  return (
  <div className="flex items-center justify-center h-screen bg-background">
  <div className="text-center space-y-4">
- <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+ <div className=" rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
  <p className="text-muted-foreground">Yükleniyor...</p>
  </div>
  </div>
@@ -244,8 +244,8 @@ export default function Rehber360Layout() {
  {!isMobile && (
  <aside
  className={cn(
-"flex flex-col border-r bg-sidebar transition-all duration-300 ease-in-out relative overflow-hidden",
-"shadow-sm shadow-sidebar-foreground/3",
+"flex flex-col border-r bg-sidebar ease-in-out relative overflow-hidden",
+"",
  sidebarOpen ?"w-60" :"w-16"
  )}
  >
@@ -254,7 +254,7 @@ export default function Rehber360Layout() {
  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-chart-2/5 opacity-30" />
  
  {/* Header section */}
- <div className="relative h-16 flex items-center justify-between px-3 border-b border-sidebar-border/50 backdrop-blur-sm bg-sidebar/80">
+ <div className="relative h-16 flex items-center justify-between px-3 border-b border-sidebar-border/50 bg-sidebar/80">
  {sidebarOpen && <AppLogo collapsed={false} />}
  <TooltipProvider>
  <Tooltip>
@@ -264,12 +264,12 @@ export default function Rehber360Layout() {
  size="icon"
  onClick={() => setSidebarOpen(!sidebarOpen)}
  className={cn(
-"shrink-0 transition-all duration-300",
-" active:scale-95"
+"shrink-0",
+""
  )}
  >
  <PanelLeftClose className={cn(
-"h-4 w-4 transition-transform duration-300",
+"h-4 w-4",
  sidebarOpen ?"rotate-0" :"rotate-180"
  )} />
  </Button>
@@ -298,32 +298,32 @@ export default function Rehber360Layout() {
  end={item.end}
  onMouseEnter={() => prefetchRoute(item.to)}
  className={({ isActive }) => cn(
-"group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
+"group flex items-center gap-3 px-3 py-2 rounded-lg",
 "",
 "text-xs font-medium text-sidebar-foreground/70",
 "relative",
- isActive &&"bg-sidebar-accent text-sidebar-accent-foreground shadow-sm",
+ isActive &&"bg-sidebar-accent text-sidebar-accent-foreground",
  !sidebarOpen &&"justify-center px-2 py-2.5",
-"animate-slide-in-left"
+""
  )}
  style={{ animationDelay: `${index * 30}ms` }}
  >
  {/* Active indicator */}
  <div className={cn(
 "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full",
-"bg-gradient-to-b from-primary to-chart-2 transition-all duration-200",
+"bg-gradient-to-b from-primary to-chart-2",
 "opacity-0 group-",
  !sidebarOpen &&"left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
  )} />
  
  <item.icon className={cn(
-"shrink-0 transition-all duration-200",
+"shrink-0",
  sidebarOpen ?"h-4 w-4" :"h-5 w-5",
 "group- group-"
  )} />
  
  <span className={cn(
-"truncate transition-opacity duration-150 whitespace-nowrap overflow-hidden",
+"truncate whitespace-nowrap overflow-hidden",
  sidebarOpen ?"opacity-100 w-auto delay-75" :"opacity-0 w-0"
  )}>
  {item.label}
@@ -331,7 +331,7 @@ export default function Rehber360Layout() {
  </NavLink>
  </TooltipTrigger>
  {!sidebarOpen && (
- <TooltipContent side="right" className="bg-sidebar border-sidebar-border shadow-lg">
+ <TooltipContent side="right" className="bg-sidebar border-sidebar-border">
  <p className="text-sidebar-foreground text-xs font-medium">{item.label}</p>
  </TooltipContent>
  )}
@@ -342,7 +342,7 @@ export default function Rehber360Layout() {
  </ScrollArea>
 
  {/* Footer section */}
- <div className="relative border-t border-sidebar-border/50 px-3 py-4 backdrop-blur-sm bg-sidebar/80">
+ <div className="relative border-t border-sidebar-border/50 px-3 py-4 bg-sidebar/80">
  <AIStatusIndicator collapsed={!sidebarOpen} />
  </div>
  </aside>
@@ -350,19 +350,19 @@ export default function Rehber360Layout() {
 
  {/* Mobile Menu */}
  {isMobile && mobileMenuOpen && (
- <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl">
+ <div className="fixed inset-0 z-50 bg-background/95">
  {/* Mobile overlay with gradient */}
  <div className="absolute inset-0 bg-gradient-to-br from-sidebar via-sidebar/90 to-sidebar-background" />
  
  <div className="relative flex h-full flex-col">
  {/* Mobile header */}
- <div className="relative flex items-center justify-between border-b border-sidebar-border/50 px-4 py-3 backdrop-blur-sm bg-sidebar/80">
+ <div className="relative flex items-center justify-between border-b border-sidebar-border/50 px-4 py-3 bg-sidebar/80">
  <AppLogo />
  <Button 
  variant="ghost" 
  size="icon" 
  onClick={() => setMobileMenuOpen(false)}
- className=" transition-all duration-200 active:scale-95"
+ className=""
  >
  <X className="h-4 w-4" />
  </Button>
@@ -382,26 +382,26 @@ export default function Rehber360Layout() {
  >
  {({ isActive }) => (
  <div className={cn(
-"group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
+"group flex items-center gap-3 px-3 py-2.5 rounded-lg",
 "",
 "text-xs font-medium text-sidebar-foreground/70",
 "relative",
- isActive &&"bg-sidebar-accent text-sidebar-accent-foreground shadow-sm",
-"animate-slide-in-right"
+ isActive &&"bg-sidebar-accent text-sidebar-accent-foreground",
+""
  )}>
  {/* Active indicator */}
  <div className={cn(
 "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full",
-"bg-gradient-to-b from-primary to-chart-2 transition-all duration-200",
+"bg-gradient-to-b from-primary to-chart-2",
  isActive ?"opacity-100" :"opacity-0 group-"
  )} />
  
  <item.icon className={cn(
-"h-4 w-4 shrink-0 transition-all duration-200",
+"h-4 w-4 shrink-0",
 "group- group-"
  )} />
  
- <span className="truncate transition-all duration-200 whitespace-nowrap">
+ <span className="truncate whitespace-nowrap">
  {item.label}
  </span>
  </div>
@@ -412,7 +412,7 @@ export default function Rehber360Layout() {
  </ScrollArea>
  
  {/* Mobile footer */}
- <div className="relative border-t border-sidebar-border/50 p-4 backdrop-blur-sm bg-sidebar/80">
+ <div className="relative border-t border-sidebar-border/50 p-4 bg-sidebar/80">
  <AIStatusIndicator />
  </div>
  </div>
@@ -421,13 +421,13 @@ export default function Rehber360Layout() {
 
  {/* Main Content */}
  <div className="flex flex-1 flex-col overflow-hidden">
- <header className="sticky top-0 z-40 border-b border-border/30 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
+ <header className="sticky top-0 z-40 border-b border-border/30 bg-background/95 supports-[backdrop-filter]:bg-background/70">
  <div className="flex h-10 items-center gap-2 px-3 md:px-5">
  {isMobile && (
  <Button 
  variant="ghost" 
  size="icon" 
- className="shrink-0 h-7 w-7 transition-all duration-200" 
+ className="shrink-0 h-7 w-7" 
  onClick={() => setMobileMenuOpen(true)}
  >
  <Menu className="h-3.5 w-3.5" />
@@ -439,7 +439,7 @@ export default function Rehber360Layout() {
  <Button
  variant="ghost"
  size="icon"
- className="h-7 w-7 transition-all duration-200"
+ className="h-7 w-7"
  onClick={() => {
  setSearchOpen(true);
  setTimeout(() => {
@@ -450,7 +450,7 @@ export default function Rehber360Layout() {
  <Search className="h-3.5 w-3.5" />
  </Button>
  ) : (
- <div className="relative w-[260px] animate-in fade-in slide-in-from-right-2 duration-200">
+ <div className="relative w-[260px] fade-in slide-in-from-right-2">
  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/60" />
  <Input
  id="header-search-input"
@@ -466,7 +466,7 @@ export default function Rehber360Layout() {
  }}
  />
  {searchQuery && searchQuery.length >= 2 && searchResults && (
- <Card className="absolute top-9 w-full max-h-[380px] overflow-hidden shadow-xl border-border/30 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+ <Card className="absolute top-9 w-full max-h-[380px] overflow-hidden border-border/30 z-50 fade-in slide-in-from-top-2">
  <ScrollArea className="h-full max-h-[400px]">
  {searchResults.students.length > 0 && (
  <div className="p-2">
@@ -579,7 +579,7 @@ export default function Rehber360Layout() {
  <Button
  variant="ghost"
  size="icon"
- className="h-7 w-7 transition-all duration-200"
+ className="h-7 w-7"
  onClick={() =>
  setDark((v) => {
  const next = !v;
@@ -593,7 +593,7 @@ export default function Rehber360Layout() {
 
  <DropdownMenu>
  <DropdownMenuTrigger asChild>
- <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 transition-all duration-200">
+ <Button variant="ghost" size="icon" className="rounded-full h-7 w-7">
  <Avatar className="h-6 w-6">
  <AvatarFallback className="text-[10px] font-semibold">
  {initials}
@@ -632,7 +632,7 @@ export default function Rehber360Layout() {
 
  <main className="flex-1 overflow-auto bg-background">
  <div className={cn(
-"w-full py-3 md:py-3 mx-auto transition-all duration-300",
+"w-full py-3 md:py-3 mx-auto",
 "px-2 md:px-3"
  )}>
  <Outlet />

@@ -123,7 +123,7 @@ export default function SurveyAIAnalysis({ distributionId }: SurveyAIAnalysisPro
  <Button onClick={handleAnalyze} disabled={loading} className="w-full">
  {loading ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  {analysisMode === 'standard' ? 'Analiz Ediliyor...' : 'Karşılaştırılıyor...'}
  </>
  ) : (

@@ -109,7 +109,7 @@ export function SubjectHeatmapWidget({ studentId, examTypeId, studentName }: Sub
  .map((subject: any) => (
  <div
  key={subject.subject_id}
- className="relative overflow-hidden rounded-lg border p-3 transition-shadow"
+ className="relative overflow-hidden rounded-lg border p-3"
  >
  <div
  className={`absolute top-0 left-0 w-1 h-full ${getHeatmapColor(subject.color_intensity)}`}

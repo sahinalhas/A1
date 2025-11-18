@@ -50,9 +50,9 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
  variant={variant}
  size={size}
  className={cn(
-"relative overflow-hidden transition-all duration-200",
- glow &&"shadow-lg",
- pulse && !disabled && !loading &&"animate-pulse",
+"relative overflow-hidden",
+ glow &&"",
+ pulse && !disabled && !loading &&"",
  className
  )}
  disabled={disabled || loading}
@@ -60,12 +60,12 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
  >
  {ripple && !disabled && !loading && (
  <span className="absolute inset-0 overflow-hidden rounded-md">
- <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group- transition-transform duration-1000" />
+ <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-" />
  </span>
  )}
 
  {loading && (
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  )}
 
  {!loading && leftIcon && (
@@ -97,7 +97,7 @@ export const IconButton = forwardRef<
  aria-label={label}
  {...props}
  >
- <span className="transition-transform duration-200 group-">
+ <span className=" group-">
  {icon}
  </span>
  </AnimatedButton>
@@ -123,9 +123,9 @@ export const FloatingActionButton = forwardRef<
  ref={ref}
  size="lg"
  className={cn(
-"rounded-full h-14 w-14 shadow-2xl",
+"rounded-full h-14 w-14",
 "bg-gradient-to-br from-primary to-primary/80",
-" transition-shadow duration-300",
+"",
  className
  )}
  {...props}
@@ -147,8 +147,8 @@ export const GradientButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
 "relative bg-gradient-to-r from-primary via-primary to-chart-2",
 "",
 "text-primary-foreground border-0",
-"shadow-lg",
-"transition-all duration-300",
+"",
+"",
  className
  )}
  glow={glow}
@@ -177,11 +177,11 @@ export const OutlineAnimatedButton = forwardRef<
  className={cn(
 "relative group overflow-hidden",
 "before:absolute before:inset-0",
-"before:bg-primary before:scale-x-0 before:origin-left",
-"before:transition-transform before:duration-300",
+"before:bg-primary before: before:origin-left",
+"before: before:",
 "",
 "",
-"transition-colors duration-300",
+"",
  className
  )}
  {...props}

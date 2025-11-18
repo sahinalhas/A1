@@ -139,7 +139,7 @@ export default function AnketlerSection({ studentId, onUpdate }: AnketlerSection
  return (
  <div
  key={response.id}
- className="flex items-center justify-between rounded-lg border p-4 transition-colors"
+ className="flex items-center justify-between rounded-lg border p-4"
  >
  <div className="flex-1">
  <div className="flex items-center gap-2 mb-1">

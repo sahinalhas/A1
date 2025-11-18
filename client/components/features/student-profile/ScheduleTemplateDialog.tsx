@@ -109,7 +109,7 @@ export default function ScheduleTemplateDialog({
  {templates.map((template) => (
  <div
  key={template.id}
- className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+ className={`p-4 rounded-lg border-2 cursor-pointer ${
  selectedTemplate === template.id
  ?"border-primary bg-primary/5"
  :"border-border"

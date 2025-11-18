@@ -45,7 +45,7 @@ export interface ReportsOverview {
 export interface CacheStats {
  total: number;
  expired: number;
- active: number;
+ number;
  byType: Array<{ cache_type: string; count: number }>;
 }
 

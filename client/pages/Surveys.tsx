@@ -118,7 +118,7 @@ export default function Surveys() {
  return (
  <div className="flex items-center justify-center min-h-[60vh]">
  <div className="text-center space-y-4">
- <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+ <div className=" rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
  <p className="text-muted-foreground">Anketler yükleniyor...</p>
  </div>
  </div>
@@ -182,7 +182,7 @@ export default function Surveys() {
  <TabsContent value="ai-analysis" className="space-y-4">
  {distributions.length > 0 ? (
  <div className="space-y-4">
- <Card className="border-muted shadow-sm">
+ <Card className="border-muted">
  <CardHeader>
  <CardTitle>Dağıtım Seçin</CardTitle>
  <CardDescription>AI analizi için bir anket dağıtımı seçin</CardDescription>
@@ -193,7 +193,7 @@ export default function Surveys() {
  <Button
  key={dist.id}
  variant="outline"
- className="justify-start h-auto p-4 transition-all"
+ className="justify-start h-auto p-4"
  onClick={() => setSelectedDistributionForAI(dist)}
  >
  <div className="text-left">
@@ -213,7 +213,7 @@ export default function Surveys() {
  )}
  </div>
  ) : (
- <Card className="border-muted shadow-sm">
+ <Card className="border-muted">
  <CardContent className="py-16 text-center">
  <ClipboardList className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
  <p className="text-muted-foreground">Henüz anket dağıtımı bulunmuyor</p>

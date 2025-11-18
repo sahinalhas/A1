@@ -81,12 +81,12 @@ export default function NewSessionDialog({
 
  return (
  <Dialog open={open} onOpenChange={onOpenChange}>
- <DialogContent hideCloseButton className="max-w-3xl max-h-[90vh] overflow-hidden p-0 gap-0 border-0 bg-white dark:bg-slate-950 shadow-2xl">
+ <DialogContent hideCloseButton className="max-w-3xl max-h-[90vh] overflow-hidden p-0 gap-0 border-0 bg-white dark:bg-slate-950">
  {/* Modern Header */}
  <div className="relative px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
  <button
  onClick={handleClose}
- className="absolute right-4 top-4 rounded-lg p-2 text-slate-400 dark: transition-colors"
+ className="absolute right-4 top-4 rounded-lg p-2 text-slate-400 dark:"
  aria-label="Kapat"
  >
  <X className="h-4 w-4" />
@@ -113,14 +113,14 @@ export default function NewSessionDialog({
  <TabsList className="grid w-full grid-cols-2 h-11 bg-slate-50 dark:bg-slate-900 p-1 rounded-lg">
  <TabsTrigger 
  value="individual"
- className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm rounded-md text-sm font-medium transition-all"
+ className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]: rounded-md text-sm font-medium"
  >
  <User className="h-4 w-4 mr-2" />
  Bireysel
  </TabsTrigger>
  <TabsTrigger 
  value="group"
- className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm rounded-md text-sm font-medium transition-all"
+ className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]: rounded-md text-sm font-medium"
  >
  <Users className="h-4 w-4 mr-2" />
  Grup

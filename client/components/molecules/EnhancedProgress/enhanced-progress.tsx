@@ -120,7 +120,7 @@ export function CircularProgress({
  strokeLinecap="round"
  strokeDasharray={circumference}
  strokeDashoffset={offset}
- className={cn("transition-all duration-300", variantColors[variant])}
+ className={cn("", variantColors[variant])}
  initial={{ strokeDashoffset: circumference }}
  animate={{ strokeDashoffset: offset }}
  transition={{ duration: 1, ease:"easeInOut" }}
@@ -162,9 +162,9 @@ export function StepProgress({ steps, currentStep, className }: StepProgressProp
  animate={{ scale: 1, opacity: 1 }}
  transition={{ delay: index * 0.1 }}
  className={cn(
-"w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300",
+"w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm",
  isCompleted &&
-"bg-primary text-primary-foreground shadow-lg",
+"bg-primary text-primary-foreground",
  isCurrent &&
 "bg-primary/20 text-primary border-2 border-primary ring-4 ring-primary/20",
  isUpcoming &&"bg-muted text-muted-foreground"

@@ -32,7 +32,7 @@ export function UnifiedAnalysisTab({
 
  return (
  <div className="space-y-6">
- <Card className="border-primary/20 shadow-sm">
+ <Card className="border-primary/20">
  <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
  <CardTitle className="flex items-center gap-2">
  <BarChart3 className="h-5 w-5 text-primary" />

@@ -110,7 +110,7 @@ export default function Login() {
  transition={{ duration: 0.5 }}
  className="w-full max-w-md relative z-10"
  >
- <Card className="shadow-2xl border-2 backdrop-blur-sm bg-white/95 dark:bg-gray-900/95">
+ <Card className=" border-2 bg-white/95 dark:bg-gray-900/95">
  <CardHeader className="space-y-1 text-center pb-8">
  <motion.div 
  className="flex justify-center mb-6"
@@ -124,7 +124,7 @@ export default function Login() {
  }}
  >
  <div className="relative">
- <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-xl">
+ <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
  <GraduationCap className="h-10 w-10 text-white" />
  </div>
  <motion.div
@@ -182,7 +182,7 @@ export default function Login() {
  <Label htmlFor="password">Şifre</Label>
  <Link 
  to="/forgot-password" 
- className="text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-all"
+ className="text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
  >
  Şifremi Unuttum
  </Link>
@@ -202,7 +202,7 @@ export default function Login() {
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded p-1"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded p-1"
  aria-label={showPassword ?"Şifreyi gizle" :"Şifreyi göster"}
  >
  {showPassword ? (
@@ -240,10 +240,10 @@ export default function Login() {
 
  <Button 
  type="submit" 
- className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-lg transition-all duration-200 transform" 
+ className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold transform" 
  disabled={isLoading}
  >
- {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+ {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
  Giriş Yap
  </Button>
  </form>
@@ -262,11 +262,11 @@ export default function Login() {
  <Button
  type="button"
  variant="outline"
- className="w-full h-11 border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark: text-amber-900 dark:text-amber-100 font-medium transition-all duration-200"
+ className="w-full h-11 border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark: text-amber-900 dark:text-amber-100 font-medium"
  onClick={handleQuickLogin}
  disabled={isLoading}
  >
- {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+ {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
  🔑 Admin Hızlı Giriş
  </Button>
 
@@ -284,12 +284,12 @@ export default function Login() {
  <Button
  type="button"
  variant="outline"
- className="w-full h-11 border-2 transition-all duration-200 group"
+ className="w-full h-11 border-2 group"
  disabled={isLoading}
  asChild
  >
  <Link to="/register">
- <UserPlus className="mr-2 h-4 w-4 group- transition-transform" />
+ <UserPlus className="mr-2 h-4 w-4 group-" />
  Yeni Hesap Oluştur
  </Link>
  </Button>

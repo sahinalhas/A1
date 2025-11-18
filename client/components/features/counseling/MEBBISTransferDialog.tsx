@@ -110,7 +110,7 @@ export function MEBBISTransferDialog({
 
  {transferState.status === 'waiting_qr' && (
  <Alert className="bg-blue-50 border-blue-200">
- <Loader2 className="h-4 w-4 animate-spin text-blue-600 flex-shrink-0" />
+ <Loader2 className="h-4 w-4 text-blue-600 flex-shrink-0" />
  <AlertDescription>
  <div className="space-y-2 text-xs sm:text-sm">
  <p className="font-medium text-blue-900">Tarayıcı penceresinde QR kodu okutun</p>

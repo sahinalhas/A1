@@ -351,17 +351,17 @@ export default function EnhancedCompleteSessionDialog({
  <Form {...form}>
  <form onSubmit={form.handleSubmit(handleSubmit, handleFormSubmit)} className="space-y-8">
  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
- <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm rounded-xl gap-1 border border-slate-200/50 dark:border-slate-700/50">
+ <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-white/40 dark:bg-slate-900/40 rounded-xl gap-1 border border-slate-200/50 dark:border-slate-700/50">
  <TabsTrigger 
  value="summary" 
- className="data-[state=active]:bg-violet-100/80 dark:data-[state=active]:bg-violet-900/40 data-[state=active]:text-violet-700 dark:data-[state=active]:text-violet-300 py-2.5 rounded-lg text-sm font-medium transition-all"
+ className="data-[state=active]:bg-violet-100/80 dark:data-[state=active]:bg-violet-900/40 data-[state=active]:text-violet-700 dark:data-[state=active]:text-violet-300 py-2.5 rounded-lg text-sm font-medium"
  >
  <FileText className="h-4 w-4 mr-1.5" />
  Özet & Takip
  </TabsTrigger>
  <TabsTrigger 
  value="assessment"
- className="data-[state=active]:bg-emerald-100/80 dark:data-[state=active]:bg-emerald-900/40 data-[state=active]:text-emerald-700 dark:data-[state=active]:text-emerald-300 py-2.5 rounded-lg text-sm font-medium transition-all"
+ className="data-[state=active]:bg-emerald-100/80 dark:data-[state=active]:bg-emerald-900/40 data-[state=active]:text-emerald-700 dark:data-[state=active]:text-emerald-300 py-2.5 rounded-lg text-sm font-medium"
  >
  <ClipboardCheck className="h-4 w-4 mr-1.5" />
  Değerlendirme
@@ -369,7 +369,7 @@ export default function EnhancedCompleteSessionDialog({
  </TabsList>
 
  <TabsContent value="summary" className="space-y-3 mt-5">
- <Card className="border-slate-200/80 dark:border-slate-700/50 shadow-sm">
+ <Card className="border-slate-200/80 dark:border-slate-700/50">
  <CardContent className="p-5 space-y-4">
  {/* Başlangıç Bilgileri - Grid */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -438,7 +438,7 @@ export default function EnhancedCompleteSessionDialog({
  className="gap-1.5 h-7 text-xs px-2.5"
  >
  {isAnalyzing ? (
- <Loader2 className="h-3 w-3 animate-spin" />
+ <Loader2 className="h-3 w-3" />
  ) : (
  <Sparkles className="h-3 w-3" />
  )}
@@ -483,7 +483,7 @@ export default function EnhancedCompleteSessionDialog({
 
  {/* Takip Görüşmesi Detayları - Inline */}
  {followUpNeeded && (
- <div className="space-y-3 rounded-lg border border-amber-300/60 dark:border-amber-700/40 bg-amber-50/40 dark:bg-amber-950/20 p-3.5 animate-in fade-in-50 slide-in-from-top-1 duration-150">
+ <div className="space-y-3 rounded-lg border border-amber-300/60 dark:border-amber-700/40 bg-amber-50/40 dark:bg-amber-950/20 p-3.5 fade-in-50 slide-in-from-top-1">
  <div className="flex items-center gap-2">
  <CalendarIcon className="h-4 w-4 text-amber-600 dark:text-amber-500" />
  <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">
@@ -612,7 +612,7 @@ export default function EnhancedCompleteSessionDialog({
  </TabsContent>
 
  <TabsContent value="assessment" className="space-y-3 mt-5">
- <Card className="border-slate-200/80 dark:border-slate-700/50 shadow-sm">
+ <Card className="border-slate-200/80 dark:border-slate-700/50">
  <CardContent className="p-5">
  <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
  <div className="flex items-center gap-2">
@@ -797,18 +797,18 @@ export default function EnhancedCompleteSessionDialog({
  variant="outline" 
  onClick={() => onOpenChange(false)}
  disabled={isPending}
- className="h-11 px-5 rounded-xl border font-medium transition-all dark:"
+ className="h-11 px-5 rounded-xl border font-medium dark:"
  >
  İptal
  </Button>
  <Button 
  type="submit" 
  disabled={isPending}
- className="h-11 px-6 rounded-xl font-medium bg-violet-500/90 text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed min-w-[180px]"
+ className="h-11 px-6 rounded-xl font-medium bg-violet-500/90 text-white disabled:opacity-50 disabled:cursor-not-allowed min-w-[180px]"
  >
  {isPending ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  Kaydediliyor...
  </>
  ) : (

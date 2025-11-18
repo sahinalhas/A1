@@ -62,7 +62,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
 
  if (isLoading) {
  return (
- <div className="space-y-6 animate-in fade-in duration-300">
+ <div className="space-y-6 fade-in">
  <div className="flex items-center justify-between">
  <div className="space-y-2">
  <Skeleton className="h-8 w-48" />
@@ -112,7 +112,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
  };
 
  return (
- <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+ <div className="space-y-6 fade-in slide-in-from-bottom-4">
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-3xl font-bold flex items-center gap-3">
@@ -128,7 +128,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
- <Card className="border-2 transition-shadow">
+ <Card className="border-2">
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
  <FileText className="h-4 w-4 text-blue-600" />
@@ -148,7 +148,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
  </CardContent>
  </Card>
 
- <Card className="border-2 transition-shadow">
+ <Card className="border-2">
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
  <Users className="h-4 w-4 text-purple-600" />
@@ -165,7 +165,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
  </CardContent>
  </Card>
 
- <Card className="border-2 transition-shadow">
+ <Card className="border-2">
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
  <Target className="h-4 w-4 text-green-600" />
@@ -183,7 +183,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
  </CardContent>
  </Card>
 
- <Card className="border-2 transition-shadow">
+ <Card className="border-2">
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
  <Award className="h-4 w-4 text-amber-600" />
@@ -217,7 +217,7 @@ export function DashboardOverviewTab({ examTypes, onNavigateToTab, onCreateSessi
  recent_sessions.map(session => (
  <div
  key={session.session_id}
- className="flex items-center justify-between p-3 border rounded-lg transition-colors"
+ className="flex items-center justify-between p-3 border rounded-lg"
  >
  <div className="flex-1">
  <div className="font-medium text-sm">{session.session_name}</div>

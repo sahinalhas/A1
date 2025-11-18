@@ -49,7 +49,7 @@ export function AttendanceHeatmap({ data, title = 'Devam Durumu Haritası' }: At
  <div
  key={dayIndex}
  className={cn(
- 'w-8 h-8 rounded flex items-center justify-center transition-all 
+ 'w-8 h-8 rounded flex items-center justify-center 
  getColor(day.status)
  )}
  title={`${new Date(day.date).toLocaleDateString('tr-TR')} - ${getLabel(day.status)}`}

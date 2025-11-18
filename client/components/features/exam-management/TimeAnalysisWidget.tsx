@@ -31,7 +31,7 @@ export function TimeAnalysisWidget({ studentId, examTypeId, studentName }: TimeA
  <CardDescription>Yükleniyor...</CardDescription>
  </CardHeader>
  <CardContent>
- <div className="h-64 bg-muted animate-pulse rounded" />
+ <div className="h-64 bg-muted rounded" />
  </CardContent>
  </Card>
  );

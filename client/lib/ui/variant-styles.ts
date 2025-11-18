@@ -32,9 +32,9 @@ export const VARIANT_COLORS = {
 } as const;
 
 export const COMMON_TRANSITIONS = {
- default: 'transition-all duration-150',
- colors: 'transition-colors',
- transform: 'transition-transform duration-200',
+ default: ' 
+ colors: '
+ transform: ' 
 } as const;
 
 export const COMMON_FOCUS_STYLES = 

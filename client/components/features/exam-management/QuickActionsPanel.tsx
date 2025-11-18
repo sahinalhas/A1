@@ -83,7 +83,7 @@ export function QuickActionsPanel({ examTypes, onNavigateToTab, onCreateSession 
 
  return (
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <Card className="border-2 border-primary/20 shadow-md transition-shadow">
+ <Card className="border-2 border-primary/20">
  <CardHeader className="bg-gradient-to-br from-primary/10 to-primary/5 border-b">
  <CardTitle className="flex items-center gap-2 text-lg">
  <FileDown className="h-5 w-5 text-primary" />
@@ -153,7 +153,7 @@ export function QuickActionsPanel({ examTypes, onNavigateToTab, onCreateSession 
  >
  {downloadMutation.isPending ? (
  <>
- <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+ <Loader2 className="h-4 w-4 mr-2" />
  İndiriliyor...
  </>
  ) : (
@@ -166,7 +166,7 @@ export function QuickActionsPanel({ examTypes, onNavigateToTab, onCreateSession 
  </CardContent>
  </Card>
 
- <Card className="border-2 border-accent/20 shadow-md">
+ <Card className="border-2 border-accent/20">
  <CardHeader className="bg-gradient-to-br from-accent/10 to-accent/5 border-b">
  <CardTitle className="flex items-center gap-2 text-lg">
  <Zap className="h-5 w-5 text-accent-foreground" />

@@ -86,7 +86,7 @@ export function AlertsWidget({ studentId, showAll = false }: AlertsWidgetProps) 
  <CardContent>
  <div className="space-y-2">
  {[...Array(3)].map((_, i) => (
- <div key={i} className="h-16 bg-muted animate-pulse rounded" />
+ <div key={i} className="h-16 bg-muted rounded" />
  ))}
  </div>
  </CardContent>

@@ -40,7 +40,7 @@ export default function SessionCard({ session, onComplete, onExtend, extendPendi
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -20 }}
  >
- <Card className=" transition-shadow">
+ <Card className="">
  <CardHeader>
  <div className="flex items-start justify-between">
  <div className="space-y-1">
@@ -108,7 +108,7 @@ export default function SessionCard({ session, onComplete, onExtend, extendPendi
  className="gap-2"
  >
  {extendPending ? (
- <Loader2 className="h-4 w-4 animate-spin" />
+ <Loader2 className="h-4 w-4" />
  ) : (
  <Plus className="h-4 w-4" />
  )}

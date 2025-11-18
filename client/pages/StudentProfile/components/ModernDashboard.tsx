@@ -66,7 +66,7 @@ const MetricCard = ({ title, score, icon: Icon, color, bgGradient, description, 
  return (
  <Card 
  className={cn(
-"relative overflow-hidden transition-all duration-300",
+"relative overflow-hidden",
  onClick &&"cursor-pointer"
  )}
  onClick={onClick}
@@ -148,7 +148,7 @@ export function ModernDashboard({
  </div>
  </div>
  
- <Card className="relative overflow-hidden border border-border/50 shadow-md">
+ <Card className="relative overflow-hidden border border-border/50">
  <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl -z-10"></div>
  
  <CardContent className="p-6">
@@ -246,7 +246,7 @@ export function ModernDashboard({
  {[1, 2, 3, 4].map((i) => (
  <Card key={i} className="border-2">
  <CardContent className="p-6">
- <div className="animate-pulse space-y-4">
+ <div className=" space-y-4">
  <div className="h-16 w-16 bg-muted rounded-2xl"></div>
  <div className="h-4 bg-muted rounded w-3/4"></div>
  <div className="h-12 bg-muted rounded w-1/2"></div>

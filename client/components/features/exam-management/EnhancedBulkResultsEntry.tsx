@@ -523,7 +523,7 @@ export function EnhancedBulkResultsEntry({
  return (
  <tr
  key={student.id}
- className={`${studentIndex % 2 === 0 ? 'bg-white' : 'bg-muted/20'} transition-colors`}
+ className={`${studentIndex % 2 === 0 ? 'bg-white' : 'bg-muted/20'} 
  >
  <td className="p-2 font-medium sticky left-0 bg-inherit border-r">
  <div className="flex flex-col">
@@ -564,7 +564,7 @@ export function EnhancedBulkResultsEntry({
  onKeyDown={(e) =>
  handleKeyDown(e, studentIndex, subjectIndex, 'correct')
  }
- className={`text-center h-9 border-0 focus:ring-2 transition-all ${
+ className={`text-center h-9 border-0 focus:ring-2 ${
  correctError ? 'ring-2 ring-red-500' : 'focus:ring-primary'
  }`}
  placeholder="0"
@@ -596,7 +596,7 @@ export function EnhancedBulkResultsEntry({
  onKeyDown={(e) =>
  handleKeyDown(e, studentIndex, subjectIndex, 'wrong')
  }
- className={`text-center h-9 border-0 focus:ring-2 transition-all ${
+ className={`text-center h-9 border-0 focus:ring-2 ${
  wrongError ? 'ring-2 ring-red-500' : 'focus:ring-primary'
  }`}
  placeholder="0"
@@ -628,7 +628,7 @@ export function EnhancedBulkResultsEntry({
  onKeyDown={(e) =>
  handleKeyDown(e, studentIndex, subjectIndex, 'empty')
  }
- className={`text-center h-9 border-0 focus:ring-2 transition-all ${
+ className={`text-center h-9 border-0 focus:ring-2 ${
  emptyError ? 'ring-2 ring-red-500' : 'focus:ring-primary'
  }`}
  placeholder="0"
@@ -697,7 +697,7 @@ export function EnhancedBulkResultsEntry({
  >
  {isSaving ? (
  <>
- <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+ <Loader2 className="h-4 w-4 mr-2" />
  Kaydediliyor...
  </>
  ) : (

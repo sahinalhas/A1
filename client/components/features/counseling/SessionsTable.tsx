@@ -132,7 +132,7 @@ export default function SessionsTable({ sessions, onExport }: SessionsTableProps
  const tags = parseSessionTags(session.sessionTags);
 
  return (
- <tr key={session.id} className="border-b transition-colors">
+ <tr key={session.id} className="border-b">
  <td className="px-4 py-3 text-sm">
  {new Date(session.sessionDate).toLocaleDateString('tr-TR')}
  </td>

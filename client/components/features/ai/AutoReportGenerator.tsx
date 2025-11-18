@@ -182,7 +182,7 @@ export default function AutoReportGenerator({ studentId, studentName }: AutoRepo
  <Button onClick={generateReport} disabled={loading} className="w-full">
  {loading ? (
  <>
- <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+ <Loader2 className="mr-2 h-4 w-4" />
  Rapor Oluşturuluyor...
  </>
  ) : (

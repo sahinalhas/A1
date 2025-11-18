@@ -114,28 +114,28 @@ export default function Courses() {
  key={cat.id}
  onClick={() => setSelectedCategory(cat.id)}
  className={`
- group relative overflow-hidden rounded-2xl p-6 transition-all duration-300
+ group relative overflow-hidden rounded-2xl p-6 
  ${isSelected 
- ? 'bg-gradient-to-br ' + cat.gradient + ' text-white shadow-xl scale-105' 
- : 'bg-card border-2 border-border shadow-sm'
+ ? 'bg-gradient-to-br ' + cat.gradient + ' text-white'
+ : 'bg-card border-2 border-border'
  }
  `}
  >
  <div className="relative z-10 flex flex-col items-center gap-3">
  <div className={`
- p-3 rounded-xl transition-all duration-300
+ p-3 rounded-xl 
  ${isSelected 
- ? 'bg-white/20 backdrop-blur-sm' 
+ ? 'bg-white/20'
  : 'bg-primary/10'
  }
  `}>
  <Icon className={`
- h-7 w-7 transition-all duration-300
+ h-7 w-7 
  ${isSelected ? 'text-white' : cat.color}
  `} />
  </div>
  <span className={`
- text-base font-semibold transition-all duration-300
+ text-base font-semibold 
  ${isSelected ? 'text-white' : 'text-foreground'}
  `}>
  {cat.label}
@@ -150,8 +150,7 @@ export default function Courses() {
  <div className="space-y-6">
  <div className="flex items-center gap-4 pb-4 border-b">
  <div className={`
- p-2.5 rounded-xl bg-gradient-to-br ${selectedCategoryData?.gradient} 
- shadow-lg
+ p-2.5 rounded-xl bg-gradient-to-br ${selectedCategoryData?.gradient}
  `}>
  {selectedCategoryData && (
  <selectedCategoryData.icon className="h-6 w-6 text-white" />
@@ -242,7 +241,7 @@ function AddSubjectForm({
  <Button
  variant="outline"
  size="lg"
- className="w-full h-14 border-2 border-dashed border-primary/30 transition-all duration-300"
+ className="w-full h-14 border-2 border-dashed border-primary/30"
  onClick={() => setIsAdding(true)}
  >
  <Plus className="h-5 w-5 mr-2" />
@@ -349,12 +348,12 @@ function SubjectAccordion({
  };
 
  return (
- <div className="border-2 rounded-xl bg-card overflow-hidden shadow-sm transition-all duration-300">
+ <div className="border-2 rounded-xl bg-card overflow-hidden">
  <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/5 to-transparent">
  <div className="flex items-center gap-3 flex-1">
  <button
  onClick={onToggle}
- className="p-2 rounded-lg transition-colors"
+ className="p-2 rounded-lg"
  >
  {isExpanded ? (
  <ChevronDown className="h-5 w-5 text-primary" />
@@ -668,7 +667,7 @@ function TopicRow({
  }
 
  return (
- <div className="grid grid-cols-12 gap-2 px-3 py-2 rounded-md transition-all duration-200 group border border-transparent">
+ <div className="grid grid-cols-12 gap-2 px-3 py-2 rounded-md group border border-transparent">
  <div className="col-span-5 flex items-center text-sm font-medium truncate">{topic.name}</div>
  <div className="col-span-1 text-center flex items-center justify-center">
  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 text-xs font-medium">
@@ -693,7 +692,7 @@ function TopicRow({
  ? new Date(topic.deadline).toLocaleDateString("tr-TR", { day: '2-digit', month: '2-digit' })
  :"-"}
  </div>
- <div className="col-span-1 flex items-center justify-end gap-0.5 opacity-0 group- transition-opacity">
+ <div className="col-span-1 flex items-center justify-end gap-0.5 opacity-0 group-">
  <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)} className="h-7 w-7 p-0">
  <Pencil className="h-3.5 w-3.5" />
  </Button>

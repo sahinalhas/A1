@@ -288,7 +288,7 @@ export default function BackupSettingsTab({ form }: BackupSettingsTabProps) {
  disabled={isLoading}
  className="gap-2"
  >
- <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+ <RefreshCw className="h-4 w-4" />
  Yenile
  </Button>
  <Button
@@ -358,7 +358,7 @@ export default function BackupSettingsTab({ form }: BackupSettingsTabProps) {
 
  {isLoading ? (
  <div className="flex justify-center p-8">
- <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+ <div className=" h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
  </div>
  ) : backups.length === 0 ? (
  <div className="text-center p-8 text-muted-foreground border-2 border-dashed rounded-lg">

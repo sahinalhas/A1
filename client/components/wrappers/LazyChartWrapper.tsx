@@ -9,7 +9,7 @@ interface LazyChartWrapperProps {
 
 const ChartSkeleton = () => (
  <div className="flex items-center justify-center h-64 bg-muted/10 rounded-lg">
- <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+ <Loader2 className="h-6 w-6 text-muted-foreground" />
  </div>
 );
 

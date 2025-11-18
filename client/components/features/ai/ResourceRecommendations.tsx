@@ -52,7 +52,7 @@ export default function ResourceRecommendations() {
  return (
  <div className="space-y-2">
  {items.map((resource, idx) => (
- <Card key={idx} className=" transition-colors">
+ <Card key={idx} className="">
  <CardContent className="p-4">
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1">
@@ -91,7 +91,7 @@ export default function ResourceRecommendations() {
  return (
  <Card>
  <CardContent className="flex items-center justify-center py-12">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <Loader2 className="h-8 w-8 text-muted-foreground" />
  </CardContent>
  </Card>
  );

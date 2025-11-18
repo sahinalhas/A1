@@ -234,14 +234,14 @@ export default function SettingsPage() {
  </Tabs>
 
  {isDirty && (
- <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/95 to-transparent pb-4 pt-8 z-50 backdrop-blur-sm">
+ <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/95 to-transparent pb-4 pt-8 z-50">
  <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
- <div className="flex flex-col sm:flex-row items-center justify-between bg-card/95 backdrop-blur-md border-2 border-border/80 rounded-xl shadow-2xl p-3 sm:p-4 gap-3 sm:gap-4">
+ <div className="flex flex-col sm:flex-row items-center justify-between bg-card/95 border-2 border-border/80 rounded-xl p-3 sm:p-4 gap-3 sm:gap-4">
  <div className="flex items-center gap-3 w-full sm:w-auto">
  <div className="relative flex-shrink-0">
  <AlertCircle className="h-5 w-5 text-amber-500" />
  <span className="absolute -top-1 -right-1 flex h-3 w-3">
- <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+ <span className=" absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
  </span>
  </div>
@@ -257,18 +257,18 @@ export default function SettingsPage() {
  variant="outline"
  onClick={() => form.reset()}
  disabled={isSaving}
- className="flex-1 sm:flex-none min-w-[100px] transition-all duration-200"
+ className="flex-1 sm:flex-none min-w-[100px]"
  >
  İptal
  </Button>
  <Button
  onClick={form.handleSubmit(onSave as any)}
  disabled={isSaving}
- className="flex-1 sm:flex-none min-w-[140px] gap-2 bg-gradient-to-r from-primary to-primary/90 shadow-lg transition-all duration-200"
+ className="flex-1 sm:flex-none min-w-[140px] gap-2 bg-gradient-to-r from-primary to-primary/90"
  >
  {isSaving ? (
  <>
- <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+ <span className="h-4 w-4 rounded-full border-2 border-current border-t-transparent" />
  <span className="hidden sm:inline">Kaydediliyor...</span>
  </>
  ) : (

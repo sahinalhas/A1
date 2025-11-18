@@ -11,12 +11,12 @@ export default function FormProgress({ currentStep, totalSteps }: FormProgressPr
  {Math.round(progress)}%
  </span>
  </div>
- <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
+ <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
  <div
- className="h-full bg-gradient-to-r from-violet-500 to-purple-600 transition-all duration-700 ease-out rounded-full shadow-sm relative"
+ className="h-full bg-gradient-to-r from-violet-500 to-purple-600 ease-out rounded-full relative"
  style={{ width: `${progress}%` }}
  >
- <div className="absolute inset-0 bg-white/20 animate-pulse" />
+ <div className="absolute inset-0 bg-white/20" />
  </div>
  </div>
  </div>

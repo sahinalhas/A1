@@ -154,7 +154,7 @@ export function ModernStatisticsDashboard({
  return (
  <div className="space-y-4">
  {[1, 2, 3].map((i) => (
- <div key={i} className="h-32 bg-muted/30 rounded-lg animate-pulse" />
+ <div key={i} className="h-32 bg-muted/30 rounded-lg" />
  ))}
  </div>
  );
@@ -182,7 +182,7 @@ export function ModernStatisticsDashboard({
  <div className="space-y-6">
  {/* Top Summary Cards */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <Card className="relative overflow-hidden border-2 transition-shadow">
+ <Card className="relative overflow-hidden border-2">
  <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full -mr-10 -mt-10" />
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -201,7 +201,7 @@ export function ModernStatisticsDashboard({
  </CardContent>
  </Card>
 
- <Card className="relative overflow-hidden border-2 transition-shadow">
+ <Card className="relative overflow-hidden border-2">
  <div className="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-full -mr-10 -mt-10" />
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -223,7 +223,7 @@ export function ModernStatisticsDashboard({
  </CardContent>
  </Card>
 
- <Card className="relative overflow-hidden border-2 transition-shadow">
+ <Card className="relative overflow-hidden border-2">
  <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full -mr-10 -mt-10" />
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -242,7 +242,7 @@ export function ModernStatisticsDashboard({
  </CardContent>
  </Card>
 
- <Card className="relative overflow-hidden border-2 transition-shadow">
+ <Card className="relative overflow-hidden border-2">
  <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 rounded-full -mr-10 -mt-10" />
  <CardHeader className="pb-3">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -494,7 +494,7 @@ export function ModernStatisticsDashboard({
  return (
  <Card
  key={stat.subject_id}
- className="border-2 transition-all"
+ className="border-2"
  >
  <CardContent className="p-4">
  <div className="flex items-center justify-between mb-3">

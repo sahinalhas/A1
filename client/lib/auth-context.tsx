@@ -198,7 +198,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
  <div className="fixed inset-0 bg-background flex items-center justify-center">
  <div className="text-center space-y-4">
  <div className="text-2xl font-bold text-primary">Rehber360</div>
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+ <div className=" rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
  <p className="text-muted-foreground">Yükleniyor...</p>
  </div>
  </div>

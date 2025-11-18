@@ -282,7 +282,7 @@ export interface TimeSeriesData {
  date: string;
  count: number;
  completed: number;
- active: number;
+ number;
 }
 
 export interface TopicAnalysis {

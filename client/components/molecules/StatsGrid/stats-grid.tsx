@@ -58,12 +58,12 @@ export function SkeletonCard({ index = 0 }: SkeletonCardProps) {
  >
  <Card>
  <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
- <div className="h-4 w-24 bg-muted animate-pulse rounded" />
- <div className="h-8 w-8 bg-muted animate-pulse rounded-lg" />
+ <div className="h-4 w-24 bg-muted rounded" />
+ <div className="h-8 w-8 bg-muted rounded-lg" />
  </CardHeader>
  <CardContent>
- <div className="h-8 w-16 bg-muted animate-pulse rounded mb-2" />
- <div className="h-3 w-32 bg-muted animate-pulse rounded" />
+ <div className="h-8 w-16 bg-muted rounded mb-2" />
+ <div className="h-3 w-32 bg-muted rounded" />
  </CardContent>
  </Card>
  </motion.div>

@@ -90,7 +90,7 @@ export function ProfileCompletenessIndicator({ overall, sections, eksikAlanlar }
  <div className="relative">
  <Progress value={overall} className="h-2" />
  <div 
- className={`absolute top-0 left-0 h-2 rounded-full transition-all ${getProgressColor(overall)}`}
+ className={`absolute top-0 left-0 h-2 rounded-full ${getProgressColor(overall)}`}
  style={{ width: `${overall}%` }}
  />
  </div>
@@ -100,7 +100,7 @@ export function ProfileCompletenessIndicator({ overall, sections, eksikAlanlar }
  {profileSections.map((section) => (
  <div 
  key={section.name} 
- className="flex flex-col gap-1 p-2 rounded-lg bg-muted/30 transition-colors"
+ className="flex flex-col gap-1 p-2 rounded-lg bg-muted/30"
  >
  <div className="flex items-center justify-between">
  <span className="text-xs font-medium truncate" title={section.name}>

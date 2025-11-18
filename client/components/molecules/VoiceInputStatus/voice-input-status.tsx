@@ -70,7 +70,7 @@ export function VoiceInputStatus({
  variant={config.variant}
  className={cn('flex items-center gap-1.5 px-3 py-1', config.className)}
  >
- <Icon className={cn('h-3.5 w-3.5', status === 'processing' && 'animate-spin')} />
+ <Icon className={cn('h-3.5 w-3.5')} />
  <span>{config.text}</span>
  {confidence !== undefined && status === 'success' && confidence > 0 && (
  <span className="ml-1 text-xs opacity-75">

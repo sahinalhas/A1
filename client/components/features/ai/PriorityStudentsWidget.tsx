@@ -28,7 +28,7 @@ export default function PriorityStudentsWidget() {
  return (
  <Card>
  <CardContent className="flex items-center justify-center py-12">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <Loader2 className="h-8 w-8 text-muted-foreground" />
  </CardContent>
  </Card>
  );
@@ -59,7 +59,7 @@ export default function PriorityStudentsWidget() {
  disabled={isRefetching}
  className="gap-2"
  >
- <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
+ <RefreshCw className="h-4 w-4" />
  </Button>
  </div>
  </CardHeader>
@@ -92,7 +92,7 @@ export default function PriorityStudentsWidget() {
  </div>
  ) : (
  priorities.map((student: any) => (
- <Card key={student.studentId} className=" transition-colors">
+ <Card key={student.studentId} className="">
  <CardContent className="p-4">
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1 min-w-0">

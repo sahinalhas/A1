@@ -102,7 +102,7 @@ export default function SchoolDashboard() {
  if (statsLoading) {
  return (
  <div className="flex items-center justify-center h-screen">
- <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full" />
+ <div className=" h-12 w-12 border-4 border-primary border-t-transparent rounded-full" />
  </div>
  );
  }
@@ -180,7 +180,7 @@ export default function SchoolDashboard() {
  <TabsContent value="classes" className="space-y-4">
  {classLoading ? (
  <div className="flex justify-center p-12">
- <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+ <div className=" h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
  </div>
  ) : (
  <>
@@ -214,7 +214,7 @@ export default function SchoolDashboard() {
  
  {trendLoading ? (
  <div className="flex justify-center p-12">
- <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+ <div className=" h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
  </div>
  ) : (
  <>

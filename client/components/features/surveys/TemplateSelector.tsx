@@ -56,14 +56,14 @@ export default function TemplateSelector({ open, onOpenChange, templates, onSele
  transition={{ duration: 0.2 }}
  >
  <Card 
- className="group cursor-pointer transition-all duration-200 h-full"
+ className="group cursor-pointer h-full"
  onClick={() => onSelect(template)}
  >
  <CardContent className="p-6">
  <div className="flex flex-col h-full">
  <div className="flex items-start justify-between mb-4">
  <div className="flex-1">
- <h4 className="font-semibold text-lg mb-2 group- transition-colors">
+ <h4 className="font-semibold text-lg mb-2 group-">
  {template.title}
  </h4>
  {template.description && (
@@ -73,7 +73,7 @@ export default function TemplateSelector({ open, onOpenChange, templates, onSele
  )}
  </div>
  <div className="ml-4 flex-shrink-0">
- <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group- group- transition-colors">
+ <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group- group-">
  <FileText className="h-5 w-5" />
  </div>
  </div>
@@ -105,7 +105,7 @@ export default function TemplateSelector({ open, onOpenChange, templates, onSele
  <Button 
  variant="outline" 
  size="sm"
- className="w-full group- group- group- transition-all"
+ className="w-full group- group- group-"
  >
  Bu Şablonu Seç
  </Button>

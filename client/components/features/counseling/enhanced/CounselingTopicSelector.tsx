@@ -65,7 +65,7 @@ export default function CounselingTopicSelector({
  aria-expanded={open}
  disabled={disabled}
  className={cn(
-"w-full justify-between h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm border focus:border-purple-400 transition-all dark:",
+"w-full justify-between h-10 rounded-lg bg-white dark:bg-slate-900 border focus:border-purple-400 dark:",
  !value &&"text-slate-400"
  )}
  >

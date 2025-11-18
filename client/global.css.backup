@@ -7,10 +7,9 @@
 
 @layer base {
   /**
-   * ✨ Rehber360 - Minimal Design System
+   * ✨ Rehber360 - Elegant Design System
    * 
-   * A clean design system with harmonious colors and typography.
-   * All visual effects, animations, and transitions removed for minimal UI.
+   * A sophisticated design system with harmonious colors and typography.
    * 
    * === COLOR PALETTE ===
    * 
@@ -205,6 +204,10 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* Elegant Typography System */
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
@@ -273,6 +276,17 @@
     text-rendering: optimizeLegibility;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   body::before {
     content: "";
     position: fixed;
@@ -300,9 +314,10 @@
         hsl(var(--background)) 100%
       );
     z-index: -1;
+    animation: gradient-shift 20s ease infinite;
   }
 
-  /* Sidebar background */
+  /* Sidebar için gradient efektini kaldır */
   [data-sidebar="sidebar"] {
     position: relative;
     z-index: 1;
@@ -314,6 +329,17 @@
     inset: 0;
     background: hsl(var(--background));
     z-index: -1;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
   }
 
   /* Glass morphism utility */
@@ -328,6 +354,7 @@
     border: 1px solid hsl(var(--border));
     border-radius: calc(var(--radius) + 2px);
   }
+
 
   /* Modern card variant */
   .card-modern {
@@ -359,6 +386,16 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradient-flow 6s ease infinite;
+  }
+
+  @keyframes gradient-flow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
   }
 
   /* Premium gradient border */
@@ -386,7 +423,7 @@
     mask-composite: exclude;
   }
 
-  /* Shimmer effect for loading states - STATIC */
+  /* Shimmer effect for loading states */
   .shimmer-effect {
     background: linear-gradient(
       90deg,
@@ -395,6 +432,22 @@
       hsl(var(--muted) / 0.3) 100%
     );
     background-size: 200% 100%;
+    animation: shimmer-slide 2s infinite;
+  }
+
+  @keyframes shimmer-slide {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+
+  /* Smooth scroll behavior */
+  * {
+    scroll-behavior: smooth;
   }
 
   /* Elegant custom scrollbar */
@@ -424,6 +477,7 @@
     outline-offset: 2px;
     border-radius: 6px;
   }
+
 
   /* Improved focus states */
   button:focus-visible,
@@ -585,6 +639,10 @@
         0 2px 8px hsl(var(--foreground) / 0.03);
     }
 
+    .elevated-card:active {
+      transform: scale(0.98);
+    }
+
     /* Mobile-specific utilities */
     .card {
       @apply rounded-lg;
@@ -636,6 +694,29 @@
 
     .space-y-6 > * + * {
       margin-top: 1rem;
+    }
+  }
+
+  /* Touch-friendly interactions */
+  @media (hover: none) and (pointer: coarse) {
+    /* Add active states for touch */
+    button:active, 
+    [role="button"]:active,
+    .elevated-card:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+      transition: all 0.1s ease;
+    }
+
+    /* Improve link touch feedback */
+    a:active {
+      opacity: 0.7;
+    }
+
+    /* Better input focus on touch */
+    input:focus, textarea:focus, select:focus {
+      transform: scale(1.01);
+      transition: transform 0.2s ease;
     }
   }
 
@@ -704,6 +785,10 @@
       }
     }
 
+    .touch-feedback {
+      @apply active:opacity-80 active:scale-98 transition-all duration-100;
+    }
+
     /* Responsive text sizes */
     .text-responsive-sm {
       @apply text-sm md:text-base;
@@ -768,9 +853,9 @@
     }
   }
 
-  /* Advanced skeleton loading - STATIC */
+  /* Advanced skeleton loading with pulse */
   .skeleton {
-    @apply bg-muted/50 rounded-md;
+    @apply bg-muted/50 animate-pulse rounded-md;
     background: linear-gradient(
       90deg,
       hsl(var(--muted) / 0.4) 0%,
@@ -778,19 +863,131 @@
       hsl(var(--muted) / 0.4) 100%
     );
     background-size: 200% 100%;
+    animation: skeleton-wave 1.8s ease-in-out infinite;
   }
 
-  /* Minimal Button Style */
-  .btn-refined {
-    background: hsl(var(--card));
-    border: 1px solid hsl(var(--border) / 0.4);
-    border-radius: calc(var(--radius));
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: -0.008em;
+  @keyframes skeleton-wave {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Micro-interaction: Button ripple effect */
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ripple::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: hsl(var(--primary-foreground) / 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .btn-ripple:active::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Haptic-like feedback simulation */
+  @keyframes haptic-tap {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+  }
+
+  .haptic-feedback:active {
+    animation: haptic-tap 0.15s ease-out;
+  }
+
+  /* Enhanced focus ring with glow */
+  .focus-glow:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
     box-shadow: 
-      0 1px 2px hsl(var(--foreground) / 0.04),
+      0 0 0 4px hsl(var(--ring) / 0.2),
+      0 0 20px hsl(var(--ring) / 0.3);
+    transition: all 0.2s ease;
+  }
+
+  /* Elegant Card Enhancements */
+  .elegant-card {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--card) / 0.97) 100%
+    );
+    border: 1px solid hsl(var(--border) / 0.4);
+    border-radius: calc(var(--radius) + 4px);
+    box-shadow: 
+      0 1px 2px hsl(var(--foreground) / 0.02),
+      0 2px 8px hsl(var(--foreground) / 0.03),
+      0 8px 24px hsl(var(--foreground) / 0.02);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .elegant-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.05) 0%,
+      transparent 50%,
+      hsl(var(--chart-3) / 0.03) 100%
+    );
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .elegant-card:hover {
+    box-shadow: 
+      0 2px 4px hsl(var(--foreground) / 0.03),
+      0 4px 12px hsl(var(--foreground) / 0.04),
+      0 12px 32px hsl(var(--foreground) / 0.03);
+    transform: translateY(-2px);
+    border-color: hsl(var(--primary) / 0.2);
+  }
+
+  .elegant-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Refined Button Styles */
+  .btn-refined {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+      0 1px 2px hsl(var(--foreground) / 0.05),
+      0 0 0 1px hsl(var(--border) / 0.3);
+  }
+
+  .btn-refined:hover {
+    box-shadow: 
+      0 2px 4px hsl(var(--foreground) / 0.08),
+      0 4px 8px hsl(var(--foreground) / 0.05),
+      0 0 0 1px hsl(var(--primary) / 0.3);
+    transform: translateY(-1px);
+  }
+
+  .btn-refined:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 1px 2px hsl(var(--foreground) / 0.05),
       0 0 0 1px hsl(var(--border) / 0.3);
   }
 
@@ -798,6 +995,13 @@
   .input-minimal {
     border: 1px solid hsl(var(--border) / 0.3);
     background: hsl(var(--background) / 0.5);
+    backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+  }
+
+  .input-minimal:hover {
+    border-color: hsl(var(--border) / 0.5);
+    background: hsl(var(--background) / 0.7);
   }
 
   .input-minimal:focus {
@@ -817,6 +1021,11 @@
     border-radius: calc(var(--radius) - 2px);
     border: 1px solid currentColor;
     opacity: 0.9;
+    transition: opacity 0.2s ease;
+  }
+
+  .badge-elegant:hover {
+    opacity: 1;
   }
 
   /* Elegant Divider */
@@ -888,6 +1097,23 @@
   .space-elegant-lg { gap: 1.5rem; }
   .space-elegant-xl { gap: 2rem; }
 
+  /* Subtle Hover Effects */
+  .hover-lift {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  .hover-scale {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+
   /* Refined Shadow System */
   .shadow-elegant-sm {
     box-shadow: 
@@ -932,7 +1158,7 @@
     );
   }
 
-  /* Elegant Loading State - STATIC */
+  /* Elegant Loading State */
   .loading-elegant {
     background: linear-gradient(
       90deg,
@@ -941,7 +1167,17 @@
       hsl(var(--muted) / 0.2) 100%
     );
     background-size: 200% 100%;
+    animation: shimmer-elegant 2s ease-in-out infinite;
     border-radius: calc(var(--radius) + 2px);
+  }
+
+  @keyframes shimmer-elegant {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 
   /* Refined Icon Container */
@@ -953,6 +1189,13 @@
     border-radius: calc(var(--radius));
     background: hsl(var(--primary) / 0.08);
     border: 1px solid hsl(var(--primary) / 0.15);
+    transition: all 0.25s ease;
+  }
+
+  .icon-container-elegant:hover {
+    background: hsl(var(--primary) / 0.12);
+    border-color: hsl(var(--primary) / 0.25);
+    transform: translateY(-1px);
   }
 
   /* Minimal Table Style */
@@ -977,6 +1220,11 @@
   .table-elegant td {
     padding: 1rem;
     border-bottom: 1px solid hsl(var(--border) / 0.2);
+    transition: background-color 0.15s ease;
+  }
+
+  .table-elegant tbody tr:hover td {
+    background-color: hsl(var(--muted) / 0.3);
   }
 
   /* Clean Status Indicators */
@@ -1003,14 +1251,191 @@
     box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
   }
 
-  /* Interactive element states - STATIC */
+  /* Smooth content reveal */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Staggered animations */
+  .stagger-item:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-item:nth-child(2) { animation-delay: 0.1s; }
+  .stagger-item:nth-child(3) { animation-delay: 0.15s; }
+  .stagger-item:nth-child(4) { animation-delay: 0.2s; }
+  .stagger-item:nth-child(5) { animation-delay: 0.25s; }
+  .stagger-item:nth-child(6) { animation-delay: 0.3s; }
+
+  /* Performance: GPU acceleration */
+  .gpu-accelerated {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Loading spinner with smooth rotation */
+  @keyframes spin-smooth {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin-smooth {
+    animation: spin-smooth 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Card hover lift effect */
+  .card-lift {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .card-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 20px 40px hsl(var(--foreground) / 0.1),
+      0 10px 20px hsl(var(--foreground) / 0.08),
+      0 0 0 1px hsl(var(--primary) / 0.1);
+  }
+
+  /* Smooth page transitions */
+  .page-transition {
+    animation: page-fade-in 0.4s ease-out;
+  }
+
+  @keyframes page-fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Enhanced tooltip */
+  .tooltip-enhanced {
+    animation: tooltip-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes tooltip-pop-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.9) translateY(5px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  /* Content placeholder shimmer */
+  .content-placeholder {
+    background: linear-gradient(
+      110deg,
+      hsl(var(--muted) / 0.3) 8%,
+      hsl(var(--muted) / 0.5) 18%,
+      hsl(var(--muted) / 0.3) 33%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-loading 1.5s linear infinite;
+  }
+
+  @keyframes shimmer-loading {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Interactive element states */
   .interactive {
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Sidebar specific styles */
+  .interactive:hover {
+    transform: translateY(-2px);
+  }
+
+  .interactive:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Notification badge pulse */
+  @keyframes badge-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+
+  .badge-pulse {
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+
+  /* Success checkmark animation */
+  @keyframes check-mark {
+    0% {
+      stroke-dashoffset: 100;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .animate-check-mark {
+    stroke-dasharray: 100;
+    animation: check-mark 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  }
+
+  /* Enhanced sidebar animations */
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Sidebar specific enhancements */
   .sidebar-modern {
     background: linear-gradient(
       135deg,
@@ -1018,6 +1443,8 @@
       hsl(var(--sidebar-background) / 0.98) 50%,
       hsl(var(--sidebar-background)) 100%
     );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
   }
 
   .sidebar-modern::before {
@@ -1031,10 +1458,15 @@
       transparent 100%
     );
     opacity: 0;
+    transition: opacity 0.3s ease;
     pointer-events: none;
   }
 
-  /* Modern navigation item */
+  .sidebar-modern:hover::before {
+    opacity: 1;
+  }
+
+  /* Enhanced navigation item animations */
   .nav-item-modern {
     position: relative;
     overflow: hidden;
@@ -1053,7 +1485,12 @@
       hsl(var(--primary) / 0.1),
       transparent
     );
+    transition: left 0.6s ease;
     pointer-events: none;
+  }
+
+  .nav-item-modern:hover::before {
+    left: 100%;
   }
 
   /* Active state indicator */
@@ -1071,10 +1508,15 @@
     );
     border-radius: 0 4px 4px 0;
     opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-item-modern.active .nav-indicator,
+  .nav-item-modern:hover .nav-indicator {
+    opacity: 1;
   }
 
   .nav-item-modern.active .nav-indicator {
-    opacity: 1;
     width: 4px;
     height: 28px;
   }
@@ -1086,5 +1528,25 @@
       hsl(var(--sidebar-background) / 0.95) 0%,
       hsl(var(--sidebar-background) / 0.98) 100%
     );
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+  }
+
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton,
+    .btn-ripple::after,
+    .animate-fade-in-up,
+    .card-lift,
+    .page-transition,
+    .tooltip-enhanced,
+    .content-placeholder,
+    .badge-pulse,
+    .animate-check-mark,
+    .animate-slide-in-left,
+    .animate-slide-in-right {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 }

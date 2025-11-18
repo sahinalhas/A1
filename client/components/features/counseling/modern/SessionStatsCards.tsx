@@ -80,7 +80,7 @@ export default function SessionStatsCards({ stats, isLoading }: SessionStatsCard
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.5 }}
  >
- <Card className="relative overflow-hidden shadow-md transition-shadow h-full">
+ <Card className="relative overflow-hidden h-full">
  <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-purple-500 to-purple-600" />
  <CardHeader className="pb-2 relative">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
@@ -109,7 +109,7 @@ export default function SessionStatsCards({ stats, isLoading }: SessionStatsCard
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.6 }}
  >
- <Card className="relative overflow-hidden shadow-md transition-shadow h-full">
+ <Card className="relative overflow-hidden h-full">
  <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-green-500 to-green-600" />
  <CardHeader className="pb-2 relative">
  <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">

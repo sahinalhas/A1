@@ -154,7 +154,7 @@ export default function Register() {
  transition={{ duration: 0.5 }}
  className="w-full max-w-2xl relative z-10"
  >
- <Card className="shadow-2xl border-2 backdrop-blur-sm bg-white/95 dark:bg-gray-900/95">
+ <Card className=" border-2 bg-white/95 dark:bg-gray-900/95">
  <CardHeader className="space-y-1 text-center pb-8">
  <motion.div 
  className="flex justify-center mb-6"
@@ -168,7 +168,7 @@ export default function Register() {
  }}
  >
  <div className="relative">
- <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-xl">
+ <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
  <UserPlus className="h-10 w-10 text-white" />
  </div>
  <motion.div
@@ -266,7 +266,7 @@ export default function Register() {
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded p-1"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded p-1"
  aria-label={showPassword ?"Şifreyi gizle" :"Şifreyi göster"}
  >
  {showPassword ? (
@@ -299,7 +299,7 @@ export default function Register() {
  <button
  type="button"
  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
- className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded p-1"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded p-1"
  aria-label={showConfirmPassword ?"Şifre tekrarını gizle" :"Şifre tekrarını göster"}
  >
  {showConfirmPassword ? (
@@ -370,7 +370,7 @@ export default function Register() {
  className="w-full" 
  disabled={isLoading}
  >
- {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+ {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
  {isLoading ? 'Kaydediliyor...' : (
  <>
  <UserPlus className="mr-2 h-4 w-4" />

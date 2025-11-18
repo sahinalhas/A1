@@ -68,7 +68,7 @@ export default function UnifiedProfileCard({ studentId }: UnifiedProfileCardProp
  return (
  <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-white">
  <CardContent className="p-6">
- <div className="animate-pulse space-y-4">
+ <div className=" space-y-4">
  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
  </div>
@@ -109,7 +109,7 @@ export default function UnifiedProfileCard({ studentId }: UnifiedProfileCardProp
  onClick={handleRefresh}
  disabled={refreshing}
  >
- <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+ <RefreshCw className="h-4 w-4" />
  </Button>
  </div>
  <p className="text-xs text-gray-500">

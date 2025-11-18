@@ -145,7 +145,7 @@ export default function EnhancedSessionsTable({
  const SortButton = ({ field, label }: { field: SortField; label: string }) => (
  <button
  onClick={() => handleSort(field)}
- className="flex items-center gap-1 transition-colors"
+ className="flex items-center gap-1"
  >
  {label}
  {sortField === field && (
@@ -296,7 +296,7 @@ export default function EnhancedSessionsTable({
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  transition={{ delay: index * 0.02 }}
- className="border-b transition-colors cursor-pointer"
+ className="border-b cursor-pointer"
  onClick={() => onSelectSession(session)}
  >
  {columns.find(c => c.key === 'sessionNumber')?.visible && (

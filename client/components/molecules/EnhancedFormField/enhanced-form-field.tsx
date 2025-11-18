@@ -69,7 +69,7 @@ export const EnhancedFormField = forwardRef<
  <Input
  ref={ref}
  className={cn(
-"transition-all duration-200",
+"",
  leftIcon &&"pl-10",
  (rightIcon || loading || hasError || hasSuccess) &&"pr-10",
  hasError &&"border-destructive focus-visible:ring-destructive",
@@ -92,7 +92,7 @@ export const EnhancedFormField = forwardRef<
  exit={{ opacity: 0, scale: 0.8 }}
  className="absolute right-3 top-1/2 -translate-y-1/2"
  >
- <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+ <Loader2 className="h-4 w-4 text-muted-foreground" />
  </motion.div>
  )}
 
@@ -234,7 +234,7 @@ export const EnhancedTextareaField = forwardRef<
  <Textarea
  ref={ref}
  className={cn(
-"transition-all duration-200",
+"",
  hasError &&"border-destructive focus-visible:ring-destructive",
  hasSuccess &&"border-success focus-visible:ring-success",
  isOverLimit &&"border-destructive",

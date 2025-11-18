@@ -133,7 +133,7 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  return (
  <div className="flex items-center justify-center p-12">
  <div className="text-center">
- <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-2" />
+ <RefreshCw className="h-8 w-8 mx-auto mb-2" />
  <p className="text-muted-foreground">Raporlar yükleniyor...</p>
  </div>
  </div>

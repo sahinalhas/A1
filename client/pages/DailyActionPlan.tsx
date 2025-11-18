@@ -103,19 +103,19 @@ export default function DailyActionPlan() {
  >
  <div className="space-y-6">
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-white p-4 rounded-lg border shadow-sm">
+ <div className="bg-white p-4 rounded-lg border">
  <div className="text-sm text-muted-foreground">Toplam Aksiyon</div>
  <div className="text-2xl font-bold mt-1">{plan.dailySummary?.totalActions || 0}</div>
  </div>
- <div className="bg-red-50 p-4 rounded-lg border border-red-200 shadow-sm">
+ <div className="bg-red-50 p-4 rounded-lg border border-red-200">
  <div className="text-sm text-red-700">Kritik Öncelikli</div>
  <div className="text-2xl font-bold mt-1 text-red-600">{plan.dailySummary?.criticalCount || 0}</div>
  </div>
- <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 shadow-sm">
+ <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
  <div className="text-sm text-orange-700">Yüksek Öncelikli</div>
  <div className="text-2xl font-bold mt-1 text-orange-600">{plan.dailySummary?.highPriorityCount || 0}</div>
  </div>
- <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-sm">
+ <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
  <div className="text-sm text-blue-700">İş Yükü</div>
  <div className="text-xl font-semibold mt-1 text-blue-600">{plan.dailySummary?.estimatedWorkload || 'Hesaplanıyor'}</div>
  </div>
@@ -165,7 +165,7 @@ export default function DailyActionPlan() {
  )}
  </div>
 
- <div className="bg-white rounded-lg border shadow-sm">
+ <div className="bg-white rounded-lg border">
  <div className="p-4 border-b bg-gray-50">
  <h2 className="text-xl font-semibold flex items-center gap-2">
  <Clock className="w-5 h-5" />
@@ -176,7 +176,7 @@ export default function DailyActionPlan() {
  {plan.hourlySchedule?.map((action, i) => (
  <div
  key={i}
- className={`p-4 border-l-4 transition-colors ${getPriorityColor(action.priority)}`}
+ className={`p-4 border-l-4 ${getPriorityColor(action.priority)}`}
  >
  <div className="flex items-start justify-between">
  <div className="flex-1">
@@ -242,7 +242,7 @@ export default function DailyActionPlan() {
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- <div className="bg-white p-4 rounded-lg border shadow-sm">
+ <div className="bg-white p-4 rounded-lg border">
  <h3 className="font-semibold mb-3 flex items-center gap-2">
  <Activity className="w-5 h-5" />
  Esneklik Önerileri
@@ -269,7 +269,7 @@ export default function DailyActionPlan() {
  </div>
  </div>
 
- <div className="bg-white p-4 rounded-lg border shadow-sm">
+ <div className="bg-white p-4 rounded-lg border">
  <h3 className="font-semibold mb-3 flex items-center gap-2">
  <CheckCircle2 className="w-5 h-5" />
  Gün Sonu Kontrol

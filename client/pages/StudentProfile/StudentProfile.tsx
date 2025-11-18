@@ -42,10 +42,10 @@ export default function StudentProfile() {
  animate={{ opacity: 1, y: 0 }}
  className="flex items-center justify-center min-h-[400px]"
  >
- <Card className="border-2 border-primary/20 shadow-xl bg-gradient-to-br from-primary/5 via-background to-accent/5">
+ <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
  <CardHeader className="text-center space-y-4">
  <div className="flex justify-center">
- <Loader2 className="h-12 w-12 text-primary animate-spin" />
+ <Loader2 className="h-12 w-12 text-primary" />
  </div>
  <CardTitle className="text-2xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
  Yükleniyor...
@@ -66,7 +66,7 @@ export default function StudentProfile() {
  animate={{ opacity: 1, scale: 1 }}
  className="flex items-center justify-center min-h-[400px]"
  >
- <Card className="border-2 border-destructive/20 shadow-xl bg-gradient-to-br from-destructive/5 via-background to-destructive/5">
+ <Card className="border-2 border-destructive/20 bg-gradient-to-br from-destructive/5 via-background to-destructive/5">
  <CardHeader className="text-center space-y-3">
  <div className="flex justify-center">
  <div className="p-4 rounded-full bg-destructive/10">
@@ -81,7 +81,7 @@ export default function StudentProfile() {
  </CardDescription>
  </CardHeader>
  <CardContent className="text-center pb-6">
- <Button asChild variant="outline" className="shadow-md transition-all">
+ <Button asChild variant="outline" className="">
  <Link to="/ogrenci">Listeye Dön</Link>
  </Button>
  </CardContent>
@@ -97,7 +97,7 @@ export default function StudentProfile() {
  animate={{ opacity: 1, scale: 1 }}
  className="flex items-center justify-center min-h-[400px]"
  >
- <Card className="border-2 border-amber-500/20 shadow-xl bg-gradient-to-br from-amber-500/5 via-background to-amber-500/5">
+ <Card className="border-2 border-amber-500/20 bg-gradient-to-br from-amber-500/5 via-background to-amber-500/5">
  <CardHeader className="text-center space-y-3">
  <div className="flex justify-center">
  <div className="p-4 rounded-full bg-amber-500/10">
@@ -110,7 +110,7 @@ export default function StudentProfile() {
  <CardDescription className="text-base">No: {id}</CardDescription>
  </CardHeader>
  <CardContent className="text-center pb-6">
- <Button asChild variant="outline" className="shadow-md transition-all">
+ <Button asChild variant="outline" className="">
  <Link to="/ogrenci">Listeye Dön</Link>
  </Button>
  </CardContent>

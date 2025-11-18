@@ -87,7 +87,7 @@ export default function PastMeetingHistory({ studentId, studentName }: PastMeeti
  }
 
  return (
- <Card className="border-2 animate-in fade-in-50 slide-in-from-top-2 duration-500">
+ <Card className="border-2 fade-in-50 slide-in-from-top-2">
  <CardHeader className="pb-3">
  <CardTitle className="text-base flex items-center gap-2">
  <FileText className="h-5 w-5 text-primary" />
@@ -149,7 +149,7 @@ export default function PastMeetingHistory({ studentId, studentName }: PastMeeti
  {sessionStats.history.slice(0, 5).map((session) => (
  <div
  key={session.sessionId}
- className="p-3 rounded-lg bg-muted/50 space-y-1.5 transition-colors"
+ className="p-3 rounded-lg bg-muted/50 space-y-1.5"
  >
  <div className="flex items-start justify-between gap-2">
  <p className="text-sm font-medium line-clamp-1">{session.topic}</p>

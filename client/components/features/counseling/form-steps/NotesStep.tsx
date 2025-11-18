@@ -43,7 +43,7 @@ export default function NotesStep({
  };
 
  return (
- <div className="space-y-8 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+ <div className="space-y-8 fade-in-50 slide-in-from-bottom-4">
  {/* Section Header */}
  <div className="flex items-center gap-3 pb-4 border-b-2">
  <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 ring-2 ring-primary/20">
@@ -64,13 +64,13 @@ export default function NotesStep({
  control={form.control}
  name="sessionDetails"
  render={({ field }) => (
- <FormItem className="animate-in fade-in-50 slide-in-from-left-4 duration-500">
+ <FormItem className=" fade-in-50 slide-in-from-left-4">
  <FormLabel className="text-base font-semibold">Görüşme Notları (Opsiyonel)</FormLabel>
  <FormControl>
  <Textarea
  {...field}
  placeholder="Görüşme hakkında eklemek istediğiniz notlar..."
- className="min-h-[220px] resize-none transition-all focus:ring-2 focus:ring-primary/20"
+ className="min-h-[220px] resize-none focus:ring-2 focus:ring-primary/20"
  />
  </FormControl>
  <FormDescription className="text-xs">
@@ -82,7 +82,7 @@ export default function NotesStep({
  />
 
  {/* Tips */}
- <Card className="border-blue-200 bg-gradient-to-br from-blue-50/80 to-blue-50/40 dark:from-blue-950/20 dark:to-blue-950/10 dark:border-blue-900 animate-in fade-in-50 slide-in-from-left-6 duration-700">
+ <Card className="border-blue-200 bg-gradient-to-br from-blue-50/80 to-blue-50/40 dark:from-blue-950/20 dark:to-blue-950/10 dark:border-blue-900 fade-in-50 slide-in-from-left-6">
  <CardContent className="pt-5">
  <div className="flex items-start gap-3">
  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
@@ -113,7 +113,7 @@ export default function NotesStep({
 
  {/* Past Meeting History - Only for individual sessions */}
  {sessionType === 'individual' && 'studentId' in formValues && formValues.studentId && (
- <div className="animate-in fade-in-50 slide-in-from-left-8 duration-1000">
+ <div className=" fade-in-50 slide-in-from-left-8">
  <PastMeetingHistory 
  studentId={formValues.studentId}
  studentName={studentList[0]?.name || 'Öğrenci'}
@@ -124,7 +124,7 @@ export default function NotesStep({
 
  {/* Right side - Summary */}
  <div className="lg:col-span-2">
- <Card className="sticky top-4 border-2 shadow-lg animate-in fade-in-50 slide-in-from-right-4 duration-700">
+ <Card className="sticky top-4 border-2 fade-in-50 slide-in-from-right-4">
  <CardHeader className="pb-4">
  <CardTitle className="text-base flex items-center gap-2">
  <div className="p-1.5 rounded-lg bg-green-100 dark:bg-green-900/30">
@@ -135,7 +135,7 @@ export default function NotesStep({
  </CardHeader>
  <CardContent className="space-y-5">
  {/* Students */}
- <div className="p-3 rounded-lg bg-muted/30 transition-all">
+ <div className="p-3 rounded-lg bg-muted/30">
  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2.5">
  <Users className="h-4 w-4" />
  <span className="font-semibold">
@@ -158,7 +158,7 @@ export default function NotesStep({
  <Separator />
 
  {/* Topic */}
- <div className="p-3 rounded-lg bg-muted/30 transition-all">
+ <div className="p-3 rounded-lg bg-muted/30">
  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2.5">
  <MessageSquare className="h-4 w-4" />
  <span className="font-semibold">Konu</span>
@@ -171,7 +171,7 @@ export default function NotesStep({
  <Separator />
 
  {/* Date & Time */}
- <div className="p-3 rounded-lg bg-muted/30 transition-all">
+ <div className="p-3 rounded-lg bg-muted/30">
  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2.5">
  <Calendar className="h-4 w-4" />
  <span className="font-semibold">Tarih & Saat</span>
@@ -191,7 +191,7 @@ export default function NotesStep({
  <Separator />
 
  {/* Location & Mode */}
- <div className="p-3 rounded-lg bg-muted/30 transition-all">
+ <div className="p-3 rounded-lg bg-muted/30">
  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2.5">
  <MapPin className="h-4 w-4" />
  <span className="font-semibold">Yer & Şekil</span>
@@ -210,7 +210,7 @@ export default function NotesStep({
  {formValues.participantType && formValues.participantType !== 'öğrenci' && (
  <>
  <Separator />
- <div className="p-3 rounded-lg bg-muted/30 transition-all">
+ <div className="p-3 rounded-lg bg-muted/30">
  <div className="text-sm text-muted-foreground mb-2.5">
  <span className="font-semibold">Ek Katılımcı</span>
  </div>

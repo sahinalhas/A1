@@ -65,7 +65,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
 
  return (
  <div className="space-y-6">
- <Card className="border-2 border-primary/20 shadow-md">
+ <Card className="border-2 border-primary/20">
  <CardHeader className="bg-gradient-to-r from-primary/10 via-accent/5 to-primary/5 border-b">
  <CardTitle className="flex items-center gap-2 text-xl">
  <Brain className="h-6 w-6 text-primary" />
@@ -139,7 +139,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
  </Alert>
  ) : (
  <Accordion type="multiple" className="space-y-4" defaultValue={['performance', 'reports']}>
- <AccordionItem value="performance" className="border-2 rounded-lg shadow-sm">
+ <AccordionItem value="performance" className="border-2 rounded-lg">
  <AccordionTrigger className="px-6">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-blue-500/10 rounded-lg">
@@ -173,7 +173,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
  </AccordionContent>
  </AccordionItem>
 
- <AccordionItem value="heatmap" className="border-2 rounded-lg shadow-sm">
+ <AccordionItem value="heatmap" className="border-2 rounded-lg">
  <AccordionTrigger className="px-6">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-orange-500/10 rounded-lg">
@@ -196,7 +196,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
  </AccordionContent>
  </AccordionItem>
 
- <AccordionItem value="prediction" className="border-2 rounded-lg shadow-sm">
+ <AccordionItem value="prediction" className="border-2 rounded-lg">
  <AccordionTrigger className="px-6">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-purple-500/10 rounded-lg">
@@ -219,7 +219,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
  </AccordionContent>
  </AccordionItem>
 
- <AccordionItem value="reports" className="border-2 rounded-lg shadow-sm">
+ <AccordionItem value="reports" className="border-2 rounded-lg">
  <AccordionTrigger className="px-6">
  <div className="flex items-center gap-3">
  <div className="p-2 bg-green-500/10 rounded-lg">
@@ -245,7 +245,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
  )}
 
  {selectedSession && (
- <Card className="border-2 shadow-sm">
+ <Card className="border-2">
  <CardHeader className="bg-gradient-to-r from-cyan-500/10 to-cyan-500/5 border-b">
  <CardTitle className="flex items-center gap-2">
  <FileQuestion className="h-5 w-5 text-cyan-600" />
@@ -264,7 +264,7 @@ export function AdvancedAnalyticsTab({ examTypes }: AdvancedAnalyticsTabProps) {
  </Card>
  )}
 
- <Card className="border-2 shadow-sm">
+ <Card className="border-2">
  <CardHeader className="bg-gradient-to-r from-amber-500/10 to-amber-500/5 border-b">
  <CardTitle className="flex items-center gap-2">
  <Award className="h-5 w-5 text-amber-600" />

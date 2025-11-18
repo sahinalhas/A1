@@ -272,7 +272,7 @@ export default function GuidanceStandardsTab() {
  return (
  <div key={category.id} className="mb-2">
  <div
- className="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer transition-colors"
+ className="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer"
  style={{ paddingLeft: `${depth * 24 + 12}px` }}
  onClick={() => toggleCategory(category.id)}
  >
@@ -297,7 +297,7 @@ export default function GuidanceStandardsTab() {
  {category.items!.map((item) => (
  <div
  key={item.id}
- className="group flex items-center gap-2 py-2 px-3 rounded-lg transition-colors"
+ className="group flex items-center gap-2 py-2 px-3 rounded-lg"
  >
  <div className="w-4 h-4 flex-shrink-0" />
  
@@ -344,7 +344,7 @@ export default function GuidanceStandardsTab() {
  size="sm"
  variant="ghost"
  onClick={() => handleEditItem(item)}
- className="h-7 w-7 p-0 opacity-0 group- transition-opacity"
+ className="h-7 w-7 p-0 opacity-0 group-"
  >
  <Edit2 className="h-3.5 w-3.5" />
  </Button>
@@ -352,7 +352,7 @@ export default function GuidanceStandardsTab() {
  size="sm"
  variant="ghost"
  onClick={() => handleDeleteItem(item)}
- className="h-7 w-7 p-0 opacity-0 group- transition-opacity text-destructive"
+ className="h-7 w-7 p-0 opacity-0 group- text-destructive"
  >
  <Trash2 className="h-3.5 w-3.5" />
  </Button>
@@ -426,7 +426,7 @@ export default function GuidanceStandardsTab() {
  if (loading) {
  return (
  <div className="flex items-center justify-center py-12">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <Loader2 className="h-8 w-8 text-muted-foreground" />
  </div>
  );
  }

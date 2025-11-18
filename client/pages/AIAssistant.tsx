@@ -64,7 +64,7 @@ function CodeBlock({ inline, className, children, ...props }: any) {
  <Button
  size="sm"
  variant="ghost"
- className="absolute right-2 top-2 opacity-0 group- transition-opacity z-10"
+ className="absolute right-2 top-2 opacity-0 group- z-10"
  onClick={handleCopy}
  >
  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -94,7 +94,7 @@ function MessageActions({
  onPin: () => void;
 }) {
  return (
- <div className="flex items-center gap-1 opacity-0 group- transition-opacity">
+ <div className="flex items-center gap-1 opacity-0 group-">
  <Button size="sm" variant="ghost" onClick={onCopy} className="h-7 w-7 p-0">
  <Copy className="h-3 w-3" />
  </Button>
@@ -431,7 +431,7 @@ export default function AIAssistant() {
  <div className="mb-6">
  <div className="flex items-center justify-between gap-3 mb-2">
  <div className="flex items-center gap-3">
- <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl backdrop-blur-sm">
+ <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl">
  <Bot className="h-6 w-6 text-primary" />
  </div>
  <div>
@@ -468,7 +468,7 @@ export default function AIAssistant() {
  <Download className="h-4 w-4" />
  Dışa Aktar
  </Button>
- <div id="export-menu" className="hidden absolute right-6 top-24 z-50 bg-popover border rounded-lg shadow-lg p-2 space-y-1">
+ <div id="export-menu" className="hidden absolute right-6 top-24 z-50 bg-popover border rounded-lg p-2 space-y-1">
  <Button variant="ghost" size="sm" onClick={() => handleExport('json')} className="w-full justify-start gap-2">
  <FileJson className="h-4 w-4" />
  JSON
@@ -488,24 +488,24 @@ export default function AIAssistant() {
  </div>
 
  <div className="flex items-center gap-2 mt-4 flex-wrap">
- <Badge variant="outline" className="gap-1 bg-background/50 backdrop-blur-sm">
+ <Badge variant="outline" className="gap-1 bg-background/50">
  <Sparkles className="h-3 w-3" />
  {modelsData?.provider === 'ollama' ? 'Ollama' : 'OpenAI'}
  </Badge>
- <Badge variant="secondary" className="bg-background/50 backdrop-blur-sm">
+ <Badge variant="secondary" className="bg-background/50">
  {modelsData?.currentModel || 'Yükleniyor...'}
  </Badge>
  {messages.length > 0 && (
  <>
- <Badge variant="outline" className="gap-1 bg-background/50 backdrop-blur-sm">
+ <Badge variant="outline" className="gap-1 bg-background/50">
  <Hash className="h-3 w-3" />
  {messages.length} mesaj
  </Badge>
- <Badge variant="outline" className="gap-1 bg-background/50 backdrop-blur-sm">
+ <Badge variant="outline" className="gap-1 bg-background/50">
  ~{estimatedTokens} token
  </Badge>
  {pinnedMessages.length > 0 && (
- <Badge variant="outline" className="gap-1 bg-background/50 backdrop-blur-sm">
+ <Badge variant="outline" className="gap-1 bg-background/50">
  <Pin className="h-3 w-3" />
  {pinnedMessages.length} sabitlenmiş
  </Badge>
@@ -548,7 +548,7 @@ export default function AIAssistant() {
  )}
 
  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
- <Card className="lg:col-span-1 border-border/50 bg-card/95 backdrop-blur-sm">
+ <Card className="lg:col-span-1 border-border/50 bg-card/95">
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
  <Settings className="h-4 w-4" />
@@ -649,7 +649,7 @@ export default function AIAssistant() {
  </CardContent>
  </Card>
 
- <Card className="lg:col-span-3 border-border/50 bg-card/95 backdrop-blur-sm">
+ <Card className="lg:col-span-3 border-border/50 bg-card/95">
  <CardHeader>
  <div className="flex items-center justify-between">
  <div>
@@ -676,7 +676,7 @@ export default function AIAssistant() {
  {filteredMessages.length === 0 && !searchQuery ? (
  <div className="flex flex-col items-center justify-center h-full text-center p-8">
  <div className="relative mb-6">
- <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+ <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
  <Bot className="h-20 w-20 text-primary relative z-10" />
  </div>
  <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -697,7 +697,7 @@ export default function AIAssistant() {
  const template = promptTemplates[prompt.text];
  if (template) setInput(template);
  }}
- className="justify-start h-auto py-3 px-4 transition-all duration-200"
+ className="justify-start h-auto py-3 px-4"
  >
  <span className="text-lg mr-2">{prompt.icon}</span>
  <span className="text-left text-xs font-medium">{prompt.text}</span>
@@ -725,11 +725,11 @@ export default function AIAssistant() {
  key={message.id}
  className={`flex gap-4 ${
  message.role === 'user' ? 'justify-end' : 'justify-start'
- } group animate-in fade-in slide-in-from-bottom-2 duration-300`}
+ } group fade-in slide-in-from-bottom-2 
  >
  {message.role === 'assistant' && (
  <div className="flex-shrink-0">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center backdrop-blur-sm border border-primary/20">
+ <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/20">
  <Bot className="h-5 w-5 text-primary" />
  </div>
  </div>
@@ -787,9 +787,9 @@ export default function AIAssistant() {
  <div
  className={`rounded-2xl p-4 ${
  message.role === 'user'
- ? 'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-lg shadow-primary/25'
- : 'bg-muted/80 backdrop-blur-sm border border-border/50'
- } transition-all duration-200 
+ ? 'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground 
+ : 'bg-muted/80 border border-border/50'
+ } 
  >
  {message.role === 'assistant' ? (
  <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -812,7 +812,7 @@ export default function AIAssistant() {
  </div>
  {message.role === 'user' && (
  <div className="flex-shrink-0">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/90 flex items-center justify-center shadow-lg shadow-primary/25">
+ <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/90 flex items-center justify-center">
  <User className="h-5 w-5 text-primary-foreground" />
  </div>
  </div>
@@ -839,7 +839,7 @@ export default function AIAssistant() {
  setInput(template);
  }
  }}
- className="text-xs gap-1 transition-all"
+ className="text-xs gap-1"
  >
  <span>{prompt.icon}</span>
  {prompt.text}
@@ -855,15 +855,15 @@ export default function AIAssistant() {
  onKeyPress={handleKeyPress}
  placeholder="Mesajınızı yazın..."
  disabled={isStreaming}
- className="flex-1 bg-background/50 backdrop-blur-sm"
+ className="flex-1 bg-background/50"
  />
  <Button
  onClick={handleSend}
  disabled={!input.trim() || isStreaming}
- className="gap-2 shadow-lg shadow-primary/25 transition-all"
+ className="gap-2"
  >
  {isStreaming ? (
- <Loader2 className="h-4 w-4 animate-spin" />
+ <Loader2 className="h-4 w-4" />
  ) : (
  <Send className="h-4 w-4" />
  )}

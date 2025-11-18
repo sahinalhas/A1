@@ -39,7 +39,7 @@ export default function DailyActionPlanWidget({ onHide }: DailyActionPlanWidgetP
  </CardTitle>
  </CardHeader>
  <CardContent className="flex justify-center py-8">
- <Loader2 className="h-6 w-6 animate-spin text-primary" />
+ <Loader2 className="h-6 w-6 text-primary" />
  </CardContent>
  </Card>
  );
