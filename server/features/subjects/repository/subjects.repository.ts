@@ -119,3 +119,17 @@ export function saveTopics(topics: Topic[]): void {
   
   transaction();
 }
+
+export function resetToDefaultData(): void {
+  ensureInitialized();
+  const db = getDatabase();
+  
+  const transaction = db.transaction(() => {
+    db.prepare('DELETE FROM topics').run();
+    db.prepare('DELETE FROM subjects').run();
+    
+    seedSubjectsAndTopics(db);
+  });
+  
+  transaction();
+}
