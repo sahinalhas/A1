@@ -201,7 +201,7 @@ export function ComparisonAnalysisTab({ examTypes, sessions }: ComparisonAnalysi
  <div
  key={session.id}
  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer ${
- isSelected ? 'bg-primary/10 border-primary' : '
+                  isSelected ? 'bg-primary/10 border-primary' : 'bg-background border-border'
  }`}
  onClick={() => toggleSession(session.id)}
  >
