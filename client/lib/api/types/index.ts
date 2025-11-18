@@ -13,79 +13,79 @@ export * from './responses';
 
 // Re-export shared API contracts for backward compatibility
 export type {
-  ApiSuccessResponse,
-  ApiErrorResponse,
-  ApiResponse,
-  ValidationError,
-  ApiError,
-  PaginatedResponse,
-  PaginatedData,
-  PaginationParams,
+ ApiSuccessResponse,
+ ApiErrorResponse,
+ ApiResponse,
+ ValidationError,
+ ApiError,
+ PaginatedResponse,
+ PaginatedData,
+ PaginationParams,
 } from '@shared/types/api-contracts';
 
 export {
-  ApiErrorCode,
-  isApiSuccessResponse,
-  isApiErrorResponse,
-  createSuccessResponse,
-  createErrorResponse,
-  createPaginatedResponse,
+ ApiErrorCode,
+ isApiSuccessResponse,
+ isApiErrorResponse,
+ createSuccessResponse,
+ createErrorResponse,
+ createPaginatedResponse,
 } from '@shared/types/api-contracts';
 
 /**
  * User API Types
  */
 export interface UserLoginRequest {
-  email: string;
-  password: string;
+ email: string;
+ password: string;
 }
 
 export interface UserRegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'counselor' | 'teacher' | 'observer';
-  institution: string;
+ name: string;
+ email: string;
+ password: string;
+ role: 'admin' | 'counselor' | 'teacher' | 'observer';
+ institution: string;
 }
 
 export interface UserPublic {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'counselor' | 'teacher' | 'observer';
-  institution: string;
-  permissions: string[];
+ id: string;
+ name: string;
+ email: string;
+ role: 'admin' | 'counselor' | 'teacher' | 'observer';
+ institution: string;
+ permissions: string[];
 }
 
 export interface UserLoginResponse {
-  success: true;
-  data?: UserPublic;
-  user?: UserPublic;
-  message?: string;
+ success: true;
+ data?: UserPublic;
+ user?: UserPublic;
+ message?: string;
 }
 
 /**
  * Backup API Types
  */
 export interface BackupMetadata {
-  id: string;
-  filename: string;
-  createdAt: string;
-  createdBy: string;
-  size: number;
-  type: 'manual' | 'automatic';
-  compressed: boolean;
-  tables: string[];
-  status: 'pending' | 'completed' | 'failed';
-  error?: string;
+ id: string;
+ filename: string;
+ createdAt: string;
+ createdBy: string;
+ size: number;
+ type: 'manual' | 'automatic';
+ compressed: boolean;
+ tables: string[];
+ status: 'pending' | 'completed' | 'failed';
+ error?: string;
 }
 
 /**
  * Analytics API Types
  */
 export interface AnalyticsOverview {
-  totalStudents: number;
-  activeInterventions: number;
-  upcomingSessions: number;
-  recentAlerts: number;
+ totalStudents: number;
+ activeInterventions: number;
+ upcomingSessions: number;
+ recentAlerts: number;
 }

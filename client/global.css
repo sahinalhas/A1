@@ -405,24 +405,6 @@
     pointer-events: none;
   }
 
-  .elevated-card:hover {
-    box-shadow: 
-      0 2px 6px hsl(var(--foreground) / 0.06),
-      0 8px 20px hsl(var(--foreground) / 0.05),
-      0 16px 40px hsl(var(--foreground) / 0.04),
-      inset 0 1px 0 hsl(var(--background)),
-      0 0 0 1px hsl(var(--primary) / 0.1);
-    transform: translateY(-4px) scale(1.01);
-    border-color: hsl(var(--primary) / 0.4);
-  }
-
-  .elevated-card:hover::before {
-    opacity: 1;
-  }
-
-  .elevated-card:hover::after {
-    left: 100%;
-  }
 
   /* Modern card variant */
   .card-modern {
@@ -433,15 +415,6 @@
       0 0 0 1px hsl(var(--border) / 0.5),
       0 2px 4px hsl(var(--foreground) / 0.03),
       0 4px 8px hsl(var(--foreground) / 0.02);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card-modern:hover {
-    box-shadow: 
-      0 0 0 1px hsl(var(--primary) / 0.2),
-      0 4px 8px hsl(var(--foreground) / 0.05),
-      0 8px 16px hsl(var(--foreground) / 0.04);
-    border-color: hsl(var(--primary) / 0.2);
   }
 
   /* Elegant gradient text */
@@ -573,15 +546,6 @@
     );
     border-radius: 6px;
     border: 2px solid hsl(var(--background));
-    transition: all 0.3s ease;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(
-      180deg,
-      hsl(var(--primary) / 0.7),
-      hsl(var(--primary) / 0.6)
-    );
   }
 
   /* Focus visible improvements */
@@ -816,15 +780,6 @@
 
   /* Touch-friendly interactions */
   @media (hover: none) and (pointer: coarse) {
-    /* Remove hover effects on touch devices */
-    .elevated-card:hover {
-      box-shadow: 
-        0 1px 3px hsl(var(--foreground) / 0.05),
-        0 4px 12px hsl(var(--foreground) / 0.04),
-        0 16px 24px hsl(var(--foreground) / 0.03);
-      transform: translateY(0);
-    }
-
     /* Add active states for touch */
     button:active, 
     [role="button"]:active,

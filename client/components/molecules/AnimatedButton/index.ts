@@ -1,7 +1,7 @@
 export {
-  AnimatedButton,
-  IconButton,
-  FloatingActionButton,
-  GradientButton,
-  OutlineAnimatedButton,
+ AnimatedButton,
+ IconButton,
+ FloatingActionButton,
+ GradientButton,
+ OutlineAnimatedButton,
 } from "./animated-button";

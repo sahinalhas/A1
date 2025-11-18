@@ -2,26 +2,26 @@ import { Suspense, ComponentType } from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface LazyExportWrapperProps {
-  component: ComponentType<any>;
-  fallback?: React.ReactNode;
-  [key: string]: any;
+ component: ComponentType<any>;
+ fallback?: React.ReactNode;
+ [key: string]: any;
 }
 
 const ExportSkeleton = () => (
-  <div className="flex items-center justify-center p-4 bg-muted/10 rounded-lg">
-    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
-    <span className="text-sm text-muted-foreground">Yükleniyor...</span>
-  </div>
+ <div className="flex items-center justify-center p-4 bg-muted/10 rounded-lg">
+ <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
+ <span className="text-sm text-muted-foreground">Yükleniyor...</span>
+ </div>
 );
 
 export const LazyExportWrapper = ({ 
-  component: Component, 
-  fallback = <ExportSkeleton />,
-  ...props 
+ component: Component, 
+ fallback = <ExportSkeleton />,
+ ...props 
 }: LazyExportWrapperProps) => {
-  return (
-    <Suspense fallback={fallback}>
-      <Component {...props} />
-    </Suspense>
-  );
+ return (
+ <Suspense fallback={fallback}>
+ <Component {...props} />
+ </Suspense>
+ );
 };

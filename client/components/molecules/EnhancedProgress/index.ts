@@ -1,6 +1,6 @@
 export {
-  EnhancedProgress,
-  CircularProgress,
-  StepProgress,
-  LoadingDots,
+ EnhancedProgress,
+ CircularProgress,
+ StepProgress,
+ LoadingDots,
 } from "./enhanced-progress";

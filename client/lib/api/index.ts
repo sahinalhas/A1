@@ -2,10 +2,10 @@
  * API Client - Modern Architecture
  * 
  * Centralized API client with organized structure:
- * - core/       → API client, interceptors, error handling
- * - endpoints/  → API endpoint functions
- * - hooks/      → React Query hooks (queries & mutations)
- * - types/      → API request/response types
+ * - core/ → API client, interceptors, error handling
+ * - endpoints/ → API endpoint functions
+ * - hooks/ → React Query hooks (queries & mutations)
+ * - types/ → API request/response types
  */
 
 // Core API infrastructure

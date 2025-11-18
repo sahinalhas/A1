@@ -17,111 +17,111 @@ import { AI_ENDPOINTS } from "@/lib/constants/api-endpoints";
 import { Loader2 } from "lucide-react";
 
 interface AIToolsHubProps {
-  studentId: string;
-  studentName: string;
-  onUpdate?: () => void;
+ studentId: string;
+ studentName: string;
+ onUpdate?: () => void;
 }
 
 export default function AIToolsHub({ studentId, studentName, onUpdate }: AIToolsHubProps) {
-  const navigate = useNavigate();
-  const [analyzingRisk, setAnalyzingRisk] = useState(false);
+ const navigate = useNavigate();
+ const [analyzingRisk, setAnalyzingRisk] = useState(false);
 
-  const handleAIChat = () => {
-    navigate(`/ai-asistan?student=${studentId}`);
-  };
+ const handleAIChat = () => {
+ navigate(`/ai-asistan?student=${studentId}`);
+ };
 
-  const handleRiskAnalysis = async () => {
-    setAnalyzingRisk(true);
-    try {
-      await apiClient.post(
-        AI_ENDPOINTS.ANALYZE_RISK,
-        { studentId },
-        {
-          showSuccessToast: true,
-          successMessage: 'Risk analizi tamamlandı',
-          showErrorToast: true,
-        }
-      );
-      
-      navigate(`/ai-asistan?student=${studentId}&action=risk`);
-    } catch (error) {
-      console.error('Risk analysis error:', error);
-    } finally {
-      setAnalyzingRisk(false);
-    }
-  };
+ const handleRiskAnalysis = async () => {
+ setAnalyzingRisk(true);
+ try {
+ await apiClient.post(
+ AI_ENDPOINTS.ANALYZE_RISK,
+ { studentId },
+ {
+ showSuccessToast: true,
+ successMessage: 'Risk analizi tamamlandı',
+ showErrorToast: true,
+ }
+ );
+ 
+ navigate(`/ai-asistan?student=${studentId}&action=risk`);
+ } catch (error) {
+ console.error('Risk analysis error:', error);
+ } finally {
+ setAnalyzingRisk(false);
+ }
+ };
 
-  return (
-    <div className="space-y-6">
-      {/* AI Araçları Sekmeleri */}
-      <Tabs defaultValue="mudahale" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="mudahale">
-            Müdahale Önerileri
-          </TabsTrigger>
-          <TabsTrigger value="raporlar">
-            Otomatik Raporlar
-          </TabsTrigger>
-          <TabsTrigger value="veli-iletisim">
-            Veli İletişimi
-          </TabsTrigger>
-        </TabsList>
+ return (
+ <div className="space-y-6">
+ {/* AI Araçları Sekmeleri */}
+ <Tabs defaultValue="mudahale" className="space-y-4">
+ <TabsList className="grid w-full grid-cols-3">
+ <TabsTrigger value="mudahale">
+ Müdahale Önerileri
+ </TabsTrigger>
+ <TabsTrigger value="raporlar">
+ Otomatik Raporlar
+ </TabsTrigger>
+ <TabsTrigger value="veli-iletisim">
+ Veli İletişimi
+ </TabsTrigger>
+ </TabsList>
 
-        <TabsContent value="mudahale" className="space-y-4">
-          <InterventionRecommendations
-            studentId={studentId}
-            studentName={studentName}
-          />
-        </TabsContent>
+ <TabsContent value="mudahale" className="space-y-4">
+ <InterventionRecommendations
+ studentId={studentId}
+ studentName={studentName}
+ />
+ </TabsContent>
 
-        <TabsContent value="raporlar" className="space-y-4">
-          <AutoReportGenerator
-            studentId={studentId}
-            studentName={studentName}
-          />
-        </TabsContent>
+ <TabsContent value="raporlar" className="space-y-4">
+ <AutoReportGenerator
+ studentId={studentId}
+ studentName={studentName}
+ />
+ </TabsContent>
 
-        <TabsContent value="veli-iletisim" className="space-y-4">
-          <ParentCommunication
-            studentId={studentId}
-            studentName={studentName}
-          />
-        </TabsContent>
-      </Tabs>
+ <TabsContent value="veli-iletisim" className="space-y-4">
+ <ParentCommunication
+ studentId={studentId}
+ studentName={studentName}
+ />
+ </TabsContent>
+ </Tabs>
 
-      {/* Hızlı Eylemler */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-primary" />
-            Hızlı AI Eylemleri
-          </CardTitle>
-          <CardDescription>
-            Öğrenci analizi için AI araçlarına hızlı erişim
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            <Button onClick={handleAIChat} className="gap-2">
-              <Bot className="h-4 w-4" />
-              AI ile Konuş
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={handleRiskAnalysis}
-              disabled={analyzingRisk}
-              className="gap-2"
-            >
-              {analyzingRisk ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Shield className="h-4 w-4" />
-              )}
-              Risk Analizi Yap
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+ {/* Hızlı Eylemler */}
+ <Card>
+ <CardHeader>
+ <CardTitle className="flex items-center gap-2">
+ <Bot className="h-5 w-5 text-primary" />
+ Hızlı AI Eylemleri
+ </CardTitle>
+ <CardDescription>
+ Öğrenci analizi için AI araçlarına hızlı erişim
+ </CardDescription>
+ </CardHeader>
+ <CardContent>
+ <div className="flex flex-wrap gap-2">
+ <Button onClick={handleAIChat} className="gap-2">
+ <Bot className="h-4 w-4" />
+ AI ile Konuş
+ </Button>
+ <Button 
+ variant="outline" 
+ onClick={handleRiskAnalysis}
+ disabled={analyzingRisk}
+ className="gap-2"
+ >
+ {analyzingRisk ? (
+ <Loader2 className="h-4 w-4 animate-spin" />
+ ) : (
+ <Shield className="h-4 w-4" />
+ )}
+ Risk Analizi Yap
+ </Button>
+ </div>
+ </CardContent>
+ </Card>
+ </div>
+ );
 }

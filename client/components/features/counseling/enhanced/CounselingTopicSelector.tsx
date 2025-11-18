@@ -8,129 +8,129 @@ import { cn } from "@/lib/utils";
 import type { CounselingTopic } from "../types";
 
 interface CounselingTopicSelectorProps {
-  topics: CounselingTopic[];
-  value?: string;
-  onValueChange: (value: string) => void;
-  placeholder?: string;
-  disabled?: boolean;
+ topics: CounselingTopic[];
+ value?: string;
+ onValueChange: (value: string) => void;
+ placeholder?: string;
+ disabled?: boolean;
 }
 
 export default function CounselingTopicSelector({
-  topics,
-  value,
-  onValueChange,
-  placeholder = "Görüşme konusu ara...",
-  disabled = false,
+ topics,
+ value,
+ onValueChange,
+ placeholder ="Görüşme konusu ara...",
+ disabled = false,
 }: CounselingTopicSelectorProps) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
+ const [open, setOpen] = useState(false);
+ const [search, setSearch] = useState("");
 
-  const selectedTopic = topics.find((topic) => topic.id === value || topic.title === value);
+ const selectedTopic = topics.find((topic) => topic.id === value || topic.title === value);
 
-  const groupedTopics = useMemo(() => {
-    const filtered = search
-      ? topics.filter((topic) => {
-          const searchLower = search.toLowerCase();
-          return (
-            topic.title.toLowerCase().includes(searchLower) ||
-            topic.category.toLowerCase().includes(searchLower) ||
-            topic.fullPath.toLowerCase().includes(searchLower)
-          );
-        })
-      : topics;
+ const groupedTopics = useMemo(() => {
+ const filtered = search
+ ? topics.filter((topic) => {
+ const searchLower = search.toLowerCase();
+ return (
+ topic.title.toLowerCase().includes(searchLower) ||
+ topic.category.toLowerCase().includes(searchLower) ||
+ topic.fullPath.toLowerCase().includes(searchLower)
+ );
+ })
+ : topics;
 
-    const grouped: Record<string, CounselingTopic[]> = {};
-    filtered.forEach((topic) => {
-      if (!grouped[topic.category]) {
-        grouped[topic.category] = [];
-      }
-      grouped[topic.category].push(topic);
-    });
+ const grouped: Record<string, CounselingTopic[]> = {};
+ filtered.forEach((topic) => {
+ if (!grouped[topic.category]) {
+ grouped[topic.category] = [];
+ }
+ grouped[topic.category].push(topic);
+ });
 
-    return grouped;
-  }, [topics, search]);
+ return grouped;
+ }, [topics, search]);
 
-  const handleSelect = (topicId: string) => {
-    onValueChange(topicId);
-    setOpen(false);
-    setSearch("");
-  };
+ const handleSelect = (topicId: string) => {
+ onValueChange(topicId);
+ setOpen(false);
+ setSearch("");
+ };
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          disabled={disabled}
-          className={cn(
-            "w-full justify-between h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm border focus:border-purple-400 transition-all hover:bg-slate-50 dark:hover:bg-slate-800",
-            !value && "text-slate-400"
-          )}
-        >
-          <span className="flex items-center gap-2 truncate">
-            <BookOpen className="h-4 w-4 shrink-0 text-purple-500" />
-            {selectedTopic ? (
-              <span className="truncate">{selectedTopic.title}</span>
-            ) : (
-              placeholder
-            )}
-          </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-full p-0 popover-content-width-full" align="start">
-        <Command shouldFilter={false}>
-          <CommandInput
-            placeholder="Konu ara..."
-            value={search}
-            onValueChange={setSearch}
-            className="h-10"
-          />
-          <CommandList className="max-h-[350px]">
-            <CommandEmpty>
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <Search className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
-                <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-                  Konu bulunamadı
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
-                  Farklı anahtar kelimeler deneyin
-                </p>
-              </div>
-            </CommandEmpty>
+ return (
+ <Popover open={open} onOpenChange={setOpen}>
+ <PopoverTrigger asChild>
+ <Button
+ variant="outline"
+ role="combobox"
+ aria-expanded={open}
+ disabled={disabled}
+ className={cn(
+"w-full justify-between h-10 rounded-lg bg-white dark:bg-slate-900 shadow-sm border focus:border-purple-400 transition-all dark:",
+ !value &&"text-slate-400"
+ )}
+ >
+ <span className="flex items-center gap-2 truncate">
+ <BookOpen className="h-4 w-4 shrink-0 text-purple-500" />
+ {selectedTopic ? (
+ <span className="truncate">{selectedTopic.title}</span>
+ ) : (
+ placeholder
+ )}
+ </span>
+ <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+ </Button>
+ </PopoverTrigger>
+ <PopoverContent className="w-full p-0 popover-content-width-full" align="start">
+ <Command shouldFilter={false}>
+ <CommandInput
+ placeholder="Konu ara..."
+ value={search}
+ onValueChange={setSearch}
+ className="h-10"
+ />
+ <CommandList className="max-h-[350px]">
+ <CommandEmpty>
+ <div className="flex flex-col items-center justify-center py-8 text-center">
+ <Search className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
+ <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+ Konu bulunamadı
+ </p>
+ <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+ Farklı anahtar kelimeler deneyin
+ </p>
+ </div>
+ </CommandEmpty>
 
-            {Object.entries(groupedTopics).map(([category, categoryTopics]) => (
-              <CommandGroup key={category} heading={category}>
-                {categoryTopics.map((topic) => (
-                  <CommandItem
-                    key={topic.id}
-                    value={topic.title}
-                    onSelect={() => handleSelect(topic.id)}
-                    className="flex items-start gap-2 py-2.5 cursor-pointer"
-                  >
-                    <Check
-                      className={cn(
-                        "h-4 w-4 shrink-0 mt-0.5",
-                        (value === topic.id || value === topic.title) ? "opacity-100 text-purple-600" : "opacity-0"
-                      )}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm leading-tight">
-                        {topic.title}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">
-                        {topic.fullPath}
-                      </p>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
+ {Object.entries(groupedTopics).map(([category, categoryTopics]) => (
+ <CommandGroup key={category} heading={category}>
+ {categoryTopics.map((topic) => (
+ <CommandItem
+ key={topic.id}
+ value={topic.title}
+ onSelect={() => handleSelect(topic.id)}
+ className="flex items-start gap-2 py-2.5 cursor-pointer"
+ >
+ <Check
+ className={cn(
+"h-4 w-4 shrink-0 mt-0.5",
+ (value === topic.id || value === topic.title) ?"opacity-100 text-purple-600" :"opacity-0"
+ )}
+ />
+ <div className="flex-1 min-w-0">
+ <p className="font-medium text-sm leading-tight">
+ {topic.title}
+ </p>
+ <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">
+ {topic.fullPath}
+ </p>
+ </div>
+ </CommandItem>
+ ))}
+ </CommandGroup>
+ ))}
+ </CommandList>
+ </Command>
+ </PopoverContent>
+ </Popover>
+ );
 }

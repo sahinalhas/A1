@@ -1,9 +1,9 @@
 export {
-  EnhancedSkeleton,
-  EnhancedSkeletonCard,
-  SkeletonTable,
-  SkeletonProfile,
-  SkeletonList,
-  SkeletonStats,
-  SkeletonForm,
+ EnhancedSkeleton,
+ EnhancedSkeletonCard,
+ SkeletonTable,
+ SkeletonProfile,
+ SkeletonList,
+ SkeletonStats,
+ SkeletonForm,
 } from "./enhanced-skeleton";

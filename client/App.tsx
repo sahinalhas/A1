@@ -32,130 +32,130 @@ const BackupManagement = lazy(() => import("@/pages/BackupManagement"));
 const ExamManagementPage = lazy(() => import("@/pages/ExamManagementPage"));
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes - longer cache for faster page transitions
-      gcTime: 15 * 60 * 1000, // 15 minutes - keep in cache longer for instant navigation
-      refetchOnWindowFocus: false, // Don't refetch when switching tabs
-      refetchOnReconnect: true, // Refetch when connection is restored
-      refetchOnMount: false, // Use cached data on mount (faster page loads)
-      retry: 1,
-    },
-  },
+ defaultOptions: {
+ queries: {
+ staleTime: 5 * 60 * 1000, // 5 minutes - longer cache for faster page transitions
+ gcTime: 15 * 60 * 1000, // 15 minutes - keep in cache longer for instant navigation
+ refetchOnWindowFocus: false, // Don't refetch when switching tabs
+ refetchOnReconnect: true, // Refetch when connection is restored
+ refetchOnMount: false, // Use cached data on mount (faster page loads)
+ retry: 1,
+ },
+ },
 });
 
 function PrefetchWrapper() {
-  usePrefetchRoutes();
-  return null;
+ usePrefetchRoutes();
+ return null;
 }
 
 const App = () => {
-  useEffect(() => {
-    const cleanup = setupGlobalErrorHandlers();
-    return cleanup;
-  }, []);
+ useEffect(() => {
+ const cleanup = setupGlobalErrorHandlers();
+ return cleanup;
+ }, []);
 
-  const LoadingFallback = () => (
-    <div className="flex items-center justify-center h-screen">
-      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-    </div>
-  );
+ const LoadingFallback = () => (
+ <div className="flex items-center justify-center h-screen">
+ <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ </div>
+ );
 
-  return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-              <PrefetchWrapper />
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/ogrenci" element={<Students />} />
-                  <Route path="/ogrenci/:id" element={<Suspense fallback={<LoadingFallback />}><StudentProfile /></Suspense>} />
-                  <Route
-                    path="/gorusmeler"
-                    element={<Suspense fallback={<LoadingFallback />}><CounselingSessions /></Suspense>}
-                  />
-                  <Route
-                    path="/anketler"
-                    element={<Suspense fallback={<LoadingFallback />}><Surveys /></Suspense>}
-                  />
-                  <Route
-                    path="/raporlar"
-                    element={<Suspense fallback={<LoadingFallback />}><Reports /></Suspense>}
-                  />
-                  <Route
-                    path="/olcme-degerlendirme"
-                    element={<Suspense fallback={<LoadingFallback />}><ExamManagementPage /></Suspense>}
-                  />
-                  <Route path="/ayarlar" element={<Suspense fallback={<LoadingFallback />}><SettingsPage /></Suspense>} />
-                  <Route
-                    path="/ai-araclari"
-                    element={<Suspense fallback={<LoadingFallback />}><AIToolsPage /></Suspense>}
-                  />
-                  <Route
-                    path="/istatistik"
-                    element={<Navigate to="/raporlar" replace />}
-                  />
-                  <Route
-                    path="/risk"
-                    element={<Navigate to="/ai-araclari?tab=risk" replace />}
-                  />
-                  <Route
-                    path="/ai-asistan"
-                    element={<Navigate to="/ai-araclari?tab=ai-asistan" replace />}
-                  />
-                  <Route
-                    path="/ai-insights"
-                    element={<Navigate to="/ai-araclari?tab=ai-insights" replace />}
-                  />
-                  <Route
-                    path="/gunluk-plan"
-                    element={<Navigate to="/ai-araclari?tab=gunluk-plan" replace />}
-                  />
-                  <Route
-                    path="/gelismis-analiz"
-                    element={<Navigate to="/ai-araclari?tab=gelismis-analiz" replace />}
-                  />
-                  <Route
-                    path="/ogrenci/:studentId/gelismis-analiz"
-                    element={<Suspense fallback={<LoadingFallback />}><AdvancedStudentAnalysis /></Suspense>}
-                  />
-                  <Route
-                    path="/bildirimler"
-                    element={<Suspense fallback={<LoadingFallback />}><Notifications /></Suspense>}
-                  />
-                  <Route
-                    path="/mudahale-takip"
-                    element={<Suspense fallback={<LoadingFallback />}><InterventionTracking /></Suspense>}
-                  />
-                  <Route
-                    path="/veli-erisim"
-                    element={<Suspense fallback={<LoadingFallback />}><ParentAccess /></Suspense>}
-                  />
-                  <Route
-                    path="/okul-dashboard"
-                    element={<Suspense fallback={<LoadingFallback />}><SchoolDashboard /></Suspense>}
-                  />
-                  <Route
-                    path="/yedekleme"
-                    element={<Suspense fallback={<LoadingFallback />}><BackupManagement /></Suspense>}
-                  />
-                </Route>
-                <Route path="/anket/:publicLink" element={<Suspense fallback={<LoadingFallback />}><PublicSurvey /></Suspense>} />
-                <Route path="*" element={<Suspense fallback={<LoadingFallback />}><NotFound /></Suspense>} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  );
+ return (
+ <ErrorBoundary>
+ <QueryClientProvider client={queryClient}>
+ <AuthProvider>
+ <TooltipProvider>
+ <Toaster />
+ <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+ <PrefetchWrapper />
+ <Routes>
+ <Route path="/login" element={<Login />} />
+ <Route path="/register" element={<Register />} />
+ <Route path="/forgot-password" element={<ForgotPassword />} />
+ <Route element={<Layout />}>
+ <Route path="/" element={<Index />} />
+ <Route path="/ogrenci" element={<Students />} />
+ <Route path="/ogrenci/:id" element={<Suspense fallback={<LoadingFallback />}><StudentProfile /></Suspense>} />
+ <Route
+ path="/gorusmeler"
+ element={<Suspense fallback={<LoadingFallback />}><CounselingSessions /></Suspense>}
+ />
+ <Route
+ path="/anketler"
+ element={<Suspense fallback={<LoadingFallback />}><Surveys /></Suspense>}
+ />
+ <Route
+ path="/raporlar"
+ element={<Suspense fallback={<LoadingFallback />}><Reports /></Suspense>}
+ />
+ <Route
+ path="/olcme-degerlendirme"
+ element={<Suspense fallback={<LoadingFallback />}><ExamManagementPage /></Suspense>}
+ />
+ <Route path="/ayarlar" element={<Suspense fallback={<LoadingFallback />}><SettingsPage /></Suspense>} />
+ <Route
+ path="/ai-araclari"
+ element={<Suspense fallback={<LoadingFallback />}><AIToolsPage /></Suspense>}
+ />
+ <Route
+ path="/istatistik"
+ element={<Navigate to="/raporlar" replace />}
+ />
+ <Route
+ path="/risk"
+ element={<Navigate to="/ai-araclari?tab=risk" replace />}
+ />
+ <Route
+ path="/ai-asistan"
+ element={<Navigate to="/ai-araclari?tab=ai-asistan" replace />}
+ />
+ <Route
+ path="/ai-insights"
+ element={<Navigate to="/ai-araclari?tab=ai-insights" replace />}
+ />
+ <Route
+ path="/gunluk-plan"
+ element={<Navigate to="/ai-araclari?tab=gunluk-plan" replace />}
+ />
+ <Route
+ path="/gelismis-analiz"
+ element={<Navigate to="/ai-araclari?tab=gelismis-analiz" replace />}
+ />
+ <Route
+ path="/ogrenci/:studentId/gelismis-analiz"
+ element={<Suspense fallback={<LoadingFallback />}><AdvancedStudentAnalysis /></Suspense>}
+ />
+ <Route
+ path="/bildirimler"
+ element={<Suspense fallback={<LoadingFallback />}><Notifications /></Suspense>}
+ />
+ <Route
+ path="/mudahale-takip"
+ element={<Suspense fallback={<LoadingFallback />}><InterventionTracking /></Suspense>}
+ />
+ <Route
+ path="/veli-erisim"
+ element={<Suspense fallback={<LoadingFallback />}><ParentAccess /></Suspense>}
+ />
+ <Route
+ path="/okul-dashboard"
+ element={<Suspense fallback={<LoadingFallback />}><SchoolDashboard /></Suspense>}
+ />
+ <Route
+ path="/yedekleme"
+ element={<Suspense fallback={<LoadingFallback />}><BackupManagement /></Suspense>}
+ />
+ </Route>
+ <Route path="/anket/:publicLink" element={<Suspense fallback={<LoadingFallback />}><PublicSurvey /></Suspense>} />
+ <Route path="*" element={<Suspense fallback={<LoadingFallback />}><NotFound /></Suspense>} />
+ </Routes>
+ </BrowserRouter>
+ </TooltipProvider>
+ </AuthProvider>
+ </QueryClientProvider>
+ </ErrorBoundary>
+ );
 };
 
 export default App;

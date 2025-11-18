@@ -1,50 +1,50 @@
 import {
-  Link,
-  NavLink,
-  Outlet,
-  useLocation,
-  useNavigate,
-  Navigate,
+ Link,
+ NavLink,
+ Outlet,
+ useLocation,
+ useNavigate,
+ Navigate,
 } from "react-router-dom";
 import { Button } from "@/components/atoms/Button";
 import { Separator } from "@/components/atoms/Separator";
 import { Avatar, AvatarFallback } from "@/components/atoms/Avatar";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+ DropdownMenu,
+ DropdownMenuContent,
+ DropdownMenuItem,
+ DropdownMenuLabel,
+ DropdownMenuSeparator,
+ DropdownMenuTrigger,
 } from "@/components/organisms/DropdownMenu";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+ Breadcrumb,
+ BreadcrumbItem,
+ BreadcrumbLink,
+ BreadcrumbList,
+ BreadcrumbPage,
+ BreadcrumbSeparator,
 } from "@/components/molecules/Breadcrumb";
 import {
-  Sun,
-  Moon,
-  Users2,
-  CalendarDays,
-  FileText,
-  MessageSquare,
-  BarChart3,
-  Settings,
-  Search,
-  Sparkles,
-  ClipboardList,
-  LogOut,
-  User,
-  Bell,
-  Home,
-  Menu,
-  X,
-  PanelLeftClose,
-  PanelLeftOpen,
+ Sun,
+ Moon,
+ Users2,
+ CalendarDays,
+ FileText,
+ MessageSquare,
+ BarChart3,
+ Settings,
+ Search,
+ Sparkles,
+ ClipboardList,
+ LogOut,
+ User,
+ Bell,
+ Home,
+ Menu,
+ X,
+ PanelLeftClose,
+ PanelLeftOpen,
 } from "lucide-react";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { loadSettings, updateSettings, SETTINGS_KEY, AppSettings } from "@/lib/app-settings";
@@ -61,584 +61,584 @@ import { prefetchRoute } from "@/hooks/usePrefetchRoutes";
 
 // Modern minimalist logo
 function AppLogo({ collapsed }: { collapsed?: boolean }) {
-  return (
-    <Link
-      to="/"
-      className={cn(
-        "flex items-center gap-2 px-2 py-3 transition-all duration-200 group relative",
-        "hover:bg-sidebar-accent/20 rounded-lg",
-        "hover:scale-[1.01] active:scale-95"
-      )}
-    >
-      <div className={cn(
-        "size-8 rounded-lg bg-gradient-to-br from-primary via-primary/90 to-chart-2",
-        "flex items-center justify-center text-primary-foreground font-bold text-sm",
-        "shrink-0 shadow-sm shadow-sidebar-foreground/10",
-        "transition-all duration-200 group-hover:shadow-md group-hover:scale-105",
-        "relative overflow-hidden"
-      )}>
-        <div className="relative z-10">R</div>
-      </div>
-      
-      <div className={cn(
-        "flex flex-col leading-none relative z-10 overflow-hidden transition-opacity duration-150",
-        collapsed ? "opacity-0 w-0" : "opacity-100 w-auto delay-75"
-      )}>
-        <span className="text-sm font-semibold tracking-tight text-sidebar-foreground transition-colors duration-200 group-hover:text-primary whitespace-nowrap">
-          Rehber360
-        </span>
-        <span className="text-[9px] text-muted-foreground mt-0.5 font-medium transition-colors duration-200 group-hover:text-sidebar-foreground/70 whitespace-nowrap">
-          Dijital Rehberlik
-        </span>
-      </div>
-    </Link>
-  );
+ return (
+ <Link
+ to="/"
+ className={cn(
+"flex items-center gap-2 px-2 py-3 transition-all duration-200 group relative",
+" rounded-lg",
+" active:scale-95"
+ )}
+ >
+ <div className={cn(
+"size-8 rounded-lg bg-gradient-to-br from-primary via-primary/90 to-chart-2",
+"flex items-center justify-center text-primary-foreground font-bold text-sm",
+"shrink-0 shadow-sm shadow-sidebar-foreground/10",
+"transition-all duration-200 group- group-",
+"relative overflow-hidden"
+ )}>
+ <div className="relative z-10">R</div>
+ </div>
+ 
+ <div className={cn(
+"flex flex-col leading-none relative z-10 overflow-hidden transition-opacity duration-150",
+ collapsed ?"opacity-0 w-0" :"opacity-100 w-auto delay-75"
+ )}>
+ <span className="text-sm font-semibold tracking-tight text-sidebar-foreground transition-colors duration-200 group- whitespace-nowrap">
+ Rehber360
+ </span>
+ <span className="text-[9px] text-muted-foreground mt-0.5 font-medium transition-colors duration-200 group- whitespace-nowrap">
+ Dijital Rehberlik
+ </span>
+ </div>
+ </Link>
+ );
 }
 
 // Modern breadcrumb
 function useBreadcrumbs() {
-  const location = useLocation();
-  const crumbs = useMemo(() => {
-    const map: Record<string, string> = {
-      "": "Ana Sayfa",
-      ogrenci: "Öğrenciler",
-      gorusmeler: "Görüşmeler",
-      anketler: "Anketler",
-      raporlar: "Raporlama",
-      "olcme-degerlendirme": "Sınavlar",
-      ayarlar: "Ayarlar",
-      "ai-araclari": "AI Araçları",
-    };
-    const parts = location.pathname.split("/").filter(Boolean);
-    return parts.map((p, i) => ({
-      key: p,
-      label: map[p] || p,
-      to: "/" + parts.slice(0, i + 1).join("/"),
-    }));
-  }, [location.pathname]);
-  return crumbs;
+ const location = useLocation();
+ const crumbs = useMemo(() => {
+ const map: Record<string, string> = {
+"":"Ana Sayfa",
+ ogrenci:"Öğrenciler",
+ gorusmeler:"Görüşmeler",
+ anketler:"Anketler",
+ raporlar:"Raporlama",
+"olcme-degerlendirme":"Sınavlar",
+ ayarlar:"Ayarlar",
+"ai-araclari":"AI Araçları",
+ };
+ const parts = location.pathname.split("/").filter(Boolean);
+ return parts.map((p, i) => ({
+ key: p,
+ label: map[p] || p,
+ to:"/" + parts.slice(0, i + 1).join("/"),
+ }));
+ }, [location.pathname]);
+ return crumbs;
 }
 
 // Modern navigation
 const navigationItems = [
-  { label: "Ana Sayfa", icon: Home, to: "/", end: true },
-  { label: "Öğrenciler", icon: Users2, to: "/ogrenci" },
-  { label: "Görüşmeler", icon: CalendarDays, to: "/gorusmeler" },
-  { label: "AI Araçları", icon: Sparkles, to: "/ai-araclari" },
-  { label: "Raporlama", icon: FileText, to: "/raporlar" },
-  { label: "Sınavlar", icon: ClipboardList, to: "/olcme-degerlendirme" },
-  { label: "Anketler", icon: MessageSquare, to: "/anketler" },
-  { label: "Ayarlar", icon: Settings, to: "/ayarlar" },
+ { label:"Ana Sayfa", icon: Home, to:"/", end: true },
+ { label:"Öğrenciler", icon: Users2, to:"/ogrenci" },
+ { label:"Görüşmeler", icon: CalendarDays, to:"/gorusmeler" },
+ { label:"AI Araçları", icon: Sparkles, to:"/ai-araclari" },
+ { label:"Raporlama", icon: FileText, to:"/raporlar" },
+ { label:"Sınavlar", icon: ClipboardList, to:"/olcme-degerlendirme" },
+ { label:"Anketler", icon: MessageSquare, to:"/anketler" },
+ { label:"Ayarlar", icon: Settings, to:"/ayarlar" },
 ];
 
 export default function Rehber360Layout() {
-  const { isAuthenticated, isLoading, logout } = useAuth();
-  const [dark, setDark] = useState(false);
-  const [account, setAccount] = useState<AppSettings["account"] | undefined>(undefined);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
-  const crumbs = useBreadcrumbs();
-  const navigate = useNavigate();
+ const { isAuthenticated, isLoading, logout } = useAuth();
+ const [dark, setDark] = useState(false);
+ const [account, setAccount] = useState<AppSettings["account"] | undefined>(undefined);
+ const [searchOpen, setSearchOpen] = useState(false);
+ const [searchQuery, setSearchQuery] = useState("");
+ const [sidebarOpen, setSidebarOpen] = useState(true);
+ const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+ const isMobile = useIsMobile();
+ const crumbs = useBreadcrumbs();
+ const navigate = useNavigate();
 
-  const initials = useMemo(() => {
-    const n = account?.displayName || "";
-    const parts = n.trim().split(/\s+/).filter(Boolean);
-    const first = parts[0]?.[0] || "K";
-    const second = parts[1]?.[0] || "";
-    return (first + second).toUpperCase();
-  }, [account]);
+ const initials = useMemo(() => {
+ const n = account?.displayName ||"";
+ const parts = n.trim().split(/\s+/).filter(Boolean);
+ const first = parts[0]?.[0] ||"K";
+ const second = parts[1]?.[0] ||"";
+ return (first + second).toUpperCase();
+ }, [account]);
 
-  useEffect(() => {
-    loadSettings().then(settings => {
-      setDark(settings.theme === "dark");
-      setAccount(settings.account);
-    });
-  }, []);
+ useEffect(() => {
+ loadSettings().then(settings => {
+ setDark(settings.theme ==="dark");
+ setAccount(settings.account);
+ });
+ }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    if (dark) root.classList.add("dark");
-    else root.classList.remove("dark");
-  }, [dark]);
+ useEffect(() => {
+ const root = document.documentElement;
+ if (dark) root.classList.add("dark");
+ else root.classList.remove("dark");
+ }, [dark]);
 
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === SETTINGS_KEY) {
-        try {
-          loadSettings().then(next => {
-            setDark(next.theme === "dark");
-            setAccount(next.account);
-          });
-        } catch {}
-      }
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+ useEffect(() => {
+ const onStorage = (e: StorageEvent) => {
+ if (e.key === SETTINGS_KEY) {
+ try {
+ loadSettings().then(next => {
+ setDark(next.theme ==="dark");
+ setAccount(next.account);
+ });
+ } catch {}
+ }
+ };
+ window.addEventListener("storage", onStorage);
+ return () => window.removeEventListener("storage", onStorage);
+ }, []);
 
-  const { data: searchResults } = useQuery<{
-    students: any[];
-    counselingSessions: any[];
-    surveys: any[];
-    pages: any[];
-  }>({
-    queryKey: ['/api/search/global', searchQuery],
-    queryFn: async () => {
-      if (!searchQuery.trim() || searchQuery.length < 2) {
-        return { students: [], counselingSessions: [], surveys: [], pages: [] };
-      }
-      const response = await fetch(`/api/search/global?q=${encodeURIComponent(searchQuery)}`);
-      if (!response.ok) throw new Error('Failed to fetch search results');
-      return response.json();
-    },
-    enabled: searchQuery.length >= 2,
-  });
+ const { data: searchResults } = useQuery<{
+ students: any[];
+ counselingSessions: any[];
+ surveys: any[];
+ pages: any[];
+ }>({
+ queryKey: ['/api/search/global', searchQuery],
+ queryFn: async () => {
+ if (!searchQuery.trim() || searchQuery.length < 2) {
+ return { students: [], counselingSessions: [], surveys: [], pages: [] };
+ }
+ const response = await fetch(`/api/search/global?q=${encodeURIComponent(searchQuery)}`);
+ if (!response.ok) throw new Error('Failed to fetch search results');
+ return response.json();
+ },
+ enabled: searchQuery.length >= 2,
+ });
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setSearchOpen((v) => !v);
-        if (!searchOpen) {
-          setTimeout(() => {
-            document.getElementById('header-search-input')?.focus();
-          }, 100);
-        }
-      }
-      if (e.key === "Escape" && searchOpen) {
-        e.preventDefault();
-        setSearchOpen(false);
-        setSearchQuery("");
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [searchOpen]);
+ useEffect(() => {
+ const onKey = (e: KeyboardEvent) => {
+ if (e.key.toLowerCase() ==="k" && (e.metaKey || e.ctrlKey)) {
+ e.preventDefault();
+ setSearchOpen((v) => !v);
+ if (!searchOpen) {
+ setTimeout(() => {
+ document.getElementById('header-search-input')?.focus();
+ }, 100);
+ }
+ }
+ if (e.key ==="Escape" && searchOpen) {
+ e.preventDefault();
+ setSearchOpen(false);
+ setSearchQuery("");
+ }
+ };
+ window.addEventListener("keydown", onKey);
+ return () => window.removeEventListener("keydown", onKey);
+ }, [searchOpen]);
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
+ const handleLogout = async () => {
+ await logout();
+ navigate('/login');
+ };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-background">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Yükleniyor...</p>
-        </div>
-      </div>
-    );
-  }
+ if (isLoading) {
+ return (
+ <div className="flex items-center justify-center h-screen bg-background">
+ <div className="text-center space-y-4">
+ <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+ <p className="text-muted-foreground">Yükleniyor...</p>
+ </div>
+ </div>
+ );
+ }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+ if (!isAuthenticated) {
+ return <Navigate to="/login" replace />;
+ }
 
-  return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      {/* Desktop Sidebar */}
-      {!isMobile && (
-        <aside
-          className={cn(
-            "flex flex-col border-r bg-sidebar transition-all duration-300 ease-in-out relative overflow-hidden",
-            "shadow-sm shadow-sidebar-foreground/3",
-            sidebarOpen ? "w-60" : "w-16"
-          )}
-        >
-          {/* Sidebar gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-sidebar via-sidebar to-sidebar-background opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-chart-2/5 opacity-30" />
-          
-          {/* Header section */}
-          <div className="relative h-16 flex items-center justify-between px-3 border-b border-sidebar-border/50 backdrop-blur-sm bg-sidebar/80">
-            {sidebarOpen && <AppLogo collapsed={false} />}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className={cn(
-                      "shrink-0 hover:bg-sidebar-accent/50 transition-all duration-300",
-                      "hover:scale-105 active:scale-95"
-                    )}
-                  >
-                    <PanelLeftClose className={cn(
-                      "h-4 w-4 transition-transform duration-300",
-                      sidebarOpen ? "rotate-0" : "rotate-180"
-                    )} />
-                  </Button>
-                </TooltipTrigger>
-                {!sidebarOpen && (
-                  <TooltipContent side="right" className="bg-sidebar border-sidebar-border">
-                    <p className="text-sidebar-foreground text-xs">Kenar çubuğunu aç</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+ return (
+ <div className="flex h-screen overflow-hidden bg-background">
+ {/* Desktop Sidebar */}
+ {!isMobile && (
+ <aside
+ className={cn(
+"flex flex-col border-r bg-sidebar transition-all duration-300 ease-in-out relative overflow-hidden",
+"shadow-sm shadow-sidebar-foreground/3",
+ sidebarOpen ?"w-60" :"w-16"
+ )}
+ >
+ {/* Sidebar gradient background */}
+ <div className="absolute inset-0 bg-gradient-to-b from-sidebar via-sidebar to-sidebar-background opacity-90" />
+ <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-chart-2/5 opacity-30" />
+ 
+ {/* Header section */}
+ <div className="relative h-16 flex items-center justify-between px-3 border-b border-sidebar-border/50 backdrop-blur-sm bg-sidebar/80">
+ {sidebarOpen && <AppLogo collapsed={false} />}
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger asChild>
+ <Button
+ variant="ghost"
+ size="icon"
+ onClick={() => setSidebarOpen(!sidebarOpen)}
+ className={cn(
+"shrink-0 transition-all duration-300",
+" active:scale-95"
+ )}
+ >
+ <PanelLeftClose className={cn(
+"h-4 w-4 transition-transform duration-300",
+ sidebarOpen ?"rotate-0" :"rotate-180"
+ )} />
+ </Button>
+ </TooltipTrigger>
+ {!sidebarOpen && (
+ <TooltipContent side="right" className="bg-sidebar border-sidebar-border">
+ <p className="text-sidebar-foreground text-xs">Kenar çubuğunu aç</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ </div>
 
-          {/* Navigation section */}
-          <ScrollArea className="relative flex-1 px-3 py-4">
-            <TooltipProvider>
-              <nav className={cn(
-                "space-y-1",
-                !sidebarOpen && "space-y-1"
-              )}>
-                {navigationItems.map((item, index) => (
-                  <Tooltip key={item.to} delayDuration={sidebarOpen ? 0 : 100}>
-                    <TooltipTrigger asChild>
-                      <NavLink
-                        to={item.to}
-                        end={item.end}
-                        onMouseEnter={() => prefetchRoute(item.to)}
-                        className={({ isActive }) => cn(
-                          "group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
-                          "hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
-                          "text-xs font-medium text-sidebar-foreground/70",
-                          "relative",
-                          isActive && "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm",
-                          !sidebarOpen && "justify-center px-2 py-2.5",
-                          "animate-slide-in-left"
-                        )}
-                        style={{ animationDelay: `${index * 30}ms` }}
-                      >
-                        {/* Active indicator */}
-                        <div className={cn(
-                          "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full",
-                          "bg-gradient-to-b from-primary to-chart-2 transition-all duration-200",
-                          "opacity-0 group-hover:opacity-100",
-                          !sidebarOpen && "left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
-                        )} />
-                        
-                        <item.icon className={cn(
-                          "shrink-0 transition-all duration-200",
-                          sidebarOpen ? "h-4 w-4" : "h-5 w-5",
-                          "group-hover:scale-105 group-hover:text-primary"
-                        )} />
-                        
-                        <span className={cn(
-                          "truncate transition-opacity duration-150 whitespace-nowrap overflow-hidden",
-                          sidebarOpen ? "opacity-100 w-auto delay-75" : "opacity-0 w-0"
-                        )}>
-                          {item.label}
-                        </span>
-                      </NavLink>
-                    </TooltipTrigger>
-                    {!sidebarOpen && (
-                      <TooltipContent side="right" className="bg-sidebar border-sidebar-border shadow-lg">
-                        <p className="text-sidebar-foreground text-xs font-medium">{item.label}</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                ))}
-              </nav>
-            </TooltipProvider>
-          </ScrollArea>
+ {/* Navigation section */}
+ <ScrollArea className="relative flex-1 px-3 py-4">
+ <TooltipProvider>
+ <nav className={cn(
+"space-y-1",
+ !sidebarOpen &&"space-y-1"
+ )}>
+ {navigationItems.map((item, index) => (
+ <Tooltip key={item.to} delayDuration={sidebarOpen ? 0 : 100}>
+ <TooltipTrigger asChild>
+ <NavLink
+ to={item.to}
+ end={item.end}
+ onMouseEnter={() => prefetchRoute(item.to)}
+ className={({ isActive }) => cn(
+"group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
+"",
+"text-xs font-medium text-sidebar-foreground/70",
+"relative",
+ isActive &&"bg-sidebar-accent text-sidebar-accent-foreground shadow-sm",
+ !sidebarOpen &&"justify-center px-2 py-2.5",
+"animate-slide-in-left"
+ )}
+ style={{ animationDelay: `${index * 30}ms` }}
+ >
+ {/* Active indicator */}
+ <div className={cn(
+"absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full",
+"bg-gradient-to-b from-primary to-chart-2 transition-all duration-200",
+"opacity-0 group-",
+ !sidebarOpen &&"left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
+ )} />
+ 
+ <item.icon className={cn(
+"shrink-0 transition-all duration-200",
+ sidebarOpen ?"h-4 w-4" :"h-5 w-5",
+"group- group-"
+ )} />
+ 
+ <span className={cn(
+"truncate transition-opacity duration-150 whitespace-nowrap overflow-hidden",
+ sidebarOpen ?"opacity-100 w-auto delay-75" :"opacity-0 w-0"
+ )}>
+ {item.label}
+ </span>
+ </NavLink>
+ </TooltipTrigger>
+ {!sidebarOpen && (
+ <TooltipContent side="right" className="bg-sidebar border-sidebar-border shadow-lg">
+ <p className="text-sidebar-foreground text-xs font-medium">{item.label}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ ))}
+ </nav>
+ </TooltipProvider>
+ </ScrollArea>
 
-          {/* Footer section */}
-          <div className="relative border-t border-sidebar-border/50 px-3 py-4 backdrop-blur-sm bg-sidebar/80">
-            <AIStatusIndicator collapsed={!sidebarOpen} />
-          </div>
-        </aside>
-      )}
+ {/* Footer section */}
+ <div className="relative border-t border-sidebar-border/50 px-3 py-4 backdrop-blur-sm bg-sidebar/80">
+ <AIStatusIndicator collapsed={!sidebarOpen} />
+ </div>
+ </aside>
+ )}
 
-      {/* Mobile Menu */}
-      {isMobile && mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl">
-          {/* Mobile overlay with gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-sidebar via-sidebar/90 to-sidebar-background" />
-          
-          <div className="relative flex h-full flex-col">
-            {/* Mobile header */}
-            <div className="relative flex items-center justify-between border-b border-sidebar-border/50 px-4 py-3 backdrop-blur-sm bg-sidebar/80">
-              <AppLogo />
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="hover:bg-sidebar-accent/50 transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            {/* Mobile navigation */}
-            <ScrollArea className="relative flex-1 p-4">
-              <nav className="space-y-1">
-                {navigationItems.map((item, index) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.end}
-                    onClick={() => setMobileMenuOpen(false)}
-                    onMouseEnter={() => prefetchRoute(item.to)}
-                    style={{ animationDelay: `${index * 30}ms` }}
-                  >
-                    {({ isActive }) => (
-                      <div className={cn(
-                        "group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
-                        "hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
-                        "text-xs font-medium text-sidebar-foreground/70",
-                        "relative",
-                        isActive && "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm",
-                        "animate-slide-in-right"
-                      )}>
-                        {/* Active indicator */}
-                        <div className={cn(
-                          "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full",
-                          "bg-gradient-to-b from-primary to-chart-2 transition-all duration-200",
-                          isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                        )} />
-                        
-                        <item.icon className={cn(
-                          "h-4 w-4 shrink-0 transition-all duration-200",
-                          "group-hover:scale-105 group-hover:text-primary"
-                        )} />
-                        
-                        <span className="truncate transition-all duration-200 whitespace-nowrap">
-                          {item.label}
-                        </span>
-                      </div>
-                    )}
-                  </NavLink>
-                ))}
-              </nav>
-            </ScrollArea>
-            
-            {/* Mobile footer */}
-            <div className="relative border-t border-sidebar-border/50 p-4 backdrop-blur-sm bg-sidebar/80">
-              <AIStatusIndicator />
-            </div>
-          </div>
-        </div>
-      )}
+ {/* Mobile Menu */}
+ {isMobile && mobileMenuOpen && (
+ <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl">
+ {/* Mobile overlay with gradient */}
+ <div className="absolute inset-0 bg-gradient-to-br from-sidebar via-sidebar/90 to-sidebar-background" />
+ 
+ <div className="relative flex h-full flex-col">
+ {/* Mobile header */}
+ <div className="relative flex items-center justify-between border-b border-sidebar-border/50 px-4 py-3 backdrop-blur-sm bg-sidebar/80">
+ <AppLogo />
+ <Button 
+ variant="ghost" 
+ size="icon" 
+ onClick={() => setMobileMenuOpen(false)}
+ className=" transition-all duration-200 active:scale-95"
+ >
+ <X className="h-4 w-4" />
+ </Button>
+ </div>
+ 
+ {/* Mobile navigation */}
+ <ScrollArea className="relative flex-1 p-4">
+ <nav className="space-y-1">
+ {navigationItems.map((item, index) => (
+ <NavLink
+ key={item.to}
+ to={item.to}
+ end={item.end}
+ onClick={() => setMobileMenuOpen(false)}
+ onMouseEnter={() => prefetchRoute(item.to)}
+ style={{ animationDelay: `${index * 30}ms` }}
+ >
+ {({ isActive }) => (
+ <div className={cn(
+"group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
+"",
+"text-xs font-medium text-sidebar-foreground/70",
+"relative",
+ isActive &&"bg-sidebar-accent text-sidebar-accent-foreground shadow-sm",
+"animate-slide-in-right"
+ )}>
+ {/* Active indicator */}
+ <div className={cn(
+"absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full",
+"bg-gradient-to-b from-primary to-chart-2 transition-all duration-200",
+ isActive ?"opacity-100" :"opacity-0 group-"
+ )} />
+ 
+ <item.icon className={cn(
+"h-4 w-4 shrink-0 transition-all duration-200",
+"group- group-"
+ )} />
+ 
+ <span className="truncate transition-all duration-200 whitespace-nowrap">
+ {item.label}
+ </span>
+ </div>
+ )}
+ </NavLink>
+ ))}
+ </nav>
+ </ScrollArea>
+ 
+ {/* Mobile footer */}
+ <div className="relative border-t border-sidebar-border/50 p-4 backdrop-blur-sm bg-sidebar/80">
+ <AIStatusIndicator />
+ </div>
+ </div>
+ </div>
+ )}
 
-      {/* Main Content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="sticky top-0 z-40 border-b border-border/30 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
-          <div className="flex h-10 items-center gap-2 px-3 md:px-5">
-            {isMobile && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="shrink-0 h-7 w-7 hover:bg-accent/50 transition-all duration-200" 
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <Menu className="h-3.5 w-3.5" />
-              </Button>
-            )}
+ {/* Main Content */}
+ <div className="flex flex-1 flex-col overflow-hidden">
+ <header className="sticky top-0 z-40 border-b border-border/30 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
+ <div className="flex h-10 items-center gap-2 px-3 md:px-5">
+ {isMobile && (
+ <Button 
+ variant="ghost" 
+ size="icon" 
+ className="shrink-0 h-7 w-7 transition-all duration-200" 
+ onClick={() => setMobileMenuOpen(true)}
+ >
+ <Menu className="h-3.5 w-3.5" />
+ </Button>
+ )}
 
-            <div className="ml-auto flex items-center gap-1">
-              {!searchOpen ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 hover:bg-accent/40 transition-all duration-200"
-                  onClick={() => {
-                    setSearchOpen(true);
-                    setTimeout(() => {
-                      document.getElementById('header-search-input')?.focus();
-                    }, 100);
-                  }}
-                >
-                  <Search className="h-3.5 w-3.5" />
-                </Button>
-              ) : (
-                <div className="relative w-[260px] animate-in fade-in slide-in-from-right-2 duration-200">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/60" />
-                  <Input
-                    id="header-search-input"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Ara... (⌘K)"
-                    className="h-7 pl-8 pr-2.5 text-[11px] border-border/30 focus-visible:ring-1 focus-visible:ring-primary/15 rounded-md"
-                    onBlur={() => {
-                      setTimeout(() => {
-                        setSearchOpen(false);
-                        setSearchQuery("");
-                      }, 300);
-                    }}
-                  />
-                  {searchQuery && searchQuery.length >= 2 && searchResults && (
-                    <Card className="absolute top-9 w-full max-h-[380px] overflow-hidden shadow-xl border-border/30 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                      <ScrollArea className="h-full max-h-[400px]">
-                        {searchResults.students.length > 0 && (
-                          <div className="p-2">
-                            <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
-                              Öğrenciler
-                            </div>
-                            {searchResults.students.map((student) => (
-                              <button
-                                key={student.id}
-                                onMouseDown={() => {
-                                  navigate(`/ogrenci/${student.id}`);
-                                  setSearchOpen(false);
-                                  setSearchQuery("");
-                                }}
-                                className="w-full flex items-center gap-2 px-2 py-2 rounded hover:bg-accent text-left"
-                              >
-                                <Users2 className="h-4 w-4 text-muted-foreground" />
-                                <div className="flex-1 text-sm">
-                                  <div>{student.name} {student.surname}</div>
-                                  {student.class && (
-                                    <div className="text-xs text-muted-foreground">{student.class}</div>
-                                  )}
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                        {searchResults.counselingSessions?.length > 0 && (
-                          <div className="p-2">
-                            <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
-                              Görüşmeler
-                            </div>
-                            {searchResults.counselingSessions.map((session) => (
-                              <button
-                                key={session.id}
-                                onMouseDown={() => {
-                                  navigate(`/gorusmeler`);
-                                  setSearchOpen(false);
-                                  setSearchQuery("");
-                                }}
-                                className="w-full flex items-center gap-2 px-2 py-2 rounded hover:bg-accent text-left"
-                              >
-                                <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                                <div className="flex-1 text-sm">
-                                  <div>{session.title}</div>
-                                  {session.studentNames && (
-                                    <div className="text-xs text-muted-foreground">{session.studentNames}</div>
-                                  )}
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                        {searchResults.surveys?.length > 0 && (
-                          <div className="p-2">
-                            <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
-                              Anketler
-                            </div>
-                            {searchResults.surveys.map((survey) => (
-                              <button
-                                key={survey.id}
-                                onMouseDown={() => {
-                                  navigate(`/anketler`);
-                                  setSearchOpen(false);
-                                  setSearchQuery("");
-                                }}
-                                className="w-full flex items-center gap-2 px-2 py-2 rounded hover:bg-accent text-left"
-                              >
-                                <FileText className="h-4 w-4 text-muted-foreground" />
-                                <div className="text-sm">{survey.title}</div>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                        {searchResults.pages?.length > 0 && (
-                          <div className="p-2">
-                            <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
-                              Sayfalar
-                            </div>
-                            {searchResults.pages.map((page) => (
-                              <button
-                                key={page.path}
-                                onMouseDown={() => {
-                                  navigate(page.path);
-                                  setSearchOpen(false);
-                                  setSearchQuery("");
-                                }}
-                                className="w-full flex items-center gap-2 px-2 py-2 rounded hover:bg-accent text-left"
-                              >
-                                <Search className="h-4 w-4 text-muted-foreground" />
-                                <div className="text-sm">{page.label}</div>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                        {searchResults.students.length === 0 && 
-                         searchResults.counselingSessions?.length === 0 && 
-                         searchResults.surveys?.length === 0 && 
-                         searchResults.pages?.length === 0 && (
-                          <div className="p-4 text-sm text-muted-foreground text-center">
-                            Sonuç bulunamadı
-                          </div>
-                        )}
-                      </ScrollArea>
-                    </Card>
-                  )}
-                </div>
-              )}
+ <div className="ml-auto flex items-center gap-1">
+ {!searchOpen ? (
+ <Button
+ variant="ghost"
+ size="icon"
+ className="h-7 w-7 transition-all duration-200"
+ onClick={() => {
+ setSearchOpen(true);
+ setTimeout(() => {
+ document.getElementById('header-search-input')?.focus();
+ }, 100);
+ }}
+ >
+ <Search className="h-3.5 w-3.5" />
+ </Button>
+ ) : (
+ <div className="relative w-[260px] animate-in fade-in slide-in-from-right-2 duration-200">
+ <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/60" />
+ <Input
+ id="header-search-input"
+ value={searchQuery}
+ onChange={(e) => setSearchQuery(e.target.value)}
+ placeholder="Ara... (⌘K)"
+ className="h-7 pl-8 pr-2.5 text-[11px] border-border/30 focus-visible:ring-1 focus-visible:ring-primary/15 rounded-md"
+ onBlur={() => {
+ setTimeout(() => {
+ setSearchOpen(false);
+ setSearchQuery("");
+ }, 300);
+ }}
+ />
+ {searchQuery && searchQuery.length >= 2 && searchResults && (
+ <Card className="absolute top-9 w-full max-h-[380px] overflow-hidden shadow-xl border-border/30 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+ <ScrollArea className="h-full max-h-[400px]">
+ {searchResults.students.length > 0 && (
+ <div className="p-2">
+ <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+ Öğrenciler
+ </div>
+ {searchResults.students.map((student) => (
+ <button
+ key={student.id}
+ onMouseDown={() => {
+ navigate(`/ogrenci/${student.id}`);
+ setSearchOpen(false);
+ setSearchQuery("");
+ }}
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ >
+ <Users2 className="h-4 w-4 text-muted-foreground" />
+ <div className="flex-1 text-sm">
+ <div>{student.name} {student.surname}</div>
+ {student.class && (
+ <div className="text-xs text-muted-foreground">{student.class}</div>
+ )}
+ </div>
+ </button>
+ ))}
+ </div>
+ )}
+ {searchResults.counselingSessions?.length > 0 && (
+ <div className="p-2">
+ <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+ Görüşmeler
+ </div>
+ {searchResults.counselingSessions.map((session) => (
+ <button
+ key={session.id}
+ onMouseDown={() => {
+ navigate(`/gorusmeler`);
+ setSearchOpen(false);
+ setSearchQuery("");
+ }}
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ >
+ <MessageSquare className="h-4 w-4 text-muted-foreground" />
+ <div className="flex-1 text-sm">
+ <div>{session.title}</div>
+ {session.studentNames && (
+ <div className="text-xs text-muted-foreground">{session.studentNames}</div>
+ )}
+ </div>
+ </button>
+ ))}
+ </div>
+ )}
+ {searchResults.surveys?.length > 0 && (
+ <div className="p-2">
+ <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+ Anketler
+ </div>
+ {searchResults.surveys.map((survey) => (
+ <button
+ key={survey.id}
+ onMouseDown={() => {
+ navigate(`/anketler`);
+ setSearchOpen(false);
+ setSearchQuery("");
+ }}
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ >
+ <FileText className="h-4 w-4 text-muted-foreground" />
+ <div className="text-sm">{survey.title}</div>
+ </button>
+ ))}
+ </div>
+ )}
+ {searchResults.pages?.length > 0 && (
+ <div className="p-2">
+ <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
+ Sayfalar
+ </div>
+ {searchResults.pages.map((page) => (
+ <button
+ key={page.path}
+ onMouseDown={() => {
+ navigate(page.path);
+ setSearchOpen(false);
+ setSearchQuery("");
+ }}
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ >
+ <Search className="h-4 w-4 text-muted-foreground" />
+ <div className="text-sm">{page.label}</div>
+ </button>
+ ))}
+ </div>
+ )}
+ {searchResults.students.length === 0 && 
+ searchResults.counselingSessions?.length === 0 && 
+ searchResults.surveys?.length === 0 && 
+ searchResults.pages?.length === 0 && (
+ <div className="p-4 text-sm text-muted-foreground text-center">
+ Sonuç bulunamadı
+ </div>
+ )}
+ </ScrollArea>
+ </Card>
+ )}
+ </div>
+ )}
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 hover:bg-accent/40 transition-all duration-200"
-                onClick={() =>
-                  setDark((v) => {
-                    const next = !v;
-                    updateSettings({ theme: next ? "dark" : "light" });
-                    return next;
-                  })
-                }
-              >
-                {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-              </Button>
+ <Button
+ variant="ghost"
+ size="icon"
+ className="h-7 w-7 transition-all duration-200"
+ onClick={() =>
+ setDark((v) => {
+ const next = !v;
+ updateSettings({ theme: next ?"dark" :"light" });
+ return next;
+ })
+ }
+ >
+ {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+ </Button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 hover:bg-accent/40 transition-all duration-200">
-                    <Avatar className="h-6 w-6">
-                      <AvatarFallback className="text-[10px] font-semibold">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/ayarlar" className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      Profil
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/bildirimler" className="flex items-center gap-2">
-                      <Bell className="h-4 w-4" />
-                      Bildirimler
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 text-destructive focus:text-destructive"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Çıkış Yap
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </header>
+ <DropdownMenu>
+ <DropdownMenuTrigger asChild>
+ <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 transition-all duration-200">
+ <Avatar className="h-6 w-6">
+ <AvatarFallback className="text-[10px] font-semibold">
+ {initials}
+ </AvatarFallback>
+ </Avatar>
+ </Button>
+ </DropdownMenuTrigger>
+ <DropdownMenuContent align="end" className="w-48">
+ <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
+ <DropdownMenuSeparator />
+ <DropdownMenuItem asChild>
+ <Link to="/ayarlar" className="flex items-center gap-2">
+ <User className="h-4 w-4" />
+ Profil
+ </Link>
+ </DropdownMenuItem>
+ <DropdownMenuItem asChild>
+ <Link to="/bildirimler" className="flex items-center gap-2">
+ <Bell className="h-4 w-4" />
+ Bildirimler
+ </Link>
+ </DropdownMenuItem>
+ <DropdownMenuSeparator />
+ <DropdownMenuItem
+ onClick={handleLogout}
+ className="flex items-center gap-2 text-destructive focus:text-destructive"
+ >
+ <LogOut className="h-4 w-4" />
+ Çıkış Yap
+ </DropdownMenuItem>
+ </DropdownMenuContent>
+ </DropdownMenu>
+ </div>
+ </div>
+ </header>
 
-        <main className="flex-1 overflow-auto bg-background">
-          <div className={cn(
-            "w-full py-3 md:py-3 mx-auto transition-all duration-300",
-            "px-2 md:px-3"
-          )}>
-            <Outlet />
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+ <main className="flex-1 overflow-auto bg-background">
+ <div className={cn(
+"w-full py-3 md:py-3 mx-auto transition-all duration-300",
+"px-2 md:px-3"
+ )}>
+ <Outlet />
+ </div>
+ </main>
+ </div>
+ </div>
+ );
 }

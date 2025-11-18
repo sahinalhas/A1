@@ -11,18 +11,18 @@
  */
 
 class CsrfTokenService {
-  // No-op methods for backwards compatibility
-  async getToken(): Promise<string> {
-    return '';
-  }
+ // No-op methods for backwards compatibility
+ async getToken(): Promise<string> {
+ return '';
+ }
 
-  refreshToken(): void {
-    // No longer needed
-  }
+ refreshToken(): void {
+ // No longer needed
+ }
 
-  hasToken(): boolean {
-    return true; // Always return true to avoid breaking existing checks
-  }
+ hasToken(): boolean {
+ return true; // Always return true to avoid breaking existing checks
+ }
 }
 
 export const csrfTokenService = new CsrfTokenService();

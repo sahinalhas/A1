@@ -11,18 +11,18 @@ import { Ruler, Weight } from "lucide-react";
 import StandardizedHealthSection from "./StandardizedHealthSection";
 
 interface EnhancedHealthSectionProps {
-  studentId: string;
-  onUpdate: () => void;
+ studentId: string;
+ onUpdate: () => void;
 }
 
 export default function EnhancedHealthSection({
-  studentId,
-  onUpdate
+ studentId,
+ onUpdate
 }: EnhancedHealthSectionProps) {
-  return (
-    <StandardizedHealthSection
-      studentId={studentId}
-      onUpdate={onUpdate}
-    />
-  );
+ return (
+ <StandardizedHealthSection
+ studentId={studentId}
+ onUpdate={onUpdate}
+ />
+ );
 }
