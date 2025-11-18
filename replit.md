@@ -129,6 +129,23 @@ Preferred communication style: Simple, everyday language.
 - ✅ Database checks for existing data before seeding to avoid duplicates
 - ✅ Automatic seeding runs on database initialization (first run only)
 
+## November 18, 2024 - Subjects and Topics Reset Feature
+- ✅ Added "Varsayılana Sıfırla" (Reset to Defaults) button to Courses page
+- ✅ Implemented backend reset endpoint at `/api/subjects/reset`
+- ✅ Created `resetToDefaultData()` function in subjects repository
+- ✅ Reset functionality includes:
+  - Deletes all existing subjects and topics from database
+  - Re-seeds database with default MEB-compliant data
+  - Wrapped in database transaction for data consistency
+  - Rate-limited endpoint (10 requests per 15 minutes)
+  - Requires authentication
+- ✅ Frontend features:
+  - AlertDialog confirmation before reset
+  - Success/error toast notifications
+  - Auto-refresh after reset to show updated data
+  - Pattern consistent with guidance standards reset
+- ✅ **Warning**: Reset removes all custom subjects and topics permanently
+
 ## November 18, 2024 - Replit Environment Setup
 - ✅ Imported GitHub project and extracted all files
 - ✅ Installed Node.js 20 and all npm dependencies
