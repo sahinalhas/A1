@@ -114,6 +114,21 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes
 
+## November 18, 2024 - Default Subjects and Topics Data System
+- ✅ Created `shared/data/default-subjects-topics.ts` with comprehensive default data for all subjects and topics
+- ✅ Added automatic seeding system for subjects and topics database tables
+- ✅ Implemented `seedSubjectsAndTopics()` function in `academic.schema.ts`
+- ✅ Integrated seed function into database initialization process
+- ✅ Default data includes:
+  - **School (Lise)**: 13 subjects (no topics) - Matematik, Fizik, Kimya, Biyoloji, etc.
+  - **LGS**: 6 subjects with 60+ topics - Türkçe, Matematik, Fen Bilimleri, etc.
+  - **TYT**: 10 subjects with 80+ topics - Türkçe, Matematik, Geometri, Fizik, etc.
+  - **AYT**: 14 subjects with 90+ topics - Matematik, Geometri, Fizik, Kimya, Edebiyat, etc.
+  - **YDT**: 4 subjects with 50+ topics - İngilizce, Almanca, Fransızca, Arapça
+- ✅ Each topic includes metadata: avgMinutes, energyLevel, difficultyScore, priority
+- ✅ Database checks for existing data before seeding to avoid duplicates
+- ✅ Automatic seeding runs on database initialization (first run only)
+
 ## November 18, 2024 - Replit Environment Setup
 - ✅ Imported GitHub project and extracted all files
 - ✅ Installed Node.js 20 and all npm dependencies

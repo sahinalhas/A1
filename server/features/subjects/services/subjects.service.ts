@@ -27,3 +27,7 @@ export function saveTopicsList(topics: Topic[]): void {
   }
   subjectsRepository.saveTopics(topics);
 }
+
+export function resetToDefaults(): void {
+  subjectsRepository.resetToDefaultData();
+}

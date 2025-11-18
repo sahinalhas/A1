@@ -1,4 +1,6 @@
 import type Database from 'better-sqlite3';
+import { randomUUID } from 'crypto';
+import { DEFAULT_SUBJECTS } from '../../../../shared/data/default-subjects-topics';
 
 export function createAcademicTables(db: Database.Database): void {
   db.exec(`
@@ -229,4 +231,86 @@ export function createAcademicTables(db: Database.Database): void {
       FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE CASCADE
     );
   `);
+}
+
+export function seedSubjectsAndTopics(db: Database.Database): void {
+  const subjectCount = db.prepare('SELECT COUNT(*) as count FROM subjects').get() as { count: number };
+  
+  if (subjectCount.count > 0) {
+    console.log('✓ Dersler ve konular zaten mevcut, otomatik doldurma atlanıyor');
+    return;
+  }
+
+  console.log('📚 Veritabanına dersler ve konular ekleniyor...');
+
+  const findSubject = db.prepare('SELECT id FROM subjects WHERE name = ? AND category = ?');
+  const insertSubject = db.prepare(`
+    INSERT INTO subjects (id, name, category, created_at)
+    VALUES (?, ?, ?, datetime('now'))
+  `);
+  const insertTopic = db.prepare(`
+    INSERT INTO topics (
+      id, subjectId, name, "order", avgMinutes, energyLevel, 
+      difficultyScore, priority, created_at
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+  `);
+
+  let subjectInserted = 0;
+  let topicInserted = 0;
+
+  const insertTransaction = db.transaction(() => {
+    for (const subjectData of DEFAULT_SUBJECTS) {
+      let subjectId: string;
+      const existingSubject = findSubject.get(subjectData.name, subjectData.category) as { id: string } | undefined;
+      
+      if (existingSubject) {
+        subjectId = existingSubject.id;
+      } else {
+        subjectId = randomUUID();
+        insertSubject.run(subjectId, subjectData.name, subjectData.category);
+        subjectInserted++;
+      }
+      
+      if (subjectData.topics.length > 0) {
+        subjectData.topics.forEach((topicData, index) => {
+          const topicId = randomUUID();
+          insertTopic.run(
+            topicId, 
+            subjectId, 
+            topicData.name, 
+            index + 1,
+            topicData.avgMinutes || 60,
+            topicData.energyLevel || 'medium',
+            topicData.difficultyScore,
+            topicData.priority
+          );
+          topicInserted++;
+        });
+      }
+    }
+  });
+
+  insertTransaction();
+
+  console.log(`✓ ${subjectInserted} ders ve ${topicInserted} konu başarıyla eklendi`);
+  
+  const stats = db.prepare(`
+    SELECT category, COUNT(*) as count 
+    FROM subjects 
+    WHERE category IS NOT NULL 
+    GROUP BY category
+  `).all() as Array<{ category: string; count: number }>;
+  
+  console.log('📊 Kategori özeti:');
+  stats.forEach((stat) => {
+    const topicCountForCategory = db.prepare(`
+      SELECT COUNT(*) as count 
+      FROM topics t 
+      JOIN subjects s ON t.subjectId = s.id 
+      WHERE s.category = ?
+    `).get(stat.category) as { count: number };
+    
+    console.log(`   ${stat.category}: ${stat.count} ders, ${topicCountForCategory.count} konu`);
+  });
 }

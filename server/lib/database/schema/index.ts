@@ -1,6 +1,6 @@
 import type Database from 'better-sqlite3';
 import { createStudentsTables } from './students.schema';
-import { createAcademicTables } from './academic.schema';
+import { createAcademicTables, seedSubjectsAndTopics } from './academic.schema';
 import { createSurveysTables } from './surveys.schema';
 import { createCounselingTables } from './counseling.schema';
 import { createCoachingTables } from './coaching.schema';
@@ -28,6 +28,7 @@ export function initializeDatabaseSchema(db: Database.Database): void {
   seedAdminUser(db);
   createStudentsTables(db);
   createAcademicTables(db);
+  seedSubjectsAndTopics(db);
   createSurveysTables(db);
   createCounselingTables(db);
   createCoachingTables(db);

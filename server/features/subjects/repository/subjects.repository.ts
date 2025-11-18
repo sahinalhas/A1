@@ -1,5 +1,6 @@
 import getDatabase from '../../../lib/database.js';
 import type { Subject, Topic } from '../types/subjects.types.js';
+import { seedSubjectsAndTopics } from '../../../lib/database/schema/academic.schema.js';
 
 let statements: any = null;
 let isInitialized = false;
