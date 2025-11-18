@@ -117,7 +117,7 @@ export default function Courses() {
  group relative overflow-hidden rounded-2xl p-6 transition-all duration-300
  ${isSelected 
  ? 'bg-gradient-to-br ' + cat.gradient + ' text-white shadow-xl scale-105' 
- : 'bg-card border-2 border-border shadow-sm 
+ : 'bg-card border-2 border-border shadow-sm'
  }
  `}
  >
@@ -126,7 +126,7 @@ export default function Courses() {
  p-3 rounded-xl transition-all duration-300
  ${isSelected 
  ? 'bg-white/20 backdrop-blur-sm' 
- : 'bg-primary/10 group-
+ : 'bg-primary/10'
  }
  `}>
  <Icon className={`
@@ -141,14 +141,6 @@ export default function Courses() {
  {cat.label}
  </span>
  </div>
- 
- {/* Gradient overlay on hover */}
- {!isSelected && (
- <div className={`
- absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 
- group- transition-opacity duration-300
- `} />
- )}
  </button>
  );
  })}

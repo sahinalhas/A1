@@ -321,7 +321,7 @@ export default function AISettingsTab() {
  className={`cursor-pointer transition-all duration-200 ${
  isSelected 
  ? 'ring-2 ring-primary shadow-lg scale-[1.02]' 
- : ' 
+ : ''
  }`}
  onClick={() => handleProviderChange(key)}
  >
