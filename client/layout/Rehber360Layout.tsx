@@ -179,7 +179,7 @@ export default function Rehber360Layout() {
  return () => window.removeEventListener("storage", onStorage);
  }, []);
 
- const { data: searchResults } = useQuery<{
+ const { data: searchResults, isLoading: isSearchLoading, error: searchError } = useQuery<{
  students: any[];
  counselingSessions: any[];
  surveys: any[];
@@ -465,9 +465,22 @@ export default function Rehber360Layout() {
  }, 300);
  }}
  />
- {searchQuery && searchQuery.length >= 2 && searchResults && (
+ {searchQuery && searchQuery.length >= 2 && (
  <Card className="absolute top-9 w-full max-h-[380px] overflow-hidden border-border/30 z-50 fade-in slide-in-from-top-2">
  <ScrollArea className="h-full max-h-[400px]">
+ {isSearchLoading && (
+ <div className="p-4 text-sm text-muted-foreground text-center flex items-center justify-center gap-2">
+ <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+ Aranıyor...
+ </div>
+ )}
+ {searchError && (
+ <div className="p-4 text-sm text-destructive text-center">
+ Arama sırasında bir hata oluştu
+ </div>
+ )}
+ {!isSearchLoading && !searchError && searchResults && (
+ <>
  {searchResults.students.length > 0 && (
  <div className="p-2">
  <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">
@@ -481,7 +494,7 @@ export default function Rehber360Layout() {
  setSearchOpen(false);
  setSearchQuery("");
  }}
- className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left hover:bg-accent"
  >
  <Users2 className="h-4 w-4 text-muted-foreground" />
  <div className="flex-1 text-sm">
@@ -507,7 +520,7 @@ export default function Rehber360Layout() {
  setSearchOpen(false);
  setSearchQuery("");
  }}
- className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left hover:bg-accent"
  >
  <MessageSquare className="h-4 w-4 text-muted-foreground" />
  <div className="flex-1 text-sm">
@@ -533,7 +546,7 @@ export default function Rehber360Layout() {
  setSearchOpen(false);
  setSearchQuery("");
  }}
- className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left hover:bg-accent"
  >
  <FileText className="h-4 w-4 text-muted-foreground" />
  <div className="text-sm">{survey.title}</div>
@@ -554,7 +567,7 @@ export default function Rehber360Layout() {
  setSearchOpen(false);
  setSearchQuery("");
  }}
- className="w-full flex items-center gap-2 px-2 py-2 rounded text-left"
+ className="w-full flex items-center gap-2 px-2 py-2 rounded text-left hover:bg-accent"
  >
  <Search className="h-4 w-4 text-muted-foreground" />
  <div className="text-sm">{page.label}</div>
@@ -569,6 +582,8 @@ export default function Rehber360Layout() {
  <div className="p-4 text-sm text-muted-foreground text-center">
  Sonuç bulunamadı
  </div>
+ )}
+ </>
  )}
  </ScrollArea>
  </Card>
