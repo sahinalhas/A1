@@ -62,7 +62,7 @@ export default function AISettingsTab() {
  useEffect(() => {
  loadCurrentSettings();
  loadHealthStatus();
- 
+
  // Health status'u her 30 saniyede güncelle
  const interval = setInterval(loadHealthStatus, 30000);
  return () => clearInterval(interval);
@@ -83,14 +83,14 @@ export default function AISettingsTab() {
  const handleProviderChange = (selectedProvider: 'ollama' | 'openai' | 'gemini') => {
  setProvider(selectedProvider);
  setConnectionStatus('unchecked');
- 
+
  if (selectedProvider === 'ollama') {
  const cachedModels = providerModelsCache['ollama'] || [];
  setAvailableModels(cachedModels);
  if (cachedModels.length > 0 && !cachedModels.includes(model)) {
  setModel(cachedModels[0]);
  }
- 
+
  // Ollama için otomatik bağlantı testi yap
  if (cachedModels.length === 0) {
  setTimeout(() => checkConnection(), 500);
@@ -109,7 +109,7 @@ export default function AISettingsTab() {
  if (modelValues.length > 0 && !modelValues.includes(model)) {
  setModel(modelValues[0]);
  }
- 
+
  // Cloud provider'lar için otomatik health check
  setTimeout(() => checkConnection(), 500);
  }
@@ -124,15 +124,15 @@ export default function AISettingsTab() {
  if (data.success && data.data) {
  const currentProvider = data.data.provider || 'gemini';
  const currentModel = data.data.currentModel || 'gemini-2.5-flash';
- 
+
  setProvider(currentProvider);
  setModel(currentModel);
  setCurrentActiveProvider(`${PROVIDER_INFO[currentProvider as keyof typeof PROVIDER_INFO].name} (${currentModel})`);
- 
+
  if (currentProvider === 'ollama' && data.data.ollamaBaseUrl) {
  setOllamaUrl(data.data.ollamaBaseUrl);
  }
- 
+
  if (data.data.availableModels && data.data.availableModels.length > 0) {
  setAvailableModels(data.data.availableModels);
  setProviderModelsCache(prev => ({
@@ -166,10 +166,10 @@ export default function AISettingsTab() {
  : '/api/ai-assistant/health';
 
  const response = await fetch(endpoint);
- 
+
  if (response.ok) {
  const data = await response.json();
- 
+
  if (provider === 'ollama' && data.models) {
  const modelNames = data.models.map((m: any) => m.name);
  setAvailableModels(modelNames);
@@ -178,11 +178,11 @@ export default function AISettingsTab() {
  'ollama': modelNames
  }));
  setConnectionStatus('success');
- 
+
  if (modelNames.length > 0 && !modelNames.includes(model)) {
  setModel(modelNames[0]);
  }
- 
+
  toast.success(`Ollama bağlantısı başarılı! ${modelNames.length} model bulundu.`);
  } else if (provider === 'gemini' && data.success && data.data) {
  if (data.data.available) {
@@ -252,7 +252,7 @@ export default function AISettingsTab() {
  if (response.ok) {
  const providerName = PROVIDER_INFO[provider].name;
  toast.success(`AI Ayarları Kaydedildi!\n${providerName} (${model}) aktif olarak ayarlandı. Bu ayar kalıcıdır.`);
- 
+
  await loadCurrentSettings();
  setConnectionStatus('unchecked');
  } else {
@@ -314,7 +314,7 @@ export default function AISettingsTab() {
  {(Object.keys(PROVIDER_INFO) as Array<keyof typeof PROVIDER_INFO>).map((key) => {
  const info = PROVIDER_INFO[key];
  const isSelected = provider === key;
- 
+
  return (
  <Card
  key={key}
@@ -416,8 +416,7 @@ export default function AISettingsTab() {
  </li>
  <li className="flex items-start gap-2">
  <span className="font-bold text-blue-600 dark:text-blue-400">3.</span>
- <span>
- Servisi başlatın:{' '}
+ <span>Servisi başlatın:{' '}
  <code className="bg-muted px-2 py-1 rounded font-mono text-xs">ollama serve</code>
  </span>
  </li>
@@ -532,7 +531,7 @@ export default function AISettingsTab() {
  {availableModels.length} model mevcut
  </Badge>
  </div>
- 
+
  <Select value={model} onValueChange={setModel}>
  <SelectTrigger id="ai-model" className="h-auto py-3">
  <SelectValue />
@@ -553,7 +552,7 @@ export default function AISettingsTab() {
  })}
  </SelectContent>
  </Select>
- 
+
  {getModelDescription(model) && (
  <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg flex items-start gap-2">
  <Info className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
