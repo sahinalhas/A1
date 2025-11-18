@@ -146,6 +146,19 @@ Preferred communication style: Simple, everyday language.
   - Pattern consistent with guidance standards reset
 - ✅ **Warning**: Reset removes all custom subjects and topics permanently
 
+## November 18, 2024 - School Category Consistency Fix
+- ✅ Fixed category inconsistency for School (Okul) subjects
+- ✅ Updated type definitions to include 'School' category:
+  - `StudySubject` type (client-side)
+  - `Subject` interface (server-side)
+- ✅ Fixed filtering logic to use consistent category values
+- ✅ New subjects now save with `category: 'School'` instead of `undefined`
+- ✅ Backward compatibility maintained:
+  - Legacy subjects with `category: undefined` still display
+  - New subjects use `category: 'School'` for consistency
+  - Default data uses `category: 'School'`
+- ✅ All exam categories now use consistent structure: School, LGS, TYT, AYT, YDT
+
 ## November 18, 2024 - Replit Environment Setup
 - ✅ Imported GitHub project and extracted all files
 - ✅ Installed Node.js 20 and all npm dependencies
