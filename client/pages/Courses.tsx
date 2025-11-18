@@ -22,8 +22,19 @@ import {
  School,
  Globe,
  Sparkles,
+ RotateCcw,
 } from "lucide-react";
 import { useToast } from "@/hooks/utils/toast.utils";
+import {
+ AlertDialog,
+ AlertDialogAction,
+ AlertDialogCancel,
+ AlertDialogContent,
+ AlertDialogDescription,
+ AlertDialogFooter,
+ AlertDialogHeader,
+ AlertDialogTitle,
+} from "@/components/organisms/AlertDialog";
 import {
  StudySubject,
  StudyTopic,
@@ -56,6 +67,7 @@ export default function Courses() {
  const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(
  new Set()
  );
+ const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
  useEffect(() => {
  refreshData();
@@ -69,6 +81,34 @@ export default function Courses() {
  setSubjects(subjectsData);
  setTopics(topicsData);
  }
+
+ const handleReset = async () => {
+ try {
+ const response = await fetch('/api/subjects/reset', {
+ method: 'POST',
+ });
+
+ const data = await response.json();
+
+ if (data.success) {
+ await refreshData();
+ toast({
+ title: 'Başarılı',
+ description: 'Dersler ve konular varsayılan değerlere sıfırlandı',
+ });
+ } else {
+ throw new Error(data.error);
+ }
+ } catch (error) {
+ toast({
+ title: 'Hata',
+ description: 'Sıfırlama sırasında bir hata oluştu',
+ variant: 'destructive',
+ });
+ } finally {
+ setResetDialogOpen(false);
+ }
+ };
 
  const filteredSubjects = useMemo(() => {
  if (selectedCategory ==="School") {
@@ -94,6 +134,7 @@ export default function Courses() {
  return (
  <div className="w-full max-w-7xl mx-auto py-8 px-4 space-y-8">
  {/* Header Section */}
+ <div className="flex items-start justify-between">
  <div className="space-y-3">
  <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
  Dersler & Konular
@@ -101,6 +142,11 @@ export default function Courses() {
  <p className="text-muted-foreground text-lg">
  Ders ve konu yönetimi ile çalışma planınızı organize edin
  </p>
+ </div>
+ <Button variant="outline" size="sm" onClick={() => setResetDialogOpen(true)}>
+ <RotateCcw className="h-4 w-4 mr-1" />
+ Varsayılana Sıfırla
+ </Button>
  </div>
 
  {/* Category Cards */}
@@ -193,6 +239,23 @@ export default function Courses() {
  </div>
  )}
  </div>
+
+ <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+ <AlertDialogContent>
+ <AlertDialogHeader>
+ <AlertDialogTitle>Varsayılana Sıfırla</AlertDialogTitle>
+ <AlertDialogDescription>
+ Tüm özelleştirmeleriniz silinecek ve dersler/konular MEB varsayılan değerlerine geri dönecektir. Emin misiniz?
+ </AlertDialogDescription>
+ </AlertDialogHeader>
+ <AlertDialogFooter>
+ <AlertDialogCancel>İptal</AlertDialogCancel>
+ <AlertDialogAction onClick={handleReset} className="bg-destructive">
+ Sıfırla
+ </AlertDialogAction>
+ </AlertDialogFooter>
+ </AlertDialogContent>
+ </AlertDialog>
  </div>
  );
 }
