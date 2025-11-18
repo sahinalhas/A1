@@ -12,5 +12,6 @@ router.post("/", simpleRateLimit(50, 15 * 60 * 1000), subjectsRoutes.saveSubject
 router.get("/topics", simpleRateLimit(200, 15 * 60 * 1000), subjectsRoutes.getTopics);
 router.get("/:id/topics", simpleRateLimit(200, 15 * 60 * 1000), subjectsRoutes.getTopicsBySubjectId);
 router.post("/topics", simpleRateLimit(50, 15 * 60 * 1000), subjectsRoutes.saveTopicsHandler);
+router.post("/reset", simpleRateLimit(10, 15 * 60 * 1000), subjectsRoutes.resetToDefaultsHandler);
 
 export default router;

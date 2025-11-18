@@ -63,3 +63,13 @@ export const saveTopicsHandler: RequestHandler = (req, res) => {
     res.status(500).json({ success: false, error: ERROR_MESSAGES.FAILED_TO_SAVE_TOPICS });
   }
 };
+
+export const resetToDefaultsHandler: RequestHandler = (req, res) => {
+  try {
+    subjectsService.resetToDefaults();
+    res.json({ success: true, message: 'Dersler ve konular varsayılan değerlere sıfırlandı' });
+  } catch (error) {
+    console.error('Error resetting to defaults:', error);
+    res.status(500).json({ success: false, error: 'Varsayılana sıfırlama başarısız oldu' });
+  }
+};
