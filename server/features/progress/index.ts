@@ -1,0 +1,17 @@
+import { Router } from 'express';
+import { simpleRateLimit } from '../../middleware/validation.js';
+import { requireSecureAuth, requireRoleSecure } from '../../middleware/auth-secure.middleware.js';
+import * as progressRoutes from './routes/progress.routes.js';
+
+const router = Router();
+
+router.use(requireSecureAuth);
+
+router.get("/", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(200, 15 * 60 * 1000), progressRoutes.getAllProgressHandler);
+router.get("/:studentId", simpleRateLimit(200, 15 * 60 * 1000), progressRoutes.getProgress);
+router.post("/", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), progressRoutes.saveProgressHandler);
+
+router.get("/academic-goals/:studentId", simpleRateLimit(200, 15 * 60 * 1000), progressRoutes.getAcademicGoals);
+router.post("/academic-goals", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), progressRoutes.saveAcademicGoalsHandler);
+
+export default router;

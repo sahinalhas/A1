@@ -1,0 +1,18 @@
+import { Router } from 'express';
+import { simpleRateLimit } from '../../middleware/validation.js';
+import { requireSecureAuth, requireRoleSecure } from '../../middleware/auth-secure.middleware.js';
+import * as examsRoutes from './routes/exams.routes.js';
+
+const router = Router();
+
+router.use(requireSecureAuth);
+
+router.get('/:studentId', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getExamResultsByStudent);
+router.get('/:studentId/type/:examType', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getExamResultsByType);
+router.get('/:studentId/latest', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getLatestExamResult);
+router.get('/:studentId/progress/:examType', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getExamProgressAnalysis);
+router.post('/', requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), examsRoutes.createExamResult);
+router.put('/:id', requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), examsRoutes.updateExamResult);
+router.delete('/:id', requireRoleSecure(['admin', 'counselor']), simpleRateLimit(20, 15 * 60 * 1000), examsRoutes.deleteExamResult);
+
+export default router;
