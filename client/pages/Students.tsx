@@ -457,21 +457,21 @@ export default function Students() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-blue-600 via-cyan-600 to-teal-700 p-12 shadow-2xl"
+        className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-blue-600 via-cyan-600 to-teal-700 p-6 md:p-8 shadow-2xl"
       >
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"></div>
 
         <div className="relative z-10 max-w-4xl">
-          <Badge className="mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+          <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
             <Sparkles className="h-3 w-3 mr-1" />
             Öğrenci Yönetim Sistemi
           </Badge>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
             Öğrenciler
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl leading-relaxed">
+          <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
             Tüm öğrenci kayıtlarını görüntüleyin, yönetin ve analiz edin. Modern arayüz ile hızlı ve kolay erişim.
           </p>
           <div className="flex flex-wrap gap-3">

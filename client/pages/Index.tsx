@@ -338,7 +338,7 @@ useEffect(() => {
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 p-12 shadow-2xl"
+        className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 p-6 md:p-8 shadow-2xl"
       >
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -350,14 +350,14 @@ useEffect(() => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+            <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
               <Sparkles className="h-3 w-3 mr-1" />
               Yeni Nesil Rehberlik Sistemi
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               Rehber360'a Hoş Geldiniz
             </h1>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl leading-relaxed">
+            <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
               Yapay zeka destekli, modern ve kullanıcı dostu öğrenci rehberlik platformu.
               Her öğrenciye özel analiz ve danışmanlık deneyimi.
             </p>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/utils/toast.utils";
-import { Plus, Download, Search as SearchIcon, Upload } from "lucide-react";
+import { motion } from "framer-motion";
+import { Plus, Download, Search as SearchIcon, Upload, Sparkles, MessageSquare, Calendar, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
 import { Badge } from "@/components/atoms/Badge";
@@ -269,43 +270,67 @@ export default function CounselingSessions() {
  };
 
  return (
- <div className="w-full max-w-7xl mx-auto py-6 space-y-6">
- <div className="flex items-center justify-between flex-wrap gap-4">
- <div>
- <h1 className="text-3xl font-bold tracking-tight">Rehberlik Görüşmeleri</h1>
- <p className="text-muted-foreground mt-1">
- Modern görüşme yönetimi ve analiz sistemi
+ <div className="w-full min-h-screen">
+ <motion.div
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-6 md:p-8 shadow-2xl"
+ >
+ <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+ <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+ <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"></div>
+
+ <div className="relative z-10 max-w-4xl">
+ <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+ <Sparkles className="h-3 w-3 mr-1" />
+ Rehberlik Görüşme Sistemi
+ </Badge>
+ <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+ Rehberlik Görüşmeleri
+ </h1>
+ <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+ Modern görüşme yönetimi ve analiz sistemi. Tüm görüşmelerinizi takip edin ve raporlayın.
  </p>
- </div>
- <div className="flex gap-2 flex-wrap">
+ <div className="flex gap-3 flex-wrap">
+ <Button 
+ onClick={() => setDialogOpen(true)}
+ size="lg"
+ className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg"
+ >
+ <Plus className="mr-2 h-5 w-5" />
+ Yeni Görüşme
+ </Button>
  <Button 
  onClick={() => setSearchOpen(true)}
- size="sm"
+ size="lg"
  variant="outline"
- className="gap-2"
+ className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
  >
- <SearchIcon className="h-4 w-4" />
+ <SearchIcon className="mr-2 h-5 w-5" />
  Ara (⌘K)
  </Button>
  <Button 
  onClick={() => setReportDialogOpen(true)}
- size="sm"
+ size="lg"
  variant="outline"
- className="gap-2"
+ className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
  >
- <Download className="h-4 w-4" />
+ <Download className="mr-2 h-5 w-5" />
  Rapor
  </Button>
- <Button 
- onClick={() => setDialogOpen(true)}
- size="sm"
- className="gap-2"
+ </div>
+ </div>
+
+ <motion.div
+ className="absolute top-10 right-10 opacity-20"
+ animate={{ rotate: 360 }}
+ transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
  >
- <Plus className="h-4 w-4" />
- Yeni Görüşme
- </Button>
- </div>
- </div>
+ <MessageSquare className="h-32 w-32 text-white" />
+ </motion.div>
+ </motion.div>
+
+ <div className="space-y-6 max-w-7xl mx-auto">
 
  <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
  <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
