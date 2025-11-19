@@ -66,42 +66,42 @@
    * - Spacing: className="space-y-4 p-6"
   */
   :root {
-    /* 2025 Minimalist Light Mode - Ultra Clean & Breathable */
-    --background: 0 0% 99%;
-    --foreground: 220 13% 13%;
+    /* Ultra-Refined Light Mode - Chic & Elegant */
+    --background: 0 0% 99.5%;
+    --foreground: 220 12% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 13% 13%;
+    --card-foreground: 220 12% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 13%;
+    --popover-foreground: 220 12% 15%;
 
-    /* Refined primary - softer, more elegant */
-    --primary: 234 72% 58%;
+    /* Elegant primary - softer indigo */
+    --primary: 235 68% 60%;
     --primary-foreground: 0 0% 100%;
 
-    /* Subtle secondary with warmth */
-    --secondary: 220 8% 97%;
-    --secondary-foreground: 220 13% 13%;
+    /* Minimal secondary */
+    --secondary: 220 7% 98%;
+    --secondary-foreground: 220 12% 15%;
 
-    /* Ultra-minimal muted palette */
-    --muted: 220 6% 97%;
-    --muted-foreground: 220 9% 52%;
+    /* Whisper-soft muted palette */
+    --muted: 220 5% 97.5%;
+    --muted-foreground: 220 8% 48%;
 
-    /* Whisper-soft accent */
-    --accent: 220 6% 98%;
-    --accent-foreground: 234 68% 54%;
+    /* Feather-light accent */
+    --accent: 220 5% 98.5%;
+    --accent-foreground: 235 64% 56%;
 
-    /* Balanced destructive */
-    --destructive: 0 60% 56%;
+    /* Refined destructive */
+    --destructive: 0 58% 54%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Almost invisible borders - 2025 trend */
-    --border: 220 8% 94%;
-    --input: 220 6% 96%;
-    --ring: 234 72% 58%;
+    /* Barely-there borders - ultra minimal */
+    --border: 220 6% 95%;
+    --input: 220 4% 97%;
+    --ring: 235 68% 60%;
 
-    --radius: 1rem;
+    --radius: 0.875rem;
 
     /* Harmonious chart colors - muted */
     --chart-1: 234 72% 58%;
@@ -134,40 +134,40 @@
   }
 
   .dark {
-    /* 2025 Minimalist Dark Mode - Rich & Refined */
-    --background: 220 20% 6%;
-    --foreground: 220 8% 96%;
+    /* Ultra-Refined Dark Mode - Elegant & Chic */
+    --background: 220 18% 7%;
+    --foreground: 220 7% 95%;
 
-    --card: 220 18% 8%;
-    --card-foreground: 220 8% 96%;
+    --card: 220 16% 9%;
+    --card-foreground: 220 7% 95%;
 
-    --popover: 220 18% 7%;
-    --popover-foreground: 220 8% 96%;
+    --popover: 220 16% 8%;
+    --popover-foreground: 220 7% 95%;
 
-    /* Luminous yet refined primary */
-    --primary: 234 75% 64%;
+    /* Refined luminous primary */
+    --primary: 235 70% 62%;
     --primary-foreground: 0 0% 100%;
 
-    /* Subtle elevation */
-    --secondary: 220 15% 12%;
-    --secondary-foreground: 220 8% 96%;
+    /* Minimal elevation */
+    --secondary: 220 13% 13%;
+    --secondary-foreground: 220 7% 95%;
 
-    /* Gentle muted tones */
-    --muted: 220 12% 11%;
-    --muted-foreground: 220 8% 60%;
+    /* Soft muted tones */
+    --muted: 220 10% 12%;
+    --muted-foreground: 220 7% 58%;
 
-    /* Soft accent */
-    --accent: 220 15% 14%;
-    --accent-foreground: 234 75% 64%;
+    /* Elegant accent */
+    --accent: 220 13% 15%;
+    --accent-foreground: 235 70% 62%;
 
-    /* Balanced destructive */
-    --destructive: 0 62% 54%;
+    /* Refined destructive */
+    --destructive: 0 60% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Subtle dark borders */
-    --border: 220 12% 15%;
-    --input: 220 12% 12%;
-    --ring: 234 75% 64%;
+    /* Subtle borders */
+    --border: 220 10% 16%;
+    --input: 220 10% 13%;
+    --ring: 235 70% 62%;
 
     /* Harmonious chart colors for dark */
     --chart-1: 234 75% 64%;
@@ -205,68 +205,69 @@
     @apply border-border;
   }
 
-  /* Elegant Typography System */
+  /* Elegant Typography System - Refined & Light */
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
   }
 
   h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-    letter-spacing: -0.03em;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  h2 {
     @apply text-3xl md:text-4xl lg:text-5xl;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.028em;
     font-weight: 700;
     line-height: 1.15;
   }
 
-  h3 {
+  h2 {
     @apply text-2xl md:text-3xl lg:text-4xl;
-    letter-spacing: -0.02em;
-    font-weight: 700;
+    letter-spacing: -0.024em;
+    font-weight: 600;
     line-height: 1.2;
   }
 
-  h4 {
+  h3 {
     @apply text-xl md:text-2xl lg:text-3xl;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
     font-weight: 600;
     line-height: 1.25;
   }
 
-  h5 {
-    @apply text-lg md:text-xl;
-    letter-spacing: -0.01em;
+  h4 {
+    @apply text-lg md:text-xl lg:text-2xl;
+    letter-spacing: -0.016em;
     font-weight: 600;
     line-height: 1.3;
   }
 
-  h6 {
+  h5 {
     @apply text-base md:text-lg;
-    letter-spacing: -0.005em;
-    font-weight: 600;
+    letter-spacing: -0.012em;
+    font-weight: 500;
     line-height: 1.35;
+  }
+
+  h6 {
+    @apply text-sm md:text-base;
+    letter-spacing: -0.008em;
+    font-weight: 500;
+    line-height: 1.4;
   }
 
   p {
     @apply leading-relaxed;
-    font-size: 1rem;
-    line-height: 1.75;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    font-weight: 400;
   }
 
   body {
     @apply bg-background text-foreground antialiased m-0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
-    line-height: 1.6;
-    letter-spacing: -0.011em;
+    line-height: 1.65;
+    letter-spacing: -0.012em;
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "cv05" 1, "cv11" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -317,25 +318,25 @@
     border: 1px solid hsl(var(--border));
   }
 
-  /* 2025 Minimalist Card - Ultra Clean */
+  /* Ultra-Minimal Card - Refined & Compact */
   .elevated-card {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border) / 0.6);
-    border-radius: var(--radius);
-    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.02);
+    border: 1px solid hsl(var(--border) / 0.5);
+    border-radius: calc(var(--radius) - 2px);
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.015);
   }
 
-  /* Modern card variant - Breathable */
+  /* Modern card variant - Compact & Elegant */
   .card-modern {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border) / 0.5);
-    border-radius: var(--radius);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid hsl(var(--border) / 0.4);
+    border-radius: calc(var(--radius) - 2px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-modern:hover {
-    border-color: hsl(var(--border) / 0.8);
-    box-shadow: 0 2px 4px hsl(var(--foreground) / 0.03);
+    border-color: hsl(var(--border) / 0.7);
+    box-shadow: 0 2px 3px hsl(var(--foreground) / 0.025);
   }
 
   /* Elegant gradient text */
@@ -399,25 +400,25 @@
     background-size: 200% 100%;
   }
 
-  /* Elegant custom scrollbar */
+  /* Minimal custom scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(var(--muted) / 0.3);
-    border-radius: 6px;
+    background: hsl(var(--muted) / 0.25);
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb {
     background: linear-gradient(
       180deg,
-      hsl(var(--primary) / 0.5),
-      hsl(var(--primary) / 0.4)
+      hsl(var(--primary) / 0.4),
+      hsl(var(--primary) / 0.35)
     );
-    border-radius: 6px;
-    border: 2px solid hsl(var(--background));
+    border-radius: 4px;
+    border: 1.5px solid hsl(var(--background));
   }
 
   /* Focus visible improvements */
@@ -782,59 +783,59 @@
     background-size: 200% 100%;
   }
 
-  /* 2025 Minimalist Button - Clean & Elegant */
+  /* Ultra-Minimal Button - Compact & Refined */
   .btn-refined {
     background: hsl(var(--card));
-    border: 1px solid hsl(var(--border) / 0.5);
-    border-radius: var(--radius);
-    padding: 0.75rem 1.5rem;
-    font-size: 0.9375rem;
+    border: 1px solid hsl(var(--border) / 0.4);
+    border-radius: calc(var(--radius) - 2px);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: -0.008em;
-    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.02);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.015);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .btn-refined:hover {
-    border-color: hsl(var(--border) / 0.8);
-    box-shadow: 0 2px 4px hsl(var(--foreground) / 0.04);
-    transform: translateY(-1px);
+    border-color: hsl(var(--border) / 0.7);
+    box-shadow: 0 2px 3px hsl(var(--foreground) / 0.025);
+    transform: translateY(-0.5px);
   }
 
-  /* 2025 Minimal Input - Whisper Soft */
+  /* Ultra-Minimal Input - Compact & Elegant */
   .input-minimal {
-    border: 1px solid hsl(var(--border) / 0.5);
+    border: 1px solid hsl(var(--border) / 0.4);
     background: hsl(var(--background));
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .input-minimal:focus {
-    border-color: hsl(var(--primary) / 0.5);
+    border-color: hsl(var(--primary) / 0.45);
     background: hsl(var(--card));
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.06);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.05);
   }
 
-  /* Sophisticated Badge */
+  /* Compact Badge */
   .badge-elegant {
     font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.02em;
-    padding: 0.25rem 0.625rem;
-    border-radius: calc(var(--radius) - 2px);
+    letter-spacing: 0.015em;
+    padding: 0.125rem 0.5rem;
+    border-radius: calc(var(--radius) - 3px);
     border: 1px solid currentColor;
-    opacity: 0.9;
+    opacity: 0.92;
   }
 
-  /* Elegant Divider */
+  /* Minimal Divider */
   .divider-elegant {
     height: 1px;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(var(--border)) 50%,
+      hsl(var(--border) / 0.6) 50%,
       transparent 100%
     );
-    margin: 1.5rem 0;
+    margin: 1rem 0;
   }
 
   /* Refined Typography Scale */
