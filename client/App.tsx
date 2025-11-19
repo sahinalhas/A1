@@ -3,7 +3,7 @@ import { Toaster } from "@/components/atoms/Toaster";
 import { TooltipProvider } from "@/components/organisms/Tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./lib/auth-context";
+import { AuthProvider, PrivateRoute } from "./lib/auth-context";
 import ErrorBoundary from "./components/features/common/ErrorBoundary";
 import { setupGlobalErrorHandlers } from "./lib/error-handler";
 import { usePrefetchRoutes } from "./hooks/usePrefetchRoutes";
@@ -73,7 +73,7 @@ const App = () => {
  <Route path="/login" element={<Login />} />
  <Route path="/register" element={<Register />} />
  <Route path="/forgot-password" element={<ForgotPassword />} />
- <Route element={<Layout />}>
+ <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
  <Route path="/" element={<Index />} />
  <Route path="/ogrenci" element={<Students />} />
  <Route path="/ogrenci/:id" element={<Suspense fallback={<LoadingFallback />}><StudentProfile /></Suspense>} />

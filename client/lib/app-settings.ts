@@ -19,7 +19,8 @@ export async function loadSettings(): Promise<AppSettings> {
  const parsed = await response.json() as Partial<AppSettings>;
  return mergeWithDefaults(parsed);
  } catch (error) {
- console.error('Error loading settings:', error);
+ const errorMessage = error instanceof Error ? error.message : String(error);
+ console.error('Error loading settings:', errorMessage);
  toast.error('Ayarlar yüklenirken hata oluştu');
  return defaultSettings();
  }
