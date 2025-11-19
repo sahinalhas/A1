@@ -201,7 +201,7 @@ export default function SurveyExcelUploadDialog({
  className={`border-2 border-dashed rounded-lg p-8 text-center ${
  dragActive
  ? 'border-primary bg-primary/5'
- : 'border-gray-300 
+ : 'border-gray-300'
  }`}
  onDragEnter={handleDrag}
  onDragLeave={handleDrag}

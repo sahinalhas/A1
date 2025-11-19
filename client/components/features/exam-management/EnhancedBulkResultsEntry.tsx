@@ -523,7 +523,7 @@ export function EnhancedBulkResultsEntry({
  return (
  <tr
  key={student.id}
- className={`${studentIndex % 2 === 0 ? 'bg-white' : 'bg-muted/20'} 
+ className={`${studentIndex % 2 === 0 ? 'bg-white' : 'bg-muted/20'}`}
  >
  <td className="p-2 font-medium sticky left-0 bg-inherit border-r">
  <div className="flex flex-col">
