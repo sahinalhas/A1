@@ -234,6 +234,9 @@ export default function EnhancedCompleteSessionDialog({
 
  const sessionDateTime = `${session.sessionDate}T${session.entryTime}:00`;
  
+      
+      const selectedTopicObj = topics.find(t => t.id === selectedTopic);
+      const topicTitle = selectedTopicObj?.title || selectedTopic;
  const requestData = {
  rawNotes,
  sessionId: session.id,
@@ -241,7 +244,7 @@ export default function EnhancedCompleteSessionDialog({
  sessionType: session.sessionType,
  sessionDate: sessionDateTime,
  entryTime: session.entryTime,
- sessionTopic: selectedTopic
+ sessionTopic: topicTitle
  };
  
  console.log('AI Analysis Request Data:', requestData);
