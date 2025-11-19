@@ -9,6 +9,7 @@ import { StudentContextService } from '../../../services/student-context.service
 import { OllamaAPIService } from '../../../services/ollama-api.service.js';
 import AIPromptBuilder from '../../../services/ai-prompt-builder.service.js';
 import { sanitizeAIRequest } from '../../../middleware/validation.js';
+import { requireAIEnabled } from '../../../middleware/ai-guard.middleware.js';
 
 const router = express.Router();
 const contextService = new StudentContextService();
@@ -129,7 +130,7 @@ router.get('/health', async (req, res) => {
  * POST /api/ai-assistant/chat
  * Chat with AI assistant (non-streaming)
  */
-router.post('/chat', sanitizeAIRequest, async (req, res) => {
+router.post('/chat', requireAIEnabled, sanitizeAIRequest, async (req, res) => {
   try {
     const { message, studentId, conversationHistory } = req.body;
 
@@ -197,7 +198,7 @@ router.post('/chat', sanitizeAIRequest, async (req, res) => {
  * POST /api/ai-assistant/chat-stream
  * Streaming chat with AI assistant
  */
-router.post('/chat-stream', sanitizeAIRequest, async (req, res) => {
+router.post('/chat-stream', requireAIEnabled, sanitizeAIRequest, async (req, res) => {
   try {
     const { message, studentId, conversationHistory } = req.body;
 
@@ -272,7 +273,7 @@ router.post('/chat-stream', sanitizeAIRequest, async (req, res) => {
  * POST /api/ai-assistant/generate-meeting-summary
  * Generate meeting summary from notes
  */
-router.post('/generate-meeting-summary', async (req, res) => {
+router.post('/generate-meeting-summary', requireAIEnabled, async (req, res) => {
   try {
     const { notes, studentId, meetingType } = req.body;
 
@@ -320,7 +321,7 @@ router.post('/generate-meeting-summary', async (req, res) => {
  * POST /api/ai-assistant/analyze-risk
  * Analyze student risk and provide recommendations
  */
-router.post('/analyze-risk', async (req, res) => {
+router.post('/analyze-risk', requireAIEnabled, async (req, res) => {
   try {
     const { studentId } = req.body;
 

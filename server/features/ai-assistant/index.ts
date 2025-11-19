@@ -6,6 +6,7 @@
 import { Router } from 'express';
 import { requireSecureAuth } from '../../middleware/auth-secure.middleware.js';
 import { aiRateLimiter } from '../../middleware/rate-limit.middleware.js';
+import { requireAIEnabled } from '../../middleware/ai-guard.middleware.js';
 import aiAssistantRoutes from './routes/ai-assistant.routes.js';
 import sessionAnalysisRoutes from './routes/session-analysis.routes.js';
 import * as meetingPrepRoutes from './routes/meeting-prep.routes.js';
@@ -24,10 +25,10 @@ router.use('/', aiAssistantRoutes);
 // Session analysis routes
 router.use('/', sessionAnalysisRoutes);
 
-// Meeting preparation routes
-router.post('/meeting-prep/parent', meetingPrepRoutes.generateParentMeetingPrep);
-router.post('/meeting-prep/intervention', meetingPrepRoutes.generateInterventionPlan);
-router.post('/meeting-prep/teacher', meetingPrepRoutes.generateTeacherMeetingPrep);
+// Meeting preparation routes (AI-powered)
+router.post('/meeting-prep/parent', requireAIEnabled, meetingPrepRoutes.generateParentMeetingPrep);
+router.post('/meeting-prep/intervention', requireAIEnabled, meetingPrepRoutes.generateInterventionPlan);
+router.post('/meeting-prep/teacher', requireAIEnabled, meetingPrepRoutes.generateTeacherMeetingPrep);
 
 // Smart recommendations routes
 router.get('/recommendations/priority-students', recommendationsRoutes.getPriorityStudents);

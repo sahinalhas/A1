@@ -136,4 +136,37 @@ export class AppSettingsService {
     settings.aiProvider = aiProviderConfig;
     this.saveSettings(settings);
   }
+
+  static isAIEnabled(): boolean {
+    const db = getDatabase();
+    
+    try {
+      const row = db.prepare('SELECT ai_enabled FROM app_settings WHERE id = 1').get() as { ai_enabled: number } | undefined;
+      return row ? row.ai_enabled === 1 : true;
+    } catch (error) {
+      logger.error('Failed to check AI enabled status', 'AppSettingsService', error);
+      return true;
+    }
+  }
+
+  static setAIEnabled(enabled: boolean): void {
+    const db = getDatabase();
+    
+    try {
+      const aiEnabledValue = enabled ? 1 : 0;
+      
+      db.prepare(`
+        INSERT INTO app_settings (id, settings, ai_enabled, updated_at)
+        VALUES (1, '{}', ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(id) DO UPDATE SET
+          ai_enabled = excluded.ai_enabled,
+          updated_at = CURRENT_TIMESTAMP
+      `).run(aiEnabledValue);
+      
+      logger.info(`AI features ${enabled ? 'enabled' : 'disabled'}`, 'AppSettingsService');
+    } catch (error) {
+      logger.error('Failed to set AI enabled status', 'AppSettingsService', error);
+      throw new Error('Failed to update AI settings');
+    }
+  }
 }

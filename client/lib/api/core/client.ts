@@ -189,6 +189,11 @@ class ApiClient {
 
 export const apiClient = new ApiClient();
 
+// Register global interceptors
+import('../interceptors/ai-disabled-interceptor.js').then(({ aiDisabledInterceptor }) => {
+  apiClient.getInterceptors().addResponseInterceptor(aiDisabledInterceptor);
+});
+
 /**
  * Create a safe API handler with proper error handling
  */

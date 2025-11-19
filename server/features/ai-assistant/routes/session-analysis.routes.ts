@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { aiSessionAnalysisRequestSchema } from '../../../../shared/schemas/ai-session-analysis.schemas.js';
 import { AISessionAnalyzerService } from '../../../services/ai-session-analyzer.service.js';
+import { requireAIEnabled } from '../../../middleware/ai-guard.middleware.js';
 
 const router = Router();
 
-router.post('/analyze-session', async (req, res) => {
+router.post('/analyze-session', requireAIEnabled, async (req, res) => {
   try {
     const validatedData = aiSessionAnalysisRequestSchema.parse(req.body);
 
