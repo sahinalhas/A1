@@ -78,6 +78,7 @@ export default function EnhancedSessionsTable({
  const map = new Map<string, CounselingTopic>();
  topics.forEach(topic => {
  map.set(topic.title, topic);
+ map.set(topic.id, topic);
  });
  return map;
  }, [topics]);
@@ -159,13 +160,13 @@ export default function EnhancedSessionsTable({
  </button>
  );
 
- const getTopicHierarchy = (topicTitle: string) => {
- if (!topicTitle) {
+ const getTopicHierarchy = (topicIdOrTitle: string | undefined) => {
+ if (!topicIdOrTitle) {
  return ['Konu belirtilmedi'];
  }
- const topic = topicsMap.get(topicTitle);
+ const topic = topicsMap.get(topicIdOrTitle);
  if (!topic || !topic.fullPath) {
- return [topicTitle];
+ return [topicIdOrTitle];
  }
  return topic.fullPath.split('>').map(s => s.trim());
  };
@@ -373,7 +374,7 @@ export default function EnhancedSessionsTable({
  {columns.find(c => c.key === 'topic')?.visible && (
  <td className="px-4 py-3 text-sm">
  <span className="truncate block max-w-xs">
- {session.topic || 'Konu belirtilmedi'}
+ {getTopicHierarchy(session.topic)[3] || getTopicHierarchy(session.topic).slice(-1)[0] || 'Konu belirtilmedi'}
  </span>
  </td>
  )}
