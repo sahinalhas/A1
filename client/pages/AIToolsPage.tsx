@@ -45,42 +45,44 @@ export default function AIToolsPage() {
  <motion.div
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-700 p-6 md:p-8 shadow-2xl"
+ className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-700 p-5 md:p-6 shadow-xl"
  >
  <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
- <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
- <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
+ <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+ <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-500/20 rounded-full blur-3xl"></div>
 
- <div className="relative z-10 max-w-4xl">
- <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+ <div className="relative z-10 max-w-3xl flex items-center justify-between">
+ <div className="flex-1">
+ <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
  <Sparkles className="h-3 w-3 mr-1" />
  Yapay Zeka Destekli Araçlar
  </Badge>
- <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+ <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
  AI Araçları
  </h1>
- <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
- Yapay zeka destekli analiz, raporlama ve asistan araçları ile öğrenci başarısını artırın.
+ <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
+ Yapay zeka destekli analiz ve raporlama araçları.
  </p>
- <div className="flex gap-4 flex-wrap">
- <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
- <Zap className="h-4 w-4 text-yellow-300" />
- <span className="text-sm text-white font-medium">Hızlı Analiz</span>
+ <div className="flex gap-3 flex-wrap">
+ <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
+ <Zap className="h-3.5 w-3.5 text-yellow-300" />
+ <span className="text-xs text-white font-medium">Hızlı Analiz</span>
  </div>
- <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
- <TrendingUp className="h-4 w-4 text-green-300" />
- <span className="text-sm text-white font-medium">Akıllı Öneriler</span>
+ <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
+ <TrendingUp className="h-3.5 w-3.5 text-green-300" />
+ <span className="text-xs text-white font-medium">Akıllı Öneriler</span>
  </div>
  </div>
  </div>
 
  <motion.div
- className="absolute top-10 right-10 opacity-20"
+ className="hidden md:block opacity-30"
  animate={{ rotate: 360 }}
  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
  >
- <Brain className="h-32 w-32 text-white" />
+ <Brain className="h-20 w-20 text-white" />
  </motion.div>
+ </div>
  </motion.div>
 
  <div className="space-y-6 max-w-7xl mx-auto">

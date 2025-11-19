@@ -274,60 +274,62 @@ export default function CounselingSessions() {
  <motion.div
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-6 md:p-8 shadow-2xl"
+ className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-5 md:p-6 shadow-xl"
  >
  <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
- <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
- <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"></div>
+ <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+ <div className="absolute bottom-0 left-0 w-56 h-56 bg-teal-500/20 rounded-full blur-3xl"></div>
 
- <div className="relative z-10 max-w-4xl">
- <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+ <div className="relative z-10 max-w-3xl flex items-center justify-between">
+ <div className="flex-1">
+ <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
  <Sparkles className="h-3 w-3 mr-1" />
  Rehberlik Görüşme Sistemi
  </Badge>
- <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+ <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
  Rehberlik Görüşmeleri
  </h1>
- <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
- Modern görüşme yönetimi ve analiz sistemi. Tüm görüşmelerinizi takip edin ve raporlayın.
+ <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
+ Modern görüşme yönetimi ve analiz sistemi.
  </p>
  <div className="flex gap-3 flex-wrap">
  <Button 
  onClick={() => setDialogOpen(true)}
- size="lg"
+ size="default"
  className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg"
  >
- <Plus className="mr-2 h-5 w-5" />
+ <Plus className="mr-2 h-4 w-4" />
  Yeni Görüşme
  </Button>
  <Button 
  onClick={() => setSearchOpen(true)}
- size="lg"
+ size="default"
  variant="outline"
  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
  >
- <SearchIcon className="mr-2 h-5 w-5" />
+ <SearchIcon className="mr-2 h-4 w-4" />
  Ara (⌘K)
  </Button>
  <Button 
  onClick={() => setReportDialogOpen(true)}
- size="lg"
+ size="default"
  variant="outline"
  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
  >
- <Download className="mr-2 h-5 w-5" />
+ <Download className="mr-2 h-4 w-4" />
  Rapor
  </Button>
  </div>
  </div>
 
  <motion.div
- className="absolute top-10 right-10 opacity-20"
+ className="hidden md:block opacity-30"
  animate={{ rotate: 360 }}
  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
  >
- <MessageSquare className="h-32 w-32 text-white" />
+ <MessageSquare className="h-20 w-20 text-white" />
  </motion.div>
+ </div>
  </motion.div>
 
  <div className="space-y-6 max-w-7xl mx-auto">

@@ -338,58 +338,58 @@ useEffect(() => {
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 p-6 md:p-8 shadow-2xl"
+        className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 p-5 md:p-6 shadow-xl"
       >
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-56 h-56 bg-pink-500/20 rounded-full blur-3xl"></div>
 
-        <div className="relative z-10 max-w-4xl">
+        <div className="relative z-10 max-w-3xl flex items-center justify-between">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="flex-1"
           >
-            <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+            <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
               Yeni Nesil Rehberlik Sistemi
             </Badge>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
               Rehber360'a Hoş Geldiniz
             </h1>
-            <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+            <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
               Yapay zeka destekli, modern ve kullanıcı dostu öğrenci rehberlik platformu.
-              Her öğrenciye özel analiz ve danışmanlık deneyimi.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               <Button
-                size="lg"
+                size="default"
                 className="bg-white text-purple-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all"
                 onClick={() => navigate('/ogrenci')}
               >
                 Hemen Başla
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
-                size="lg"
+                size="default"
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
                 onClick={() => navigate('/ai-araclari')}
               >
-                <Brain className="mr-2 h-5 w-5" />
+                <Brain className="mr-2 h-4 w-4" />
                 AI Araçları
               </Button>
             </div>
           </motion.div>
-        </div>
 
-        <motion.div
-          className="absolute top-10 right-10 opacity-20"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        >
-          <Sparkles className="h-32 w-32 text-white" />
-        </motion.div>
+          <motion.div
+            className="hidden md:block opacity-30"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          >
+            <GraduationCap className="h-20 w-20 text-white" />
+          </motion.div>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
