@@ -20,16 +20,16 @@ export const GRADIENT_COLORS = {
  ocean:"linear-gradient(135deg, #2e3192 0%, #1bffff 100%)",
 } as const;
 
-// Modern Education Platform Gradients (2025)
+// Modern Education Platform Gradients (2025) - Premium Edition
 export const MODERN_GRADIENTS = {
- blue:"bg-gradient-to-br from-blue-500 to-blue-600",
- green:"bg-gradient-to-br from-green-500 to-green-600",
- amber:"bg-gradient-to-br from-amber-500 to-amber-600",
- purple:"bg-gradient-to-br from-purple-500 to-purple-600",
- indigo:"bg-gradient-to-br from-indigo-500 to-indigo-600",
- teal:"bg-gradient-to-br from-teal-500 to-teal-600",
- rose:"bg-gradient-to-br from-rose-500 to-rose-600",
- cyan:"bg-gradient-to-br from-cyan-500 to-cyan-600",
+ blue:"bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600",
+ green:"bg-gradient-to-br from-emerald-500 via-green-600 to-teal-600",
+ amber:"bg-gradient-to-br from-amber-500 via-orange-500 to-red-500",
+ purple:"bg-gradient-to-br from-purple-500 via-violet-600 to-fuchsia-600",
+ indigo:"bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600",
+ teal:"bg-gradient-to-br from-teal-500 via-cyan-600 to-blue-600",
+ rose:"bg-gradient-to-br from-rose-500 via-pink-600 to-fuchsia-600",
+ cyan:"bg-gradient-to-br from-cyan-500 via-sky-600 to-blue-600",
 } as const;
 
 // Card Background Gradients with Opacity

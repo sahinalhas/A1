@@ -67,136 +67,136 @@
   */
   :root {
     /* Ultra-Refined Light Mode - Chic & Elegant */
-    --background: 0 0% 99%;
-    --foreground: 222 15% 12%;
+    --background: 0 0% 100%;
+    --foreground: 224 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 15% 12%;
+    --card-foreground: 224 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 15% 12%;
+    --popover-foreground: 224 20% 10%;
 
-    /* Rich indigo primary with depth */
-    --primary: 239 84% 67%;
+    /* Vibrant gradient primary - Modern & Eye-catching */
+    --primary: 250 95% 63%;
     --primary-foreground: 0 0% 100%;
 
-    /* Elevated secondary */
-    --secondary: 220 8% 97%;
-    --secondary-foreground: 222 15% 12%;
+    /* Elevated secondary with warmth */
+    --secondary: 240 10% 96%;
+    --secondary-foreground: 224 20% 10%;
 
     /* Refined muted palette */
-    --muted: 220 7% 96%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 240 8% 95%;
+    --muted-foreground: 240 12% 48%;
 
-    /* Sophisticated accent */
-    --accent: 220 8% 97%;
-    --accent-foreground: 239 84% 67%;
+    /* Sophisticated accent with purple tone */
+    --accent: 270 95% 70%;
+    --accent-foreground: 0 0% 100%;
 
-    /* Modern destructive */
-    --destructive: 0 72% 51%;
+    /* Modern destructive with energy */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Crisp borders with subtle definition */
-    --border: 220 10% 92%;
-    --input: 220 8% 96%;
-    --ring: 239 84% 67%;
+    /* Ultra-crisp borders with refined definition */
+    --border: 240 12% 90%;
+    --input: 240 8% 94%;
+    --ring: 250 95% 63%;
 
-    --radius: 0.875rem;
+    --radius: 1rem;
 
-    /* Vibrant harmonious chart colors */
-    --chart-1: 239 84% 67%;
-    --chart-2: 200 98% 39%;
-    --chart-3: 271 91% 65%;
-    --chart-4: 142 71% 45%;
-    --chart-5: 25 95% 53%;
+    /* Harmonious vibrant chart palette */
+    --chart-1: 250 95% 63%;
+    --chart-2: 195 100% 50%;
+    --chart-3: 280 90% 68%;
+    --chart-4: 150 80% 50%;
+    --chart-5: 30 100% 60%;
 
-    /* Vivid success */
-    --success: 142 71% 45%;
+    /* Vibrant success with freshness */
+    --success: 150 80% 50%;
     --success-foreground: 0 0% 100%;
 
-    /* Bold warning */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    /* Energetic warning */
+    --warning: 40 96% 56%;
+    --warning-foreground: 224 20% 10%;
 
-    /* Vibrant info */
-    --info: 200 98% 39%;
+    /* Bright info tone */
+    --info: 195 100% 50%;
     --info-foreground: 0 0% 100%;
 
-    /* Enhanced sidebar */
-    --sidebar-background: 0 0% 98.5%;
-    --sidebar-foreground: 222 15% 12%;
-    --sidebar-primary: 239 84% 67%;
+    /* Premium sidebar design */
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 224 20% 10%;
+    --sidebar-primary: 250 95% 63%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 8% 96%;
-    --sidebar-accent-foreground: 222 15% 12%;
-    --sidebar-border: 220 10% 92%;
-    --sidebar-ring: 239 84% 67%;
+    --sidebar-accent: 240 8% 95%;
+    --sidebar-accent-foreground: 224 20% 10%;
+    --sidebar-border: 240 12% 90%;
+    --sidebar-ring: 250 95% 63%;
   }
 
   .dark {
-    /* Ultra-Refined Dark Mode - Elegant & Chic */
-    --background: 222 24% 5%;
-    --foreground: 220 10% 97%;
+    /* Ultra-Refined Dark Mode - Deep & Luxurious */
+    --background: 224 30% 6%;
+    --foreground: 240 8% 95%;
 
-    --card: 222 20% 8%;
-    --card-foreground: 220 10% 97%;
+    --card: 224 25% 8%;
+    --card-foreground: 240 8% 95%;
 
-    --popover: 222 20% 7%;
-    --popover-foreground: 220 10% 97%;
+    --popover: 224 28% 7%;
+    --popover-foreground: 240 8% 95%;
 
-    /* Luminous vibrant primary */
-    --primary: 239 84% 67%;
-    --primary-foreground: 222 24% 5%;
+    /* Luminous vibrant primary with glow */
+    --primary: 250 95% 68%;
+    --primary-foreground: 224 30% 6%;
 
-    /* Rich elevation */
-    --secondary: 222 18% 12%;
-    --secondary-foreground: 220 10% 97%;
+    /* Rich elevation with depth */
+    --secondary: 224 22% 14%;
+    --secondary-foreground: 240 8% 95%;
 
-    /* Deep muted tones */
-    --muted: 222 16% 10%;
-    --muted-foreground: 220 10% 62%;
+    /* Deep sophisticated muted tones */
+    --muted: 224 20% 12%;
+    --muted-foreground: 240 10% 65%;
 
-    /* Sophisticated accent */
-    --accent: 222 18% 14%;
-    --accent-foreground: 239 84% 67%;
+    /* Elegant accent with purple shimmer */
+    --accent: 270 95% 75%;
+    --accent-foreground: 224 30% 6%;
 
-    /* Bold destructive */
-    --destructive: 0 72% 51%;
+    /* Bold destructive with energy */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Defined borders */
-    --border: 222 14% 18%;
-    --input: 222 16% 12%;
-    --ring: 239 84% 67%;
+    /* Refined borders with subtle glow */
+    --border: 224 18% 20%;
+    --input: 224 20% 14%;
+    --ring: 250 95% 68%;
 
-    /* Vibrant chart colors for dark */
-    --chart-1: 239 84% 67%;
-    --chart-2: 200 98% 39%;
-    --chart-3: 271 91% 65%;
-    --chart-4: 142 71% 45%;
-    --chart-5: 25 95% 53%;
+    /* Vibrant luminous chart palette */
+    --chart-1: 250 95% 68%;
+    --chart-2: 195 100% 55%;
+    --chart-3: 280 90% 72%;
+    --chart-4: 150 80% 55%;
+    --chart-5: 30 100% 65%;
 
-    /* Vivid success */
-    --success: 142 71% 45%;
+    /* Glowing success */
+    --success: 150 80% 55%;
     --success-foreground: 0 0% 100%;
 
-    /* Bright warning */
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 24% 5%;
+    /* Energetic warning */
+    --warning: 40 96% 60%;
+    --warning-foreground: 224 30% 6%;
 
-    /* Vibrant info */
-    --info: 200 98% 39%;
+    /* Luminous info */
+    --info: 195 100% 55%;
     --info-foreground: 0 0% 100%;
 
-    /* Rich dark sidebar */
-    --sidebar-background: 222 24% 4%;
-    --sidebar-foreground: 220 10% 97%;
-    --sidebar-primary: 239 84% 67%;
-    --sidebar-primary-foreground: 222 24% 5%;
-    --sidebar-accent: 222 18% 11%;
-    --sidebar-accent-foreground: 220 10% 97%;
-    --sidebar-border: 222 14% 16%;
-    --sidebar-ring: 239 84% 67%;
+    /* Premium dark sidebar */
+    --sidebar-background: 224 30% 5%;
+    --sidebar-foreground: 240 8% 95%;
+    --sidebar-primary: 250 95% 68%;
+    --sidebar-primary-foreground: 224 30% 6%;
+    --sidebar-accent: 224 22% 12%;
+    --sidebar-accent-foreground: 240 8% 95%;
+    --sidebar-border: 224 18% 18%;
+    --sidebar-ring: 250 95% 68%;
   }
 }
 
@@ -282,33 +282,45 @@
     pointer-events: none;
     background:
       radial-gradient(
-        ellipse 1800px 900px at 15% 20%,
-        hsl(var(--primary) / 0.08),
-        transparent 50%
+        ellipse 2000px 1000px at 20% 15%,
+        hsl(var(--primary) / 0.12),
+        transparent 55%
       ),
       radial-gradient(
-        ellipse 1600px 800px at 85% 10%,
+        ellipse 1800px 900px at 80% 20%,
+        hsl(var(--accent) / 0.1),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 1600px 800px at 50% 85%,
+        hsl(var(--chart-2) / 0.08),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 1400px 700px at 10% 90%,
         hsl(var(--chart-3) / 0.06),
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse 1400px 700px at 50% 100%,
-        hsl(var(--chart-2) / 0.05),
         transparent 50%
       );
     z-index: -1;
-    animation: subtle-shift 20s ease-in-out infinite alternate, gradient-rotate 30s linear infinite;
+    animation: 
+      ambient-shift 25s ease-in-out infinite alternate,
+      gradient-pulse 35s ease-in-out infinite,
+      gradient-rotate 45s linear infinite;
   }
 
-  @keyframes subtle-shift {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; }
+  @keyframes ambient-shift {
+    0%, 100% { opacity: 1; filter: blur(0px); }
+    50% { opacity: 0.9; filter: blur(2px); }
+  }
+
+  @keyframes gradient-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
   }
 
   @keyframes gradient-rotate {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.05); }
-    100% { transform: rotate(360deg) scale(1); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   /* Sidebar background */
@@ -340,23 +352,24 @@
       inset 0 1px 0 hsl(var(--background) / 0.5);
   }
 
-  /* Modern Elevated Card - Refined & Elegant */
+  /* Modern Elevated Card - Premium & Sophisticated */
   .elevated-card {
     background: linear-gradient(
-      135deg,
+      140deg,
       hsl(var(--card)),
-      hsl(var(--card) / 0.98)
+      hsl(var(--card) / 0.96)
     );
-    border: 1px solid hsl(var(--border) / 0.8);
-    border-radius: calc(var(--radius));
+    border: 1px solid hsl(var(--border) / 0.5);
+    border-radius: calc(var(--radius) + 2px);
     box-shadow: 
-      0 1px 3px hsl(var(--foreground) / 0.04),
-      0 3px 8px hsl(var(--foreground) / 0.06),
-      0 10px 20px hsl(var(--foreground) / 0.05),
-      0 0 0 1px hsl(var(--border) / 0.6);
+      0 2px 8px hsl(var(--foreground) / 0.03),
+      0 4px 16px hsl(var(--foreground) / 0.04),
+      0 8px 32px hsl(var(--foreground) / 0.04),
+      0 16px 48px hsl(var(--primary) / 0.03),
+      inset 0 1px 0 hsl(var(--background) / 0.8);
     position: relative;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .elevated-card::before {
@@ -365,29 +378,64 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(
       90deg,
       transparent,
-      hsl(var(--primary) / 0.5),
-      hsl(var(--chart-3) / 0.4),
+      hsl(var(--primary) / 0.6),
+      hsl(var(--accent) / 0.5),
+      hsl(var(--chart-2) / 0.4),
       transparent
     );
-    animation: gradient-slide 3s ease-in-out infinite;
+    animation: premium-gradient-flow 4s ease-in-out infinite;
   }
 
-  @keyframes gradient-slide {
-    0%, 100% { opacity: 0.6; transform: translateX(-10%); }
-    50% { opacity: 1; transform: translateX(10%); }
+  .elevated-card::after {
+    content: "";
+    position: absolute;
+    inset: -100px;
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      hsl(var(--primary) / 0.08) 60deg,
+      hsl(var(--accent) / 0.06) 120deg,
+      transparent 180deg
+    );
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  @keyframes premium-gradient-flow {
+    0%, 100% { 
+      opacity: 0.7; 
+      transform: translateX(-20%) scaleX(0.8); 
+    }
+    50% { 
+      opacity: 1; 
+      transform: translateX(20%) scaleX(1.2); 
+    }
   }
 
   .elevated-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.01);
+    border-color: hsl(var(--primary) / 0.4);
     box-shadow: 
-      0 4px 12px hsl(var(--foreground) / 0.08),
-      0 8px 24px hsl(var(--foreground) / 0.1),
-      0 16px 32px hsl(var(--primary) / 0.12),
-      0 0 0 1px hsl(var(--primary) / 0.3);
+      0 8px 24px hsl(var(--foreground) / 0.06),
+      0 16px 48px hsl(var(--foreground) / 0.08),
+      0 24px 64px hsl(var(--primary) / 0.15),
+      0 0 0 1px hsl(var(--primary) / 0.4),
+      0 0 80px hsl(var(--primary) / 0.2),
+      inset 0 1px 0 hsl(var(--primary) / 0.2);
+  }
+
+  .elevated-card:hover::after {
+    opacity: 1;
+    animation: card-shimmer 3s linear infinite;
+  }
+
+  @keyframes card-shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   /* Modern card variant - Compact & Elegant */
@@ -437,25 +485,33 @@
     opacity: 1;
   }
 
-  /* Elegant gradient text */
+  /* Elegant gradient text with premium shimmer */
   .gradient-text {
     background: linear-gradient(
-      120deg,
+      135deg,
       hsl(var(--primary)) 0%,
-      hsl(var(--chart-2)) 40%,
-      hsl(var(--chart-3)) 100%
+      hsl(var(--accent)) 30%,
+      hsl(var(--chart-2)) 60%,
+      hsl(var(--primary)) 100%
     );
-    background-size: 200% auto;
+    background-size: 300% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: brightness(1.1) saturate(1.2);
-    animation: gradient-flow 5s ease infinite;
+    filter: brightness(1.15) saturate(1.3) contrast(1.1);
+    animation: premium-gradient-flow 8s ease-in-out infinite;
+    position: relative;
   }
 
-  @keyframes gradient-flow {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+  @keyframes premium-gradient-flow {
+    0%, 100% { 
+      background-position: 0% 50%; 
+      filter: brightness(1.15) saturate(1.3) hue-rotate(0deg);
+    }
+    50% { 
+      background-position: 100% 50%; 
+      filter: brightness(1.25) saturate(1.4) hue-rotate(5deg);
+    }
   }
 
   .gradient-text-animated {
