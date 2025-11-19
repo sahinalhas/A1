@@ -787,9 +787,9 @@ export default function AIAssistant() {
  <div
  className={`rounded-2xl p-4 ${
  message.role === 'user'
- ? 'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground 
+ ? 'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground'
  : 'bg-muted/80 border border-border/50'
- } 
+ }`}
  >
  {message.role === 'assistant' ? (
  <div className="prose prose-sm dark:prose-invert max-w-none">
