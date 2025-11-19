@@ -70,38 +70,12 @@ export default function Login() {
  }
  };
 
- const prefersReducedMotion = typeof window !== 'undefined' 
- ? window.matchMedia('(prefers-reduced-motion: reduce)').matches 
- : false;
-
  return (
- <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-indigo-950 p-4 relative overflow-hidden">
- {/* Animated background elements */}
+ <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
+ {/* Subtle background gradient - minimal */}
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
- <motion.div
- className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
- animate={prefersReducedMotion ? {} : {
- scale: [1, 1.2, 1],
- rotate: [0, 90, 0],
- }}
- transition={{
- duration: 20,
- repeat: Infinity,
- ease:"easeInOut",
- }}
- />
- <motion.div
- className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-indigo-400/20 to-pink-400/20 rounded-full blur-3xl"
- animate={prefersReducedMotion ? {} : {
- scale: [1, 1.3, 1],
- rotate: [0, -90, 0],
- }}
- transition={{
- duration: 25,
- repeat: Infinity,
- ease:"easeInOut",
- }}
- />
+ <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/8 to-purple-500/6 rounded-full blur-3xl" />
+ <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-indigo-500/6 to-primary/8 rounded-full blur-3xl" />
  </div>
 
  <motion.div
@@ -110,54 +84,38 @@ export default function Login() {
  transition={{ duration: 0.5 }}
  className="w-full max-w-md relative z-10"
  >
- <Card className=" border-2 bg-white/95 dark:bg-gray-900/95">
- <CardHeader className="space-y-1 text-center pb-8">
+ <Card className="border bg-card/80 backdrop-blur-xl shadow-xl">
+ <CardHeader className="space-y-3 text-center pb-6">
  <motion.div 
- className="flex justify-center mb-6"
- initial={{ scale: 0 }}
- animate={{ scale: 1 }}
- transition={{ 
- type:"spring",
- stiffness: 260,
- damping: 20,
- delay: 0.1
- }}
+ className="flex justify-center mb-4"
+ initial={{ opacity: 0, scale: 0.95 }}
+ animate={{ opacity: 1, scale: 1 }}
+ transition={{ duration: 0.4, ease: "easeOut" }}
  >
  <div className="relative">
- <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
- <GraduationCap className="h-10 w-10 text-white" />
+ <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary via-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/20">
+ <GraduationCap className="h-8 w-8 text-white" />
  </div>
- <motion.div
- className="absolute -top-1 -right-1"
- animate={prefersReducedMotion ? {} : { 
- rotate: [0, 15, -15, 0],
- scale: [1, 1.1, 1.1, 1]
- }}
- transition={{
- duration: 2,
- repeat: Infinity,
- repeatDelay: 3
- }}
- >
- <Sparkles className="h-5 w-5 text-yellow-400 fill-yellow-400" />
- </motion.div>
+ <div className="absolute -top-0.5 -right-0.5">
+ <Sparkles className="h-4 w-4 text-amber-400 fill-amber-400" />
+ </div>
  </div>
  </motion.div>
  <motion.div
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.2 }}
+ transition={{ delay: 0.1, duration: 0.4 }}
  >
- <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+ <CardTitle className="text-2xl font-semibold gradient-text">
  Rehber360'a Hoş Geldiniz
  </CardTitle>
  </motion.div>
  <motion.div
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
- transition={{ delay: 0.3 }}
+ transition={{ delay: 0.2, duration: 0.4 }}
  >
- <CardDescription className="text-base">
+ <CardDescription className="text-sm text-muted-foreground">
  MEB uyumlu dijital rehberlik yönetimi
  </CardDescription>
  </motion.div>
@@ -240,10 +198,10 @@ export default function Login() {
 
  <Button 
  type="submit" 
- className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold transform" 
+ className="w-full h-10 bg-primary hover:bg-primary/90 text-white font-medium shadow-sm transition-all duration-200" 
  disabled={isLoading}
  >
- {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
+ {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
  Giriş Yap
  </Button>
  </form>
@@ -262,11 +220,11 @@ export default function Login() {
  <Button
  type="button"
  variant="outline"
- className="w-full h-11 border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark: text-amber-900 dark:text-amber-100 font-medium"
+ className="w-full h-10 border border-amber-400/50 bg-amber-50/50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-100 font-medium hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors"
  onClick={handleQuickLogin}
  disabled={isLoading}
  >
- {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
+ {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
  🔑 Admin Hızlı Giriş
  </Button>
 
@@ -284,12 +242,12 @@ export default function Login() {
  <Button
  type="button"
  variant="outline"
- className="w-full h-11 border-2 group"
+ className="w-full h-10 border group hover:border-primary/50 transition-colors"
  disabled={isLoading}
  asChild
  >
  <Link to="/register">
- <UserPlus className="mr-2 h-4 w-4 group-" />
+ <UserPlus className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
  Yeni Hesap Oluştur
  </Link>
  </Button>
