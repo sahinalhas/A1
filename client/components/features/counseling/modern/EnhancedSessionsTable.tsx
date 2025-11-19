@@ -374,7 +374,7 @@ export default function EnhancedSessionsTable({
  {columns.find(c => c.key === 'topic')?.visible && (
  <td className="px-4 py-3 text-sm">
  <span className="truncate block max-w-xs">
- {getTopicHierarchy(session.topic)[3] || getTopicHierarchy(session.topic).slice(-1)[0] || 'Konu belirtilmedi'}
+ {getTopicHierarchy(session.topic)[3] || '-'}
  </span>
  </td>
  )}
