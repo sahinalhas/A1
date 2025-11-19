@@ -3,7 +3,7 @@ import { GuidanceCategory } from '../types/guidance-standards.types';
 export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
   {
     id: 'individual-gelissel-ve-onleyici',
-    title: 'GELİŞİMSEL VE ÖNLEYİCİ HİZMETLER',
+    title: 'Ö GELİŞİMSEL VE ÖNLEYİCİ HİZMETLER',
     type: 'individual',
     parentId: null,
     level: 1,
@@ -163,7 +163,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
   },
   {
     id: 'individual-iyilestirici',
-    title: 'İYİLEŞTİRİCİ HİZMETLER',
+    title: 'İ İYİLEŞTİRİCİ HİZMETLER',
     type: 'individual',
     parentId: null,
     level: 1,
@@ -271,7 +271,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
   },
   {
     id: 'individual-destek',
-    title: 'DESTEK HİZMETLER',
+    title: 'D DESTEK HİZMETLER',
     type: 'individual',
     parentId: null,
     level: 1,
