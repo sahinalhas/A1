@@ -1,605 +1,735 @@
 import { useEffect, useMemo, useState } from "react";
-import {
- Card,
- CardContent,
- CardHeader,
- CardTitle,
- CardDescription,
-} from "@/components/organisms/Card";
-import { StatCard } from "@/components/molecules/StatCard";
-import { StatsGrid } from "@/components/molecules/StatsGrid";
-import { Button } from "@/components/atoms/Button";
-import { PageHeader } from "@/components/molecules/PageHeader";
-import {
- ChartContainer,
- ChartTooltip,
- ChartTooltipContent,
-} from "@/components/organisms/Chart";
-import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Line, LineChart } from "recharts";
-import { Badge } from "@/components/atoms/Badge";
-import { motion } from "framer-motion";
-import {
- Bell,
- Users2,
- CalendarDays,
- MessageSquare,
- FileText,
- BarChart3,
- BookOpen,
- Clock,
- TrendingUp,
- AlertTriangle,
- Target,
- CheckCircle2,
- AlertCircle,
- Brain,
- Activity,
- Sparkles,
- ArrowUpRight,
- ArrowDownRight,
- TrendingDown,
- KeyRound,
-} from "lucide-react";
-import { type EarlyWarning } from "@/lib/analytics";
-import { optimizedGenerateEarlyWarnings } from "@/lib/analytics-cache";
-import type { Student, Intervention } from "@/lib/storage";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/auth-context";
+import { apiClient } from "@/lib/api/core/client";
+import { STUDENT_ENDPOINTS, SURVEY_ENDPOINTS, COUNSELING_ENDPOINTS } from "@/lib/constants/api-endpoints";
+import { DashboardSkeleton } from "@/components/features/dashboard/DashboardSkeleton";
+import type { Student } from "@/lib/storage";
+import type { EarlyWarning } from "@/lib/analytics";
+import { optimizedGenerateEarlyWarnings } from "@/lib/analytics-cache";
 import RiskSummaryWidget from "@/components/features/common/RiskSummaryWidget";
 import DailyActionPlanWidget from "@/components/features/dashboard/DailyActionPlanWidget";
 import SchoolWideAIInsights from "@/components/features/dashboard/SchoolWideAIInsights";
-import { DashboardSkeleton } from "@/components/features/dashboard/DashboardSkeleton";
 import AISuggestionPanel from "@/components/features/ai-suggestions/AISuggestionPanel";
-import { apiClient } from "@/lib/api/core/client";
-import { STUDENT_ENDPOINTS, SURVEY_ENDPOINTS, COUNSELING_ENDPOINTS } from "@/lib/constants/api-endpoints";
-import { MODERN_GRADIENTS } from "@/lib/config/theme.config";
-import { useAuth } from "@/lib/auth-context";
+import {
+  Users2,
+  CalendarDays,
+  MessageSquare,
+  AlertTriangle,
+  Target,
+  Brain,
+  Sparkles,
+  TrendingUp,
+  Activity,
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  BarChart3,
+  FileText,
+  Shield,
+  Zap,
+  Heart,
+  Award,
+  BookOpen,
+  GraduationCap,
+  LineChart,
+  KeyRound,
+  AlertCircle,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
+import { Button } from "@/components/atoms/Button";
+import { Badge } from "@/components/atoms/Badge";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/organisms/Chart";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 interface DashboardStats {
- studentCount: number;
- meetingCount: number;
- activeSurveyCount: number;
- openInterventionCount: number;
- completedInterventionsThisMonth: number;
- activeCounselingSessionsToday: number;
+  studentCount: number;
+  meetingCount: number;
+  activeSurveyCount: number;
+  openInterventionCount: number;
+  completedInterventionsThisMonth: number;
+  activeCounselingSessionsToday: number;
 }
 
 interface RiskDistribution {
- high: number;
- medium: number;
- low: number;
- none: number;
+  high: number;
+  medium: number;
+  low: number;
+  none: number;
 }
 
 interface CounselingSession {
- id: string;
- sessionDate: string;
- topic: string;
- status: string;
- studentIds?: string[];
+  id: string;
+  sessionDate: string;
+  topic: string;
+  status: string;
+  studentIds?: string[];
 }
 
 export default function Index() {
- const navigate = useNavigate();
- const { isAuthenticated, login } = useAuth();
- const [isLoading, setIsLoading] = useState(true);
- const [isQuickLoginLoading, setIsQuickLoginLoading] = useState(false);
- 
- const [stats, setStats] = useState<DashboardStats>({
- studentCount: 0,
- meetingCount: 0,
- activeSurveyCount: 0,
- openInterventionCount: 0,
- completedInterventionsThisMonth: 0,
- activeCounselingSessionsToday: 0,
- });
+  const navigate = useNavigate();
+  const { isAuthenticated, login } = useAuth();
+  const { scrollY } = useScroll();
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
- const [riskDistribution, setRiskDistribution] = useState<RiskDistribution>({
- high: 0,
- medium: 0,
- low: 0,
- none: 0,
- });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isQuickLoginLoading, setIsQuickLoginLoading] = useState(false);
+  const [stats, setStats] = useState<DashboardStats>({
+    studentCount: 0,
+    meetingCount: 0,
+    activeSurveyCount: 0,
+    openInterventionCount: 0,
+    completedInterventionsThisMonth: 0,
+    activeCounselingSessionsToday: 0,
+  });
+  const [riskDistribution, setRiskDistribution] = useState<RiskDistribution>({
+    high: 0,
+    medium: 0,
+    low: 0,
+    none: 0,
+  });
+  const [weeklyMeetingTrend, setWeeklyMeetingTrend] = useState<any[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [earlyWarnings, setEarlyWarnings] = useState<EarlyWarning[]>([]);
 
- const [students, setStudents] = useState<Student[]>([]);
- const [earlyWarnings, setEarlyWarnings] = useState<EarlyWarning[]>([]);
- const [weeklyMeetingTrend, setWeeklyMeetingTrend] = useState<any[]>([]);
+useEffect(() => {
+    if (students.length === 0) {
+      setEarlyWarnings([]);
+      return;
+    }
 
- useEffect(() => {
- if (students.length === 0) {
- setEarlyWarnings([]);
- return;
- }
- 
- const fetchWarnings = async () => {
- try {
- const warnings = await optimizedGenerateEarlyWarnings();
- setEarlyWarnings(warnings.slice(0, 10));
- } catch (error) {
- console.error('Failed to generate early warnings:', error);
- setEarlyWarnings([]);
- }
- };
- 
- setTimeout(() => fetchWarnings(), 500);
- }, [students]);
+    const fetchWarnings = async () => {
+      try {
+        const warnings = await optimizedGenerateEarlyWarnings();
+        setEarlyWarnings(warnings.slice(0, 10));
+      } catch (error) {
+        console.error('Failed to generate early warnings:', error);
+        setEarlyWarnings([]);
+      }
+    };
 
- const criticalWarnings = useMemo(() => {
- return earlyWarnings.filter(w => w.severity === 'kritik' || w.severity === 'yüksek');
- }, [earlyWarnings]);
+    setTimeout(() => fetchWarnings(), 500);
+  }, [students]);
 
- useEffect(() => {
- async function fetchDashboardData() {
- setIsLoading(true);
- try {
- const [studentsResponse, distributions, sessions] = await Promise.all([
- apiClient.get<Student[]>(STUDENT_ENDPOINTS.BASE, { showErrorToast: false }),
- apiClient.get<any[]>(SURVEY_ENDPOINTS.DISTRIBUTIONS, { showErrorToast: false }),
- apiClient.get<CounselingSession[]>(COUNSELING_ENDPOINTS.BASE, { showErrorToast: false }),
- ]);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setIsLoading(false);
+      return;
+    }
 
- const studentsData = Array.isArray(studentsResponse) ? studentsResponse : [];
- if (studentsData.length > 0) {
- setStudents(studentsData);
- setStats(prev => ({ ...prev, studentCount: studentsData.length }));
+    async function fetchDashboardData() {
+      setIsLoading(true);
+      try {
+        const [studentsResponse, distributions, sessions] = await Promise.all([
+          apiClient.get<Student[]>(STUDENT_ENDPOINTS.BASE, { showErrorToast: false }),
+          apiClient.get<any[]>(SURVEY_ENDPOINTS.DISTRIBUTIONS, { showErrorToast: false }),
+          apiClient.get<CounselingSession[]>(COUNSELING_ENDPOINTS.BASE, { showErrorToast: false }),
+        ]);
 
- const riskCount = {
- high: studentsData.filter((s: Student) => s.risk ==="Yüksek").length,
- medium: studentsData.filter((s: Student) => s.risk ==="Orta").length,
- low: studentsData.filter((s: Student) => s.risk ==="Düşük").length,
- none: studentsData.filter((s: Student) => !s.risk).length,
- };
- setRiskDistribution(riskCount);
- }
+        const studentsData = Array.isArray(studentsResponse) ? studentsResponse : [];
+        if (studentsData.length > 0) {
+          setStudents(studentsData);
+          setStats(prev => ({ ...prev, studentCount: studentsData.length }));
 
- if (distributions) {
- const activeCount = distributions.filter((d: any) => d.status === 'ACTIVE').length;
- setStats(prev => ({ ...prev, activeSurveyCount: activeCount }));
- }
+          const riskCount = {
+            high: studentsData.filter((s: Student) => s.risk === "Yüksek").length,
+            medium: studentsData.filter((s: Student) => s.risk === "Orta").length,
+            low: studentsData.filter((s: Student) => s.risk === "Düşük").length,
+            none: studentsData.filter((s: Student) => !s.risk).length,
+          };
+          setRiskDistribution(riskCount);
+        }
 
- if (sessions) {
- const today = new Date().toISOString().split('T')[0];
- const activeTodayCount = sessions.filter(s => 
- s.sessionDate?.startsWith(today) && s.status === 'ACTIVE'
- ).length;
- setStats(prev => ({ ...prev, activeCounselingSessionsToday: activeTodayCount }));
+        if (distributions) {
+          const activeCount = distributions.filter((d: any) => d.status === 'ACTIVE').length;
+          setStats(prev => ({ ...prev, activeSurveyCount: activeCount }));
+        }
 
- const thisWeek = getLastNDays(7);
- const weeklyData = thisWeek.map(day => {
- const dayStr = day.toISOString().split('T')[0];
- const count = sessions.filter(s => s.sessionDate?.startsWith(dayStr)).length;
- return {
- day: day.toLocaleDateString('tr-TR', { weekday: 'short' }),
- count: count,
- };
- });
- setWeeklyMeetingTrend(weeklyData);
- 
- const thisWeekTotal = weeklyData.reduce((sum, d) => sum + d.count, 0);
- setStats(prev => ({ ...prev, meetingCount: thisWeekTotal }));
- }
+        if (sessions) {
+          const today = new Date().toISOString().split('T')[0];
+          const activeTodayCount = sessions.filter(s =>
+            s.sessionDate?.startsWith(today) && s.status === 'ACTIVE'
+          ).length;
+          setStats(prev => ({ ...prev, activeCounselingSessionsToday: activeTodayCount }));
 
- } catch (error) {
- console.error('Failed to fetch dashboard data:', error);
- } finally {
- setIsLoading(false);
- }
- }
+          const thisWeek = getLastNDays(7);
+          const weeklyData = thisWeek.map(day => {
+            const dayStr = day.toISOString().split('T')[0];
+            const count = sessions.filter(s => s.sessionDate?.startsWith(dayStr)).length;
+            return {
+              day: day.toLocaleDateString('tr-TR', { weekday: 'short' }),
+              count: count,
+            };
+          });
+          setWeeklyMeetingTrend(weeklyData);
 
- fetchDashboardData();
- 
- async function fetchInterventionStats() {
- try {
- const data = await apiClient.get<{
- openInterventions: number;
- completedThisMonth: number;
- }>('/api/standardized-profile/intervention-stats', { showErrorToast: false });
- 
- if (data) {
- setStats(prev => ({ 
- ...prev, 
- openInterventionCount: data.openInterventions,
- completedInterventionsThisMonth: data.completedThisMonth 
- }));
- }
- } catch (error) {
- console.error('Failed to fetch intervention stats:', error);
- }
- }
- 
- fetchInterventionStats();
- }, []);
+          const thisWeekTotal = weeklyData.reduce((sum, d) => sum + d.count, 0);
+          setStats(prev => ({ ...prev, meetingCount: thisWeekTotal }));
+        }
 
- function getLastNDays(n: number): Date[] {
- const days: Date[] = [];
- for (let i = n - 1; i >= 0; i--) {
- const date = new Date();
- date.setDate(date.getDate() - i);
- days.push(date);
- }
- return days;
- }
+        const interventionData = await apiClient.get<{
+          openInterventions: number;
+          completedThisMonth: number;
+        }>('/api/standardized-profile/intervention-stats', { showErrorToast: false });
 
- const displayStats = useMemo(() => {
- return [
- { 
- title:"Toplam Öğrenci", 
- value: stats.studentCount, 
- icon: Users2, 
- gradient: MODERN_GRADIENTS.purple,
- subtitle: `${stats.studentCount} kayıtlı öğrenci`
- },
- { 
- title:"Bu Hafta Görüşme", 
- value: stats.meetingCount, 
- icon: CalendarDays, 
- gradient: MODERN_GRADIENTS.blue,
- subtitle: `${stats.activeCounselingSessionsToday} bugün`
- },
- { 
- title:"Açık Müdahale", 
- value: stats.openInterventionCount, 
- icon: AlertTriangle, 
- gradient: MODERN_GRADIENTS.amber,
- subtitle: `${stats.completedInterventionsThisMonth} bu ay tamamlandı`
- },
- { 
- title:"Aktif Anket", 
- value: stats.activeSurveyCount, 
- icon: MessageSquare, 
- gradient: MODERN_GRADIENTS.green,
- subtitle:"Devam eden anketler"
- },
- ];
- }, [stats]);
+        if (interventionData) {
+          setStats(prev => ({
+            ...prev,
+            openInterventionCount: interventionData.openInterventions,
+            completedInterventionsThisMonth: interventionData.completedThisMonth
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
- const riskChartData = useMemo(() => [
- { name:"Düşük", value: riskDistribution.low, color:"#22c55e" },
- { name:"Orta", value: riskDistribution.medium, color:"#f59e0b" },
- { name:"Yüksek", value: riskDistribution.high, color:"#ef4444" },
- { name:"Değerlendirilmemiş", value: riskDistribution.none, color:"#94a3b8" },
- ], [riskDistribution]);
+    fetchDashboardData();
+  }, [isAuthenticated]);
 
- const isDevelopment = import.meta.env.DEV;
+  function getLastNDays(n: number): Date[] {
+    const days: Date[] = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      days.push(date);
+    }
+    return days;
+  }
 
- const handleQuickAdminLogin = async () => {
- setIsQuickLoginLoading(true);
- try {
- const success = await login('admin@okul.edu.tr', 'admin123');
- if (success) {
- window.location.reload();
- }
- } catch (error) {
- console.error('Admin hızlı giriş hatası:', error);
- } finally {
- setIsQuickLoginLoading(false);
- }
- };
+  const handleQuickAdminLogin = async () => {
+    setIsQuickLoginLoading(true);
+    try {
+      const success = await login('admin@okul.edu.tr', 'admin123');
+      if (success) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Admin hızlı giriş hatası:', error);
+    } finally {
+      setIsQuickLoginLoading(false);
+    }
+  };
 
- if (isLoading) {
- return <DashboardSkeleton />;
- }
+  const isDevelopment = import.meta.env.DEV;
 
- return (
- <div className="w-full max-w-7xl mx-auto py-6 space-y-6 page-transition">
- {!isAuthenticated && isDevelopment && (
- <motion.div
- initial={{ opacity: 0, y: -20 }}
- animate={{ opacity: 1, y: 0 }}
- className="mb-4"
- >
- <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg p-4">
- <div className="flex items-center justify-between">
- <div className="flex items-center gap-3">
- <div className="bg-white/20 rounded-full p-2">
- <KeyRound className="h-5 w-5" />
- </div>
- <div>
- <h3 className="font-semibold">Geliştirme Modu</h3>
- <p className="text-sm text-white/90">Admin olarak hızlı giriş yapabilirsiniz</p>
- </div>
- </div>
- <Button
- onClick={handleQuickAdminLogin}
- disabled={isQuickLoginLoading}
- className="bg-white text-orange-600"
- >
- {isQuickLoginLoading ? (
- <>
- <Clock className="mr-2 h-4 w-4" />
- Giriş yapılıyor...
- </>
- ) : (
- <>
- <KeyRound className="mr-2 h-4 w-4" />
- Admin Hızlı Giriş
- </>
- )}
- </Button>
- </div>
- </div>
- </motion.div>
- )}
+  const criticalWarnings = useMemo(() => {
+    return earlyWarnings.filter(w => w.severity === 'kritik' || w.severity === 'yüksek');
+  }, [earlyWarnings]);
 
- <PageHeader
- title="Rehber360"
- subtitle={new Date().toLocaleDateString('tr-TR', { 
- weekday: 'long', 
- year: 'numeric', 
- month: 'long', 
- day: 'numeric' 
- })}
- icon={Sparkles}
- actions={
- <Badge variant="secondary" className="text-sm px-4 py-2 h-fit gap-2 bg-primary/10 text-primary border-primary/20">
- <Clock className="h-4 w-4" />
- Gerçek Zamanlı
- </Badge>
- }
- />
+  const quickActions = [
+    { title: "Öğrenciler", description: "Tüm öğrencileri görüntüle", icon: Users2, href: "/ogrenci", gradient: "from-violet-500 to-purple-600" },
+    { title: "Görüşmeler", description: "Danışmanlık seansları", icon: CalendarDays, href: "/gorusmeler", gradient: "from-blue-500 to-cyan-600" },
+    { title: "Anketler", description: "Aktif anket yönetimi", icon: MessageSquare, href: "/anketler", gradient: "from-emerald-500 to-teal-600" },
+    { title: "AI Asistan", description: "Yapay zeka destekli analiz", icon: Brain, href: "/ai-araclari", gradient: "from-pink-500 to-rose-600" },
+    { title: "Raporlar", description: "Detaylı istatistikler", icon: FileText, href: "/raporlar", gradient: "from-amber-500 to-orange-600" },
+    { title: "Ölçme Değerlendirme", description: "Sınav ve testler", icon: BarChart3, href: "/olcme-degerlendirme", gradient: "from-indigo-500 to-purple-600" },
+  ];
 
- <StatsGrid columns={4}>
- {displayStats.map((stat, i) => (
- <StatCard
- key={stat.title}
- title={stat.title}
- value={stat.value}
- subtitle={stat.subtitle}
- icon={stat.icon}
- gradient={stat.gradient}
- delay={i * 0.1}
- />
- ))}
- </StatsGrid>
+  const riskChartData = useMemo(() => [
+    { name: "Düşük", value: riskDistribution.low, color: "#22c55e" },
+    { name: "Orta", value: riskDistribution.medium, color: "#f59e0b" },
+    { name: "Yüksek", value: riskDistribution.high, color: "#ef4444" },
+    { name: "Değerlendirilmemiş", value: riskDistribution.none, color: "#94a3b8" },
+  ], [riskDistribution]);
 
- <div className="grid gap-6 md:grid-cols-3">
- <motion.div 
- className="md:col-span-2"
- initial={{ opacity: 0, x: -20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ delay: 0.2 }}
- >
- <Card className="h-full border-2 card-lift gpu-accelerated">
- <CardHeader>
- <CardTitle className="flex items-center gap-2">
- <TrendingUp className="h-5 w-5 text-primary" />
- Haftalık Görüşme Trendleri
- </CardTitle>
- <CardDescription>Son 7 günlük görüşme dağılımı</CardDescription>
- </CardHeader>
- <CardContent>
- <ChartContainer
- config={{
- count: { label:"Görüşme", color:"hsl(var(--primary))" },
- }}
- className="h-[250px]"
- >
- <AreaChart data={weeklyMeetingTrend}>
- <defs>
- <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
- <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
- </linearGradient>
- </defs>
- <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
- <XAxis 
- dataKey="day" 
- tickLine={false} 
- axisLine={false} 
- tickMargin={8}
- className="text-xs"
- />
- <YAxis 
- tickLine={false} 
- axisLine={false} 
- tickMargin={8}
- className="text-xs"
- />
- <ChartTooltip content={<ChartTooltipContent />} />
- <Area
- type="monotone"
- dataKey="count"
- stroke="hsl(var(--primary))"
- strokeWidth={3}
- fill="url(#colorCount)"
- />
- </AreaChart>
- </ChartContainer>
- </CardContent>
- </Card>
- </motion.div>
+  const statsCards = useMemo(() => [
+    {
+      title: "Toplam Öğrenci",
+      value: stats.studentCount,
+      icon: Users2,
+      gradient: "from-violet-500 to-purple-600",
+      description: "Kayıtlı öğrenci sayısı",
+      trend: "+12%"
+    },
+    {
+      title: "Bu Hafta Görüşme",
+      value: stats.meetingCount,
+      icon: CalendarDays,
+      gradient: "from-blue-500 to-cyan-600",
+      description: `${stats.activeCounselingSessionsToday} bugün`,
+      trend: "+8%"
+    },
+    {
+      title: "Açık Müdahale",
+      value: stats.openInterventionCount,
+      icon: AlertTriangle,
+      gradient: "from-amber-500 to-orange-600",
+      description: `${stats.completedInterventionsThisMonth} tamamlandı`,
+      trend: "-5%"
+    },
+    {
+      title: "Aktif Anket",
+      value: stats.activeSurveyCount,
+      icon: MessageSquare,
+      gradient: "from-emerald-500 to-teal-600",
+      description: "Devam eden anketler",
+      trend: "+3"
+    },
+  ], [stats]);
 
- <motion.div
- initial={{ opacity: 0, x: 20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ delay: 0.3 }}
- >
- <Card className="h-full border-2 card-lift gpu-accelerated">
- <CardHeader>
- <CardTitle className="flex items-center gap-2">
- <AlertCircle className="h-5 w-5 text-amber-600" />
- Kritik Uyarılar
- </CardTitle>
- <CardDescription>Acil müdahale gerektiren durumlar</CardDescription>
- </CardHeader>
- <CardContent className="space-y-3">
- {criticalWarnings.length > 0 ? (
- criticalWarnings.slice(0, 4).map((warning, i) => (
- <div 
- key={i} 
- className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 interactive haptic-feedback border border-amber-200/50"
- onClick={() => navigate(`/ogrenci/${warning.studentId}`)}
- >
- <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
- <div className="flex-1 min-w-0">
- <div className="text-sm font-semibold truncate">{warning.studentName}</div>
- <div className="text-xs text-muted-foreground line-clamp-2">{warning.message}</div>
- </div>
- <Badge variant="destructive" className="text-xs flex-shrink-0">{warning.severity}</Badge>
- </div>
- ))
- ) : (
- <div className="text-sm text-muted-foreground text-center py-8 flex flex-col items-center gap-2">
- <CheckCircle2 className="h-8 w-8 text-green-500" />
- <span>Kritik uyarı bulunmuyor</span>
- </div>
- )}
- </CardContent>
- </Card>
- </motion.div>
- </div>
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
 
- <div className="grid gap-6 md:grid-cols-2">
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.4 }}
- >
- <Card className="border-2 card-lift gpu-accelerated">
- <CardHeader>
- <CardTitle className="flex items-center gap-2">
- <Activity className="h-5 w-5 text-primary" />
- Risk Dağılımı
- </CardTitle>
- <CardDescription>Öğrenci risk seviyeleri analizi</CardDescription>
- </CardHeader>
- <CardContent>
- <div className="grid md:grid-cols-2 gap-6">
- <div className="h-[220px] flex items-center justify-center">
- <ResponsiveContainer width="100%" height="100%">
- <PieChart>
- <Pie
- data={riskChartData}
- cx="50%"
- cy="50%"
- labelLine={false}
- label={({ name, percent }) => percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
- outerRadius={80}
- fill="#8884d8"
- dataKey="value"
- >
- {riskChartData.map((entry, index) => (
- <Cell key={`cell-${index}`} fill={entry.color} />
- ))}
- </Pie>
- <ChartTooltip />
- </PieChart>
- </ResponsiveContainer>
- </div>
- <div className="space-y-3">
- <div className="flex items-center justify-between p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200/50">
- <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded-full bg-red-500"></div>
- <span className="text-sm font-medium">Yüksek Risk</span>
- </div>
- <Badge variant="destructive">{riskDistribution.high}</Badge>
- </div>
- <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50">
- <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded-full bg-amber-500"></div>
- <span className="text-sm font-medium">Orta Risk</span>
- </div>
- <Badge variant="outline" className="border-amber-500 text-amber-700 dark:text-amber-400">{riskDistribution.medium}</Badge>
- </div>
- <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200/50">
- <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded-full bg-green-500"></div>
- <span className="text-sm font-medium">Düşük Risk</span>
- </div>
- <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400">{riskDistribution.low}</Badge>
- </div>
- <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-950/20 border border-slate-200/50">
- <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded-full bg-slate-400"></div>
- <span className="text-sm font-medium">Değerlendirilmemiş</span>
- </div>
- <Badge variant="outline">{riskDistribution.none}</Badge>
- </div>
- </div>
- </div>
- </CardContent>
- </Card>
- </motion.div>
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center p-6">
+        {isDevelopment ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-md w-full"
+          >
+            <div className="bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-2xl p-8 shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="inline-flex p-4 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                  <KeyRound className="h-8 w-8" />
+                </div>
+                <h2 className="text-2xl font-bold mb-2">Geliştirme Modu</h2>
+                <p className="text-white/90">Admin olarak hızlı giriş yapabilirsiniz</p>
+              </div>
+              <Button
+                onClick={handleQuickAdminLogin}
+                disabled={isQuickLoginLoading}
+                className="w-full bg-white text-orange-600 hover:bg-white/90 h-12 text-lg"
+                size="lg"
+              >
+                {isQuickLoginLoading ? (
+                  <>
+                    <Clock className="mr-2 h-5 w-5 animate-spin" />
+                    Giriş yapılıyor...
+                  </>
+                ) : (
+                  <>
+                    <KeyRound className="mr-2 h-5 w-5" />
+                    Admin Hızlı Giriş
+                  </>
+                )}
+              </Button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center"
+          >
+            <div className="inline-flex p-4 rounded-full bg-muted mb-4">
+              <Shield className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h2 className="text-2xl font-bold mb-2">Giriş Gerekli</h2>
+            <p className="text-muted-foreground mb-6">Bu sayfayı görüntülemek için lütfen giriş yapın</p>
+            <Button onClick={() => navigate('/login')} size="lg">
+              Giriş Yap
+            </Button>
+          </motion.div>
+        )}
+      </div>
+    );
+  }
 
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.5 }}
- >
- <Card className="border-2 card-lift gpu-accelerated">
- <CardHeader>
- <CardTitle className="flex items-center gap-2">
- <Target className="h-5 w-5 text-primary" />
- Hızlı Erişim
- </CardTitle>
- <CardDescription>Sık kullanılan modüller</CardDescription>
- </CardHeader>
- <CardContent className="space-y-2">
- <Button asChild className="w-full group justify-start text-base h-12 bg-gradient-to-r from-violet-500 to-purple-600 btn-ripple haptic-feedback focus-glow">
- <a href="/ogrenci">
- <Users2 className="mr-3 h-5 w-5 group-" /> 
- Öğrenciler
- </a>
- </Button>
- <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
- <a href="/gorusmeler">
- <CalendarDays className="mr-3 h-5 w-5 group-" /> 
- Görüşmeler
- </a>
- </Button>
- <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
- <a href="/anketler">
- <MessageSquare className="mr-3 h-5 w-5 group-" /> 
- Anketler
- </a>
- </Button>
- <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
- <a href="/raporlar">
- <FileText className="mr-3 h-5 w-5 group-" /> 
- Raporlar
- </a>
- </Button>
- <Button asChild variant="outline" className="w-full group justify-start text-base h-12 dark: btn-ripple haptic-feedback">
- <a href="/ai-asistan">
- <Brain className="mr-3 h-5 w-5 group-" /> 
- AI Asistan
- </a>
- </Button>
- </CardContent>
- </Card>
- </motion.div>
- </div>
+  return (
+    <div className="min-h-screen w-full">
 
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.6 }}
- >
- <RiskSummaryWidget />
- </motion.div>
+      <motion.div
+        style={{ opacity: heroOpacity, scale: heroScale }}
+        className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 p-12 shadow-2xl"
+      >
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl"></div>
 
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.7 }}
- >
- <DailyActionPlanWidget />
- </motion.div>
+        <div className="relative z-10 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge className="mb-4 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+              <Sparkles className="h-3 w-3 mr-1" />
+              Yeni Nesil Rehberlik Sistemi
+            </Badge>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+              Rehber360'a Hoş Geldiniz
+            </h1>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl leading-relaxed">
+              Yapay zeka destekli, modern ve kullanıcı dostu öğrenci rehberlik platformu.
+              Her öğrenciye özel analiz ve danışmanlık deneyimi.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button
+                size="lg"
+                className="bg-white text-purple-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all"
+                onClick={() => navigate('/ogrenci')}
+              >
+                Hemen Başla
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+                onClick={() => navigate('/ai-araclari')}
+              >
+                <Brain className="mr-2 h-5 w-5" />
+                AI Araçları
+              </Button>
+            </div>
+          </motion.div>
+        </div>
 
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.75 }}
- >
- <AISuggestionPanel />
- </motion.div>
+        <motion.div
+          className="absolute top-10 right-10 opacity-20"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        >
+          <Sparkles className="h-32 w-32 text-white" />
+        </motion.div>
+      </motion.div>
 
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.8 }}
- >
- <SchoolWideAIInsights />
- </motion.div>
- </div>
- );
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {statsCards.map((stat, index) => (
+          <motion.div
+            key={stat.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ y: -5, scale: 1.02 }}
+            className="group"
+          >
+            <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity`}></div>
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.gradient} shadow-lg`}>
+                    <stat.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    {stat.trend}
+                  </Badge>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3 mb-8">
+        <motion.div
+          className="md:col-span-2"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card className="border-2 hover:shadow-lg transition-all h-full bg-white dark:bg-slate-900">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <TrendingUp className="h-5 w-5 text-violet-600" />
+                    Haftalık Görüşme Aktivitesi
+                  </CardTitle>
+                  <CardDescription>Son 7 günlük görüşme trendi</CardDescription>
+                </div>
+                <Badge variant="secondary" className="gap-1">
+                  <Activity className="h-3 w-3" />
+                  Canlı
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer
+                config={{
+                  count: { label: "Görüşme", color: "hsl(262, 83%, 58%)" },
+                }}
+                className="h-[280px]"
+              >
+                <AreaChart data={weeklyMeetingTrend}>
+                  <defs>
+                    <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
+                  <XAxis
+                    dataKey="day"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    className="text-xs"
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    className="text-xs"
+                  />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Area
+                    type="monotone"
+                    dataKey="count"
+                    stroke="hsl(262, 83%, 58%)"
+                    strokeWidth={3}
+                    fill="url(#colorGradient)"
+                  />
+                </AreaChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card className="border-2 hover:shadow-lg transition-all h-full bg-white dark:bg-slate-900">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <AlertCircle className="h-5 w-5 text-amber-600" />
+                Kritik Uyarılar
+              </CardTitle>
+              <CardDescription>Acil müdahale gerektiren durumlar</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {criticalWarnings.length > 0 ? (
+                criticalWarnings.slice(0, 4).map((warning, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 cursor-pointer hover:shadow-md transition-all border border-amber-200/50"
+                    onClick={() => navigate(`/ogrenci/${warning.studentId}`)}
+                  >
+                    <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold truncate">{warning.studentName}</div>
+                      <div className="text-xs text-muted-foreground line-clamp-2">{warning.message}</div>
+                    </div>
+                    <Badge variant="destructive" className="text-xs flex-shrink-0">{warning.severity}</Badge>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground text-center py-8 flex flex-col items-center gap-2">
+                  <CheckCircle2 className="h-8 w-8 text-green-500" />
+                  <span>Kritik uyarı bulunmuyor</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="mb-8"
+      >
+        <Card className="border-2 bg-white dark:bg-slate-900">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Shield className="h-5 w-5 text-blue-600" />
+              Risk Dağılımı Analizi
+            </CardTitle>
+            <CardDescription>Öğrenci risk seviyeleri dağılımı</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="h-[220px] flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={riskChartData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {riskChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <ChartTooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                    <span className="text-sm font-medium">Yüksek Risk</span>
+                  </div>
+                  <Badge variant="destructive">{riskDistribution.high}</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                    <span className="text-sm font-medium">Orta Risk</span>
+                  </div>
+                  <Badge variant="outline" className="border-amber-500 text-amber-700 dark:text-amber-400">{riskDistribution.medium}</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span className="text-sm font-medium">Düşük Risk</span>
+                  </div>
+                  <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400">{riskDistribution.low}</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-950/20 border border-slate-200/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-slate-400"></div>
+                    <span className="text-sm font-medium">Değerlendirilmemiş</span>
+                  </div>
+                  <Badge variant="outline">{riskDistribution.none}</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+      >
+        <Card className="border-2 mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Zap className="h-6 w-6 text-amber-600" />
+              Hızlı Erişim
+            </CardTitle>
+            <CardDescription>En sık kullanılan modüllere hızlıca ulaşın</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {quickActions.map((action, index) => (
+                <motion.div
+                  key={action.title}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.7 + index * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Card
+                    className="cursor-pointer border-2 hover:shadow-xl transition-all duration-300 group overflow-hidden"
+                    onClick={() => navigate(action.href)}
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity`}></div>
+                    <CardContent className="p-6 relative">
+                      <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${action.gradient} mb-3 shadow-lg`}>
+                        <action.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="font-bold text-lg mb-1">{action.title}</h3>
+                      <p className="text-sm text-muted-foreground">{action.description}</p>
+                      <ArrowRight className="absolute top-6 right-6 h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      <div className="grid gap-6 md:grid-cols-3 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+        >
+          <Card className="border-2 hover:shadow-lg transition-all bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20">
+            <CardContent className="p-6 text-center">
+              <div className="inline-flex p-4 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 mb-4 shadow-lg">
+                <GraduationCap className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">{students.length}</h3>
+              <p className="text-sm text-muted-foreground">Başarı Hikayesi</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0 }}
+        >
+          <Card className="border-2 hover:shadow-lg transition-all bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
+            <CardContent className="p-6 text-center">
+              <div className="inline-flex p-4 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 mb-4 shadow-lg">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">%98</h3>
+              <p className="text-sm text-muted-foreground">Memnuniyet Oranı</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1 }}
+        >
+          <Card className="border-2 hover:shadow-lg transition-all bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20">
+            <CardContent className="p-6 text-center">
+              <div className="inline-flex p-4 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 mb-4 shadow-lg">
+                <Award className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">AI Destekli</h3>
+              <p className="text-sm text-muted-foreground">Akıllı Analiz</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2 }}
+        className="mb-8"
+      >
+        <RiskSummaryWidget />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.3 }}
+        className="mb-8"
+      >
+        <DailyActionPlanWidget />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.4 }}
+        className="mb-8"
+      >
+        <AISuggestionPanel />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5 }}
+      >
+        <SchoolWideAIInsights />
+      </motion.div>
+    </div>
+  );
 }
