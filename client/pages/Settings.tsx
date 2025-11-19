@@ -186,7 +186,7 @@ export default function SettingsPage() {
  });
  }}
  >
- <TabsList variant="default">
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-7">
  {SETTINGS_TABS.map((tabConfig) => (
  <TabsTrigger
  key={tabConfig.value}

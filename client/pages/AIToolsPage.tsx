@@ -94,7 +94,7 @@ export default function AIToolsPage() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.3 }}
  >
- <TabsList variant="pills" className="justify-center flex-wrap bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm">
+ <TabsList variant="pills" className="justify-center flex-wrap">
  {AI_TOOLS_TABS.map((tabConfig) => (
  <TabsTrigger 
  key={tabConfig.value} 

@@ -340,7 +340,7 @@ export default function CounselingSessions() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.3 }}
  >
- <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm">
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
  <TabsTrigger value="dashboard">
  Dashboard
  </TabsTrigger>
