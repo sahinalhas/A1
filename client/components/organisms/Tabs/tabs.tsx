@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
  TabsListProps
 >(({ className, variant ="default", ...props }, ref) => {
  const variantStyles = {
- default:"bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm",
+ default:"bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm border-0",
  pills:"bg-transparent border-0 gap-2",
  underline:"bg-transparent border-b border-slate-200 dark:border-slate-800 rounded-none gap-1"
  };
