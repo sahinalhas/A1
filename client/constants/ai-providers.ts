@@ -11,6 +11,9 @@ export interface AIModel {
   value: string;
   name: string;
   description: string;
+  speed?: 'fast' | 'balanced' | 'powerful';
+  contextWindow?: string;
+  recommended?: boolean;
 }
 
 export interface AIProviderInfo {
@@ -30,10 +33,10 @@ export const AI_PROVIDERS: Record<AIProviderType, AIProviderInfo> = {
     color: 'from-blue-500 to-cyan-500',
     features: ['Ücretsiz kullanım', 'Yüksek performans', 'Geniş token limiti', 'Makul kullanımda sınırsız'],
     models: [
-      { value: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'En hızlı ve verimli model (Önerilen)' },
-      { value: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: 'En güçlü model, karmaşık görevler için' },
-      { value: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', description: 'Dengeli performans ve hız' },
-      { value: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash Exp', description: 'Deneysel özellikler ile' }
+      { value: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'En hızlı ve verimli model', speed: 'fast', contextWindow: '128K', recommended: true },
+      { value: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: 'En güçlü model, karmaşık görevler için', speed: 'powerful', contextWindow: '200K' },
+      { value: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', description: 'Dengeli performans ve hız', speed: 'balanced', contextWindow: '128K' },
+      { value: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash Exp', description: 'Deneysel özellikler ile', speed: 'fast', contextWindow: '128K' }
     ]
   },
   openai: {
@@ -43,10 +46,10 @@ export const AI_PROVIDERS: Record<AIProviderType, AIProviderInfo> = {
     color: 'from-green-500 to-emerald-500',
     features: ['GPT-4 desteği', 'Yüksek kalite', 'Geniş dil desteği', 'API key gerekli'],
     models: [
-      { value: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Hızlı ve ekonomik (Önerilen)' },
-      { value: 'gpt-4o', name: 'GPT-4o', description: 'En yeni ve güçlü model' },
-      { value: 'gpt-4-turbo', name: 'GPT-4 Turbo', description: 'Dengeli güç ve hız' },
-      { value: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Hızlı ve ekonomik' }
+      { value: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Hızlı ve ekonomik', speed: 'fast', contextWindow: '128K', recommended: true },
+      { value: 'gpt-4o', name: 'GPT-4o', description: 'En yeni ve güçlü model', speed: 'powerful', contextWindow: '128K' },
+      { value: 'gpt-4-turbo', name: 'GPT-4 Turbo', description: 'Dengeli güç ve hız', speed: 'balanced', contextWindow: '128K' },
+      { value: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Hızlı ve ekonomik', speed: 'fast', contextWindow: '16K' }
     ]
   },
   ollama: {

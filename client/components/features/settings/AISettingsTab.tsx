@@ -1,21 +1,54 @@
 /**
- * AI Settings Tab
- * Modern, clean AI configuration interface
+ * AI Settings Tab - Modern & Compact
+ * Zarif, kullanıcı dostu AI yapılandırma arayüzü
  */
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/organisms/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/organisms/Card';
 import { Label } from '@/components/atoms/Label';
 import { Input } from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/Select';
 import { Switch } from '@/components/atoms/Switch';
-import { Brain, CheckCircle, Loader2, Server, Info, Zap, Power, Settings2 } from 'lucide-react';
+import { 
+  Brain, 
+  CheckCircle, 
+  Loader2, 
+  Server, 
+  Info, 
+  Zap, 
+  Settings2, 
+  Sparkles,
+  AlertCircle,
+  ChevronDown,
+  Rocket,
+  Activity,
+  Gauge
+} from 'lucide-react';
 import { Badge } from '@/components/atoms/Badge';
 import { toast } from 'sonner';
 import { Separator } from '@/components/atoms/Separator';
 import { Alert, AlertDescription } from '@/components/atoms/Alert';
-import { AI_PROVIDERS, AI_FEATURES, type AIProviderType } from '@/constants/ai-providers';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/organisms/Collapsible/collapsible';
+import { AI_PROVIDERS, AI_FEATURES, type AIProviderType, type AIModel } from '@/constants/ai-providers';
+
+const SPEED_ICONS = {
+  fast: Rocket,
+  balanced: Activity,
+  powerful: Gauge
+};
+
+const SPEED_LABELS = {
+  fast: 'Hızlı',
+  balanced: 'Dengeli',
+  powerful: 'Güçlü'
+};
+
+const SPEED_COLORS = {
+  fast: 'text-green-600 bg-green-50 dark:bg-green-950/30',
+  balanced: 'text-blue-600 bg-blue-50 dark:bg-blue-950/30',
+  powerful: 'text-purple-600 bg-purple-50 dark:bg-purple-950/30'
+};
 
 export default function AISettingsTab() {
   const [aiEnabled, setAiEnabled] = useState(true);
@@ -26,6 +59,19 @@ export default function AISettingsTab() {
   const [isTestingConnection, setIsTestingConnection] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isLoadingModels, setIsLoadingModels] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+
+  const [savedProvider, setSavedProvider] = useState<AIProviderType>('gemini');
+  const [savedModel, setSavedModel] = useState('gemini-2.5-flash');
+  const [savedAiEnabled, setSavedAiEnabled] = useState(true);
+  const [savedOllamaUrl, setSavedOllamaUrl] = useState('http://localhost:11434');
+
+  const hasUnsavedChanges = 
+    provider !== savedProvider || 
+    model !== savedModel || 
+    aiEnabled !== savedAiEnabled ||
+    (provider === 'ollama' && ollamaUrl !== savedOllamaUrl);
 
   useEffect(() => {
     loadSettings();
@@ -41,11 +87,17 @@ export default function AISettingsTab() {
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.data) {
-          setProvider(data.data.provider || 'gemini');
-          setModel(data.data.currentModel || 'gemini-2.5-flash');
+          const loadedProvider = data.data.provider || 'gemini';
+          const loadedModel = data.data.currentModel || 'gemini-2.5-flash';
           
-          if (data.data.provider === 'ollama' && data.data.ollamaBaseUrl) {
+          setProvider(loadedProvider);
+          setModel(loadedModel);
+          setSavedProvider(loadedProvider);
+          setSavedModel(loadedModel);
+          
+          if (data.data.ollamaBaseUrl) {
             setOllamaUrl(data.data.ollamaBaseUrl);
+            setSavedOllamaUrl(data.data.ollamaBaseUrl);
           }
 
           if (data.data.availableModels?.length > 0) {
@@ -54,12 +106,12 @@ export default function AISettingsTab() {
         }
       }
 
-      // Load AI enabled status
       const settingsResponse = await fetch('/api/settings');
       if (settingsResponse.ok) {
         const settingsData = await settingsResponse.json();
         if (settingsData.success && settingsData.data?.aiEnabled !== undefined) {
           setAiEnabled(settingsData.data.aiEnabled);
+          setSavedAiEnabled(settingsData.data.aiEnabled);
         }
       }
     } catch (error) {
@@ -68,8 +120,9 @@ export default function AISettingsTab() {
     }
   };
 
-  const updateAvailableModels = () => {
+  const updateAvailableModels = async () => {
     const providerInfo = AI_PROVIDERS[provider];
+    
     if (providerInfo.models.length > 0) {
       const modelValues = providerInfo.models.map(m => m.value);
       setAvailableModels(modelValues);
@@ -78,8 +131,32 @@ export default function AISettingsTab() {
       }
     } else if (provider === 'ollama') {
       setAvailableModels([]);
-      setModel('');
       setConnectionStatus('idle');
+      
+      setIsLoadingModels(true);
+      try {
+        const response = await fetch(`${ollamaUrl}/api/tags`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.models && data.models.length > 0) {
+            const modelNames = data.models.map((m: any) => m.name);
+            setAvailableModels(modelNames);
+            
+            if (model && modelNames.includes(model)) {
+              
+            } else if (savedModel && modelNames.includes(savedModel)) {
+              setModel(savedModel);
+            } else if (modelNames.length > 0) {
+              setModel(modelNames[0]);
+            }
+            setConnectionStatus('success');
+          }
+        }
+      } catch (error) {
+        setConnectionStatus('idle');
+      } finally {
+        setIsLoadingModels(false);
+      }
     }
   };
 
@@ -102,7 +179,12 @@ export default function AISettingsTab() {
           setAvailableModels(modelNames);
           setConnectionStatus('success');
           toast.success(`Ollama bağlantısı başarılı! ${modelNames.length} model bulundu.`);
-          if (modelNames.length > 0 && !modelNames.includes(model)) {
+          
+          if (model && modelNames.includes(model)) {
+            
+          } else if (savedModel && modelNames.includes(savedModel)) {
+            setModel(savedModel);
+          } else if (modelNames.length > 0) {
             setModel(modelNames[0]);
           }
         } else if (data.success && data.data?.available) {
@@ -126,7 +208,6 @@ export default function AISettingsTab() {
   const saveSettings = async () => {
     setIsSaving(true);
     try {
-      // Save AI enabled status
       const enabledResponse = await fetch('/api/settings/ai-enabled', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -137,7 +218,6 @@ export default function AISettingsTab() {
         throw new Error('AI durum ayarı kaydedilemedi');
       }
 
-      // Save provider settings
       const providerSettings = {
         provider,
         model,
@@ -154,8 +234,20 @@ export default function AISettingsTab() {
         throw new Error('Provider ayarları kaydedilemedi');
       }
 
+      setSavedProvider(provider);
+      setSavedModel(model);
+      setSavedAiEnabled(aiEnabled);
+      if (provider === 'ollama') {
+        setSavedOllamaUrl(ollamaUrl);
+      }
+
       toast.success(
-        `AI Ayarları Kaydedildi!\n${aiEnabled ? `${AI_PROVIDERS[provider].name} (${model}) aktif` : 'AI özellikleri kapalı'}`
+        '✅ Ayarlar Kaydedildi!',
+        {
+          description: aiEnabled 
+            ? `${AI_PROVIDERS[provider].name} - ${AI_PROVIDERS[provider].models.find(m => m.value === model)?.name || model}` 
+            : 'AI özellikleri kapalı'
+        }
       );
       setConnectionStatus('idle');
     } catch (error) {
@@ -167,53 +259,60 @@ export default function AISettingsTab() {
   };
 
   const ProviderIcon = AI_PROVIDERS[provider].icon;
+  const currentModelInfo = AI_PROVIDERS[provider].models.find(m => m.value === model);
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      {/* AI Enable/Disable Toggle */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg bg-gradient-to-br ${aiEnabled ? 'from-blue-500 to-indigo-500' : 'from-gray-400 to-gray-500'} text-white`}>
-                <Power className="h-6 w-6" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl">AI Özellikleri</CardTitle>
-                <CardDescription>
-                  {aiEnabled ? 'AI özellikleri aktif ve kullanıma hazır' : 'AI özellikleri şu anda kapalı'}
-                </CardDescription>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Label htmlFor="ai-enabled" className="text-sm font-medium">
-                {aiEnabled ? 'Aktif' : 'Kapalı'}
-              </Label>
-              <Switch
-                id="ai-enabled"
-                checked={aiEnabled}
-                onCheckedChange={setAiEnabled}
-                className="data-[state=checked]:bg-green-500"
-              />
-            </div>
+    <div className="space-y-4 max-w-6xl">
+      <div className="flex items-center justify-between gap-4 p-4 rounded-xl border bg-gradient-to-r from-background to-accent/20">
+        <div className="flex items-center gap-3">
+          <div className={`p-2 rounded-lg bg-gradient-to-br ${aiEnabled ? 'from-blue-500 to-indigo-500' : 'from-gray-400 to-gray-500'} text-white shadow-lg`}>
+            <Brain className="h-5 w-5" />
           </div>
-        </CardHeader>
-      </Card>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-semibold">AI Yapılandırması</h2>
+              {hasUnsavedChanges && (
+                <Badge variant="outline" className="border-orange-500 text-orange-600 animate-pulse">
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  Kaydedilmedi
+                </Badge>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {aiEnabled ? (
+                <>
+                  Aktif: <span className="font-medium text-foreground">{AI_PROVIDERS[savedProvider].name}</span>
+                  {savedModel && <span className="text-xs"> • {AI_PROVIDERS[savedProvider].models.find(m => m.value === savedModel)?.name || savedModel}</span>}
+                </>
+              ) : (
+                'AI özellikleri şu anda kapalı'
+              )}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Label htmlFor="ai-toggle" className="text-sm font-medium">
+            {aiEnabled ? 'Aktif' : 'Kapalı'}
+          </Label>
+          <Switch
+            id="ai-toggle"
+            checked={aiEnabled}
+            onCheckedChange={setAiEnabled}
+            className="data-[state=checked]:bg-green-500"
+          />
+        </div>
+      </div>
 
-      {/* Provider Selection - Only show when AI is enabled */}
       {aiEnabled && (
         <>
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Settings2 className="h-5 w-5 text-primary" />
-                <CardTitle>AI Provider Seçimi</CardTitle>
-              </div>
-              <CardDescription>
-                Kullanmak istediğiniz yapay zeka sağlayıcısını seçin
-              </CardDescription>
+          <Card className="border-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Provider Seçimi
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
                 {(Object.keys(AI_PROVIDERS) as AIProviderType[]).map((key) => {
                   const info = AI_PROVIDERS[key];
@@ -224,53 +323,35 @@ export default function AISettingsTab() {
                     <button
                       key={key}
                       onClick={() => setProvider(key)}
-                      className={`relative p-4 rounded-lg border-2 transition-all text-left ${
+                      className={`relative p-3 rounded-lg border-2 transition-all text-left group hover:shadow-md ${
                         isSelected
-                          ? 'border-primary bg-primary/5 shadow-md'
-                          : 'border-border hover:border-primary/50 hover:bg-accent/50'
+                          ? 'border-primary bg-primary/5 shadow-sm'
+                          : 'border-border hover:border-primary/30'
                       }`}
                     >
-                      <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between">
-                          <div className={`p-2 rounded-lg bg-gradient-to-br ${info.color} text-white`}>
-                            <Icon className="h-5 w-5" />
+                          <div className={`p-1.5 rounded-md bg-gradient-to-br ${info.color} text-white`}>
+                            <Icon className="h-4 w-4" />
                           </div>
                           {isSelected && (
-                            <Badge variant="default" className="bg-primary">
-                              <CheckCircle className="mr-1 h-3 w-3" />
-                              Seçili
-                            </Badge>
+                            <CheckCircle className="h-4 w-4 text-primary" />
                           )}
                         </div>
                         <div>
-                          <h3 className="font-semibold">{info.name}</h3>
-                          <p className="text-xs text-muted-foreground mt-1">{info.description}</p>
+                          <h3 className="font-semibold text-sm">{info.name}</h3>
+                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{info.description}</p>
                         </div>
                       </div>
                     </button>
                   );
                 })}
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Provider Configuration */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <ProviderIcon className="h-5 w-5 text-primary" />
-                <CardTitle>{AI_PROVIDERS[provider].name} Yapılandırması</CardTitle>
-              </div>
-              <CardDescription>
-                {AI_PROVIDERS[provider].description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Ollama URL */}
               {provider === 'ollama' && (
-                <div className="space-y-2">
-                  <Label htmlFor="ollama-url" className="flex items-center gap-2">
-                    <Server className="h-4 w-4" />
+                <div className="space-y-2 pt-2 border-t">
+                  <Label htmlFor="ollama-url" className="flex items-center gap-2 text-sm">
+                    <Server className="h-3.5 w-3.5" />
                     Ollama Sunucu Adresi
                   </Label>
                   <Input
@@ -278,22 +359,30 @@ export default function AISettingsTab() {
                     value={ollamaUrl}
                     onChange={(e) => setOllamaUrl(e.target.value)}
                     placeholder="http://localhost:11434"
-                    className="font-mono"
+                    className="font-mono text-sm"
                   />
-                  <p className="text-xs text-muted-foreground flex items-start gap-2">
+                  <p className="text-xs text-muted-foreground flex items-start gap-1.5">
                     <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                    <span>Ollama servisinin çalıştığı URL adresi.</span>
+                    <span>
+                      Ollama servisinin çalıştığı adres. Kurulu değilse{' '}
+                      <a 
+                        href="https://ollama.com/download" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline font-medium"
+                      >
+                        buradan indirebilirsiniz
+                      </a>
+                    </span>
                   </p>
                 </div>
               )}
 
-              {/* Provider Info Alerts */}
               {provider === 'gemini' && (
                 <Alert className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900">
                   <Info className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  <AlertDescription className="text-sm">
-                    <strong>Ücretsiz ve Güçlü:</strong> Gemini API makul kullanım dahilinde ücretsizdir.
-                    API key'inizi{' '}
+                  <AlertDescription className="text-xs">
+                    <strong>Ücretsiz:</strong> Gemini API key'inizi{' '}
                     <a 
                       href="https://aistudio.google.com/apikey" 
                       target="_blank" 
@@ -310,8 +399,8 @@ export default function AISettingsTab() {
               {provider === 'openai' && (
                 <Alert className="bg-orange-50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-900">
                   <Info className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                  <AlertDescription className="text-sm">
-                    <strong>Ücretli Servis:</strong> OpenAI kullanım başına ücretlendirilir. API key'inizi{' '}
+                  <AlertDescription className="text-xs">
+                    <strong>Ücretli:</strong> OpenAI API key'inizi{' '}
                     <a 
                       href="https://platform.openai.com/api-keys" 
                       target="_blank" 
@@ -325,126 +414,153 @@ export default function AISettingsTab() {
                 </Alert>
               )}
 
-              {/* Test Connection */}
-              <Separator />
-
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 pt-2">
                 <Button 
                   onClick={testConnection} 
                   disabled={isTestingConnection}
                   variant="outline"
-                  size="lg"
+                  size="sm"
                 >
                   {isTestingConnection ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
                       Kontrol ediliyor...
                     </>
                   ) : (
                     <>
-                      <Zap className="mr-2 h-4 w-4" />
+                      <Zap className="mr-2 h-3.5 w-3.5" />
                       Bağlantıyı Test Et
                     </>
                   )}
                 </Button>
 
                 {connectionStatus === 'success' && (
-                  <Badge variant="default" className="bg-green-500 text-sm py-1.5 px-3">
-                    <CheckCircle className="mr-1.5 h-4 w-4" />
+                  <Badge variant="default" className="bg-green-500 text-xs">
+                    <CheckCircle className="mr-1 h-3 w-3" />
                     Bağlantı Başarılı
                   </Badge>
                 )}
               </div>
-
-              {/* Model Selection */}
-              {availableModels.length > 0 && (
-                <>
-                  <Separator />
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="ai-model" className="text-base font-semibold flex items-center gap-2">
-                        <Brain className="h-4 w-4" />
-                        Model Seçimi
-                      </Label>
-                      <Badge variant="secondary" className="text-xs">
-                        {availableModels.length} model mevcut
-                      </Badge>
-                    </div>
-
-                    <Select value={model} onValueChange={setModel}>
-                      <SelectTrigger id="ai-model" className="h-auto py-3">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableModels.map((m) => {
-                          const modelInfo = AI_PROVIDERS[provider].models.find(model => model.value === m);
-                          return (
-                            <SelectItem key={m} value={m} className="py-3">
-                              <div className="flex flex-col items-start gap-1">
-                                <span className="font-medium">{modelInfo?.name || m}</span>
-                                {modelInfo?.description && (
-                                  <span className="text-xs text-muted-foreground">{modelInfo.description}</span>
-                                )}
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </>
-              )}
-
-              {/* Save Button */}
-              <Separator />
-
-              <div className="flex justify-end">
-                <Button 
-                  onClick={saveSettings}
-                  disabled={isSaving}
-                  size="lg"
-                  className="min-w-[160px]"
-                >
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Kaydediliyor...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="mr-2 h-5 w-5" />
-                      Ayarları Kaydet
-                    </>
-                  )}
-                </Button>
-              </div>
             </CardContent>
           </Card>
 
-          {/* AI Features */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Brain className="h-5 w-5 text-primary" />
-                <CardTitle>Kullanılabilir AI Özellikleri</CardTitle>
+          <Card className="border-2">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Brain className="h-4 w-4" />
+                  Model Seçimi
+                </CardTitle>
+                {availableModels.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {availableModels.length} model
+                  </Badge>
+                )}
               </div>
-              <CardDescription>
-                Seçtiğiniz AI provider ile aktif olacak özellikler
-              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {isLoadingModels ? (
+                <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Modeller yükleniyor...
+                </div>
+              ) : availableModels.length > 0 ? (
+                <Select value={model} onValueChange={setModel}>
+                  <SelectTrigger className="h-auto py-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableModels.map((m) => {
+                      const modelInfo = AI_PROVIDERS[provider].models.find(model => model.value === m);
+                      const SpeedIcon = modelInfo?.speed ? SPEED_ICONS[modelInfo.speed] : null;
+                      
+                      return (
+                        <SelectItem key={m} value={m} className="py-2.5">
+                          <div className="flex items-center gap-2 w-full">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-sm">{modelInfo?.name || m}</span>
+                                {modelInfo?.recommended && (
+                                  <Badge variant="default" className="text-xs px-1.5 py-0 h-4">
+                                    Önerilen
+                                  </Badge>
+                                )}
+                              </div>
+                              {modelInfo?.description && (
+                                <p className="text-xs text-muted-foreground mt-0.5">{modelInfo.description}</p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              {modelInfo?.contextWindow && (
+                                <Badge variant="outline" className="text-xs px-1.5 py-0 h-5">
+                                  {modelInfo.contextWindow}
+                                </Badge>
+                              )}
+                              {SpeedIcon && modelInfo?.speed && (
+                                <Badge variant="outline" className={`text-xs px-1.5 py-0 h-5 ${SPEED_COLORS[modelInfo.speed]}`}>
+                                  <SpeedIcon className="h-3 w-3 mr-1" />
+                                  {SPEED_LABELS[modelInfo.speed]}
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    {provider === 'ollama' 
+                      ? 'Model bulunamadı. Ollama sunucunuzun çalıştığından emin olun ve "Bağlantıyı Test Et" butonuna tıklayın.'
+                      : 'Model listesi yüklenemedi. Lütfen bağlantıyı test edin.'}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="w-full justify-between text-xs">
+                    <span className="flex items-center gap-2">
+                      <Settings2 className="h-3.5 w-3.5" />
+                      Gelişmiş Ayarlar
+                    </span>
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform ${advancedOpen ? 'rotate-180' : ''}`} />
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-3 pt-3">
+                  <Alert className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
+                    <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <AlertDescription className="text-xs">
+                      Gelişmiş parametreler yakında eklenecek (Temperature, Max Tokens, System Prompt)
+                    </AlertDescription>
+                  </Alert>
+                </CollapsibleContent>
+              </Collapsible>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 bg-gradient-to-br from-background to-accent/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                Aktif Özellikler
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-2">
                 {AI_FEATURES.map((feature, index) => (
                   <div 
                     key={index} 
-                    className="flex items-start gap-3 p-3 border rounded-lg hover:bg-accent/50 transition-colors"
+                    className="flex items-start gap-2 p-2 border rounded-md hover:bg-accent/30 transition-colors"
                   >
-                    <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded">
-                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    <div className="p-1 bg-green-100 dark:bg-green-900/30 rounded">
+                      <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm">{feature.name}</div>
+                      <div className="font-medium text-xs">{feature.name}</div>
                       <div className="text-xs text-muted-foreground mt-0.5">{feature.description}</div>
                     </div>
                   </div>
@@ -452,18 +568,37 @@ export default function AISettingsTab() {
               </div>
             </CardContent>
           </Card>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <Button 
+              onClick={saveSettings}
+              disabled={isSaving || !hasUnsavedChanges}
+              size="lg"
+              className="min-w-[200px] shadow-md"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Kaydediliyor...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="mr-2 h-4 w-4" />
+                  {hasUnsavedChanges ? 'Değişiklikleri Kaydet' : 'Kayıtlı'}
+                </>
+              )}
+            </Button>
+          </div>
         </>
       )}
 
-      {/* AI Disabled Message */}
       {!aiEnabled && (
         <Alert className="bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-900">
           <Info className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
           <AlertDescription>
-            <p className="font-semibold mb-2">AI Özellikleri Kapalı</p>
-            <p className="text-sm text-muted-foreground">
-              AI özellikleri şu anda devre dışı. Aktif etmek için yukarıdaki anahtarı açın ve ayarları kaydedin.
-              AI özellikleri kapalıyken, AI destekli tüm işlemler (sohbet, analiz, öneriler) kullanılamayacaktır.
+            <p className="font-semibold text-sm mb-1">AI Özellikleri Kapalı</p>
+            <p className="text-xs text-muted-foreground">
+              AI özellikleri şu anda devre dışı. Aktif etmek için yukarıdaki anahtarı açın ve kaydedin.
             </p>
           </AlertDescription>
         </Alert>
