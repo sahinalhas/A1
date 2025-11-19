@@ -281,21 +281,27 @@
     pointer-events: none;
     background:
       radial-gradient(
-        ellipse 1600px 800px at 15% 20%,
-        hsl(var(--primary) / 0.025),
+        ellipse 1800px 900px at 15% 20%,
+        hsl(var(--primary) / 0.04),
         transparent 50%
       ),
       radial-gradient(
-        ellipse 1400px 700px at 85% 10%,
-        hsl(var(--chart-3) / 0.02),
+        ellipse 1600px 800px at 85% 10%,
+        hsl(var(--chart-3) / 0.035),
         transparent 50%
       ),
       radial-gradient(
-        ellipse 1200px 600px at 50% 100%,
-        hsl(var(--chart-2) / 0.015),
+        ellipse 1400px 700px at 50% 100%,
+        hsl(var(--chart-2) / 0.025),
         transparent 50%
       );
     z-index: -1;
+    animation: subtle-shift 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes subtle-shift {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
   }
 
   /* Sidebar background */
@@ -314,29 +320,87 @@
 
   /* Glass morphism utility */
   .glass {
-    background: hsl(var(--background));
-    border: 1px solid hsl(var(--border));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--background) / 0.8),
+      hsl(var(--background) / 0.6)
+    );
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid hsl(var(--border) / 0.3);
+    box-shadow: 
+      0 8px 32px hsl(var(--foreground) / 0.08),
+      inset 0 1px 0 hsl(var(--background) / 0.5);
   }
 
   /* Ultra-Minimal Card - Refined & Compact */
   .elevated-card {
-    background: hsl(var(--card));
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--card)),
+      hsl(var(--card) / 0.98)
+    );
     border: 1px solid hsl(var(--border) / 0.5);
     border-radius: calc(var(--radius) - 2px);
-    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.015);
+    box-shadow: 
+      0 1px 3px hsl(var(--foreground) / 0.02),
+      0 1px 2px hsl(var(--foreground) / 0.03);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .elevated-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.1),
+      transparent
+    );
   }
 
   /* Modern card variant - Compact & Elegant */
   .card-modern {
-    background: hsl(var(--card));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)),
+      hsl(var(--card) / 0.96)
+    );
     border: 1px solid hsl(var(--border) / 0.4);
     border-radius: calc(var(--radius) - 2px);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-modern::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 50% 0%,
+      hsl(var(--primary) / 0.03),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   .card-modern:hover {
-    border-color: hsl(var(--border) / 0.7);
-    box-shadow: 0 2px 3px hsl(var(--foreground) / 0.025);
+    border-color: hsl(var(--border) / 0.8);
+    box-shadow: 
+      0 4px 6px hsl(var(--foreground) / 0.03),
+      0 2px 4px hsl(var(--foreground) / 0.04);
+    transform: translateY(-1px);
+  }
+
+  .card-modern:hover::after {
+    opacity: 1;
   }
 
   /* Elegant gradient text */
@@ -344,24 +408,34 @@
     background: linear-gradient(
       135deg,
       hsl(var(--primary)) 0%,
+      hsl(var(--chart-2)) 50%,
       hsl(var(--chart-3)) 100%
     );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: brightness(1.1);
   }
 
   .gradient-text-animated {
     background: linear-gradient(
       135deg,
       hsl(var(--primary)) 0%,
+      hsl(var(--chart-2)) 25%,
       hsl(var(--chart-3)) 50%,
+      hsl(var(--chart-2)) 75%,
       hsl(var(--primary)) 100%
     );
     background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   /* Premium gradient border */
@@ -785,34 +859,155 @@
 
   /* Ultra-Minimal Button - Compact & Refined */
   .btn-refined {
-    background: hsl(var(--card));
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--card)),
+      hsl(var(--card) / 0.95)
+    );
     border: 1px solid hsl(var(--border) / 0.4);
     border-radius: calc(var(--radius) - 2px);
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: -0.008em;
-    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.015);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+      0 1px 2px hsl(var(--foreground) / 0.02),
+      0 1px 3px hsl(var(--foreground) / 0.01);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-refined::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--primary) / 0.1),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
   }
 
   .btn-refined:hover {
-    border-color: hsl(var(--border) / 0.7);
-    box-shadow: 0 2px 3px hsl(var(--foreground) / 0.025);
-    transform: translateY(-0.5px);
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 
+      0 4px 6px hsl(var(--foreground) / 0.04),
+      0 2px 4px hsl(var(--primary) / 0.1);
+    transform: translateY(-1px);
+
+  /* Modern Visual Enhancement Utilities */
+  .shine-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shine-effect::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    bottom: -50%;
+    left: -50%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      hsl(var(--background) / 0.3) 50%,
+      transparent
+    );
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .shine-effect:hover::after {
+    transform: rotate(45deg) translateX(100%);
+  }
+
+  /* Subtle depth effect */
+  .depth-subtle {
+    box-shadow: 
+      0 1px 3px hsl(var(--foreground) / 0.04),
+      0 1px 2px hsl(var(--foreground) / 0.06),
+      inset 0 1px 0 hsl(var(--background) / 0.5);
+  }
+
+  /* Premium surface */
+  .surface-premium {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--card) / 0.95) 100%
+    );
+    border: 1px solid hsl(var(--border) / 0.3);
+    box-shadow: 
+      0 2px 8px hsl(var(--foreground) / 0.04),
+      0 1px 3px hsl(var(--foreground) / 0.06);
+  }
+
+  /* Glow on hover */
+  .glow-on-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glow-on-hover:hover {
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.15),
+      0 0 40px hsl(var(--primary) / 0.1);
+  }
+
+  /* Frosted glass effect */
+  .frosted-glass {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--background) / 0.7),
+      hsl(var(--background) / 0.5)
+    );
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    border: 1px solid hsl(var(--border) / 0.2);
+    box-shadow: 
+      0 8px 32px hsl(var(--foreground) / 0.1),
+      inset 0 1px 0 hsl(var(--background) / 0.6);
+  }
+
+  }
+
+  .btn-refined:hover::before {
+    opacity: 1;
+  }
+
+  .btn-refined:active {
+    transform: translateY(0);
   }
 
   /* Ultra-Minimal Input - Compact & Elegant */
   .input-minimal {
     border: 1px solid hsl(var(--border) / 0.4);
-    background: hsl(var(--background));
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background)),
+      hsl(var(--background) / 0.98)
+    );
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
 
   .input-minimal:focus {
-    border-color: hsl(var(--primary) / 0.45);
-    background: hsl(var(--card));
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.05);
+    border-color: hsl(var(--primary) / 0.5);
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--card)),
+      hsl(var(--card) / 0.98)
+    );
+    box-shadow: 
+      0 0 0 3px hsl(var(--primary) / 0.08),
+      0 1px 2px hsl(var(--primary) / 0.1);
+  }
+
+  .input-minimal:hover:not(:focus) {
+    border-color: hsl(var(--border) / 0.6);
   }
 
   /* Compact Badge */
