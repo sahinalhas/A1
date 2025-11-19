@@ -76,43 +76,20 @@ export class AIContextRouter {
 
   /**
    * Görev tipine göre en uygun provider ve modeli seç
+   * NOT: Kullanıcının seçtiği provider HER ZAMAN kullanılır,
+   * API key yoksa hata verir ama başka provider'a geçmez
    */
   static async getOptimalConfig(context: AITaskContext): Promise<Partial<AIProviderConfig>> {
     const taskConfig = this.taskModelMap[context.taskType];
     
-    // Kullanıcı tercihini al
+    // Kullanıcı tercihini al ve HER ZAMAN kullan (availability kontrolü YOK)
     const userProvider = AIProviderService.getInstance().getProvider();
+    const userModel = AIProviderService.getInstance().getModel();
     
-    // Eğer kullanıcı provider'ı mevcutsa ve task için uygunsa, onu kullan
-    if (await this.isProviderAvailable(userProvider)) {
-      return {
-        provider: userProvider,
-        temperature: taskConfig.temperature
-      };
-    }
-    
-    // Yoksa task-specific provider'a geç
-    if (await this.isProviderAvailable(taskConfig.preferredProvider)) {
-      return {
-        provider: taskConfig.preferredProvider,
-        model: taskConfig.model,
-        temperature: taskConfig.temperature
-      };
-    }
-    
-    // Fallback varsa onu kullan
-    if (taskConfig.fallback && await this.isProviderAvailable(taskConfig.fallback.provider)) {
-      return {
-        provider: taskConfig.fallback.provider,
-        model: taskConfig.fallback.model,
-        temperature: taskConfig.temperature
-      };
-    }
-    
-    // Son çare: ollama
+    // Kullanıcının seçtiği provider ve model her zaman korunur
     return {
-      provider: 'ollama',
-      model: 'llama3.2:3b',
+      provider: userProvider,
+      model: userModel,
       temperature: taskConfig.temperature
     };
   }

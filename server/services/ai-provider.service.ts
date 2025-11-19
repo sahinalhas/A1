@@ -88,6 +88,15 @@ export class AIProviderService {
     // 3. Adapter oluştur
     this.adapter = AIAdapterFactory.createAdapter(this.config);
 
+    // Net başlatma mesajı
+    console.log('\n' + '━'.repeat(80));
+    console.log(`✅ AI Provider Başlatıldı: ${provider.toUpperCase()} (${model})`);
+    console.log('━'.repeat(80));
+    console.log(`📌 Seçilen Provider: ${provider}`);
+    console.log(`📌 Kullanılan Model: ${model}`);
+    console.log(`📌 Seçim Kaynağı: ${savedSettings?.provider ? 'Kullanıcı Ayarları (Kalıcı)' : 'Varsayılan'}`);
+    console.log('━'.repeat(80) + '\n');
+    
     logger.info(`AI Provider initialized: ${provider} (${model})`, 'AIProviderService');
   }
 
@@ -163,14 +172,15 @@ export class AIProviderService {
 
   /**
    * Get singleton instance
+   * NOT: Singleton her zaman korunur, config parametresi sadece ilk oluşturmada kullanılır
+   * Mevcut provider'ı değiştirmek için setProvider() kullanın
    */
   public static getInstance(config?: Partial<AIProviderConfig>): AIProviderService {
     if (!AIProviderService.instance) {
-      AIProviderService.instance = new AIProviderService(config);
-    } else if (config) {
-      // Config verilmişse instance'ı yeniden oluştur
+      // İlk oluşturmada config kullan
       AIProviderService.instance = new AIProviderService(config);
     }
+    // Zaten varsa mevcut instance'ı döndür (config parametresi görmezden gelinir)
     return AIProviderService.instance;
   }
 
@@ -210,7 +220,7 @@ export class AIProviderService {
     // Ayarları database'e kaydet
     AppSettingsService.saveAIProvider(provider, this.config.model, this.config.ollamaBaseUrl);
 
-    // Adapter'ı yeniden oluştur
+    // Adapter'ı yeniden oluştur (DisabledAdapter fallback zaten AIAdapterFactory'de var)
     this.adapter = AIAdapterFactory.createAdapter(this.config);
 
     logger.info(`AI Provider changed: ${provider} (${this.config.model})`, 'AIProviderService');

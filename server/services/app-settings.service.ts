@@ -82,14 +82,28 @@ export class AppSettingsService {
     if (result?.provider === 'gemini') {
       const hasGeminiKey = !!(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 0);
       if (!hasGeminiKey) {
-        logger.warn('⚠️ Gemini provider selected but API key not configured. User selection preserved.', 'AppSettingsService');
+        console.log('\n' + '='.repeat(80));
+        console.log('⚠️  UYARI: GEMINI API KEY EKSİK!');
+        console.log('='.repeat(80));
+        console.log('Kullanıcı Gemini provider seçmiş ancak GEMINI_API_KEY tanımlı değil.');
+        console.log('Kullanıcı seçimi korunuyor, ancak AI özellikleri çalışmayacak.');
+        console.log('Çözüm: .env dosyasına GEMINI_API_KEY ekleyin veya farklı provider seçin.');
+        console.log('='.repeat(80) + '\n');
+        logger.warn('Gemini provider selected but API key not configured. User selection preserved.', 'AppSettingsService');
       }
     }
     
     if (result?.provider === 'openai') {
       const hasOpenAIKey = !!(process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY.trim().length > 0);
       if (!hasOpenAIKey) {
-        logger.warn('⚠️ OpenAI provider selected but API key not configured. User selection preserved.', 'AppSettingsService');
+        console.log('\n' + '='.repeat(80));
+        console.log('⚠️  UYARI: OPENAI API KEY EKSİK!');
+        console.log('='.repeat(80));
+        console.log('Kullanıcı OpenAI provider seçmiş ancak OPENAI_API_KEY tanımlı değil.');
+        console.log('Kullanıcı seçimi korunuyor, ancak AI özellikleri çalışmayacak.');
+        console.log('Çözüm: .env dosyasına OPENAI_API_KEY ekleyin veya farklı provider seçin.');
+        console.log('='.repeat(80) + '\n');
+        logger.warn('OpenAI provider selected but API key not configured. User selection preserved.', 'AppSettingsService');
       }
     }
     
