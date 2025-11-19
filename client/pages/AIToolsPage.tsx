@@ -2,10 +2,10 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/organisms/Tabs';
-import { Brain } from 'lucide-react';
+import { Brain, Sparkles, Zap, TrendingUp } from 'lucide-react';
 import { AI_TOOLS_TABS, VALID_AI_TOOLS_TABS } from '@/config/tabs';
 import { AIToolsLoadingState } from '@/components/features/ai-tools/AIToolsLoadingState';
-import { PageHeader } from '@/components/molecules/PageHeader';
+import { Badge } from '@/components/atoms/Badge';
 
 const RiskDashboard = lazy(() => import('./RiskDashboard'));
 const AIAssistant = lazy(() => import('./AIAssistant'));
@@ -41,22 +41,58 @@ export default function AIToolsPage() {
  };
 
  return (
+ <div className="w-full min-h-screen">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.5 }}
- className="w-full max-w-7xl mx-auto py-6 space-y-6"
+ className="relative overflow-hidden rounded-3xl mb-8 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-700 p-6 md:p-8 shadow-2xl"
  >
- <PageHeader
- icon={Brain}
- title="AI Araçları"
- subtitle="Yapay zeka destekli analiz, raporlama ve asistan araçları"
- />
+ <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+ <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+ <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
 
+ <div className="relative z-10 max-w-4xl">
+ <Badge className="mb-3 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+ <Sparkles className="h-3 w-3 mr-1" />
+ Yapay Zeka Destekli Araçlar
+ </Badge>
+ <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+ AI Araçları
+ </h1>
+ <p className="text-base md:text-lg text-white/90 mb-6 max-w-2xl leading-relaxed">
+ Yapay zeka destekli analiz, raporlama ve asistan araçları ile öğrenci başarısını artırın.
+ </p>
+ <div className="flex gap-4 flex-wrap">
+ <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
+ <Zap className="h-4 w-4 text-yellow-300" />
+ <span className="text-sm text-white font-medium">Hızlı Analiz</span>
+ </div>
+ <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
+ <TrendingUp className="h-4 w-4 text-green-300" />
+ <span className="text-sm text-white font-medium">Akıllı Öneriler</span>
+ </div>
+ </div>
+ </div>
+
+ <motion.div
+ className="absolute top-10 right-10 opacity-20"
+ animate={{ rotate: 360 }}
+ transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+ >
+ <Brain className="h-32 w-32 text-white" />
+ </motion.div>
+ </motion.div>
+
+ <div className="space-y-6 max-w-7xl mx-auto">
  {/* Tabs Container */}
  <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
  {/* Responsive Tab List */}
- <TabsList variant="pills" className="justify-center flex-wrap">
+ <motion.div
+ initial={{ opacity: 0, y: -10 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.3 }}
+ >
+ <TabsList variant="pills" className="justify-center flex-wrap bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm">
  {AI_TOOLS_TABS.map((tabConfig) => (
  <TabsTrigger 
  key={tabConfig.value} 
@@ -69,8 +105,14 @@ export default function AIToolsPage() {
  </TabsTrigger>
  ))}
  </TabsList>
+ </motion.div>
 
  {/* Tab Contents */}
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ delay: 0.2 }}
+ >
  <TabsContent value="risk" className="min-h-[600px]">
  <Suspense fallback={<AIToolsLoadingState icon={AI_TOOLS_TABS[0].icon!} message="Risk verileri yükleniyor..." />}>
  <RiskDashboard />
@@ -100,7 +142,9 @@ export default function AIToolsPage() {
  <DailyActionPlan />
  </Suspense>
  </TabsContent>
- </Tabs>
  </motion.div>
+ </Tabs>
+ </div>
+ </div>
  );
 }
