@@ -192,6 +192,18 @@ export default function EnhancedCompleteSessionDialog({
 
  const handleAIAnalyze = async () => {
  const rawNotes = form.getValues('detailedNotes');
+    const selectedTopic = form.getValues('topic');
+
+    if (!selectedTopic || selectedTopic.trim() === '') {
+      toast({
+        title: 'Görüşme konusu seçilmedi',
+        description: 'Lütfen önce görüşme konusunu seçin',
+        variant: 'destructive'
+      });
+      setActiveTab('summary');
+      setTimeout(() => form.setFocus('topic'), 100);
+      return;
+    }
 
  if (!rawNotes || rawNotes.trim().length < 10) {
  toast({
@@ -229,7 +241,7 @@ export default function EnhancedCompleteSessionDialog({
  sessionType: session.sessionType,
  sessionDate: sessionDateTime,
  entryTime: session.entryTime,
- sessionTopic: session.topic
+ sessionTopic: selectedTopic
  };
  
  console.log('AI Analysis Request Data:', requestData);

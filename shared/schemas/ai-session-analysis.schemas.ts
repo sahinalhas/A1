@@ -7,7 +7,7 @@ export const aiSessionAnalysisRequestSchema = z.object({
   sessionType: z.enum(['individual', 'group']),
   sessionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/, 'Geçerli tarih formatı gerekli'),
   entryTime: z.string().regex(/^\d{2}:\d{2}$/, 'Geçerli saat formatı: HH:MM'),
-  sessionTopic: z.string().optional()
+  sessionTopic: z.string().nullish()
 });
 
 export const aiSessionSummarySchema = z.object({
