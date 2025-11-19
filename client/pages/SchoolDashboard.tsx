@@ -316,7 +316,7 @@ function AttendanceOverviewCard({ data }: { data?: SchoolStatsType }) {
  </div>
  <div className="flex justify-between items-center">
  <span>Mükemmel Devam:</span>
- <Badge variant="default">{data.attendanceOverview.excellent} öğrenci</Badge>
+ <Badge >{data.attendanceOverview.excellent} öğrenci</Badge>
  </div>
  <div className="flex justify-between items-center">
  <span>İyi Devam:</span>
@@ -347,7 +347,7 @@ function AcademicOverviewCard({ data }: { data?: SchoolStatsType }) {
  </div>
  <div className="flex justify-between items-center">
  <span>Başarılı Öğrenci:</span>
- <Badge variant="default">{data.academicOverview.topPerformers} öğrenci</Badge>
+ <Badge >{data.academicOverview.topPerformers} öğrenci</Badge>
  </div>
  <div className="flex justify-between items-center">
  <span>Destek Gereken:</span>

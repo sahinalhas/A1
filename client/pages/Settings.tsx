@@ -192,7 +192,7 @@ export default function SettingsPage() {
  key={tabConfig.value}
  value={tabConfig.value}
  icon={tabConfig.icon}
- variant="default"
+ 
  title={tabConfig.description}
  >
  {tabConfig.label}

@@ -408,7 +408,7 @@ function ExportSettings() {
  Kritik uyarılar için e-posta bildirimi
  </div>
  </div>
- <Badge variant="default">Açık</Badge>
+ <Badge >Açık</Badge>
  </div>
  
  <div className="flex items-center justify-between">

@@ -260,7 +260,7 @@ export default function AdvancedAIAnalysis() {
  <div key={i} className="p-4 border-l-4 border-orange-500 bg-orange-50 rounded-lg">
  <div className="flex items-center justify-between mb-2">
  <h3 className="font-semibold">{corr.factor1} ↔ {corr.factor2}</h3>
- <Badge variant="default">
+ <Badge >
  Güç: {(corr.strength * 100).toFixed(0)}%
  </Badge>
  </div>

@@ -217,7 +217,7 @@ export function ProfileDashboard({
  {/* AI Action Buttons */}
  <div className="flex gap-2 flex-wrap">
  <Button
- variant="default"
+ 
  size="sm"
  onClick={handleAIAnalysis}
  className="gap-2"

@@ -100,7 +100,7 @@ export default function AIToolsPage() {
  key={tabConfig.value} 
  value={tabConfig.value}
  icon={tabConfig.icon}
- variant={tabConfig.variant}
+ 
  title={tabConfig.description}
  >
  {tabConfig.label}

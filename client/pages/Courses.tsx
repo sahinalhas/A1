@@ -440,7 +440,7 @@ function SubjectAccordion({
  className="max-w-md h-10 border-2"
  autoFocus
  />
- <Button onClick={handleUpdate} size="sm" variant="default">
+ <Button onClick={handleUpdate} size="sm" >
  <Check className="h-4 w-4" />
  </Button>
  <Button
@@ -701,7 +701,7 @@ function TopicRow({
  className="col-span-1 h-8 text-xs"
  />
  <div className="col-span-1 flex gap-0.5">
- <Button onClick={handleUpdate} size="sm" variant="default" className="h-7 w-7 p-0">
+ <Button onClick={handleUpdate} size="sm"  className="h-7 w-7 p-0">
  <Check className="h-3.5 w-3.5" />
  </Button>
  <Button
@@ -889,7 +889,7 @@ function AddTopicForm({
  className="col-span-1 h-8 text-xs"
  />
  <div className="col-span-1 flex gap-0.5">
- <Button onClick={handleAdd} size="sm" variant="default" className="h-7 w-7 p-0">
+ <Button onClick={handleAdd} size="sm"  className="h-7 w-7 p-0">
  <Check className="h-3.5 w-3.5" />
  </Button>
  <Button variant="outline" size="sm" onClick={onCancel} className="h-7 w-7 p-0">
