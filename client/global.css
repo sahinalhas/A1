@@ -7,10 +7,10 @@
 
 @layer base {
   /**
-   * ✨ Rehber360 - Minimal Design System
+   * ✨ Rehber360 - Modern Design System
    * 
-   * A clean design system with harmonious colors and typography.
-   * All visual effects, animations, and transitions removed for minimal UI.
+   * A sophisticated design system with harmonious colors and elegant typography.
+   * Refined visual aesthetics with smooth interactions for a contemporary experience.
    * 
    * === COLOR PALETTE ===
    * 
@@ -340,7 +340,7 @@
       inset 0 1px 0 hsl(var(--background) / 0.5);
   }
 
-  /* Ultra-Minimal Card - Refined & Compact */
+  /* Modern Elevated Card - Refined & Elegant */
   .elevated-card {
     background: linear-gradient(
       135deg,
@@ -538,7 +538,7 @@
     }
   }
 
-  /* Minimal custom scrollbar */
+  /* Modern custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -946,7 +946,7 @@
     transform: scale(1.05);
   }
 
-  /* Ultra-Minimal Button - Compact & Refined */
+  /* Modern Button - Elegant & Refined */
   .btn-refined {
     background: linear-gradient(
       135deg,
@@ -1112,8 +1112,8 @@
     transform: translateY(0);
   }
 
-  /* Ultra-Minimal Input - Compact & Elegant */
-  .input-minimal {
+  /* Modern Input - Sleek & Elegant */
+  .input-modern {
     border: 1.5px solid hsl(var(--border) / 0.6);
     background: linear-gradient(
       to bottom,
@@ -1124,7 +1124,7 @@
     position: relative;
   }
 
-  .input-minimal:focus {
+  .input-modern:focus {
     border-color: hsl(var(--primary) / 0.7);
     background: linear-gradient(
       to bottom,
@@ -1136,12 +1136,12 @@
       0 2px 4px hsl(var(--primary) / 0.15);
   }
 
-  .input-minimal:hover:not(:focus) {
+  .input-modern:hover:not(:focus) {
     border-color: hsl(var(--border) / 0.8);
   }
 
-  /* Compact Badge */
-  .badge-elegant {
+  /* Modern Badge */
+  .badge-modern {
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.015em;
@@ -1151,8 +1151,8 @@
     opacity: 0.92;
   }
 
-  /* Minimal Divider */
-  .divider-elegant {
+  /* Modern Divider */
+  .divider-modern {
     height: 1px;
     background: linear-gradient(
       90deg,
@@ -1213,43 +1213,43 @@
     color: hsl(var(--muted-foreground));
   }
 
-  /* Elegant Spacing Utilities */
-  .space-elegant-xs { gap: 0.5rem; }
-  .space-elegant-sm { gap: 0.75rem; }
-  .space-elegant-md { gap: 1rem; }
-  .space-elegant-lg { gap: 1.5rem; }
-  .space-elegant-xl { gap: 2rem; }
+  /* Modern Spacing Utilities */
+  .space-modern-xs { gap: 0.5rem; }
+  .space-modern-sm { gap: 0.75rem; }
+  .space-modern-md { gap: 1rem; }
+  .space-modern-lg { gap: 1.5rem; }
+  .space-modern-xl { gap: 2rem; }
 
-  /* Refined Shadow System */
-  .shadow-elegant-sm {
+  /* Modern Shadow System */
+  .shadow-modern-sm {
     box-shadow: 
       0 1px 3px hsl(var(--foreground) / 0.05),
       0 1px 2px hsl(var(--foreground) / 0.06),
       0 0 0 1px hsl(var(--border) / 0.3);
   }
 
-  .shadow-elegant-md {
+  .shadow-modern-md {
     box-shadow: 
       0 2px 6px hsl(var(--foreground) / 0.06),
       0 4px 12px hsl(var(--foreground) / 0.05),
       0 0 0 1px hsl(var(--border) / 0.3);
   }
 
-  .shadow-elegant-lg {
+  .shadow-modern-lg {
     box-shadow: 
       0 4px 12px hsl(var(--foreground) / 0.07),
       0 8px 24px hsl(var(--foreground) / 0.06),
       0 0 0 1px hsl(var(--border) / 0.3);
   }
 
-  /* Minimal Border Radius Utilities */
-  .rounded-elegant-sm { border-radius: 0.5rem; }
-  .rounded-elegant { border-radius: 0.75rem; }
-  .rounded-elegant-lg { border-radius: 1rem; }
-  .rounded-elegant-xl { border-radius: 1.5rem; }
+  /* Modern Border Radius Utilities */
+  .rounded-modern-sm { border-radius: 0.5rem; }
+  .rounded-modern { border-radius: 0.75rem; }
+  .rounded-modern-lg { border-radius: 1rem; }
+  .rounded-modern-xl { border-radius: 1.5rem; }
 
-  /* Sophisticated Gradient Backgrounds */
-  .bg-gradient-elegant {
+  /* Modern Gradient Backgrounds */
+  .bg-gradient-modern {
     background: linear-gradient(
       135deg,
       hsl(var(--background)) 0%,
@@ -1257,7 +1257,7 @@
     );
   }
 
-  .bg-gradient-subtle {
+  .bg-gradient-modern-subtle {
     background: linear-gradient(
       to bottom,
       hsl(var(--background)) 0%,
@@ -1265,8 +1265,8 @@
     );
   }
 
-  /* Elegant Loading State - STATIC */
-  .loading-elegant {
+  /* Modern Loading State - STATIC */
+  .loading-modern {
     background: linear-gradient(
       90deg,
       hsl(var(--muted) / 0.2) 0%,
@@ -1277,8 +1277,8 @@
     border-radius: calc(var(--radius) + 2px);
   }
 
-  /* Refined Icon Container */
-  .icon-container-elegant {
+  /* Modern Icon Container */
+  .icon-container-modern {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1288,17 +1288,17 @@
     border: 1px solid hsl(var(--primary) / 0.15);
   }
 
-  /* Minimal Table Style */
-  .table-elegant {
+  /* Modern Table Style */
+  .table-modern {
     border-collapse: separate;
     border-spacing: 0;
   }
 
-  .table-elegant thead {
+  .table-modern thead {
     border-bottom: 1px solid hsl(var(--border) / 0.3);
   }
 
-  .table-elegant th {
+  .table-modern th {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
     font-weight: 500;
@@ -1307,7 +1307,7 @@
     letter-spacing: 0.01em;
   }
 
-  .table-elegant td {
+  .table-modern td {
     padding: 1rem;
     border-bottom: 1px solid hsl(var(--border) / 0.2);
   }
