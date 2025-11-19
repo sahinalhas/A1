@@ -210,6 +210,7 @@
     @apply tracking-tight;
     font-weight: 600;
     line-height: 1.2;
+    text-shadow: 0 1px 2px hsl(var(--foreground) / 0.03);
   }
 
   h1 {
@@ -282,26 +283,32 @@
     background:
       radial-gradient(
         ellipse 1800px 900px at 15% 20%,
-        hsl(var(--primary) / 0.04),
+        hsl(var(--primary) / 0.08),
         transparent 50%
       ),
       radial-gradient(
         ellipse 1600px 800px at 85% 10%,
-        hsl(var(--chart-3) / 0.035),
+        hsl(var(--chart-3) / 0.06),
         transparent 50%
       ),
       radial-gradient(
         ellipse 1400px 700px at 50% 100%,
-        hsl(var(--chart-2) / 0.025),
+        hsl(var(--chart-2) / 0.05),
         transparent 50%
       );
     z-index: -1;
-    animation: subtle-shift 20s ease-in-out infinite alternate;
+    animation: subtle-shift 20s ease-in-out infinite alternate, gradient-rotate 30s linear infinite;
   }
 
   @keyframes subtle-shift {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.85; }
+  }
+
+  @keyframes gradient-rotate {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
   }
 
   /* Sidebar background */
@@ -349,6 +356,7 @@
       0 0 0 1px hsl(var(--border) / 0.6);
     position: relative;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .elevated-card::before {
@@ -357,13 +365,29 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
     background: linear-gradient(
       90deg,
       transparent,
-      hsl(var(--primary) / 0.3),
+      hsl(var(--primary) / 0.5),
+      hsl(var(--chart-3) / 0.4),
       transparent
     );
+    animation: gradient-slide 3s ease-in-out infinite;
+  }
+
+  @keyframes gradient-slide {
+    0%, 100% { opacity: 0.6; transform: translateX(-10%); }
+    50% { opacity: 1; transform: translateX(10%); }
+  }
+
+  .elevated-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 4px 12px hsl(var(--foreground) / 0.08),
+      0 8px 24px hsl(var(--foreground) / 0.1),
+      0 16px 32px hsl(var(--primary) / 0.12),
+      0 0 0 1px hsl(var(--primary) / 0.3);
   }
 
   /* Modern card variant - Compact & Elegant */
@@ -398,13 +422,15 @@
   }
 
   .card-modern:hover {
-    border-color: hsl(var(--primary) / 0.4);
+    border-color: hsl(var(--primary) / 0.5);
     box-shadow: 
       0 4px 8px hsl(var(--foreground) / 0.06),
       0 12px 24px hsl(var(--foreground) / 0.08),
-      0 0 0 1px hsl(var(--primary) / 0.2),
-      0 0 0 4px hsl(var(--primary) / 0.05);
-    transform: translateY(-3px);
+      0 20px 40px hsl(var(--primary) / 0.15),
+      0 0 0 1px hsl(var(--primary) / 0.3),
+      0 0 0 4px hsl(var(--primary) / 0.08),
+      0 0 60px hsl(var(--primary) / 0.2);
+    transform: translateY(-4px) scale(1.01);
   }
 
   .card-modern:hover::after {
@@ -419,10 +445,17 @@
       hsl(var(--chart-2)) 40%,
       hsl(var(--chart-3)) 100%
     );
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: brightness(1.05) saturate(1.1);
+    filter: brightness(1.1) saturate(1.2);
+    animation: gradient-flow 5s ease infinite;
+  }
+
+  @keyframes gradient-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   .gradient-text-animated {
@@ -472,7 +505,7 @@
     mask-composite: exclude;
   }
 
-  /* Shimmer effect for loading states - STATIC */
+  /* Shimmer effect for loading states */
   .shimmer-effect {
     background: linear-gradient(
       90deg,
@@ -481,6 +514,28 @@
       hsl(var(--muted) / 0.3) 100%
     );
     background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Pulse effect for notifications and alerts */
+  .pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0.7);
+    }
+    50% {
+      opacity: 0.9;
+      box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
+    }
   }
 
   /* Minimal custom scrollbar */
@@ -854,7 +909,7 @@
     }
   }
 
-  /* Advanced skeleton loading - STATIC */
+  /* Advanced skeleton loading */
   .skeleton {
     @apply bg-muted/50 rounded-md;
     background: linear-gradient(
@@ -864,6 +919,31 @@
       hsl(var(--muted) / 0.4) 100%
     );
     background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Floating animation for hero elements */
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Subtle scale on hover */
+  .hover-scale {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
   }
 
   /* Ultra-Minimal Button - Compact & Refined */
@@ -902,12 +982,14 @@
   }
 
   .btn-refined:hover {
-    border-color: hsl(var(--primary) / 0.6);
+    border-color: hsl(var(--primary) / 0.7);
     box-shadow: 
-      0 3px 8px hsl(var(--foreground) / 0.08),
-      0 6px 16px hsl(var(--primary) / 0.2),
-      0 0 0 1px hsl(var(--primary) / 0.4);
-    transform: translateY(-2px);
+      0 4px 12px hsl(var(--foreground) / 0.1),
+      0 8px 20px hsl(var(--primary) / 0.25),
+      0 0 0 1px hsl(var(--primary) / 0.5),
+      0 0 30px hsl(var(--primary) / 0.15);
+    transform: translateY(-3px) scale(1.02);
+  }
 
   /* Modern Visual Enhancement Utilities */
   .shine-effect {
@@ -959,13 +1041,50 @@
 
   /* Glow on hover */
   .glow-on-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .glow-on-hover:hover {
     box-shadow: 
-      0 0 20px hsl(var(--primary) / 0.15),
-      0 0 40px hsl(var(--primary) / 0.1);
+      0 0 20px hsl(var(--primary) / 0.25),
+      0 0 40px hsl(var(--primary) / 0.15),
+      0 0 60px hsl(var(--primary) / 0.1),
+      0 4px 20px hsl(var(--foreground) / 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Magnetic effect for interactive elements */
+  .magnetic-hover {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .magnetic-hover:hover {
+    transform: scale(1.08) translateZ(0);
+    filter: brightness(1.1);
+  }
+
+  /* Modern ripple effect */
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: hsl(var(--primary) / 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .ripple-effect:active::after {
+    width: 300px;
+    height: 300px;
   }
 
   /* Frosted glass effect */

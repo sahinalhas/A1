@@ -47,10 +47,12 @@ export const CARD_GRADIENTS = {
 
 // Modern Shadow System
 export const MODERN_SHADOWS = {
- sm:"",
- md:"",
- lg:"",
- none:"",
+ sm: "shadow-sm hover:shadow-md transition-shadow duration-300",
+ md: "shadow-md hover:shadow-lg hover:shadow-primary/10 transition-shadow duration-300",
+ lg: "shadow-lg hover:shadow-xl hover:shadow-primary/15 transition-shadow duration-300",
+ xl: "shadow-xl hover:shadow-2xl hover:shadow-primary/20 transition-shadow duration-300",
+ glow: "shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-shadow duration-300",
+ none: "",
 } as const;
 
 // Animation Variants for Framer Motion
