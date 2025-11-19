@@ -76,6 +76,10 @@ export default function AISettingsTab() {
       if (!modelValues.includes(model)) {
         setModel(modelValues[0]);
       }
+    } else if (provider === 'ollama') {
+      setAvailableModels([]);
+      setModel('');
+      setConnectionStatus('idle');
     }
   };
 
