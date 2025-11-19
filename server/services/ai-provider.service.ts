@@ -93,7 +93,9 @@ export class AIProviderService {
 
   /**
    * Provider seçim öncelik mantığı
-   * Öncelik sırası: config > savedSettings > API keys > ollama
+   * Öncelik sırası: config > savedSettings > ollama (default)
+   * NOT: Artık API key varlığına göre otomatik seçim yapmıyoruz, 
+   * kullanıcının seçimi her zaman korunur
    */
   private selectProvider(
     config?: Partial<AIProviderConfig>,
@@ -110,22 +112,8 @@ export class AIProviderService {
       return savedSettings.provider as AIProvider;
     }
 
-    // 3. ÖNCELİK: API key varlığına göre otomatik seçim
-    const hasGeminiKey = this.hasValidAPIKey('GEMINI_API_KEY');
-    const hasOpenAIKey = this.hasValidAPIKey('OPENAI_API_KEY');
-
-    if (hasGeminiKey) {
-      logger.info('Gemini API key found, set as default provider', 'AIProviderService');
-      return 'gemini';
-    }
-
-    if (hasOpenAIKey) {
-      logger.info('OpenAI API key found, set as default provider', 'AIProviderService');
-      return 'openai';
-    }
-
-    // 4. Son seçenek: Ollama (local, API key gerektirmez)
-    logger.info('Using Ollama (local) as default provider', 'AIProviderService');
+    // 3. Varsayılan: Ollama (local, API key gerektirmez)
+    logger.info('No saved settings, using Ollama as default provider', 'AIProviderService');
     return 'ollama';
   }
 

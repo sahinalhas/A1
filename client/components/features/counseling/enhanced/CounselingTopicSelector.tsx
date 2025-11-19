@@ -27,8 +27,8 @@ export default function CounselingTopicSelector({
 
  const selectedTopic = topics.find((topic) => topic.id === value || topic.title === value);
 
- const groupedTopics = useMemo(() => {
- const filtered = search
+ const filteredTopics = useMemo(() => {
+ return search
  ? topics.filter((topic) => {
  const searchLower = search.toLowerCase();
  return (
@@ -38,16 +38,6 @@ export default function CounselingTopicSelector({
  );
  })
  : topics;
-
- const grouped: Record<string, CounselingTopic[]> = {};
- filtered.forEach((topic) => {
- if (!grouped[topic.category]) {
- grouped[topic.category] = [];
- }
- grouped[topic.category].push(topic);
- });
-
- return grouped;
  }, [topics, search]);
 
  const handleSelect = (topicId: string) => {
@@ -101,9 +91,7 @@ export default function CounselingTopicSelector({
  </div>
  </CommandEmpty>
 
- {Object.entries(groupedTopics).map(([category, categoryTopics]) => (
- <CommandGroup key={category} heading={category}>
- {categoryTopics.map((topic) => (
+ {filteredTopics.map((topic) => (
  <CommandItem
  key={topic.id}
  value={topic.title}
@@ -125,8 +113,6 @@ export default function CounselingTopicSelector({
  </p>
  </div>
  </CommandItem>
- ))}
- </CommandGroup>
  ))}
  </CommandList>
  </Command>
