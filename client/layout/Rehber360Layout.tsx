@@ -153,6 +153,8 @@ export default function Rehber360Layout() {
  loadSettings().then(settings => {
  setDark(settings.theme ==="dark");
  setAccount(settings.account);
+ }).catch(err => {
+ console.error('Failed to load settings:', err);
  });
  }, []);
 

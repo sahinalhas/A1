@@ -6,6 +6,17 @@
 import { AIProviderService } from '../../../services/ai-provider.service.js';
 import getDatabase from '../../../lib/database.js';
 
+interface StudentData {
+  id: string;
+  name: string;
+  surname: string;
+  notOrtalamasi?: number;
+  devamsizlik?: number;
+  davranisNotu?: number;
+  ozelDurum?: string;
+  alertType?: string;
+}
+
 export interface ClassComparison {
   className: string;
   totalStudents: number;
@@ -108,7 +119,7 @@ export class BulkAIAnalysisService {
     for (const classInfo of classes) {
       const students = db.prepare(`
         SELECT * FROM students WHERE class = ?
-      `).all(classInfo.class);
+      `).all(classInfo.class) as StudentData[];
 
       const analysis = await this.analyzeClass(classInfo.class, students);
       classAnalyses.push(analysis);
@@ -120,7 +131,7 @@ export class BulkAIAnalysisService {
   /**
    * Tek bir sınıfı analiz et
    */
-  private async analyzeClass(className: string, students: unknown[]): Promise<ClassComparison> {
+  private async analyzeClass(className: string, students: StudentData[]): Promise<ClassComparison> {
     const prompt = `
 Sınıf: ${className}
 Öğrenci Sayısı: ${students.length}
@@ -285,7 +296,7 @@ JSON formatında döndür:
       WHERE s.devamsizlik > 5 OR s.notOrtalamasi < 60 OR s.davranisNotu < 4
       ORDER BY s.devamsizlik DESC, s.notOrtalamasi ASC
       LIMIT 20
-    `).all();
+    `).all() as StudentData[];
 
     const prompt = `
 Yüksek Riskli Öğrenciler:
@@ -375,7 +386,7 @@ JSON formatında döndür:
     };
   }
 
-  private calculateRiskDistribution(students: unknown[]): ClassComparison['riskDistribution'] {
+  private calculateRiskDistribution(students: StudentData[]): ClassComparison['riskDistribution'] {
     const dist = { low: 0, medium: 0, high: 0, critical: 0 };
 
     students.forEach(s => {
@@ -403,7 +414,7 @@ JSON formatında döndür:
     return dist;
   }
 
-  private getFallbackClassAnalysis(className: string, students: unknown[]): ClassComparison {
+  private getFallbackClassAnalysis(className: string, students: StudentData[]): ClassComparison {
     const avgGPA = students.reduce((sum, s) => sum + (s.notOrtalamasi || 0), 0) / students.length;
 
     return {
@@ -446,7 +457,7 @@ JSON formatında döndür:
     };
   }
 
-  private getFallbackEarlyWarningReport(students: unknown[]): EarlyWarningSystemReport {
+  private getFallbackEarlyWarningReport(students: StudentData[]): EarlyWarningSystemReport {
     return {
       timestamp: new Date().toISOString(),
       criticalAlerts: students.slice(0, 5).map(s => ({
