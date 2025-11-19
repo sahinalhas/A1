@@ -725,8 +725,8 @@ export default function AIAssistant() {
  key={message.id}
  className={`flex gap-4 ${
  message.role === 'user' ? 'justify-end' : 'justify-start'
- } group fade-in slide-in-from-bottom-2 
- >
+ } group fade-in slide-in-from-bottom-2`}
+                  >
  {message.role === 'assistant' && (
  <div className="flex-shrink-0">
  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/20">
