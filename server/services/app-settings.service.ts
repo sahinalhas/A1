@@ -17,8 +17,8 @@ export class AppSettingsService {
   private static getDefaultSettings(): AppSettings {
     return {
       aiProvider: {
-        provider: process.env.GEMINI_API_KEY ? 'gemini' : 'ollama',
-        model: process.env.GEMINI_API_KEY ? 'gemini-2.5-flash' : 'llama3.2:3b',
+        provider: 'ollama',
+        model: 'llama3.2:3b',
         ollamaBaseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
       }
     };
@@ -78,37 +78,31 @@ export class AppSettingsService {
     const settings = this.getSettings();
     let result = settings.aiProvider || this.getDefaultSettings().aiProvider;
     
-    // Check if saved provider requires an API key that's missing
+    // Sadece uyarı ver, kullanıcı seçimini değiştirme
     if (result?.provider === 'gemini') {
       const hasGeminiKey = !!(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 0);
       if (!hasGeminiKey) {
-        console.warn('⚠️ Gemini provider selected but API key not configured, falling back to Ollama');
-        result.provider = 'ollama';
-        result.model = 'llama3.2:3b';
-        this.saveAIProvider(result.provider, result.model, result.ollamaBaseUrl);
+        logger.warn('⚠️ Gemini provider selected but API key not configured. User selection preserved.', 'AppSettingsService');
       }
     }
     
     if (result?.provider === 'openai') {
       const hasOpenAIKey = !!(process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY.trim().length > 0);
       if (!hasOpenAIKey) {
-        console.warn('⚠️ OpenAI provider selected but API key not configured, falling back to Ollama');
-        result.provider = 'ollama';
-        result.model = 'llama3.2:3b';
-        this.saveAIProvider(result.provider, result.model, result.ollamaBaseUrl);
+        logger.warn('⚠️ OpenAI provider selected but API key not configured. User selection preserved.', 'AppSettingsService');
       }
     }
     
     // Auto-migrate deprecated Gemini models to current version
     if (result?.model === 'gemini-1.5-flash' || result?.model === 'gemini-1.5-pro') {
-      console.log('🔄 Auto-migrating deprecated Gemini model:', result.model, '→ gemini-2.5-flash');
+      logger.info('🔄 Auto-migrating deprecated Gemini model: ' + result.model + ' → gemini-2.5-flash', 'AppSettingsService');
       result.model = 'gemini-2.5-flash';
       this.saveAIProvider(result.provider, result.model, result.ollamaBaseUrl);
     }
     
     // Auto-migrate deprecated Ollama 'llama3' to 'llama3.2:3b'
     if (result?.provider === 'ollama' && result?.model === 'llama3') {
-      console.log('🔄 Auto-migrating deprecated Ollama model:', result.model, '→ llama3.2:3b');
+      logger.info('🔄 Auto-migrating deprecated Ollama model: ' + result.model + ' → llama3.2:3b', 'AppSettingsService');
       result.model = 'llama3.2:3b';
       this.saveAIProvider(result.provider, result.model, result.ollamaBaseUrl);
     }
