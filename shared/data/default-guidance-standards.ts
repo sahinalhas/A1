@@ -13,7 +13,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
     children: [
       {
         id: 'individual-bireyi-tanima',
-        title: 'BİREYİ TANIMA ÇALIŞMALARI',
+        title: 'ÖOB BİREYİ TANIMA ÇALIŞMALARI',
         type: 'individual',
         parentId: 'individual-gelissel-ve-onleyici',
         level: 2,
@@ -49,7 +49,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'individual-bilgi-verme',
-        title: 'BİLGİ VERME ÇALIŞMALARI',
+        title: 'ÖOV BİLGİ VERME ÇALIŞMALARI',
         type: 'individual',
         parentId: 'individual-gelissel-ve-onleyici',
         level: 2,
@@ -59,7 +59,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'individual-sosyal-duygusal',
-            title: 'SOSYAL DUYGUSAL GELİŞİM',
+            title: 'ÖOVK SOSYAL DUYGUSAL GELİŞİM',
             type: 'individual',
             parentId: 'individual-bilgi-verme',
             level: 3,
@@ -77,7 +77,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'individual-akademik',
-            title: 'AKADEMİK GELİŞİM',
+            title: 'ÖOVE AKADEMİK GELİŞİM',
             type: 'individual',
             parentId: 'individual-bilgi-verme',
             level: 3,
@@ -115,7 +115,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'individual-kariyer',
-            title: 'KARİYER GELİŞİMİ',
+            title: 'ÖOVM KARİYER GELİŞİMİ',
             type: 'individual',
             parentId: 'individual-bilgi-verme',
             level: 3,
@@ -146,7 +146,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'individual-yoneltme-izleme',
-        title: 'YÖNELTME VE İZLEME',
+        title: 'ÖOY YÖNELTME VE İZLEME',
         type: 'individual',
         parentId: 'individual-gelissel-ve-onleyici',
         level: 2,
@@ -173,7 +173,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
     children: [
       {
         id: 'individual-bireysel-psikolojik-danism',
-        title: 'BİREYSEL PSİKOLOJİK DANIŞMA',
+        title: 'İB BİREYSEL PSİKOLOJİK DANIŞMA',
         type: 'individual',
         parentId: 'individual-iyilestirici',
         level: 2,
@@ -193,7 +193,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'individual-psikososyal-mudahale',
-        title: 'PSİKOSOSYAL MÜDAHALE',
+        title: 'İP PSİKOSOSYAL MÜDAHALE',
         type: 'individual',
         parentId: 'individual-iyilestirici',
         level: 2,
@@ -203,7 +203,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'individual-bildirim-yukumlulugu',
-            title: 'BİLDİRİM YÜKÜMLÜLÜĞÜ',
+            title: 'İPbB BİLDİRİM YÜKÜMLÜLÜĞÜ',
             type: 'individual',
             parentId: 'individual-psikososyal-mudahale',
             level: 3,
@@ -225,7 +225,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'individual-koruyucu-tedbir',
-            title: 'KORUYUCU VE DESTEKLEYİCİ TEDBİR',
+            title: 'İPbT KORUYUCU VE DESTEKLEYİCİ TEDBİR',
             type: 'individual',
             parentId: 'individual-psikososyal-mudahale',
             level: 3,
@@ -239,7 +239,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'individual-intihar',
-            title: 'İNTHAR',
+            title: 'İPbİ İNTHAR',
             type: 'individual',
             parentId: 'individual-psikososyal-mudahale',
             level: 3,
@@ -254,7 +254,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'individual-sevk',
-        title: 'SEVK (YÖNLENDİRME)',
+        title: 'İS SEVK (YÖNLENDİRME)',
         type: 'individual',
         parentId: 'individual-iyilestirici',
         level: 2,
@@ -281,7 +281,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
     children: [
       {
         id: 'individual-musavirlik',
-        title: 'MÜŞAVİRLİK',
+        title: 'DM MÜŞAVİRLİK',
         type: 'individual',
         parentId: 'individual-destek',
         level: 2,
@@ -291,7 +291,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'individual-veliye-yonelik',
-            title: 'VELİYE YÖNELİK',
+            title: 'DMV VELİYE YÖNELİK',
             type: 'individual',
             parentId: 'individual-musavirlik',
             level: 3,
@@ -311,7 +311,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'individual-ogretmene-yonelik',
-            title: 'ÖĞRETMENE YÖNELİK',
+            title: 'DMÖ ÖĞRETMENE YÖNELİK',
             type: 'individual',
             parentId: 'individual-musavirlik',
             level: 3,
@@ -338,7 +338,7 @@ export const DEFAULT_INDIVIDUAL_STANDARDS: GuidanceCategory[] = [
 export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
   {
     id: 'group-gelissel-ve-onleyici',
-    title: 'GELİŞİMSEL VE ÖNLEYİCİ HİZMETLER',
+    title: 'Ö GELİŞİMSEL VE ÖNLEYİCİ HİZMETLER',
     type: 'group',
     parentId: null,
     level: 1,
@@ -348,7 +348,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
     children: [
       {
         id: 'group-sinif-rehberlik',
-        title: 'SINIF REHBERLİK PROGRAMI',
+        title: 'ÖS SINIF REHBERLİK PROGRAMI',
         type: 'group',
         parentId: 'group-gelissel-ve-onleyici',
         level: 2,
@@ -358,7 +358,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'group-okul-oncesi',
-            title: 'Okul Öncesi',
+            title: 'ÖSO Okul Öncesi',
             type: 'group',
             parentId: 'group-sinif-rehberlik',
             level: 3,
@@ -370,7 +370,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-ilkokul',
-            title: 'İlkokul',
+            title: 'ÖSİ İlkokul',
             type: 'group',
             parentId: 'group-sinif-rehberlik',
             level: 3,
@@ -383,7 +383,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-ortaokul',
-            title: 'Ortaokul',
+            title: 'ÖSROrtaokul',
             type: 'group',
             parentId: 'group-sinif-rehberlik',
             level: 3,
@@ -396,7 +396,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-ortaogretim',
-            title: 'Ortaöğretim',
+            title: 'ÖSL Ortaöğretim',
             type: 'group',
             parentId: 'group-sinif-rehberlik',
             level: 3,
@@ -414,7 +414,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-bireyi-tanima',
-        title: 'BİREYİ TANIMA ÇALIŞMALARI',
+        title: 'ÖOB BİREYİ TANIMA ÇALIŞMALARI',
         type: 'group',
         parentId: 'group-gelissel-ve-onleyici',
         level: 2,
@@ -461,7 +461,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-bilgi-verme',
-        title: 'BİLGİ VERME ÇALIŞMALARI',
+        title: 'ÖOV BİLGİ VERME ÇALIŞMALARI',
         type: 'group',
         parentId: 'group-gelissel-ve-onleyici',
         level: 2,
@@ -471,7 +471,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'group-sosyal-duygusal',
-            title: 'SOSYAL DUYGUSAL GELİŞİM',
+            title: 'ÖOVK SOSYAL DUYGUSAL GELİŞİM',
             type: 'group',
             parentId: 'group-bilgi-verme',
             level: 3,
@@ -524,7 +524,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-akademik',
-            title: 'AKADEMİK GELİŞİM',
+            title: 'ÖOVE AKADEMİK GELİŞİM',
             type: 'group',
             parentId: 'group-bilgi-verme',
             level: 3,
@@ -564,7 +564,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-kariyer',
-            title: 'KARİYER GELİŞİMİ',
+            title: 'ÖOVM KARİYER GELİŞİMİ',
             type: 'group',
             parentId: 'group-bilgi-verme',
             level: 3,
@@ -592,7 +592,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-yoneltme-izleme',
-        title: 'YÖNELTME VE İZLEME',
+        title: 'ÖOY YÖNELTME VE İZLEME',
         type: 'group',
         parentId: 'group-gelissel-ve-onleyici',
         level: 2,
@@ -609,7 +609,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
   },
   {
     id: 'group-iyilestirici',
-    title: 'İYİLEŞTİRİCİ HİZMETLER',
+    title: 'İ İYİLEŞTİRİCİ HİZMETLER',
     type: 'group',
     parentId: null,
     level: 1,
@@ -619,7 +619,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
     children: [
       {
         id: 'group-grupla-psikolojik-danism',
-        title: 'GRUPLA PSİKOLOJİK DANIŞMA',
+        title: 'İG GRUPLA PSİKOLOJİK DANIŞMA',
         type: 'group',
         parentId: 'group-iyilestirici',
         level: 2,
@@ -629,7 +629,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-psikososyal-mudahale',
-        title: 'PSİKOSOSYAL MÜDAHALE',
+        title: 'İP PSİKOSOSYAL MÜDAHALE',
         type: 'group',
         parentId: 'group-iyilestirici',
         level: 2,
@@ -649,7 +649,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
   },
   {
     id: 'group-destek',
-    title: 'DESTEK HİZMETLER',
+    title: 'D DESTEK HİZMETLER',
     type: 'group',
     parentId: null,
     level: 1,
@@ -659,7 +659,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
     children: [
       {
         id: 'group-musavirlik',
-        title: 'MÜŞAVİRLİK',
+        title: 'DM MÜŞAVİRLİK',
         type: 'group',
         parentId: 'group-destek',
         level: 2,
@@ -669,7 +669,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'group-veliye-yonelik',
-            title: 'VELİYE YÖNELİK',
+            title: 'DMV VELİYE YÖNELİK',
             type: 'group',
             parentId: 'group-musavirlik',
             level: 3,
@@ -754,7 +754,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-ogretmene-yonelik',
-            title: 'ÖĞRETMENE YÖNELİK',
+            title: 'DMÖ ÖĞRETMENE YÖNELİK',
             type: 'group',
             parentId: 'group-musavirlik',
             level: 3,
@@ -830,7 +830,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-diger-kisilere-yonelik',
-            title: 'DİĞER KİŞİLERE YÖNELİK',
+            title: 'DMD DİĞER KİŞİLERE YÖNELİK',
             type: 'group',
             parentId: 'group-musavirlik',
             level: 3,
@@ -861,7 +861,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-program-yonetimi',
-        title: 'PROGRAM YÖNETİMİ, ARAŞTIRMA, PROJE',
+        title: 'DP PROGRAM YÖNETİMİ, ARAŞTIRMA, PROJE',
         type: 'group',
         parentId: 'group-destek',
         level: 2,
@@ -883,7 +883,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-is-birligi',
-        title: 'İŞ BİRLİĞİ',
+        title: 'Dİ İŞ BİRLİĞİ',
         type: 'group',
         parentId: 'group-destek',
         level: 2,
@@ -893,7 +893,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
         children: [
           {
             id: 'group-toplantilar',
-            title: 'TOPLANTILAR',
+            title: 'DİT TOPLANTILAR',
             type: 'group',
             parentId: 'group-is-birligi',
             level: 3,
@@ -915,7 +915,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
           },
           {
             id: 'group-faaliyetler',
-            title: 'FAALİYETLER',
+            title: 'DİF FAALİYETLER',
             type: 'group',
             parentId: 'group-is-birligi',
             level: 3,
@@ -934,7 +934,7 @@ export const DEFAULT_GROUP_STANDARDS: GuidanceCategory[] = [
       },
       {
         id: 'group-mesleki-gelisim',
-        title: 'MESLEKİ GELİŞİM',
+        title: 'DG MESLEKİ GELİŞİM',
         type: 'group',
         parentId: 'group-destek',
         level: 2,
