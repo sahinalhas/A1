@@ -1,43 +1,6 @@
 # Overview
 
-Rehber360 is a comprehensive student guidance and management system (Öğrenci Rehberlik Sistemi) designed for educational institutions in Turkey. It empowers counselors, teachers, and administrators to track student progress, conduct counseling, manage surveys, generate AI-powered insights, and monitor student risk levels.
-
-The system features a robust **Coaching System** (Koçluk Sistemi) that supports academic and personal development. Key capabilities include:
-- Academic Goal Tracking (YKS, LGS, TYT, AYT, YDT exam preparation)
-- Multiple Intelligence and Learning Style Assessments
-- 360° Evaluation and Achievement System (gamification)
-- Daily Self-Assessment for holistic well-being
-- Parent Collaboration and documentation
-- AI-Powered Recommendations for personalized guidance
-- Comprehensive Progress Monitoring dashboards
-
-Rehber360 is a full-stack TypeScript application utilizing a React frontend, an Express backend, and SQLite for data persistence.
-
-## Quick Start
-
-### Development
-The application runs on port 5000 with both frontend (Vite) and backend (Express) integrated:
-```bash
-npm run dev
-```
-
-### Default Credentials
-After first run, use these credentials to login:
-- **Email**: admin@okul.edu.tr
-- **Password**: admin123
-
-### Environment Setup
-The `.env` file is created from `.env.example` with sensible defaults. For AI features, configure at least one provider:
-- `OPENAI_API_KEY` - For GPT models
-- `GEMINI_API_KEY` - For Google Gemini
-- `OLLAMA_BASE_URL` - For local AI (default: http://localhost:11434)
-
-### Deployment
-The app is configured for Replit autoscale deployment:
-```bash
-npm run build  # Builds both frontend and backend
-npm run start  # Runs production server
-```
+Rehber360 is a comprehensive student guidance and management system (Öğrenci Rehberlik Sistemi) for Turkish educational institutions. It facilitates student progress tracking, counseling, survey management, and risk level monitoring. The system incorporates AI-powered insights and a robust Coaching System (Koçluk Sistemi) for academic and personal development. Key features include academic goal tracking (YKS, LGS, TYT, AYT, YDT exam preparation), Multiple Intelligence and Learning Style Assessments, a 360° Evaluation and Achievement System, daily self-assessments, parent collaboration, and AI-Powered Recommendations. It is a full-stack TypeScript application with a React frontend, Express backend, and SQLite database.
 
 # User Preferences
 
@@ -47,53 +10,32 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend Architecture
 
-**Framework**: React 18 with TypeScript, using Vite.
-**Routing**: React Router v6 for client-side routing with lazy loading.
-**State Management**: React Query for server state caching, React Context for global state, and React hooks for local state.
-**UI Component Library**: Custom system built on Radix UI primitives, styled with Tailwind CSS, using Framer Motion for animations and Shadcn/ui patterns.
-**Key Design Decisions**:
-- **Progressive Loading**: Server-Sent Events (SSE) for streaming.
-- **Performance Optimization**: Memoization, virtualization (`react-virtual`), and code splitting.
-- **Cache Strategy**: Multi-layer caching with configurable TTLs.
-- **Offline Support**: PWA capabilities with service workers.
-**Coaching Features**: Includes dashboards for academic goal tracking, multiple intelligence radar charts, learning style analysis, SMART goal creation, 360° evaluation visualization, achievement badges, daily self-assessment forms, and parent/home visit management.
+The frontend uses React 18 with TypeScript and Vite. It employs React Router v6 for lazy-loaded client-side routing, React Query for server state, React Context for global state, and React hooks for local state management. The UI is built with custom components based on Radix UI primitives, styled with Tailwind CSS, and animated with Framer Motion following Shadcn/ui patterns. Design decisions include Server-Sent Events (SSE) for progressive loading, performance optimizations like memoization and code splitting, multi-layer caching, and PWA capabilities for offline support. Coaching features include dashboards for academic goal tracking, multiple intelligence radar charts, learning style analysis, SMART goal creation, 360° evaluation visualization, achievement badges, daily self-assessment forms, and parent/home visit management.
 
 ## Backend Architecture
 
-**Framework**: Express 5.1.0 with TypeScript on Node.js 22.
-**Database**: SQLite with `better-sqlite3` for synchronous operations.
-**Architecture Pattern**: Feature-based modular architecture, where each domain (e.g., coaching, students, surveys) is self-contained with its own repository, services, and routes.
-**Key Design Decisions**:
-- **Feature-Based Organization**: Code organized by domain.
-- **Repository Pattern**: Separated data access layer.
-- **Service Layer**: Encapsulated business logic.
-- **Centralized Configuration**: Environment variables, CORS, and security settings.
-**Security Measures**: CSRF protection (`csrf-csrf`), rate limiting (`express-rate-limit`), input validation (Zod), and cookie-based authentication with httpOnly cookies.
-**Coaching Services**: Manages academic goals, multiple intelligence and learning style assessments, SMART goals, AI-powered recommendations, 360° evaluations, achievements, self-assessments, parent meetings, home visits, and family participation metrics.
+The backend is built with Express 5.1.0 on Node.js 22, utilizing TypeScript. It uses SQLite with `better-sqlite3` for synchronous database operations. The architecture follows a feature-based modular pattern, organizing code by domain (e.g., coaching, students) with dedicated repositories, services, and routes. Key design decisions include a repository pattern for data access, a service layer for business logic, and centralized configuration. Security measures include CSRF protection, rate limiting, Zod for input validation, and cookie-based authentication with httpOnly cookies. Coaching services manage academic goals, assessments, AI recommendations, evaluations, achievements, and parent/family interactions.
 
 ## Data Storage Solutions
 
-**Primary Database**: SQLite, stored in `./data/database.db`.
-**Database Architecture**: Schema migrations via versioned SQL files; synchronous queries.
-**Key Data Models**: `students`, `counseling_sessions`, `survey_templates`, `academic_records`, `risk_assessments`, `interventions`, `exam_sessions`, `guidance_categories`, `guidance_items`.
-**Coaching System Tables**: `academic_goals`, `multiple_intelligence`, `learning_styles`, `smart_goals`, `coaching_recommendations`, `evaluations_360`, `achievements`, `self_assessments`, `parent_meetings`, `home_visits`, `family_participation`.
-**Backup Strategy**: Manual and automatic backups with validation.
+The primary database is SQLite, stored at `./data/database.db`, with schema migrations managed via versioned SQL files and synchronous queries. Key data models include `students`, `counseling_sessions`, `survey_templates`, `academic_records`, `risk_assessments`, `interventions`, `exam_sessions`, `guidance_categories`, `guidance_items`, and specific tables for the Coaching System like `academic_goals`, `multiple_intelligence`, `learning_styles`, `smart_goals`, `coaching_recommendations`, `evaluations_360`, `achievements`, `self_assessments`, `parent_meetings`, `home_visits`, and `family_participation`. The system supports manual and automatic backups.
 
 ## Authentication and Authorization
 
-**Authentication Method**: Cookie-based sessions with httpOnly cookies.
-**User Roles**: `admin`, `counselor`, `teacher`, `observer`.
-**Authorization Strategy**: Role-based permissions enforced on both frontend and backend; context-based authorization for React components.
-**Security Features**: Password hashing (bcryptjs), CSRF token validation, rate limiting on auth endpoints, secure cookie settings.
+Authentication is cookie-based using httpOnly cookies. The system supports user roles such as `admin`, `counselor`, `teacher`, and `observer`. Authorization is role-based, enforced on both the frontend and backend, with context-based authorization for React components. Security features include bcryptjs for password hashing, CSRF token validation, rate limiting on authentication endpoints, and secure cookie settings.
+
+## UI/UX Design Decisions
+
+The design follows an "zarif ve şık minimal kompakt" (elegant, chic, minimal, compact) aesthetic with a refined color palette (99.5% background in light mode, softer indigo primary color), and subtle borders. Accessibility is prioritized with 44px minimum touch targets, WCAG 2.2 compliant focus indicators (≥3:1 contrast), and good contrast ratios (light mode ~5.1:1, dark mode ~3.4:1). Typography uses a 15px base font size with lighter heading weights for compactness and refined readability. Component designs are compact and minimal, with reduced padding, smaller border radii (0.875rem), and subtle visual effects like 200ms transitions and light shadows.
 
 # External Dependencies
 
 ## AI Services
 
--   **OpenAI Integration**: GPT-4 for advanced student analysis, intervention recommendations, and predictive analytics. Configurable via `OPENAI_API_KEY`.
--   **Google Gemini Integration**: Alternative AI provider for analysis and chat features. Configurable via `GEMINI_API_KEY`.
--   **Ollama (Local AI)**: Local LLM support for privacy-sensitive deployments or as a fallback. Configurable via `OLLAMA_BASE_URL`.
--   **AI Feature Usage**: Student risk prediction, automated action plans, survey sentiment analysis, multi-student comparative analysis, class-wide performance insights.
+-   **OpenAI Integration**: Utilizes GPT-4 for advanced student analysis, intervention recommendations, and predictive analytics, configured via `OPENAI_API_KEY`.
+-   **Google Gemini Integration**: Provides an alternative AI provider for analysis and chat features, configured via `GEMINI_API_AT`.
+-   **Ollama (Local AI)**: Supports local LLM deployments for privacy or as a fallback, configured via `OLLAMA_BASE_URL`.
+-   **AI Feature Usage**: Powers student risk prediction, automated action plans, survey sentiment analysis, multi-student comparative analysis, and class-wide performance insights.
 
 ## Third-Party Services
 
@@ -102,117 +44,12 @@ Preferred communication style: Simple, everyday language.
 
 ## Key NPM Dependencies
 
-**Frontend**: `react`, `react-router-dom`, `@tanstack/react-query`, `@tanstack/react-virtual`, `react-hook-form`, `zod`, `recharts`, `react-big-calendar`, `react-markdown`, `date-fns`, `framer-motion`.
-**Backend**: `express`, `better-sqlite3`, `bcryptjs`, `cookie-parser`, `cors`, `csrf-csrf`, `express-rate-limit`, `dotenv`, `multer`, `jspdf`, `xlsx`, `uuid`.
-**Development**: `vite`, `typescript`, `tailwindcss`, `eslint`, `@vitejs/plugin-react-swc`.
+-   **Frontend**: `react`, `react-router-dom`, `@tanstack/react-query`, `@tanstack/react-virtual`, `react-hook-form`, `zod`, `recharts`, `react-big-calendar`, `react-markdown`, `date-fns`, `framer-motion`.
+-   **Backend**: `express`, `better-sqlite3`, `bcryptjs`, `cookie-parser`, `cors`, `csrf-csrf`, `express-rate-limit`, `dotenv`, `multer`, `jspdf`, `xlsx`, `uuid`.
+-   **Development**: `vite`, `typescript`, `tailwindcss`, `eslint`, `@vitejs/plugin-react-swc`.
 
 ## External APIs and Integrations
 
 -   **Turkish Education System Compliance**: Adherence to MEB standards, tracking of Turkish standardized exams (LGS, TYT, AYT, YDT), and Turkish localization. Includes a hierarchical guidance standards system with an automated markdown-to-database pipeline.
--   **File Processing**: Excel import/export for bulk data, PDF generation for reports, and image upload.
--   **Progressive Web App**: Service worker for offline functionality, app manifest, and optional push notifications.
-
-# Recent Changes
-
-## November 18, 2025 - Compact Minimalist Design Update
-- ✅ Refined design system to be more compact per user preference
-- ✅ **Component Spacing Optimization**:
-  - Card: Reduced padding from p-7 to p-5 for tighter layout
-  - Card Header: Reduced space-y from 2.5 to 1.5
-  - Button: Reduced heights and padding (default: h-10→h-9, px-5→px-4)
-  - Input: Reduced height from h-11 to h-9, padding from px-4/py-3 to px-3/py-2
-  - Border radius adjusted: rounded-xl→rounded-lg for inputs and large buttons
-- ✅ **Maintained Design Quality**:
-  - All interactive elements remain comfortably clickable
-  - Focus states and accessibility preserved
-  - Visual hierarchy maintained with tighter spacing
-  - Modern minimalist aesthetic retained
-
-## November 18, 2025 - Minimalist Design System 2025
-- ✅ Updated entire design system to follow 2025 minimalist trends
-- ✅ **Color Palette Refinement**:
-  - Light mode: Ultra-clean 99% background with subtle borders (opacity 0.5-0.6)
-  - Dark mode: Rich yet refined dark backgrounds with harmonious colors
-  - Softer primary color (234° 72% 58%) - more elegant than previous
-  - Whisper-soft muted tones for better readability
-  - Almost invisible borders following 2025 trend
-- ✅ **Typography System**:
-  - Maintained Inter font family with refined letter-spacing
-  - Better visual hierarchy with cleaner heading styles
-  - Improved line-heights for breathable reading experience
-- ✅ **Component Updates**:
-  - Button: Removed gradients, added subtle shadows and hover effects
-  - Card: Modern rounded-2xl design with clean styling
-  - Input: Minimalist rounded design with soft focus states
-  - Logo: Ultra minimalist flat design, removed gradients
-- ✅ **Visual Refinements**:
-  - Subtle background gradients (opacity 0.015-0.025)
-  - Clean hover animations with active:scale-[0.98]
-  - Soft shadows instead of heavy elevations
-- ✅ **User Experience**:
-  - Faster perceived performance with cleaner visuals
-  - Better focus states for accessibility
-  - Smoother transitions (300ms duration)
-  - Compact, efficient layout spacing
-
-## November 18, 2024 - Default Subjects and Topics Data System
-- ✅ Created `shared/data/default-subjects-topics.ts` with comprehensive default data for all subjects and topics
-- ✅ Added automatic seeding system for subjects and topics database tables
-- ✅ Implemented `seedSubjectsAndTopics()` function in `academic.schema.ts`
-- ✅ Integrated seed function into database initialization process
-- ✅ Default data includes:
-  - **School (Lise)**: 13 subjects (no topics) - Matematik, Fizik, Kimya, Biyoloji, etc.
-  - **LGS**: 6 subjects with 60+ topics - Türkçe, Matematik, Fen Bilimleri, etc.
-  - **TYT**: 10 subjects with 80+ topics - Türkçe, Matematik, Geometri, Fizik, etc.
-  - **AYT**: 14 subjects with 90+ topics - Matematik, Geometri, Fizik, Kimya, Edebiyat, etc.
-  - **YDT**: 4 subjects with 50+ topics - İngilizce, Almanca, Fransızca, Arapça
-- ✅ Each topic includes metadata: avgMinutes, energyLevel, difficultyScore, priority
-- ✅ Database checks for existing data before seeding to avoid duplicates
-- ✅ Automatic seeding runs on database initialization (first run only)
-
-## November 18, 2024 - Subjects and Topics Reset Feature
-- ✅ Added "Varsayılana Sıfırla" (Reset to Defaults) button to Courses page
-- ✅ Implemented backend reset endpoint at `/api/subjects/reset`
-- ✅ Created `resetToDefaultData()` function in subjects repository
-- ✅ Reset functionality includes:
-  - Deletes all existing subjects and topics from database
-  - Re-seeds database with default MEB-compliant data
-  - Wrapped in database transaction for data consistency
-  - Rate-limited endpoint (10 requests per 15 minutes)
-  - Requires authentication
-- ✅ Frontend features:
-  - AlertDialog confirmation before reset
-  - Success/error toast notifications
-  - Auto-refresh after reset to show updated data
-  - Pattern consistent with guidance standards reset
-- ✅ **Warning**: Reset removes all custom subjects and topics permanently
-
-## November 18, 2024 - School Category Consistency Fix
-- ✅ Fixed category inconsistency for School (Okul) subjects
-- ✅ Updated type definitions to include 'School' category:
-  - `StudySubject` type (client-side)
-  - `Subject` interface (server-side)
-- ✅ Fixed filtering logic to use consistent category values
-- ✅ New subjects now save with `category: 'School'` instead of `undefined`
-- ✅ Backward compatibility maintained:
-  - Legacy subjects with `category: undefined` still display
-  - New subjects use `category: 'School'` for consistency
-  - Default data uses `category: 'School'`
-- ✅ All exam categories now use consistent structure: School, LGS, TYT, AYT, YDT
-
-## November 18, 2024 - Replit Environment Setup
-- ✅ Imported GitHub project and extracted all files
-- ✅ Installed Node.js 20 and all npm dependencies
-- ✅ Created `.env` file from `.env.example` with default configuration
-- ✅ Configured workflow to run `npm run dev` on port 5000
-- ✅ Verified Vite configuration for Replit (0.0.0.0 host, allowedHosts: true, HMR via WSS)
-- ✅ Confirmed Express backend integration and database initialization
-- ✅ Configured autoscale deployment with build and start commands
-- ✅ Application successfully running with all features initialized
-
-### Replit-Specific Configuration
-- Frontend: Vite dev server on 0.0.0.0:5000 with proxy support
-- Backend: Express server integrated via Vite plugin
-- Database: SQLite initialized at `./database.db`
-- Admin account created automatically on first run
-- All schedulers and background services running
+-   **File Processing**: Supports Excel import/export, PDF generation for reports, and image uploads.
+-   **Progressive Web App**: Features a service worker for offline functionality, an app manifest, and optional push notifications.
