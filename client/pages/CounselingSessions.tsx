@@ -333,7 +333,12 @@ export default function CounselingSessions() {
  <div className="space-y-6 max-w-7xl mx-auto">
 
  <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
- <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
+ <motion.div
+ initial={{ opacity: 0, y: -10 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.3 }}
+ >
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-sm">
  <TabsTrigger value="dashboard">
  Dashboard
  </TabsTrigger>
@@ -353,11 +358,23 @@ export default function CounselingSessions() {
  Analitik
  </TabsTrigger>
  </TabsList>
+ </motion.div>
 
  <TabsContent value="dashboard" className="space-y-6">
+ <motion.div
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ delay: 0.1 }}
+ >
  <SessionStatsCards stats={stats} isLoading={sessionsLoading} />
+ </motion.div>
  
- <div className="flex items-center justify-between">
+ <motion.div 
+ className="flex items-center justify-between"
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ delay: 0.2 }}
+ >
  <h2 className="text-xl font-semibold">Görüşme Takvimi</h2>
  <div className="flex gap-2">
  <Button
@@ -365,6 +382,7 @@ export default function CounselingSessions() {
  size="sm"
  onClick={() => setViewMode('calendar')}
  >
+ <Calendar className="h-4 w-4 mr-2" />
  Takvim
  </Button>
  <Button
@@ -372,6 +390,7 @@ export default function CounselingSessions() {
  size="sm"
  onClick={() => setViewMode('table')}
  >
+ <Users className="h-4 w-4 mr-2" />
  Tablo
  </Button>
  {isMobile && (
@@ -384,7 +403,7 @@ export default function CounselingSessions() {
  </Button>
  )}
  </div>
- </div>
+ </motion.div>
 
  {sessionsLoading ? (
  viewMode === 'calendar' ? <CalendarSkeleton /> :
@@ -496,7 +515,6 @@ export default function CounselingSessions() {
  sessionType={sessionType}
  onSessionTypeChange={setSessionType}
  students={students}
- topics={topics}
  selectedStudents={selectedStudents}
  onSelectedStudentsChange={setSelectedStudents}
  onSubmit={handleCreateSession}
@@ -614,6 +632,7 @@ export default function CounselingSessions() {
  sessionIds={completedSessions.map(s => s.id)}
  totalSessions={completedSessions.length}
  />
+ </div>
  </div>
  );
 }
