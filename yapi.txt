@@ -1,0 +1,1014 @@
+
+# ÖĞRENCİ PROFİLİ SAYFASI - TAM YAPI ANALİZİ
+# =====================================================
+
+## 1. ANA SAYFA YAPISI
+Dosya: client/pages/StudentProfile/StudentProfile.tsx
+
+### Ana Bileşenler:
+- StudentHeader: Öğrenci başlık bilgileri
+- StudentProfileTabs: 6 ana sekme yapısı
+- ProfileCompletenessIndicator: Profil tamamlanma göstergesi
+- EnhancedRiskCard: Risk analiz kartı (AI destekli)
+
+### Veri Kaynakları:
+- useStudentProfile: Öğrenci temel bilgileri
+- useStudentData: Tüm öğrenci verileri
+- /api/student-profile/${studentId}/scores: Standartlaştırılmış skorlar
+
+---
+
+## 2. 6 ANA SEKME YAPISI
+Yapılandırma: client/config/tabs/student-profile-tabs.ts
+
+### 2.1 GENEL BAKIŞ SEKMESİ (Overview)
+Dosya: client/pages/StudentProfile/tabs/OverviewTab.tsx
+
+#### Bileşenler:
+1. **ProfileCompletenessIndicator**
+   - Toplam tamamlanma skoru (%)
+   - Bölüm bazlı tamamlanma:
+     * Kimlik & Aile
+     * Sağlık
+     * Akademik
+     * Sosyal-Duygusal
+     * Risk & Müdahale
+     * İletişim
+   - Eksik alanlar listesi
+
+2. **ModernDashboard**
+   Dosya: client/pages/StudentProfile/components/ModernDashboard.tsx
+   
+   Alt Bileşenler:
+   - **UnifiedScoreDashboard**: Birleşik skor göstergeleri
+     * Genel Skor (0-100)
+     * Akademik Performans
+     * Sosyal-Duygusal Gelişim
+     * Risk Seviyesi
+     * Profil Tamamlanma
+   
+   - **ProgressiveAnalysisView**: Aşamalı analiz
+     * Hızlı Profil Özeti
+     * Detaylı Analiz (AI)
+     * Derin Psikolojik Analiz (AI)
+   
+   - **Önemli Bilgiler Kartları**:
+     * Son Görüşme
+     * Devamsızlık Durumu
+     * Risk Uyarıları
+     * Aktif Müdahaleler
+
+3. **PersonalizedLearningCard**
+   - Öğrenme stili analizi
+   - Kişiselleştirilmiş öğrenme stratejileri
+   - Güçlü/zayıf yönler
+   - Önerilen çalışma yöntemleri
+
+---
+
+### 2.2 KİMLİK & AİLE SEKMESİ (Identity-Family)
+Dosya: client/pages/StudentProfile/tabs/IdentityFamilyTab.tsx
+
+#### Ana Bileşen:
+**UnifiedIdentitySection**
+Dosya: client/components/features/student-profile/sections/UnifiedIdentitySection.tsx
+
+#### Toplanan Bilgiler:
+
+##### Temel Kimlik Bilgileri:
+- Ad, Soyad
+- TC Kimlik No
+- Okul Numarası
+- Sınıf
+- Cinsiyet (K/E)
+- Doğum Tarihi
+- Doğum Yeri
+
+##### İletişim Bilgileri:
+- Telefon
+- E-posta
+- İl, İlçe
+- Açık Adres
+
+##### Aile Bilgileri:
+- Veli Adı
+- Veli Telefon
+- Veli E-posta
+- Veli Mesleği
+- Veli Eğitim Seviyesi
+- İkinci Veli Bilgileri
+- Anne/Baba Mesleği
+- Kardeş Sayısı
+
+##### Eğitim Bilgileri:
+- Mezun Olduğu İlkokul
+- Önceki Okullar
+- Sınıf Tekrarı Durumu
+- Özel Eğitim Geçmişi
+
+---
+
+### 2.3 AKADEMİK SEKMESİ (Academics)
+Dosya: client/pages/StudentProfile/tabs/AcademicsTab.tsx
+
+#### Ana Bileşen:
+**SmartAcademicDashboard**
+Dosya: client/components/features/student-profile/sections/SmartAcademicDashboard.tsx
+
+#### Alt Sekmeler (5 Adet):
+
+##### 2.3.1 Akademik Performans
+Bileşen: StandardizedAcademicSection
+Dosya: client/components/features/student-profile/sections/StandardizedAcademicSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+- Güçlü Dersler (Multi-select, kategorize)
+- Zayıf Dersler (Multi-select, kategorize)
+- Güçlü Beceriler (Multi-select, kategorize)
+- Zayıf Beceriler (Multi-select, kategorize)
+- Birincil Öğrenme Stili
+- İkincil Öğrenme Stili
+- Genel Motivasyon Seviyesi (1-10)
+- Haftalık Çalışma Saati
+- Ödev Tamamlama Oranı (%)
+- Dil Becerileri
+- Ek Notlar
+
+Ders Kategorileri:
+- Fen Bilimleri (Matematik, Fizik, Kimya, Biyoloji)
+- Sosyal Bilimler (Tarih, Coğrafya, Felsefe)
+- Dil & Edebiyat (Türkçe, İngilizce)
+- Sanat & Spor
+- Teknoloji & Bilgisayar
+
+##### 2.3.2 Sınavlar & Değerlendirme
+Bileşen: StudentExamResultsSection
+Dosya: client/components/features/student-profile/sections/StudentExamResultsSection.tsx
+
+Toplanan Bilgiler:
+- Deneme Sınav Sonuçları
+  * Sınav Tarihi
+  * Sınav Türü (TYT, AYT, LGS)
+  * Oturum Adı
+  * Ders Adı
+  * Doğru/Yanlış/Boş Sayısı
+  * Net Skor
+  
+- Okul Sınav Notları
+  * Sınav Türü (Yazılı, Quiz, Performans)
+  * Ders
+  * Puan
+  * Maksimum Puan
+  * Tarih
+
+- İstatistikler
+  * Toplam Sınav Sayısı
+  * Son Sınav Bilgisi
+  * Ortalama Performans
+  * Trend Grafikleri
+
+##### 2.3.3 Çalışma Programı
+Bileşen: CalismaProgramiSection
+Dosya: client/components/features/student-profile/sections/CalismaProgramiSection.tsx
+
+İçerikler:
+- **WeeklySchedule**: Haftalık çalışma takvimi
+  * 7 gün x 24 saat grid
+  * Saat aralıklarına göre planlama
+  * Ders/aktivite atamaları
+  * Renk kodlaması
+
+- **TopicPlanner**: Konu planlayıcı
+  * Ders seçimi
+  * Konu listesi
+  * Hedef tarih
+  * Öncelik seviyesi
+  * İlerleme takibi
+
+##### 2.3.4 İlerleme & Başarılar
+Bileşen: IlerlemeTakibiSection
+Dosya: client/components/features/student-profile/sections/IlerlemeTakibiSection.tsx
+
+Toplanan Bilgiler:
+- Başarı Kayıtları
+  * Başarı Başlığı
+  * Açıklama
+  * Kategori (Genel, Akademik, Sosyal, Davranış, Hedef)
+  * Renk Kodu
+  * Kazanılma Tarihi
+  * Kriteri
+
+##### 2.3.5 Anketler
+Bileşen: AnketlerSection
+Dosya: client/components/features/student-profile/sections/AnketlerSection.tsx
+
+Toplanan Bilgiler:
+- Ana anket sisteminden senkronize anket yanıtları
+- Tamamlanma tarihi
+- Anket başlığı
+- Skor (varsa)
+- İstatistikler (toplam, son 30 gün)
+
+#### Üst Bölüm:
+**PersonalizedLearningCard**
+- AI destekli öğrenme stratejileri
+- Kişiselleştirilmiş öneriler
+- Öğrenme profili
+
+---
+
+### 2.4 İYİLİK HALİ & GELİŞİM SEKMESİ (Wellbeing)
+Dosya: client/pages/StudentProfile/tabs/WellbeingTab.tsx
+
+#### 2.4.1 Sağlık Bilgileri
+Bileşen: EnhancedHealthSection → StandardizedHealthSection
+Dosya: client/components/features/student-profile/sections/StandardizedHealthSection.tsx
+
+Toplanan Bilgiler:
+
+##### Temel Sağlık Bilgileri:
+- Kan Grubu (A+, A-, B+, B-, AB+, AB-, 0+, 0-)
+- Son Sağlık Kontrolü (tarih)
+- Kronik Hastalıklar (Multi-select, kategorize)
+  * Astım, Diyabet, Epilepsi, Kalp Hastalığı, vs.
+- Alerjiler (Multi-select, kategorize)
+  * Gıda alerjileri
+  * İlaç alerjileri
+  * Çevresel alerjiler
+- Kullanılan İlaçlar (Multi-select, kategorize)
+- Tıbbi Geçmiş (metin)
+- Özel İhtiyaçlar (metin)
+- Fiziksel Kısıtlamalar (metin)
+
+##### Acil Durum Kişileri (2 Kişi):
+Her biri için:
+- Ad Soyad
+- Telefon
+- Yakınlık Derecesi
+
+##### Doktor Bilgisi:
+- Doktor Adı
+- Doktor Telefonu
+- Doktor Branşı
+
+#### 2.4.2 Özel Eğitim & Destek
+Bileşen: OzelEgitimSection
+Dosya: client/components/features/student-profile/sections/OzelEgitimSection.tsx
+
+Toplanan Bilgiler:
+- BEP Durumu (Var/Yok)
+- BEP Başlangıç/Bitiş Tarihi
+- BEP Hedefleri
+- Tanı
+- RAM Rapor Tarihi
+- RAM Rapor Özeti
+- Destek Hizmetleri
+- Uyarlamalar
+- Durum (Aktif/Tamamlandı/İptal)
+- Sonraki Değerlendirme Tarihi
+- Notlar
+
+#### 2.4.3 Sosyal Ağ Analizi
+Bileşen: SocialNetworkMap
+Dosya: client/components/features/social/SocialNetworkMap.tsx
+
+Görselleştirme:
+- Öğrenci merkezli sosyal ağ grafiği
+- İlişki türleri (Aile, Arkadaş, Öğretmen, Mentor)
+- İlişki gücü gösterimi
+- İnteraktif node'lar
+
+#### 2.4.4 Gelişim Profili
+Bileşen: DevelopmentProfileSection
+Dosya: client/components/features/student-profile/sections/DevelopmentProfileSection.tsx
+
+##### Alt Sekmeler (5 Adet):
+
+###### A) Sosyal-Duygusal
+Bileşen: StandardizedSocialEmotionalSection
+Dosya: client/components/features/student-profile/sections/StandardizedSocialEmotionalSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+- Güçlü Sosyal Beceriler (Multi-select)
+- Geliştirilmesi Gereken Beceriler (Multi-select)
+
+SEL Yetkinlik Seviyeleri (1-10):
+- Empati Seviyesi
+- Öz-farkındalık
+- Duygu Düzenleme
+- Çatışma Çözme
+- Liderlik
+- Takım Çalışması
+- İletişim
+
+Sosyal Bağlam:
+- Arkadaş Çevresi Büyüklüğü (Yok/Az/Orta/Geniş)
+- Arkadaş Çevresi Kalitesi (Zayıf/Orta/İyi/Çok İyi)
+- Sosyal Rol (Lider/Aktif Üye/Takipçi/Gözlemci/İzole)
+- Zorbalık Durumu (Yok/Mağdur/Fail/Her İkisi/Gözlemci)
+
+###### B) Çoklu Zeka
+Bileşen: KisilikProfiliSection
+Dosya: client/components/features/student-profile/sections/KisilikProfiliSection.tsx
+
+8 Zeka Alanı (1-10 arası):
+- Dilsel Zeka
+- Mantıksal-Matematiksel Zeka
+- Uzamsal Zeka
+- Müzikal Zeka
+- Bedensel-Kinestetik Zeka
+- Kişilerarası Zeka
+- İçsel Zeka
+- Doğacı Zeka
+
+###### C) 360 Derece Değerlendirme
+Bileşen: Degerlendirme360Section
+Dosya: client/components/features/student-profile/sections/Degerlendirme360Section.tsx
+
+Her Değerlendirme için:
+- Değerlendirici Türü (Öğrenci/Öğretmen/Veli/Arkadaş)
+- Değerlendirici Adı (opsiyonel)
+
+Değerlendirme Alanları (1-10):
+- Akademik Performans
+- Sosyal Beceriler
+- İletişim
+- Liderlik
+- Takım Çalışması
+- Genel Puan (otomatik hesaplanan)
+
+###### D) Yetenekler & İlgiler
+Bileşen: StandardizedTalentsSection
+Dosya: client/components/features/student-profile/sections/StandardizedTalentsSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+- Yaratıcı & Sanatsal Yetenekler (Multi-select)
+- Fiziksel & Sportif Yetenekler (Multi-select)
+- Ana İlgi Alanları (Multi-select)
+- Keşfedilen/Gelişen İlgiler (Multi-select)
+- Haftalık Katılım Saati
+- Hobiler (metin)
+- Okul Dışı Aktiviteler (metin)
+- Kulüp Üyelikleri (tag input)
+- Katıldığı Yarışmalar (tag input)
+
+###### E) Motivasyon
+Bileşen: MotivationProfileSection
+Dosya: client/components/features/student-profile/sections/MotivationProfileSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+- Ana Motivasyon Kaynakları (Multi-select, kategorize)
+  * İçsel: Akademik Başarı, Merak, Özerklik, Yetkinlik
+  * Dışsal: Aile Beklentisi, Akran Tanınması, Ödül, Gelecek
+- Kariyer Aspirasyonları (Multi-select)
+- Akademik Hedefler (Multi-select)
+
+Motivasyon Düzey Değerlendirmesi (1-10):
+- Hedef Netliği
+- İçsel Motivasyon
+- Dışsal Motivasyon
+- Azim ve Sebat
+- Gelecek Yönelimi
+
+Hedef Detayları:
+- Kısa Vadeli Hedefler (metin)
+- Uzun Vadeli Hedefler (metin)
+- Engeller (metin)
+- Destek İhtiyaçları (metin)
+
+#### 2.4.5 Kariyer & Gelecek Planlama
+Bileşen: CareerFutureSection
+Dosya: client/components/features/student-profile/sections/CareerFutureSection.tsx
+
+##### Alt Sekmeler (2 Adet):
+
+###### A) Kariyer Rehberliği
+Bileşen: CareerGuidanceSection
+Dosya: client/components/features/student-profile/sections/CareerGuidanceSection.tsx
+
+Alt Sekmeler (6 Adet):
+
+**1) Analiz**
+- AI Destekli Meslek Uyum Analizi
+- Genel Uyumluluk Skoru
+- En İyi Eşleşen Meslekler
+- Her meslek için:
+  * Uyum Skoru
+  * Güçlü Yönler
+  * Gelişim Alanları
+  * Kritik Yetkinlik Eksiklikleri
+
+**2) Keşfet**
+- Meslek Veritabanı
+- Kategori Filtreleme
+- Arama
+- Her meslek için:
+  * Açıklama
+  * Eğitim Gereksinimleri
+  * Ortalama Maaş
+  * İş Bulma Durumu
+  * Gerekli Beceriler
+
+**3) Yol Haritası**
+- Öğrenci İçin Oluşturulan Yol Haritaları
+- Her yol haritası için:
+  * Hedef Meslek
+  * Toplam Adım Sayısı
+  * Tamamlanan Adımlar
+  * İlerleme Yüzdesi
+  * Kategori bazlı adımlar (Eğitim, Beceri, Deneyim, Sertifika, Networking)
+
+**4) Yetkinlikler**
+- Öğrencinin Mevcut Yetkinlikleri
+- Kaynak (Transkript, Anket, Öğretmen)
+- Seviye (Başlangıç/Orta/İleri/Uzman)
+- Doğrulama Durumu
+
+İstatistikler:
+- Toplam Yetkinlik
+- Doğrulanmış Yetkinlik
+- İleri/Uzman Seviye
+- Son Güncelleme
+
+**5) Karşılaştır**
+- Birden fazla meslek karşılaştırma
+- Genel Uyum
+- Eğitim Gereksinimi
+- Gelecek Potansiyeli
+- Yetkinlik Açığı
+- Detaylı karşılaştırma tablosu
+
+**6) Geçmiş**
+- Geçmiş Analiz Kayıtları
+- Tarih, Skor, En İyi Eşleşme
+- Trend Analizi
+
+###### B) Hedefler & Planlama
+Bileşen: HedeflerPlanlamaSection
+Dosya: client/components/features/student-profile/sections/HedeflerPlanlamaSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+
+Öğrenci Beklentileri:
+- Öğrenci Beklentileri (metin)
+- Kısa Vadeli Hedefler (metin)
+- Uzun Vadeli Hedefler (metin)
+
+Aile Beklentileri:
+- Aile Beklentileri (metin)
+
+Kariyer & Üniversite:
+- Kariyer İlgi Alanları (metin)
+- Üniversite Tercihleri (metin)
+- Ek Notlar (metin)
+
+---
+
+### 2.5 RİSK & MÜDAHALE SEKMESİ (Risk-Support)
+Dosya: client/pages/StudentProfile/tabs/RiskSupportTab.tsx
+
+#### Ana Bileşen:
+**EnhancedRiskDashboard**
+Dosya: client/components/features/student-profile/sections/EnhancedRiskDashboard.tsx
+
+#### Üst Bölüm:
+**EnhancedRiskCard** - AI Destekli Detaylı Risk Analizi
+- Birleşik Risk Skoru (0-100)
+- Risk Kategorisi (Düşük/Orta/Yüksek/Kritik)
+- Trend (Artan/Azalan/Stabil)
+- Risk Faktörleri (AI tarafından tespit edilen)
+- Koruyucu Faktörler
+- Önerilen Müdahaleler
+
+#### Alt Bileşen:
+**UnifiedRiskSection**
+Dosya: client/components/features/student-profile/sections/UnifiedRiskSection.tsx
+
+##### Alt Sekmeler (3 Adet):
+
+###### A) Risk Değerlendirme
+Bileşen: RiskDegerlendirmeSection
+Dosya: client/components/features/student-profile/sections/RiskDegerlendirmeSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+- Akademik Risk Seviyesi (Düşük/Orta/Yüksek/Çok Yüksek)
+- Davranışsal Risk Seviyesi
+- Devamsızlık Risk Seviyesi
+- Sosyal-Duygusal Risk Seviyesi
+- Akademik Risk Faktörleri (metin)
+- Davranışsal Faktörler (metin)
+- Koruyucu Faktörler (metin)
+- Gerekli Müdahaleler (metin)
+- Veli Bilgilendirildi (checkbox)
+- Sorumlu Danışman
+- Sonraki Değerlendirme Tarihi
+
+###### B) Davranış Takibi
+İki Alt Bileşen:
+
+**1) DisciplineSection**
+Dosya: client/components/features/student-profile/sections/DisciplineSection.tsx
+
+Toplanan Bilgiler:
+- Disiplin Cezaları ve Kayıtları (metin)
+  * Tarih
+  * Ceza Türü
+  * Açıklama
+  * Alınan Önlemler
+
+**2) DavranisTakibiSection** (ABC Analizi)
+Dosya: client/components/features/student-profile/sections/DavranisTakibiSection.tsx
+
+Her Davranış Olayı için:
+- Olay Tarihi
+- Olay Saati
+- Konum
+- Davranış Türü (Sözlü/Fiziksel/Kurallara Uymama/Derse Katılmama/Diğer)
+- Yoğunluk (Düşük/Orta/Yüksek)
+
+ABC Analizi:
+- Öncül (Antecedent) - Davranıştan önce ne oldu
+- Davranış (Behavior) - Ne yapıldı
+- Sonuç (Consequence) - Davranıştan sonra ne oldu
+
+- Kullanılan Müdahale
+- Müdahale Etkinliği (Çok Etkili/Etkili/Kısmen Etkili/Etkisiz)
+- Veli Bilgilendirildi
+- Kaydeden Kişi
+- Notlar ve Patern Analizi
+
+###### C) Koruyucu Faktörler
+Bileşen: RiskProtectiveProfileSection
+Dosya: client/components/features/student-profile/sections/RiskProtectiveProfileSection.tsx
+
+Toplanan Bilgiler:
+- Değerlendirme Tarihi
+
+Risk Değerlendirmesi:
+- Genel Risk Seviyesi (1-10)
+
+Alan Bazlı Risk Seviyeleri (1-10):
+- Akademik Risk
+- Davranışsal Risk
+- Duygusal Risk
+- Sosyal Risk
+
+Koruyucu Faktörler (1-10):
+- Aile Desteği
+- Akran Desteği
+- Okul Bağlılığı
+- Dayanıklılık Seviyesi
+- Başa Çıkma Becerileri
+
+Risk & Koruyucu Faktörler:
+- Tespit Edilen Risk Faktörleri (Multi-select)
+- Koruyucu Faktörler (Multi-select)
+- Önerilen Müdahaleler (Multi-select)
+
+Detaylar:
+- Risk Değerlendirme Notları
+- Müdahale Planı
+- İzleme Sıklığı (Gün/Hafta/Ay/Üç Ay/Yarı Yıl)
+
+---
+
+### 2.6 İLETİŞİM & KAYITLAR SEKMESİ (Communication)
+Dosya: client/pages/StudentProfile/tabs/CommunicationTab.tsx
+
+#### Ana Bileşen:
+**CommunicationCenter**
+Dosya: client/components/features/student-profile/sections/CommunicationCenter.tsx
+
+#### Üst İstatistikler (4 Kart):
+- Toplam Görüşme Sayısı
+- Ev Ziyareti Sayısı
+- Aile Katılımı Sayısı
+- Son İletişim Tarihi
+
+#### Alt Sekmeler (5 Adet):
+
+##### A) Tüm Görüşmeler
+Bileşen: UnifiedMeetingsSection
+Dosya: client/components/features/student-profile/sections/UnifiedMeetingsSection.tsx
+
+Filtreler:
+- Tümü
+- Veli Görüşmeleri
+- Bireysel Görüşmeler
+- Grup Görüşmeleri
+
+Her Görüşme için:
+- Görüşme Türü
+- Tarih & Saat
+- Konum
+- Konu
+- Not (metin)
+- Eylem Planı (metin)
+- Sonuç
+- Takip Gerekli (flag)
+- Kaynak (Ana Sistem / Manuel)
+
+İstatistikler:
+- Toplam Görüşme
+- Türlere Göre Dağılım
+- Son 30 Gün
+- Takip Bekleyen
+
+##### B) Ev Ziyaretleri
+Bileşen: EvZiyaretleriSection
+Dosya: client/components/features/student-profile/sections/EvZiyaretleriSection.tsx
+
+Her Ziyaret için:
+- Ziyaret Tarihi
+- Ziyaret Saati
+- Süre (dakika)
+- Ziyaretçiler (virgülle ayrılmış)
+- Evde Bulunanlar (virgülle ayrılmış)
+- Ev Ortamı (Uygun/Orta/Zor Koşullar/Değerlendirilemedi)
+- Aile Etkileşimi (Olumlu/Normal/Gergin/İşbirliksiz)
+- Gözlemler (metin)
+- Öneriler (metin)
+- Tespit Edilen Sorunlar (metin)
+- Sağlanan Kaynaklar/Yardımlar (metin)
+- Sonraki Ziyaret Tarihi
+- Kaydeden
+
+##### C) Aile Katılımı
+Bileşen: AileKatilimiSection
+Dosya: client/components/features/student-profile/sections/AileKatilimiSection.tsx
+
+Her Katılım için:
+- Etkinlik Türü (Veli Toplantısı/Okul Etkinliği/Öğretmen Görüşmesi/Performans Değerlendirme/Diğer)
+- Etkinlik Adı
+- Etkinlik Tarihi
+- Katılım Durumu (Katıldı/Katılmadı/Geç Katıldı/Erken Ayrıldı)
+- Katılan Aile Üyeleri (virgülle ayrılmış)
+- Katılım Düzeyi (Çok Aktif/Aktif/Pasif/İlgisiz)
+- İletişim Sıklığı (Günlük/Haftalık/Aylık/Sadece Gerekende)
+- Tercih Edilen İletişim Yöntemi (Telefon/Email/WhatsApp/Yüz Yüze/Okul Sistemi)
+- Veli Müsait Olduğu Zamanlar
+- Notlar
+- Kaydeden
+
+##### D) Geçmiş (İletişim Geçmişi)
+Bileşen: ProfileUpdateTimeline
+Dosya: client/components/features/live-profile/ProfileUpdateTimeline.tsx
+
+İçerik:
+- Tüm Profil Güncelleme Geçmişi
+- Değişiklik Türü
+- Alan
+- Eski/Yeni Değer
+- Tarih & Saat
+- Kullanıcı
+
+##### E) AI Araçları
+Bileşen: AIToolsHub
+Dosya: client/components/features/student-profile/sections/AIToolsHub.tsx
+
+Alt Sekmeler (3 Adet):
+
+**1) Müdahale Önerileri**
+Bileşen: InterventionRecommendations
+- AI Destekli Müdahale Önerileri
+- Risk Analizi
+- Önerilen Stratejiler
+- Öncelik Seviyesi
+
+**2) Otomatik Raporlar**
+Bileşen: AutoReportGenerator
+- Rapor Türü Seçimi
+- Tarih Aralığı
+- PDF/Word Export
+- Rapor Şablonları
+
+**3) Veli İletişimi**
+Bileşen: ParentCommunication
+- AI Destekli Mesaj Önerileri
+- İletişim Geçmişi
+- Mesaj Şablonları
+
+Hızlı Eylemler:
+- AI ile Konuş (AI Assistant'a yönlendirme)
+- Risk Analizi Yap (AI analiz tetikleme)
+
+---
+
+## 3. VERİ AKIŞI VE API YAPISI
+
+### 3.1 Ana Veri Hookları:
+
+#### useStudentProfile(studentId)
+Dosya: client/hooks/features/student-profile/student-profile.hooks.ts
+- Öğrenci temel bilgilerini getirir
+- localStorage'dan önce okur, sonra API'den yeniler
+
+#### useStudentData(studentId, refresh)
+Dosya: client/hooks/features/student-profile/student-data.hooks.ts
+- Tüm öğrenci verilerini toplar:
+  * Notes (Görüşme Notları)
+  * Survey Results
+  * Attendance Records
+  * Academic Records
+  * Interventions
+  * Special Education
+  * Risk Factors
+  * Behavior Incidents
+  * Exam Results
+  * Coaching Recommendations
+  * Academic Goals
+  * Multiple Intelligence
+  * Learning Style
+  * Smart Goals
+  * Evaluations 360
+  * Achievements
+  * Self Assessments
+  * Parent Meetings
+  * Home Visits
+  * Family Participation
+
+### 3.2 API Endpoints:
+
+#### Profil Skorları:
+```
+GET /api/student-profile/${studentId}/scores
+```
+Dönen Data:
+- completeness: Profil tamamlanma yüzdesi
+  * overall: Genel (%)
+  * sections: Bölüm bazlı (%)
+  * eksikAlanlar: Eksik alan listesi
+
+#### Standartlaştırılmış Profil:
+```
+POST /api/standardized-profile/${studentId}/${endpoint}
+```
+Endpoints:
+- academic
+- health
+- social-emotional
+- talents-interests
+- motivation
+- goals-planning
+- risk-protective
+- behavior-incidents
+
+#### Holistik Profil:
+```
+POST /api/holistic-profile/${endpoint}
+```
+Endpoints:
+- strengths
+- interests
+- sel-competencies
+- social-relations
+- socioeconomic
+- future-vision
+
+#### Kariyer Rehberliği:
+```
+POST /api/career-guidance/analyze
+POST /api/career-guidance/roadmap
+GET /api/career-guidance/careers
+GET /api/career-guidance/competencies/${studentId}
+```
+
+---
+
+## 4. RENK PALETİ & UI TASARIMI
+
+### Sekme Renk Kodları:
+Dosya: client/config/tabs/student-profile-tabs.ts
+
+```javascript
+overview: {
+  gradient: "from-indigo-500 via-violet-500 to-purple-600",
+  bg: "bg-gradient-to-r from-indigo-50/80 to-purple-50/80"
+}
+
+identity-family: {
+  gradient: "from-blue-500 to-cyan-500",
+  bg: "bg-gradient-to-r from-blue-50/80 to-cyan-50/80"
+}
+
+academics: {
+  gradient: "from-emerald-500 to-teal-500",
+  bg: "bg-gradient-to-r from-emerald-50/80 to-teal-50/80"
+}
+
+wellbeing: {
+  gradient: "from-green-500 to-lime-500",
+  bg: "bg-gradient-to-r from-green-50/80 to-lime-50/80"
+}
+
+risk-support: {
+  gradient: "from-red-500 to-orange-500",
+  bg: "bg-gradient-to-r from-red-50/80 to-orange-50/80"
+}
+
+communication: {
+  gradient: "from-violet-500 to-fuchsia-500",
+  bg: "bg-gradient-to-r from-violet-50/80 to-fuchsia-50/80"
+}
+```
+
+---
+
+## 5. ÖZELLİKLER & YAPILANDIRMA
+
+### 5.1 AI Entegrasyonu:
+- Tüm metin alanlarında AI önerileri (EnhancedTextarea)
+- Sesli giriş desteği (Web Speech API)
+- Otomatik analiz ve öneriler
+- Risk skorlama ve tahminleme
+
+### 5.2 Gerçek Zamanlı Güncellemeler:
+- Profile güncelleme geçmişi
+- Değişiklik takibi
+- Otomatik senkronizasyon
+
+### 5.3 Responsive Tasarım:
+- Mobile-first yaklaşım
+- Grid sistemli sekmeler
+- Adaptif içerik gösterimi
+
+### 5.4 Veri Bütünlüğü:
+- Zorunlu alan validasyonu
+- Form state management (react-hook-form)
+- Zod schema validasyonu
+- Error handling
+
+### 5.5 Performans Optimizasyonu:
+- Lazy loading
+- Memoization
+- Progressive loading
+- Cache yönetimi
+
+---
+
+## 6. VERİ MODELLERİ VE TİPLER
+
+### Shared Types:
+Dosya: shared/types/
+
+- student.types.ts
+- standardized-profile.types.ts
+- holistic-profile.types.ts
+- career-guidance.types.ts
+- meeting-notes.types.ts
+
+### TaxonomyConstants:
+Dosya: shared/constants/student-profile-taxonomy.ts
+
+Kategorize seçenekler:
+- ACADEMIC_SUBJECTS
+- ACADEMIC_SKILLS
+- LEARNING_STYLES
+- SOCIAL_SKILLS
+- CREATIVE_TALENTS
+- PHYSICAL_TALENTS
+- INTEREST_AREAS
+- CHRONIC_DISEASES
+- ALLERGIES
+- MEDICATION_TYPES
+- BLOOD_TYPES
+- BEHAVIOR_CATEGORIES
+
+---
+
+## 7. TOPLAM BİLGİ NOKTALARI
+
+### Toplanan Veri Kategorileri: ~450+ Alan
+
+1. Kimlik Bilgileri: ~20 alan
+2. Sağlık Bilgileri: ~30 alan
+3. Akademik Bilgiler: ~50 alan
+4. Sosyal-Duygusal: ~40 alan
+5. Yetenekler & İlgiler: ~25 alan
+6. Risk Değerlendirme: ~30 alan
+7. Kariyer Rehberliği: ~40 alan
+8. İletişim Kayıtları: ~50 alan
+9. Davranış Takibi: ~25 alan
+10. Özel Eğitim: ~15 alan
+11. Gelişim Profili: ~60 alan
+12. Motivasyon: ~30 alan
+13. Hedefler: ~20 alan
+14. Aile Bilgileri: ~25 alan
+15. Çoklu Zeka: ~10 alan
+
+---
+
+## 8. ÖNEMLİ NOTLAR
+
+### Manuel Girişler YOK:
+- Risk skorları otomatik hesaplanır
+- Müdahale önerileri AI tarafından üretilir
+- Profil tamamlanma otomatik hesaplanır
+
+### Veri Senkronizasyonu:
+- Anketler ana sistemden otomatik çekilir
+- Sınav sonuçları exam-management'tan gelir
+- Görüşmeler counseling-sessions'dan senkronize edilir
+
+### Güvenlik:
+- Sosyoekonomik veriler şifreli
+- Sağlık bilgileri hassas veri
+- Erişim kontrolü yapılmalı
+
+---
+
+## 9. SİSTEM AKIŞ DİYAGRAMI
+
+```
+StudentProfile.tsx (Ana Sayfa)
+│
+├── StudentHeader (Öğrenci Başlık)
+│
+└── StudentProfileTabs (6 Ana Sekme)
+    │
+    ├── 1. OVERVIEW (Genel Bakış)
+    │   ├── ProfileCompletenessIndicator
+    │   ├── ModernDashboard
+    │   │   ├── UnifiedScoreDashboard
+    │   │   ├── ProgressiveAnalysisView
+    │   │   └── Önemli Bilgiler Kartları
+    │   └── PersonalizedLearningCard
+    │
+    ├── 2. IDENTITY-FAMILY (Kimlik & Aile)
+    │   └── UnifiedIdentitySection
+    │       ├── Temel Kimlik
+    │       ├── İletişim
+    │       ├── Aile Bilgileri
+    │       └── Eğitim Geçmişi
+    │
+    ├── 3. ACADEMICS (Akademik)
+    │   └── SmartAcademicDashboard
+    │       ├── PersonalizedLearningCard (Üst)
+    │       └── 5 Alt Sekme:
+    │           ├── A. Akademik Performans
+    │           ├── B. Sınavlar & Değerlendirme
+    │           ├── C. Çalışma Programı
+    │           ├── D. İlerleme & Başarılar
+    │           └── E. Anketler
+    │
+    ├── 4. WELLBEING (İyilik Hali & Gelişim)
+    │   ├── EnhancedHealthSection
+    │   ├── OzelEgitimSection
+    │   ├── SocialNetworkMap
+    │   ├── DevelopmentProfileSection
+    │   │   └── 5 Alt Sekme:
+    │   │       ├── A. Sosyal-Duygusal
+    │   │       ├── B. Çoklu Zeka
+    │   │       ├── C. 360 Derece Değerlendirme
+    │   │       ├── D. Yetenekler & İlgiler
+    │   │       └── E. Motivasyon
+    │   └── CareerFutureSection
+    │       └── 2 Alt Sekme:
+    │           ├── A. Kariyer Rehberliği (6 alt sekme)
+    │           └── B. Hedefler & Planlama
+    │
+    ├── 5. RISK-SUPPORT (Risk & Müdahale)
+    │   └── EnhancedRiskDashboard
+    │       ├── EnhancedRiskCard (AI Analiz)
+    │       └── UnifiedRiskSection
+    │           └── 3 Alt Sekme:
+    │               ├── A. Risk Değerlendirme
+    │               ├── B. Davranış Takibi
+    │               │   ├── DisciplineSection
+    │               │   └── DavranisTakibiSection
+    │               └── C. Koruyucu Faktörler
+    │
+    └── 6. COMMUNICATION (İletişim & Kayıtlar)
+        └── CommunicationCenter
+            ├── İstatistik Kartları (4 adet)
+            └── 5 Alt Sekme:
+                ├── A. Tüm Görüşmeler
+                ├── B. Ev Ziyaretleri
+                ├── C. Aile Katılımı
+                ├── D. Geçmiş (Timeline)
+                └── E. AI Araçları
+                    ├── Müdahale Önerileri
+                    ├── Otomatik Raporlar
+                    └── Veli İletişimi
+```
+
+---
+
+## 10. SONUÇ
+
+Öğrenci Profili sayfası:
+- **6 ana sekme**
+- **32 alt sekme** (tüm seviyelerde)
+- **~450+ veri noktası**
+- **100% AI entegrasyonu**
+- **Gerçek zamanlı senkronizasyon**
+- **Otomatik risk hesaplama**
+- **Holistik profil yaklaşımı**
+
+ile yapılandırılmış, eksiksiz ve kapsamlı bir rehberlik sistemidir.
