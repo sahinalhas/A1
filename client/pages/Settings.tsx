@@ -170,28 +170,29 @@ export default function SettingsPage() {
   <div className="w-full min-h-screen pb-6">
    {/* Modern Gradient Header */}
    <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.5 }}
-    className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-teal-500 to-blue-600 text-white mb-6"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-cyan-500 via-teal-500 to-blue-600 p-5 md:p-6 shadow-xl"
    >
-    <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]" />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-    
-    <div className="relative max-w-7xl mx-auto px-6 py-12">
+    <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 left-0 w-56 h-56 bg-cyan-500/20 rounded-full blur-3xl"></div>
+
+    <div className="relative z-10 max-w-full flex items-center justify-between">
      <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       className="flex-1"
      >
-      <div className="flex items-center gap-3 mb-3">
-       <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
-        <SettingsIcon className="h-7 w-7" />
-       </div>
-       <h1 className="text-4xl font-bold tracking-tight">Sistem Ayarları</h1>
-      </div>
-      <p className="text-white/90 text-base max-w-2xl">
+      <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
+       <Sparkles className="h-3 w-3 mr-1" />
+       Sistem Yapılandırma
+      </Badge>
+      <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+       Sistem Ayarları
+      </h1>
+      <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
        Uygulama genel tercihleri ve yapılandırma seçenekleri
       </p>
      </motion.div>
@@ -200,9 +201,8 @@ export default function SettingsPage() {
       className="hidden md:block opacity-30"
       animate={{ rotate: 360 }}
       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      style={{ position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)' }}
      >
-      <Sparkles className="h-20 w-20 text-white" />
+      <SettingsIcon className="h-20 w-20 text-white" />
      </motion.div>
     </div>
    </motion.div>
