@@ -12,6 +12,21 @@ Preferred communication style: Simple, everyday language.
 
 The frontend uses React 18 with TypeScript and Vite. It employs React Router v6 for lazy-loaded client-side routing, React Query for server state, React Context for global state, and React hooks for local state management. The UI is built with custom components based on Radix UI primitives, styled with Tailwind CSS, and animated with Framer Motion following Shadcn/ui patterns. Design decisions include Server-Sent Events (SSE) for progressive loading, performance optimizations like memoization and code splitting, multi-layer caching, and PWA capabilities for offline support. Coaching features include dashboards for academic goal tracking, multiple intelligence radar charts, learning style analysis, SMART goal creation, 360° evaluation visualization, achievement badges, daily self-assessment forms, and parent/home visit management.
 
+### Student Profile Organization
+
+The student profile uses a **data-type focused architecture** with 8 main tabs, following professional counseling software standards:
+
+1. **Genel Bakış (Overview)** - Dashboard with summary scores, profile completion status, and quick actions
+2. **Demografik Bilgiler (Demographics)** - Identity information, contact details, and family structure
+3. **Akademik Veriler (Academic)** - Grades, exams, attendance, study programs, and academic performance
+4. **Psikososyal Profil (Psychosocial)** - Social-emotional development (SEL), behavioral observations, and peer relationships
+5. **Gelişimsel Değerlendirmeler (Developmental)** - Multiple intelligences, learning styles, talents, and interests
+6. **Sağlık & Destek (Health & Support)** - Health status, special education, risk analysis, and intervention plans
+7. **Kariyer & Yaşam (Career & Life)** - Career goals, university planning, competencies, and future vision
+8. **İletişim Kayıtları (Communication Records)** - Meeting records, parent communication, and professional notes
+
+This structure ensures each data category has a single, well-defined location, preventing information duplication and improving user navigation efficiency.
+
 ## Backend Architecture
 
 The backend is built with Express 5.1.0 on Node.js 22, utilizing TypeScript. It uses SQLite with `better-sqlite3` for synchronous database operations. The architecture follows a feature-based modular pattern, organizing code by domain (e.g., coaching, students) with dedicated repositories, services, and routes. Key design decisions include a repository pattern for data access, a service layer for business logic, and centralized configuration. Security measures include CSRF protection, rate limiting, Zod for input validation, and cookie-based authentication with httpOnly cookies. Coaching services manage academic goals, assessments, AI recommendations, evaluations, achievements, and parent/family interactions.
