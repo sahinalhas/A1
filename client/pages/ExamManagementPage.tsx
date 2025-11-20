@@ -1,9 +1,22 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/organisms/Tabs';
-import { ClipboardList, User } from 'lucide-react';
+import { 
+  ClipboardList, 
+  User, 
+  Plus,
+  BarChart3,
+  TrendingUp,
+  BookOpen,
+  GraduationCap,
+  FileText,
+  Sparkles
+} from 'lucide-react';
 import { PageHeader } from '@/components/molecules/PageHeader';
 import { Alert, AlertDescription } from '@/components/atoms/Alert';
 import { Skeleton } from '@/components/atoms/Skeleton';
+import { Badge } from '@/components/atoms/Badge';
+import { Button } from '@/components/atoms/Button';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -28,6 +41,8 @@ import { DashboardOverviewTab } from '@/components/features/exam-management/Dash
 import { UnifiedAnalysisTab } from '@/components/features/exam-management/UnifiedAnalysisTab';
 import { AdvancedAnalyticsTab } from '@/components/features/exam-management/AdvancedAnalyticsTab';
 import { StudentSelfServiceDashboard } from '@/components/features/exam-management/StudentSelfServiceDashboard';
+import ExamStatsCards from '@/components/features/exam-management/ExamStatsCards';
+import { useDashboardOverview } from '@/hooks/queries/exams.query-hooks';
 import type {
  ExamSession,
  SubjectResults,
@@ -65,6 +80,7 @@ export default function ExamManagementPage() {
  const { data: allSessions = [], refetch: refetchSessions } = useExamSessions();
  const { data: students = [] } = useStudents();
  const { data: schoolExams = [] } = useSchoolExamsByStudent(undefined);
+ const { data: overview, isLoading: overviewLoading } = useDashboardOverview();
 
  const createSession = useCreateExamSession();
  const updateSession = useUpdateExamSession();
@@ -226,32 +242,117 @@ export default function ExamManagementPage() {
  }
 
  return (
- <div className="w-full max-w-7xl mx-auto py-6 space-y-6">
- <PageHeader
- title="Sınavlar"
- subtitle="Deneme sınavları, okul notları ve değerlendirme sonuçlarını yönetin"
- icon={ClipboardList}
+ <div className="w-full min-h-screen pb-6">
+ {/* Modern Gradient Header */}
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ duration: 0.5 }}
+ className="relative overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-violet-600 text-white mb-6"
+ >
+ <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]" />
+ <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+ 
+ <div className="relative max-w-7xl mx-auto px-6 py-12">
+ <div className="flex items-center justify-between flex-wrap gap-6">
+ <motion.div
+ initial={{ opacity: 0, x: -20 }}
+ animate={{ opacity: 1, x: 0 }}
+ transition={{ duration: 0.5, delay: 0.1 }}
+ className="flex-1"
+ >
+ <div className="flex items-center gap-3 mb-3">
+ <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
+ <ClipboardList className="h-7 w-7" />
+ </div>
+ <h1 className="text-4xl font-bold tracking-tight">Ölçme ve Değerlendirme</h1>
+ </div>
+ <p className="text-white/90 text-base max-w-2xl">
+ Deneme sınavları, okul notları ve değerlendirme sonuçlarını yönetin
+ </p>
+ </motion.div>
+
+ <motion.div
+ initial={{ opacity: 0, x: 20 }}
+ animate={{ opacity: 1, x: 0 }}
+ transition={{ duration: 0.5, delay: 0.2 }}
+ >
+ <Button 
+ size="lg" 
+ onClick={() => setActiveTab('practice-exams')}
+ className="gap-2 bg-white text-indigo-600 hover:bg-white/90 shadow-xl hover:shadow-2xl transition-all duration-300"
+ >
+ <Plus className="h-5 w-5" />
+ Yeni Deneme Ekle
+ </Button>
+ </motion.div>
+ </div>
+
+ <motion.div
+ className="hidden md:block opacity-30"
+ animate={{ rotate: 360 }}
+ transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+ style={{ position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)' }}
+ >
+ <GraduationCap className="h-20 w-20 text-white" />
+ </motion.div>
+ </div>
+ </motion.div>
+
+ <div className="space-y-6 max-w-7xl mx-auto px-6">
+ {/* Stats Cards */}
+ <ExamStatsCards
+ stats={overview ? {
+ totalSessions: overview.summary.total_sessions,
+ totalStudents: overview.summary.total_students,
+ avgParticipationRate: overview.summary.avg_participation_rate,
+ avgOverallSuccess: overview.summary.avg_overall_success,
+ sessionsThisMonth: overview.summary.sessions_this_month,
+ sessionsLastMonth: overview.summary.sessions_last_month,
+ trend: overview.summary.trend,
+ } : {
+ totalSessions: 0,
+ totalStudents: 0,
+ avgParticipationRate: 0,
+ avgOverallSuccess: 0,
+ sessionsThisMonth: 0,
+ sessionsLastMonth: 0,
+ trend: 'stable' as const,
+ }}
+ isLoading={overviewLoading}
  />
 
+ {/* Modern Tabs */}
+ <motion.div
+ initial={{ opacity: 0, y: -10 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.3 }}
+ >
  <Tabs value={activeTab} onValueChange={setActiveTab}>
- <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
- <TabsTrigger value="overview">
- Genel Bakış
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsTrigger value="overview" className="gap-2">
+ <BarChart3 className="h-4 w-4" />
+ <span className="hidden sm:inline">Genel Bakış</span>
  </TabsTrigger>
- <TabsTrigger value="practice-exams">
- Denemeler
+ <TabsTrigger value="practice-exams" className="gap-2">
+ <FileText className="h-4 w-4" />
+ <span className="hidden sm:inline">Denemeler</span>
  </TabsTrigger>
- <TabsTrigger value="school-exams">
- Okul Sınavları
+ <TabsTrigger value="school-exams" className="gap-2">
+ <BookOpen className="h-4 w-4" />
+ <span className="hidden sm:inline">Okul Sınavları</span>
  </TabsTrigger>
- <TabsTrigger value="analysis">
- Analizler
+ <TabsTrigger value="analysis" className="gap-2">
+ <TrendingUp className="h-4 w-4" />
+ <span className="hidden sm:inline">Analizler</span>
  </TabsTrigger>
- <TabsTrigger value="advanced">
- Gelişmiş Analitik
+ <TabsTrigger value="advanced" className="gap-2">
+ <BarChart3 className="h-4 w-4" />
+ <span className="hidden sm:inline">Gelişmiş Analitik</span>
  </TabsTrigger>
- <TabsTrigger value="student-dashboard">
- Öğrenci Panosu
+ <TabsTrigger value="student-dashboard" className="gap-2">
+ <User className="h-4 w-4" />
+ <span className="hidden sm:inline">Öğrenci Panosu</span>
  </TabsTrigger>
  </TabsList>
 
@@ -336,6 +437,8 @@ export default function ExamManagementPage() {
  )}
  </TabsContent>
  </Tabs>
+ </motion.div>
+ </div>
 
  <ExamSessionDialog
  open={sessionDialogOpen}
