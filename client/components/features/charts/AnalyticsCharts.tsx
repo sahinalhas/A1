@@ -72,30 +72,37 @@ export function SuccessMetricCard({
  const percentage = total ? Math.round((value / total) * 100) : value;
  
  return (
- <Card>
- <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
- <CardTitle className="text-sm font-medium">{title}</CardTitle>
- {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
+ <Card className="relative overflow-hidden hover:shadow-lg transition-shadow duration-300">
+ <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+ <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+ <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+ {Icon && (
+ <div className="p-2 rounded-lg bg-primary/10">
+ <Icon className="h-4 w-4 text-primary" />
+ </div>
+ )}
  </CardHeader>
- <CardContent>
+ <CardContent className="relative z-10">
  <div className="text-2xl font-bold">
  {total ? `${value}/${total}` : showAsPercentage ? `%${percentage}` : value}
  </div>
  {description && (
- <p className="text-xs text-muted-foreground">{description}</p>
+ <p className="text-xs text-muted-foreground mt-1">{description}</p>
  )}
  {trend && (
  <div className={cn(
-"flex items-center text-xs mt-1",
+"flex items-center text-xs mt-2 gap-1",
  trend ==="up" ?"text-green-600" : 
  trend ==="down" ?"text-red-600" :"text-muted-foreground"
  )}>
  {trend ==="up" ? (
- <TrendingUp className="h-3 w-3 mr-1" />
+ <TrendingUp className="h-3 w-3" />
  ) : trend ==="down" ? (
- <TrendingDown className="h-3 w-3 mr-1" />
+ <TrendingDown className="h-3 w-3" />
  ) : null}
+ <span className="font-medium">
  {trend ==="up" ?"Yükseliş" : trend ==="down" ?"Düşüş" :"Sabit"}
+ </span>
  </div>
  )}
  </CardContent>
@@ -105,14 +112,17 @@ export function SuccessMetricCard({
 
 export const RiskDistributionChart = React.memo(({ data }: { data: ChartDataPoint[] }) => {
  return (
- <Card>
- <CardHeader>
+ <Card className="relative overflow-hidden hover:shadow-lg transition-shadow duration-300">
+ <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent opacity-50" />
+ <CardHeader className="relative z-10">
  <CardTitle className="flex items-center gap-2">
- <AlertTriangle className="h-5 w-5" />
+ <div className="p-2 rounded-lg bg-orange-100">
+ <AlertTriangle className="h-5 w-5 text-orange-600" />
+ </div>
  Risk Dağılımı
  </CardTitle>
  </CardHeader>
- <CardContent>
+ <CardContent className="relative z-10">
  <ResponsiveContainer width="100%" height={200}>
  <PieChart>
  <Pie
@@ -131,6 +141,7 @@ export const RiskDistributionChart = React.memo(({ data }: { data: ChartDataPoin
  </Pie>
  <Tooltip 
  formatter={(value: any) => [`${value} öğrenci`, 'Sayı']}
+ contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: '1px solid #e5e7eb' }}
  />
  <Legend />
  </PieChart>
@@ -160,25 +171,32 @@ export const PerformanceTrendChart = React.memo(({
  , [optimizedData]);
 
  return (
- <Card>
- <CardHeader>
- <CardTitle>{title}</CardTitle>
+ <Card className="relative overflow-hidden hover:shadow-lg transition-shadow duration-300">
+ <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50" />
+ <CardHeader className="relative z-10">
+ <CardTitle className="flex items-center gap-2">
+ <div className="p-2 rounded-lg bg-blue-100">
+ <TrendingUp className="h-5 w-5 text-blue-600" />
+ </div>
+ {title}
+ </CardTitle>
  </CardHeader>
- <CardContent>
+ <CardContent className="relative z-10">
  <ResponsiveContainer width="100%" height={300}>
  <LineChart data={optimizedData}>
- <CartesianGrid strokeDasharray="3 3" />
- <XAxis dataKey="date" />
- <YAxis />
+ <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+ <XAxis dataKey="date" stroke="#6b7280" style={{ fontSize: '12px' }} />
+ <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
  <Tooltip 
  formatter={(value: any) => [value.toFixed(2), 'Değer']}
  labelFormatter={(label) => `Tarih: ${label}`}
+ contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: '1px solid #e5e7eb' }}
  />
  <Line 
  type="monotone" 
  dataKey={dataKey} 
  stroke={color} 
- strokeWidth={2}
+ strokeWidth={3}
  dot={{ fill: color, strokeWidth: 2, r: 4 }}
  isAnimationActive={false}
  />
@@ -188,6 +206,7 @@ export const PerformanceTrendChart = React.memo(({
  dataKey="target" 
  stroke={CHART_COLORS.muted}
  strokeDasharray="5 5"
+ strokeWidth={2}
  dot={false}
  isAnimationActive={false}
  />
@@ -209,25 +228,28 @@ export const ClassComparisonChart = React.memo(({ data }: { data: ComparisonData
  , [optimizedData]);
 
  return (
- <Card>
- <CardHeader>
+ <Card className="relative overflow-hidden hover:shadow-lg transition-shadow duration-300">
+ <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-50" />
+ <CardHeader className="relative z-10">
  <CardTitle className="flex items-center gap-2">
- <Users className="h-5 w-5" />
+ <div className="p-2 rounded-lg bg-green-100">
+ <Users className="h-5 w-5 text-green-600" />
+ </div>
  Sınıf Karşılaştırması
  </CardTitle>
  </CardHeader>
- <CardContent>
+ <CardContent className="relative z-10">
  <ResponsiveContainer width="100%" height={300}>
  <BarChart data={optimizedData}>
- <CartesianGrid strokeDasharray="3 3" />
- <XAxis dataKey="category" />
- <YAxis />
- <Tooltip />
+ <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+ <XAxis dataKey="category" stroke="#6b7280" style={{ fontSize: '12px' }} />
+ <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+ <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: '1px solid #e5e7eb' }} />
  <Legend />
- <Bar dataKey="current" fill={CHART_COLORS.primary} name="Mevcut Dönem" isAnimationActive={false} />
- <Bar dataKey="previous" fill={CHART_COLORS.muted} name="Önceki Dönem" isAnimationActive={false} />
+ <Bar dataKey="current" fill={CHART_COLORS.primary} name="Mevcut Dönem" radius={[8, 8, 0, 0]} isAnimationActive={false} />
+ <Bar dataKey="previous" fill={CHART_COLORS.muted} name="Önceki Dönem" radius={[8, 8, 0, 0]} isAnimationActive={false} />
  {hasTarget && (
- <Bar dataKey="target" fill={CHART_COLORS.success} name="Hedef" isAnimationActive={false} />
+ <Bar dataKey="target" fill={CHART_COLORS.success} name="Hedef" radius={[8, 8, 0, 0]} isAnimationActive={false} />
  )}
  </BarChart>
  </ResponsiveContainer>

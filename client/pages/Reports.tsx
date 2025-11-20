@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/organisms
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
-import { PageHeader } from "@/components/molecules/PageHeader";
+import { StatCard } from "@/components/molecules/StatCard";
+import { StatsGrid } from "@/components/molecules/StatsGrid";
 import { 
  Select, 
  SelectContent, 
@@ -58,14 +59,15 @@ import {
  Users,
  AlertTriangle,
  Award,
- Calendar,
  Download,
  Filter,
  Settings,
  RefreshCw,
- FileText,
  Mail,
  Brain,
+ Sparkles,
+ PieChart,
+ LineChart,
 } from "lucide-react";
 
 // =================== OVERVIEW DASHBOARD ===================
@@ -154,70 +156,89 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  return (
  <div className="space-y-6">
  {/* Ana İstatistikler */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
- <SuccessMetricCard
+ <StatsGrid columns={4}>
+ <StatCard
  title="Toplam Öğrenci"
  value={overallStats.totalStudents}
+ subtitle="Sisteme kayıtlı öğrenci sayısı"
  icon={Users}
- description="Sisteme kayıtlı öğrenci sayısı"
- showAsPercentage={false}
+ gradient="bg-gradient-to-br from-blue-500 to-blue-600"
+ delay={0}
  />
  
- <SuccessMetricCard
+ <StatCard
  title="Ortalama Başarı"
- value={Math.round(overallStats.averageSuccessRate)}
+ value={`%${Math.round(overallStats.averageSuccessRate)}`}
+ subtitle="Genel başarı tahmini ortalaması"
  icon={Award}
- description="Genel başarı tahmini ortalaması"
- trend="up"
+ gradient="bg-gradient-to-br from-green-500 to-green-600"
+ trend={{ value: "Yükseliş trendi", isPositive: true }}
+ delay={0.1}
  />
  
- <SuccessMetricCard
+ <StatCard
  title="Yüksek Başarı"
  value={overallStats.highSuccessCount}
- total={overallStats.totalStudents}
+ subtitle={`${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}% başarılı öğrenci`}
  icon={TrendingUp}
- description="Yüksek başarı gösteren öğrenci"
- trend="up"
+ gradient="bg-gradient-to-br from-emerald-500 to-emerald-600"
+ trend={{ value: `${overallStats.highSuccessCount} öğrenci`, isPositive: true }}
+ delay={0.2}
  />
  
- <SuccessMetricCard
+ <StatCard
  title="Risk Altında"
  value={overallStats.atRiskCount}
+ subtitle="Yakın takip gerektiren öğrenci"
  icon={AlertTriangle}
- description="Yakın takip gerektiren öğrenci"
- trend="down"
+ gradient="bg-gradient-to-br from-orange-500 to-orange-600"
+ delay={0.3}
  />
- </div>
+ </StatsGrid>
 
  {/* Uyarı Özeti */}
  {overallStats.activeWarnings > 0 && (
- <Card className="border-orange-200 bg-orange-50">
+ <motion.div
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ delay: 0.4 }}
+ >
+ <Card className="relative overflow-hidden border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50">
+ <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
  <CardHeader>
- <CardTitle className="flex items-center gap-2 text-orange-800">
- <AlertTriangle className="h-5 w-5" />
+ <CardTitle className="flex items-center gap-2 text-orange-800 relative z-10">
+ <div className="p-2 rounded-lg bg-orange-100">
+ <AlertTriangle className="h-5 w-5 text-orange-600" />
+ </div>
  Aktif Uyarılar
  </CardTitle>
  </CardHeader>
- <CardContent>
+ <CardContent className="relative z-10">
  <div className="flex items-center justify-between">
  <div>
- <div className="text-2xl font-bold text-orange-800">
+ <div className="text-3xl font-bold text-orange-800">
  {overallStats.activeWarnings}
  </div>
- <div className="text-sm text-orange-600">
+ <div className="text-sm text-orange-600 mt-1">
  {overallStats.criticalWarnings > 0 && (
- <span className="font-medium">
+ <Badge className="bg-red-100 text-red-700 border-red-200">
  {overallStats.criticalWarnings} kritik uyarı
- </span>
+ </Badge>
  )}
  </div>
  </div>
- <Button variant="outline" size="sm" onClick={() => setActiveTab('warnings')}>
+ <Button 
+ variant="outline" 
+ size="sm" 
+ onClick={() => setActiveTab('warnings')}
+ className="bg-white hover:bg-orange-50 border-orange-200"
+ >
  Detayları Görüntüle
  </Button>
  </div>
  </CardContent>
  </Card>
+ </motion.div>
  )}
 
  {/* Grafikler */}
@@ -518,72 +539,105 @@ export default function Reports() {
  }
 
  return (
+ <div className="w-full min-h-screen">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.5 }}
- className="w-full max-w-7xl mx-auto py-6 space-y-6"
+ className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-700 p-5 md:p-6 shadow-xl"
  >
- <PageHeader
- icon={BarChart3}
- title="Analiz & Raporlama"
- subtitle="Öğrenci başarı analizleri, karşılaştırmalı raporlar ve erken uyarı sistemi"
- actions={
- <div className="flex gap-2">
+ <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+ <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+ <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-500/20 rounded-full blur-3xl"></div>
+
+ <div className="relative z-10 max-w-5xl flex items-center justify-between">
+ <div className="flex-1">
+ <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
+ <Sparkles className="h-3 w-3 mr-1" />
+ Gelişmiş Analiz Sistemi
+ </Badge>
+ <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+ Analiz & Raporlama
+ </h1>
+ <p className="text-sm md:text-base text-white/90 mb-4 max-w-2xl leading-relaxed">
+ Öğrenci başarı analizleri, karşılaştırmalı raporlar ve erken uyarı sistemi
+ </p>
+ <div className="flex gap-3 flex-wrap">
  <Button 
- variant="outline" 
- size="sm"
  onClick={handleRefresh}
- className="gap-2"
+ size="default"
+ variant="outline"
+ className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
  >
- <RefreshCw className="h-4 w-4" />
+ <RefreshCw className="mr-2 h-4 w-4" />
  Yenile
  </Button>
  <Button 
- variant="outline" 
- size="sm"
- className="gap-2"
  onClick={() => setFiltersOpen(true)}
+ size="default"
+ variant="outline"
+ className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
  >
- <Filter className="h-4 w-4" />
+ <Filter className="mr-2 h-4 w-4" />
  Filtreler
  </Button>
  <Button 
- size="sm"
- className="gap-2"
  onClick={handleHeaderExport}
+ size="default"
+ className="bg-white text-purple-600 hover:bg-white/90 shadow-lg"
  disabled={!exportPermissions.canExportFiltered && !exportPermissions.canExportAll}
  >
- <Download className="h-4 w-4" />
+ <Download className="mr-2 h-4 w-4" />
  Rapor İndir
  </Button>
  </div>
- }
- />
+ </div>
 
+ <motion.div
+ className="hidden md:block opacity-30"
+ animate={{ rotate: 360 }}
+ transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+ >
+ <BarChart3 className="h-20 w-20 text-white" />
+ </motion.div>
+ </div>
+ </motion.div>
+
+ <div className="space-y-6 max-w-7xl mx-auto">
  {/* Ana İçerik */}
+ <motion.div
+ initial={{ opacity: 0, y: -10 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.3 }}
+ >
  <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
- <TabsList className="grid w-full grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
- <TabsTrigger value="overview">
- Genel Bakış
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-4 lg:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsTrigger value="overview" className="gap-2">
+ <PieChart className="h-4 w-4" />
+ <span className="hidden sm:inline">Genel Bakış</span>
  </TabsTrigger>
- <TabsTrigger value="predictive">
- Prediktif Analiz
+ <TabsTrigger value="predictive" className="gap-2">
+ <TrendingUp className="h-4 w-4" />
+ <span className="hidden sm:inline">Prediktif</span>
  </TabsTrigger>
- <TabsTrigger value="comparative">
- Karşılaştırmalı
+ <TabsTrigger value="comparative" className="gap-2">
+ <BarChart3 className="h-4 w-4" />
+ <span className="hidden sm:inline">Karşılaştırmalı</span>
  </TabsTrigger>
- <TabsTrigger value="progress">
- İlerleme
+ <TabsTrigger value="progress" className="gap-2">
+ <LineChart className="h-4 w-4" />
+ <span className="hidden sm:inline">İlerleme</span>
  </TabsTrigger>
- <TabsTrigger value="warnings">
- Erken Uyarı
+ <TabsTrigger value="warnings" className="gap-2">
+ <AlertTriangle className="h-4 w-4" />
+ <span className="hidden sm:inline">Erken Uyarı</span>
  </TabsTrigger>
- <TabsTrigger value="ai-analysis">
- AI Analiz
+ <TabsTrigger value="ai-analysis" className="gap-2">
+ <Brain className="h-4 w-4" />
+ <span className="hidden sm:inline">AI Analiz</span>
  </TabsTrigger>
- <TabsTrigger value="settings">
- Ayarlar
+ <TabsTrigger value="settings" className="gap-2">
+ <Settings className="h-4 w-4" />
+ <span className="hidden sm:inline">Ayarlar</span>
  </TabsTrigger>
  </TabsList>
 
@@ -665,6 +719,7 @@ export default function Reports() {
  </div>
  )}
  </Tabs>
+ </motion.div>
 
  {/* Filtreler Dialog */}
  <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
@@ -733,6 +788,7 @@ export default function Reports() {
  </div>
  </DialogContent>
  </Dialog>
- </motion.div>
+ </div>
+ </div>
  );
 }
