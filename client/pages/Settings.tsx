@@ -226,17 +226,17 @@ export default function SettingsPage() {
       }}
       className="space-y-4"
      >
-      <TabsList className="grid w-full grid-cols-3 md:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm h-auto">
+      <TabsList className="grid w-full grid-cols-3 md:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm h-auto p-0.5">
        {SETTINGS_TABS.map((tabConfig) => {
         const IconComponent = tabConfig.icon;
         return (
          <TabsTrigger
           key={tabConfig.value}
           value={tabConfig.value}
-          className="gap-1.5 px-2 py-2 text-xs md:text-sm whitespace-nowrap"
+          className="gap-1 px-1.5 py-1.5 text-[11px] whitespace-nowrap"
           title={tabConfig.description}
          >
-          {IconComponent && <IconComponent className="h-3.5 w-3.5 flex-shrink-0" />}
+          {IconComponent && <IconComponent className="h-3 w-3 flex-shrink-0" />}
           <span className="hidden sm:inline truncate">{tabConfig.label}</span>
          </TabsTrigger>
         );

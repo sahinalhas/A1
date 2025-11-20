@@ -13,19 +13,19 @@ export const SETTINGS_TABS: TabConfig[] = [
  },
  {
  value:"bildirim",
- label:"Bildirimler",
+ label:"Bildirim",
  icon: Bell,
  description:"Bildirim tercihleri ve ayarları"
  },
  {
  value:"ai",
- label:"AI Yapılandırma",
+ label:"AI",
  icon: Sparkles,
  description:"Yapay zeka entegrasyonu ve ayarları"
  },
  {
  value:"dersler",
- label:"Dersler & Konular",
+ label:"Dersler",
  icon: BookOpen,
  description:"Ders ve konu yönetimi"
  },
@@ -37,13 +37,13 @@ export const SETTINGS_TABS: TabConfig[] = [
  },
  {
  value:"yedekleme",
- label:"Yedekleme",
+ label:"Yedek",
  icon: Archive,
  description:"Veri yedekleme ve geri yükleme"
  },
  {
  value:"rehberlik-standartlari",
- label:"Rehberlik Standartları",
+ label:"Standartlar",
  icon: Target,
  description:"Rehberlik standartları ve hedefler"
  }
