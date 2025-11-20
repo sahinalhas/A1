@@ -26,49 +26,49 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
  value:"overview",
  label:"Genel Bakış",
  icon: LayoutDashboard,
- description:"360° durum özeti, trendler, hızlı aksiyonlar ve önemli bilgiler",
+ description:"Özet skorlar, profil tamamlama durumu ve hızlı aksiyonlar (Detaylar diğer sekmelerde)",
  variant:"pills"
  },
  {
  value:"identity-family",
  label:"Kimlik & Aile",
  icon: Users,
- description:"Öğrenci ve aile bilgileri, sağlık, özel eğitim, sosyoekonomik durum",
+ description:"Temel kimlik, iletişim, adres, veli bilgileri, sağlık profili ve özel eğitim",
  variant:"pills"
  },
  {
  value:"academics",
- label:"Akademik",
+ label:"Akademik Performans",
  icon: GraduationCap,
- description:"Notlar, sınavlar, devam, öğrenme stratejisi ve ilerleme",
+ description:"Akademik skor, notlar, sınavlar, çalışma programı, ilerleme ve AI öğrenme stratejileri",
  variant:"pills"
  },
  {
  value:"wellbeing",
- label:"Gelişim & Potansiyel",
+ label:"Gelişim & Sosyal",
  icon: Heart,
- description:"Çoklu zeka, öğrenme stilleri, sosyal-duygusal beceriler ve sosyal ağ",
+ description:"Sosyal-duygusal profil, çoklu zeka, öğrenme stili, yetenek & ilgi alanları",
  variant:"pills"
  },
  {
  value:"risk-support",
- label:"Risk & Müdahale",
+ label:"Risk & Destek",
  icon: ShieldAlert,
- description:"Risk faktörleri, davranış takibi ve müdahale planları",
+ description:"AI risk analizi, davranış kayıtları, koruyucu faktörler ve müdahale planları",
  variant:"pills"
  },
  {
  value:"career-goals",
- label:"Hedefler & Kariyer",
+ label:"Kariyer & Hedefler",
  icon: Target,
- description:"Kariyer planlaması, meslek seçimi, yetkinlikler ve gelecek hedefleri",
+ description:"Meslek hedefleri, üniversite planlaması, yetkinlikler ve gelecek vizyonu",
  variant:"pills"
  },
  {
  value:"communication",
- label:"İletişim",
+ label:"Görüşmeler & İletişim",
  icon: MessageCircle,
- description:"Görüşmeler, ev ziyaretleri, aile katılımı ve AI araçları",
+ description:"Tüm görüşme kayıtları (veli, bireysel, grup), ev ziyaretleri ve iletişim geçmişi",
  variant:"pills"
  },
 ];
