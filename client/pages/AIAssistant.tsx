@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/organisms/Card';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
@@ -11,7 +12,7 @@ import { Separator } from '@/components/atoms/Separator';
 import { 
  Loader2, Send, Bot, User, Settings, Sparkles, Copy, Check, 
  RefreshCw, Edit2, Trash2, Pin, PinOff, Download, Search, 
- X, StopCircle, FileText, FileJson, FileCode, Clock, Hash
+ X, StopCircle, FileText, FileJson, FileCode, Clock, Hash, Brain
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -411,9 +412,44 @@ export default function AIAssistant() {
  };
 
  return (
- <div className="w-full max-w-7xl mx-auto py-6 space-y-6">
+ <div className="w-full min-h-screen pb-6">
+ {/* Modern Gradient Header */}
+ <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-purple-600 via-pink-600 to-rose-700 p-5 md:p-6 shadow-xl"
+ >
+  <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+  <div className="absolute bottom-0 left-0 w-56 h-56 bg-pink-500/20 rounded-full blur-3xl"></div>
+
+  <div className="relative z-10 max-w-full flex items-center justify-between">
+   <div className="flex-1">
+    <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
+     <Sparkles className="h-3 w-3 mr-1" />
+     AI Destekli Rehberlik
+    </Badge>
+    <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+     AI Rehber Asistan
+    </h1>
+    <p className="text-sm md:text-base text-white/90 mb-0 max-w-xl leading-relaxed">
+     Yapay zeka destekli rehberlik asistanı ile öğrencilerinizi daha iyi anlayın
+    </p>
+   </div>
+
+   <motion.div
+    className="hidden md:block opacity-30"
+    animate={{ rotate: 360 }}
+    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+   >
+    <Brain className="h-20 w-20 text-white" />
+   </motion.div>
+  </div>
+ </motion.div>
+
+ <div className="space-y-6 max-w-7xl mx-auto px-6">
  <Tabs defaultValue="chat" className="space-y-6">
- <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
  <TabsTrigger value="chat">
  Sohbet
  </TabsTrigger>
@@ -429,65 +465,7 @@ export default function AIAssistant() {
  </TabsList>
 
  <div className="mb-6">
- <div className="flex items-center justify-between gap-3 mb-2">
- <div className="flex items-center gap-3">
- <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl">
- <Bot className="h-6 w-6 text-primary" />
- </div>
- <div>
- <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
- AI Rehber Asistan
- </h1>
- <p className="text-muted-foreground">
- Yapay zeka destekli rehberlik asistanı ile öğrencilerinizi daha iyi anlayın
- </p>
- </div>
- </div>
-
- <div className="flex items-center gap-2">
- {messages.length > 0 && (
- <>
- <Button
- variant="outline"
- size="sm"
- onClick={() => setShowSearch(!showSearch)}
- className="gap-2"
- >
- <Search className="h-4 w-4" />
- Ara
- </Button>
- <Button
- variant="outline"
- size="sm"
- onClick={() => {
- const menu = document.getElementById('export-menu');
- menu?.classList.toggle('hidden');
- }}
- className="gap-2"
- >
- <Download className="h-4 w-4" />
- Dışa Aktar
- </Button>
- <div id="export-menu" className="hidden absolute right-6 top-24 z-50 bg-popover border rounded-lg p-2 space-y-1">
- <Button variant="ghost" size="sm" onClick={() => handleExport('json')} className="w-full justify-start gap-2">
- <FileJson className="h-4 w-4" />
- JSON
- </Button>
- <Button variant="ghost" size="sm" onClick={() => handleExport('txt')} className="w-full justify-start gap-2">
- <FileText className="h-4 w-4" />
- TXT
- </Button>
- <Button variant="ghost" size="sm" onClick={() => handleExport('md')} className="w-full justify-start gap-2">
- <FileCode className="h-4 w-4" />
- Markdown
- </Button>
- </div>
- </>
- )}
- </div>
- </div>
-
- <div className="flex items-center gap-2 mt-4 flex-wrap">
+ <div className="flex items-center gap-2 flex-wrap">
  <Badge variant="outline" className="gap-1 bg-background/50">
  <Sparkles className="h-3 w-3" />
  {modelsData?.provider === 'ollama' ? 'Ollama' : 'OpenAI'}
@@ -902,6 +880,7 @@ export default function AIAssistant() {
  <ResourceRecommendations />
  </TabsContent>
  </Tabs>
+ </div>
  </div>
  );
 }

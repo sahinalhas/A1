@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/organisms/Card";
 import { Button } from "@/components/atoms/Button";
+import { Badge } from "@/components/atoms/Badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
 import { 
   Plus, 
