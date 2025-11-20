@@ -245,54 +245,41 @@ export default function ExamManagementPage() {
  <div className="w-full min-h-screen pb-6">
  {/* Modern Gradient Header */}
  <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- transition={{ duration: 0.5 }}
- className="relative overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-violet-600 text-white mb-6"
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-indigo-500 via-purple-500 to-violet-600 p-5 md:p-6 shadow-xl"
  >
- <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]" />
- <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+ <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+ <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+ <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-400/20 rounded-full blur-3xl"></div>
  
- <div className="relative max-w-7xl mx-auto px-6 py-12">
- <div className="flex items-center justify-between flex-wrap gap-6">
- <motion.div
- initial={{ opacity: 0, x: -20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ duration: 0.5, delay: 0.1 }}
- className="flex-1"
- >
- <div className="flex items-center gap-3 mb-3">
- <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
- <ClipboardList className="h-7 w-7" />
- </div>
- <h1 className="text-4xl font-bold tracking-tight">Ölçme ve Değerlendirme</h1>
- </div>
- <p className="text-white/90 text-base max-w-2xl">
+ <div className="relative z-10 max-w-full flex items-center justify-between">
+ <div className="flex-1">
+ <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
+ <ClipboardList className="h-3 w-3 mr-1" />
+ Sınav Yönetimi
+ </Badge>
+ <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+ Ölçme ve Değerlendirme
+ </h1>
+ <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
  Deneme sınavları, okul notları ve değerlendirme sonuçlarını yönetin
  </p>
- </motion.div>
-
- <motion.div
- initial={{ opacity: 0, x: 20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ duration: 0.5, delay: 0.2 }}
- >
+ 
  <Button 
- size="lg" 
+ size="sm" 
  onClick={() => setActiveTab('practice-exams')}
- className="gap-2 bg-white text-indigo-600 hover:bg-white/90 shadow-xl hover:shadow-2xl transition-all duration-300"
+ className="gap-2 bg-white text-indigo-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300"
  >
- <Plus className="h-5 w-5" />
+ <Plus className="h-4 w-4" />
  Yeni Deneme Ekle
  </Button>
- </motion.div>
  </div>
 
  <motion.div
  className="hidden md:block opacity-30"
  animate={{ rotate: 360 }}
  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
- style={{ position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)' }}
  >
  <GraduationCap className="h-20 w-20 text-white" />
  </motion.div>
