@@ -32,7 +32,7 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
  value:"identity-family",
  label:"Kimlik & Aile",
  icon: Users,
- description:"Öğrenci ve aile bilgileri, iletişim, sosyoekonomik durum",
+ description:"Öğrenci ve aile bilgileri, sağlık, özel eğitim, sosyoekonomik durum",
  variant:"pills"
  },
  {
@@ -44,9 +44,9 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
  },
  {
  value:"wellbeing",
- label:"İyilik Hali & Gelişim",
+ label:"Gelişim & Potansiyel",
  icon: Heart,
- description:"Sağlık, sosyal-duygusal, kişilik, motivasyon ve kariyer",
+ description:"Çoklu zeka, öğrenme stilleri, sosyal-duygusal beceriler ve sosyal ağ",
  variant:"pills"
  },
  {
@@ -58,9 +58,9 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
  },
  {
  value:"communication",
- label:"İletişim & Kayıtlar",
+ label:"İletişim & Hedefler",
  icon: MessageCircle,
- description:"Görüşmeler, notlar, ev ziyaretleri, belgeler ve AI araçları",
+ description:"Görüşmeler, ev ziyaretleri, aile katılımı, kariyer hedefleri ve AI araçları",
  variant:"pills"
  },
 ];
