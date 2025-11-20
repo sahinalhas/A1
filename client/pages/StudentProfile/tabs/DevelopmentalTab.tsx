@@ -53,7 +53,7 @@ export function DevelopmentalTab({ studentId, data, onUpdate }: DevelopmentalTab
                       <div className="text-muted-foreground capitalize">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
-                      <div className="font-semibold text-purple-700">{value}/10</div>
+                      <div className="font-semibold text-purple-700">{String(value)}/10</div>
                     </div>
                   ))}
               </div>

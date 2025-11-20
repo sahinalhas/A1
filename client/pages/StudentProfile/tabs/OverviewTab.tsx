@@ -154,7 +154,7 @@ export function OverviewTab({
       <ProfileDashboard
         studentId={studentId}
         scores={scoresData}
-        loadingScores={loadingScores}
+        isLoading={loadingScores}
       />
 
       {/* Hızlı Aksiyonlar */}
