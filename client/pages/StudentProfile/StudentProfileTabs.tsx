@@ -67,7 +67,12 @@ export function StudentProfileTabs({
  </TabsContent>
 
  <TabsContent value="identity-family" className="space-y-3">
- <IdentityFamilyTab student={student} onUpdate={onUpdate} />
+ <IdentityFamilyTab 
+ student={student} 
+ studentId={studentId}
+ specialEducation={data.specialEducation}
+ onUpdate={onUpdate} 
+ />
  </TabsContent>
 
  <TabsContent value="academics" className="space-y-3">
@@ -77,7 +82,6 @@ export function StudentProfileTabs({
  <TabsContent value="wellbeing" className="space-y-3">
  <WellbeingTab
  studentId={studentId}
- studentName={studentName}
  data={data}
  onUpdate={onUpdate}
  />
