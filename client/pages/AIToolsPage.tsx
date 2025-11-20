@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/organisms/Tabs';
-import { Brain, Sparkles, Zap, TrendingUp } from 'lucide-react';
+import { Brain, Zap, TrendingUp } from 'lucide-react';
 import { AI_TOOLS_TABS, VALID_AI_TOOLS_TABS } from '@/config/tabs';
 import { AIToolsLoadingState } from '@/components/features/ai-tools/AIToolsLoadingState';
 import { Badge } from '@/components/atoms/Badge';
@@ -41,29 +41,41 @@ export default function AIToolsPage() {
  };
 
  return (
- <div className="w-full min-h-screen">
+ <div className="w-full min-h-screen pb-6">
  <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-700 p-5 md:p-6 shadow-xl"
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ duration: 0.5 }}
+ className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-teal-500 to-blue-600 text-white mb-6"
  >
- <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
- <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
- <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-500/20 rounded-full blur-3xl"></div>
-
- <div className="relative z-10 max-w-3xl flex items-center justify-between">
- <div className="flex-1">
- <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
- <Sparkles className="h-3 w-3 mr-1" />
- Yapay Zeka Destekli Araçlar
- </Badge>
- <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
- AI Araçları
- </h1>
- <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
- Yapay zeka destekli analiz ve raporlama araçları.
+ <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]" />
+ <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+ 
+ <div className="relative max-w-7xl mx-auto px-6 py-12">
+ <div className="flex items-center justify-between flex-wrap gap-6">
+ <motion.div
+ initial={{ opacity: 0, x: -20 }}
+ animate={{ opacity: 1, x: 0 }}
+ transition={{ duration: 0.5, delay: 0.1 }}
+ className="flex-1"
+ >
+ <div className="flex items-center gap-3 mb-3">
+ <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
+ <Brain className="h-7 w-7" />
+ </div>
+ <h1 className="text-4xl font-bold tracking-tight">AI Araçları</h1>
+ </div>
+ <p className="text-white/90 text-base max-w-2xl">
+ Yapay zeka destekli analiz ve raporlama araçları
  </p>
- <div className="flex gap-3 flex-wrap">
+ </motion.div>
+
+ <motion.div
+ initial={{ opacity: 0, x: 20 }}
+ animate={{ opacity: 1, x: 0 }}
+ transition={{ duration: 0.5, delay: 0.2 }}
+ className="flex gap-3 flex-wrap"
+ >
  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
  <Zap className="h-3.5 w-3.5 text-yellow-300" />
  <span className="text-xs text-white font-medium">Hızlı Analiz</span>
@@ -72,20 +84,21 @@ export default function AIToolsPage() {
  <TrendingUp className="h-3.5 w-3.5 text-green-300" />
  <span className="text-xs text-white font-medium">Akıllı Öneriler</span>
  </div>
- </div>
+ </motion.div>
  </div>
 
  <motion.div
  className="hidden md:block opacity-30"
  animate={{ rotate: 360 }}
  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+ style={{ position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)' }}
  >
  <Brain className="h-20 w-20 text-white" />
  </motion.div>
  </div>
  </motion.div>
 
- <div className="space-y-6 max-w-7xl mx-auto">
+ <div className="space-y-6 max-w-7xl mx-auto px-6">
  {/* Tabs Container */}
  <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
  {/* Responsive Tab List */}
