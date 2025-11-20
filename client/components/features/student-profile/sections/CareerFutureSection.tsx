@@ -4,12 +4,13 @@
  */
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
+import { Briefcase, Target } from "lucide-react";
 import CareerGuidanceSection from "./CareerGuidanceSection";
 import HedeflerPlanlamaSection from "./HedeflerPlanlamaSection";
 
 const KARIYER_TABS = [
- { value:"rehberlik", label:"Kariyer Rehberliği" },
- { value:"hedefler", label:"Hedefler & Planlama" },
+ { value:"rehberlik", label:"Kariyer Rehberliği", icon: Briefcase },
+ { value:"hedefler", label:"Hedefler & Planlama", icon: Target },
 ] as const;
 
 interface CareerFutureSectionProps {
@@ -25,10 +26,11 @@ export default function CareerFutureSection({
 }: CareerFutureSectionProps) {
  return (
  <Tabs defaultValue="rehberlik" className="space-y-4">
- <TabsList className="grid w-full grid-cols-2">
- {KARIYER_TABS.map(({ value, label }) => (
- <TabsTrigger key={value} value={value}>
- {label}
+ <TabsList className="grid w-full grid-cols-2 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ {KARIYER_TABS.map(({ value, label, icon: Icon }) => (
+ <TabsTrigger key={value} value={value} className="gap-2">
+ <Icon className="h-4 w-4" />
+ <span className="hidden sm:inline">{label}</span>
  </TabsTrigger>
  ))}
  </TabsList>

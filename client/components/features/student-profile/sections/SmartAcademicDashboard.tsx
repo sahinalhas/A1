@@ -37,17 +37,20 @@ export default function SmartAcademicDashboard({
 
  {/* Akademik Alt Sekmeler */}
  <Tabs defaultValue="performans" className="space-y-4">
- <TabsList variant="underline" className="grid w-full grid-cols-2 md:grid-cols-5">
- {STUDENT_ACADEMIC_TABS.map((tabConfig) => (
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ {STUDENT_ACADEMIC_TABS.map((tabConfig) => {
+ const Icon = tabConfig.icon;
+ return (
  <TabsTrigger 
  key={tabConfig.value} 
  value={tabConfig.value}
- icon={tabConfig.icon}
- variant="underline"
+ className="gap-2"
  >
- {tabConfig.label}
+ {Icon && <Icon className="h-4 w-4" />}
+ <span className="hidden sm:inline">{tabConfig.label}</span>
  </TabsTrigger>
- ))}
+ );
+ })}
  </TabsList>
 
  <TabsContent value="performans" className="space-y-4">

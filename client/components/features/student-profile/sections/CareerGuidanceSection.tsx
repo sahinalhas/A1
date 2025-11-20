@@ -27,7 +27,8 @@ import {
  History,
  GitCompare,
  RefreshCw,
- TrendingDown
+ TrendingDown,
+ MapPin
 } from "lucide-react";
 import {
  getAllCareers,
@@ -185,13 +186,31 @@ export default function CareerGuidanceSection({ studentId, studentName }: Career
  </CardHeader>
  <CardContent>
  <Tabs value={activeTab} onValueChange={setActiveTab}>
- <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
- <TabsTrigger value="analysis">Analiz</TabsTrigger>
- <TabsTrigger value="explore">Keşfet</TabsTrigger>
- <TabsTrigger value="roadmap">Yol Haritası</TabsTrigger>
- <TabsTrigger value="competencies">Yetkinlikler</TabsTrigger>
- <TabsTrigger value="compare">Karşılaştır</TabsTrigger>
- <TabsTrigger value="history">Geçmiş</TabsTrigger>
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsTrigger value="analysis" className="gap-2">
+ <Sparkles className="h-4 w-4" />
+ <span className="hidden sm:inline">Analiz</span>
+ </TabsTrigger>
+ <TabsTrigger value="explore" className="gap-2">
+ <Briefcase className="h-4 w-4" />
+ <span className="hidden sm:inline">Keşfet</span>
+ </TabsTrigger>
+ <TabsTrigger value="roadmap" className="gap-2">
+ <MapPin className="h-4 w-4" />
+ <span className="hidden sm:inline">Yol Haritası</span>
+ </TabsTrigger>
+ <TabsTrigger value="competencies" className="gap-2">
+ <Award className="h-4 w-4" />
+ <span className="hidden sm:inline">Yetkinlikler</span>
+ </TabsTrigger>
+ <TabsTrigger value="compare" className="gap-2">
+ <BarChart3 className="h-4 w-4" />
+ <span className="hidden sm:inline">Karşılaştır</span>
+ </TabsTrigger>
+ <TabsTrigger value="history" className="gap-2">
+ <History className="h-4 w-4" />
+ <span className="hidden sm:inline">Geçmiş</span>
+ </TabsTrigger>
  </TabsList>
 
  <TabsContent value="analysis" className="space-y-4 mt-4">

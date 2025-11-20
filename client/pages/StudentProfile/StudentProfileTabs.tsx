@@ -40,18 +40,21 @@ export function StudentProfileTabs({
 
  return (
  <Tabs defaultValue="overview" className="space-y-4">
- <TabsList variant="pills" className="justify-center flex-wrap">
- {STUDENT_PROFILE_MAIN_TABS.map((tabConfig) => (
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ {STUDENT_PROFILE_MAIN_TABS.map((tabConfig) => {
+ const Icon = tabConfig.icon;
+ return (
  <TabsTrigger
  key={tabConfig.value}
  value={tabConfig.value}
- icon={tabConfig.icon}
- 
+ className="gap-2"
  title={tabConfig.description}
  >
- {tabConfig.label}
+ {Icon && <Icon className="h-4 w-4" />}
+ <span className="hidden sm:inline">{tabConfig.label}</span>
  </TabsTrigger>
- ))}
+ );
+ })}
  </TabsList>
 
  <TabsContent value="overview" className="space-y-3">

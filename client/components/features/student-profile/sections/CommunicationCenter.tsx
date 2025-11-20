@@ -136,17 +136,20 @@ export default function CommunicationCenter({
 
  {/* Alt Sekmeler */}
  <Tabs defaultValue="tum-gorusmeler" className="space-y-4" onValueChange={loadStats}>
- <TabsList variant="underline" className="grid w-full grid-cols-2 md:grid-cols-5">
- {STUDENT_COMMUNICATION_TABS.map((tabConfig) => (
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ {STUDENT_COMMUNICATION_TABS.map((tabConfig) => {
+ const Icon = tabConfig.icon;
+ return (
  <TabsTrigger 
  key={tabConfig.value} 
  value={tabConfig.value}
- icon={tabConfig.icon}
- variant="underline"
+ className="gap-2"
  >
- {tabConfig.label}
+ {Icon && <Icon className="h-4 w-4" />}
+ <span className="hidden sm:inline">{tabConfig.label}</span>
  </TabsTrigger>
- ))}
+ );
+ })}
  </TabsList>
 
  <TabsContent value="tum-gorusmeler" className="space-y-4">

@@ -4,6 +4,7 @@
  */
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
+import { Heart, Brain, Target, Star, TrendingUp } from "lucide-react";
 import StandardizedSocialEmotionalSection from "./StandardizedSocialEmotionalSection";
 import KisilikProfiliSection from "./KisilikProfiliSection";
 import StandardizedTalentsSection from "./StandardizedTalentsSection";
@@ -11,11 +12,11 @@ import MotivationProfileSection from "./MotivationProfileSection";
 import Degerlendirme360Section from "./Degerlendirme360Section";
 
 const GELISIM_TABS = [
- { value:"sosyal-duygusal", label:"Sosyal-Duygusal" },
- { value:"coklu-zeka", label:"Çoklu Zeka" },
- { value:"degerlendirme-360", label:"360 Derece Değerlendirme" },
- { value:"yetenekler", label:"Yetenekler & İlgiler" },
- { value:"motivasyon", label:"Motivasyon" },
+ { value:"sosyal-duygusal", label:"Sosyal-Duygusal", icon: Heart },
+ { value:"coklu-zeka", label:"Çoklu Zeka", icon: Brain },
+ { value:"degerlendirme-360", label:"360 Derece Değerlendirme", icon: Target },
+ { value:"yetenekler", label:"Yetenekler & İlgiler", icon: Star },
+ { value:"motivasyon", label:"Motivasyon", icon: TrendingUp },
 ] as const;
 
 interface DevelopmentProfileSectionProps {
@@ -33,10 +34,11 @@ export default function DevelopmentProfileSection({
 }: DevelopmentProfileSectionProps) {
  return (
  <Tabs defaultValue="sosyal-duygusal" className="space-y-4">
- <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
- {GELISIM_TABS.map(({ value, label }) => (
- <TabsTrigger key={value} value={value}>
- {label}
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ {GELISIM_TABS.map(({ value, label, icon: Icon }) => (
+ <TabsTrigger key={value} value={value} className="gap-2">
+ <Icon className="h-4 w-4" />
+ <span className="hidden sm:inline">{label}</span>
  </TabsTrigger>
  ))}
  </TabsList>
