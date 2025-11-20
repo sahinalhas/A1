@@ -17,6 +17,7 @@ import { IdentityFamilyTab } from "./tabs/IdentityFamilyTab";
 import { AcademicsTab } from "./tabs/AcademicsTab";
 import { WellbeingTab } from "./tabs/WellbeingTab";
 import { RiskSupportTab } from "./tabs/RiskSupportTab";
+import { CareerGoalsTab } from "./tabs/CareerGoalsTab";
 import { CommunicationTab } from "./tabs/CommunicationTab";
 
 interface StudentProfileTabsProps {
@@ -40,7 +41,7 @@ export function StudentProfileTabs({
 
  return (
  <Tabs defaultValue="overview" className="space-y-4">
- <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
  {STUDENT_PROFILE_MAIN_TABS.map((tabConfig) => {
  const Icon = tabConfig.icon;
  return (
@@ -91,6 +92,14 @@ export function StudentProfileTabs({
  <RiskSupportTab
  studentId={studentId}
  student={student}
+ onUpdate={onUpdate}
+ />
+ </TabsContent>
+
+ <TabsContent value="career-goals" className="space-y-3">
+ <CareerGoalsTab
+ studentId={studentId}
+ studentName={studentName}
  onUpdate={onUpdate}
  />
  </TabsContent>

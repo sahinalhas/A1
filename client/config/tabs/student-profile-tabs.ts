@@ -13,6 +13,7 @@ import {
  Users,
  Home,
  Calendar,
+ Target,
 } from "lucide-react";
 import { TabConfig } from "./types";
 
@@ -57,10 +58,17 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
  variant:"pills"
  },
  {
+ value:"career-goals",
+ label:"Hedefler & Kariyer",
+ icon: Target,
+ description:"Kariyer planlaması, meslek seçimi, yetkinlikler ve gelecek hedefleri",
+ variant:"pills"
+ },
+ {
  value:"communication",
- label:"İletişim & Hedefler",
+ label:"İletişim",
  icon: MessageCircle,
- description:"Görüşmeler, ev ziyaretleri, aile katılımı, kariyer hedefleri ve AI araçları",
+ description:"Görüşmeler, ev ziyaretleri, aile katılımı ve AI araçları",
  variant:"pills"
  },
 ];
@@ -155,6 +163,11 @@ export const STUDENT_TAB_COLORS = {
  gradient:"from-red-500 to-orange-500",
  bg:"bg-gradient-to-r from-red-50/80 to-orange-50/80 dark:from-red-950/30 dark:to-orange-950/30",
  border:"border-red-200/50 dark:border-red-800/50",
+ },
+"career-goals": {
+ gradient:"from-amber-500 to-yellow-500",
+ bg:"bg-gradient-to-r from-amber-50/80 to-yellow-50/80 dark:from-amber-950/30 dark:to-yellow-950/30",
+ border:"border-amber-200/50 dark:border-amber-800/50",
  },
  communication: {
  gradient:"from-violet-500 to-fuchsia-500",
