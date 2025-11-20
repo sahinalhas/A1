@@ -297,7 +297,7 @@ export default function SurveyAnalyticsTab({ distributions }: SurveyAnalyticsTab
                             </div>
                           </div>
 
-                          {Object.keys(distributionStats.demographicBreakdown.byClass).length > 0 && (
+                          {distributionStats.demographicBreakdown?.byClass && Object.keys(distributionStats.demographicBreakdown.byClass).length > 0 && (
                             <div className="p-4 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100/50 dark:from-purple-950/30 dark:to-purple-900/20 border border-purple-200 dark:border-purple-800">
                               <h4 className="font-medium mb-3 text-purple-900 dark:text-purple-100">Sınıf Bazlı Dağılım</h4>
                               <div className="space-y-2">
