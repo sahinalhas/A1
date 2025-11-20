@@ -340,24 +340,29 @@ export default function CounselingSessions() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.3 }}
  >
- <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
- <TabsTrigger value="dashboard">
- Dashboard
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsTrigger value="dashboard" className="gap-2">
+ <TrendingUp className="h-4 w-4" />
+ <span className="hidden sm:inline">Dashboard</span>
  </TabsTrigger>
- <TabsTrigger value="active">
- Aktif
+ <TabsTrigger value="active" className="gap-2">
+ <Users className="h-4 w-4" />
+ <span className="hidden sm:inline">Aktif</span>
  {activeSessions.length > 0 && (
  <Badge variant="secondary" className="ml-2">{activeSessions.length}</Badge>
  )}
  </TabsTrigger>
- <TabsTrigger value="journal">
- Defter
+ <TabsTrigger value="journal" className="gap-2">
+ <MessageSquare className="h-4 w-4" />
+ <span className="hidden sm:inline">Defter</span>
  </TabsTrigger>
- <TabsTrigger value="reminders">
- Hatırlatmalar
+ <TabsTrigger value="reminders" className="gap-2">
+ <Calendar className="h-4 w-4" />
+ <span className="hidden sm:inline">Hatırlatmalar</span>
  </TabsTrigger>
- <TabsTrigger value="analytics">
- Analitik
+ <TabsTrigger value="analytics" className="gap-2">
+ <TrendingUp className="h-4 w-4" />
+ <span className="hidden sm:inline">Analitik</span>
  </TabsTrigger>
  </TabsList>
  </motion.div>

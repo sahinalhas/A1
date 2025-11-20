@@ -107,16 +107,16 @@ export default function AIToolsPage() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.3 }}
  >
- <TabsList variant="pills" className="justify-center flex-wrap">
+ <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
  {AI_TOOLS_TABS.map((tabConfig) => (
  <TabsTrigger 
  key={tabConfig.value} 
  value={tabConfig.value}
- icon={tabConfig.icon}
- 
+ className="gap-2"
  title={tabConfig.description}
  >
- {tabConfig.label}
+ {tabConfig.icon && <tabConfig.icon className="h-4 w-4" />}
+ <span className="hidden sm:inline">{tabConfig.label}</span>
  </TabsTrigger>
  ))}
  </TabsList>

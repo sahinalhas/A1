@@ -450,17 +450,21 @@ export default function AIAssistant() {
  <div className="space-y-6 max-w-7xl mx-auto px-6">
  <Tabs defaultValue="chat" className="space-y-6">
  <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
- <TabsTrigger value="chat">
- Sohbet
+ <TabsTrigger value="chat" className="gap-2">
+ <Bot className="h-4 w-4" />
+ <span className="hidden sm:inline">Sohbet</span>
  </TabsTrigger>
- <TabsTrigger value="meeting-prep">
- Toplantı Hazırlık
+ <TabsTrigger value="meeting-prep" className="gap-2">
+ <FileText className="h-4 w-4" />
+ <span className="hidden sm:inline">Toplantı Hazırlık</span>
  </TabsTrigger>
- <TabsTrigger value="priority">
- Öncelikli Öğrenciler
+ <TabsTrigger value="priority" className="gap-2">
+ <User className="h-4 w-4" />
+ <span className="hidden sm:inline">Öncelikli Öğrenciler</span>
  </TabsTrigger>
- <TabsTrigger value="resources">
- Kaynaklar
+ <TabsTrigger value="resources" className="gap-2">
+ <Brain className="h-4 w-4" />
+ <span className="hidden sm:inline">Kaynaklar</span>
  </TabsTrigger>
  </TabsList>
 
