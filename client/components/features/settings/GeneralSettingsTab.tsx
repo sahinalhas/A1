@@ -1,5 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { AppSettings } from "@/lib/app-settings";
+import { motion } from "framer-motion";
 import {
  Card,
  CardContent,
@@ -18,6 +19,7 @@ import {
  SelectValue,
 } from "@/components/atoms/Select";
 import { EnhancedTextarea as Textarea } from "@/components/molecules/EnhancedTextarea";
+import { Palette, User, Calendar, Clock, Globe } from "lucide-react";
 
 interface GeneralSettingsTabProps {
  form: UseFormReturn<AppSettings>;
@@ -26,12 +28,20 @@ interface GeneralSettingsTabProps {
 export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  return (
  <div className="grid gap-4 md:grid-cols-2">
- <Card>
- <CardHeader>
- <CardTitle>Görünüm</CardTitle>
- <CardDescription>Tema ve dil tercihi</CardDescription>
- </CardHeader>
- <CardContent className="space-y-4">
+ <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3 }}
+ >
+  <Card className="border-muted">
+   <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+     <Palette className="h-5 w-5 text-primary" />
+     Görünüm
+    </CardTitle>
+    <CardDescription>Tema ve dil tercihi</CardDescription>
+   </CardHeader>
+   <CardContent className="space-y-4">
  <div className="grid gap-2">
  <Label>Tema</Label>
  <div className="flex items-center gap-3">
@@ -140,14 +150,23 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  </Select>
  </div>
  </CardContent>
- </Card>
+  </Card>
+ </motion.div>
 
- <Card id="account">
- <CardHeader>
- <CardTitle>Hesap</CardTitle>
- <CardDescription>Kullanıcı bilgileri</CardDescription>
- </CardHeader>
- <CardContent className="space-y-4">
+ <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3, delay: 0.1 }}
+ >
+  <Card id="account" className="border-muted">
+   <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+     <User className="h-5 w-5 text-primary" />
+     Hesap
+    </CardTitle>
+    <CardDescription>Kullanıcı bilgileri</CardDescription>
+   </CardHeader>
+   <CardContent className="space-y-4">
  <div className="grid gap-2">
  <Label htmlFor="displayName">Ad Soyad</Label>
  <Input
@@ -198,7 +217,8 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  />
  </div>
  </CardContent>
- </Card>
+  </Card>
+ </motion.div>
  </div>
  );
 }

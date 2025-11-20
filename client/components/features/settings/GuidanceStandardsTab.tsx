@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, ChevronDown, Plus, Edit2, Trash2, Check, X, Download, Upload, RotateCcw, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronRight, ChevronDown, Plus, Edit2, Trash2, Check, X, Download, Upload, RotateCcw, Loader2, BookOpen, Users, User } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/organisms/Tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/organisms/Card';
 import { useToast } from '@/hooks/utils/toast.utils';
 import {
  AlertDialog,
@@ -440,59 +442,79 @@ export default function GuidanceStandardsTab() {
  }
 
  return (
- <div className="space-y-4">
- <div className="flex items-center justify-between">
- <div>
- <h3 className="text-lg font-semibold">Rehberlik Standartları</h3>
- <p className="text-sm text-muted-foreground">
- Bireysel ve grup çalışmalarınız için standart kategorileri yönetin
- </p>
- </div>
- <div className="flex items-center gap-2">
- <Button variant="outline" size="sm" onClick={handleExport}>
- <Download className="h-4 w-4 mr-1" />
- Dışa Aktar
- </Button>
- <label htmlFor="import-file">
- <Button variant="outline" size="sm" asChild>
- <span>
- <Upload className="h-4 w-4 mr-1" />
- İçe Aktar
- </span>
- </Button>
- </label>
- <input
- id="import-file"
- type="file"
- accept=".json"
- className="hidden"
- onChange={handleImport}
- />
- <Button variant="outline" size="sm" onClick={() => setResetDialogOpen(true)}>
- <RotateCcw className="h-4 w-4 mr-1" />
- Varsayılana Sıfırla
- </Button>
- </div>
- </div>
+ <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3 }}
+  className="space-y-4"
+ >
+  <Card className="border-muted">
+   <CardHeader>
+    <div className="flex items-center justify-between">
+     <div>
+      <CardTitle className="flex items-center gap-2">
+       <BookOpen className="h-5 w-5 text-primary" />
+       Rehberlik Standartları
+      </CardTitle>
+      <CardDescription>
+       Bireysel ve grup çalışmalarınız için standart kategorileri yönetin
+      </CardDescription>
+     </div>
+     <div className="flex items-center gap-2">
+      <Button variant="outline" size="sm" onClick={handleExport} className="gap-2">
+       <Download className="h-4 w-4" />
+       Dışa Aktar
+      </Button>
+      <label htmlFor="import-file">
+       <Button variant="outline" size="sm" asChild>
+        <span className="gap-2 cursor-pointer">
+         <Upload className="h-4 w-4" />
+         İçe Aktar
+        </span>
+       </Button>
+      </label>
+      <input
+       id="import-file"
+       type="file"
+       accept=".json"
+       className="hidden"
+       onChange={handleImport}
+      />
+      <Button variant="outline" size="sm" onClick={() => setResetDialogOpen(true)} className="gap-2">
+       <RotateCcw className="h-4 w-4" />
+       Varsayılana Sıfırla
+      </Button>
+     </div>
+    </div>
+   </CardHeader>
+   <CardContent>
 
- <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'individual' | 'group')}>
- <TabsList className="grid w-full grid-cols-2">
- <TabsTrigger value="individual">Bireysel Çalışmalar</TabsTrigger>
- <TabsTrigger value="group">Grup Çalışmaları</TabsTrigger>
- </TabsList>
+    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'individual' | 'group')}>
+     <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+      <TabsTrigger value="individual" className="gap-2">
+       <User className="h-4 w-4" />
+       Bireysel Çalışmalar
+      </TabsTrigger>
+      <TabsTrigger value="group" className="gap-2">
+       <Users className="h-4 w-4" />
+       Grup Çalışmaları
+      </TabsTrigger>
+     </TabsList>
 
- <TabsContent value="individual" className="mt-4 border rounded-lg p-4">
- <div className="space-y-2">
- {standards.individual.map((category) => renderCategory(category))}
- </div>
- </TabsContent>
+     <TabsContent value="individual" className="mt-4 border border-border/40 rounded-lg p-4 bg-muted/20">
+      <div className="space-y-2">
+       {standards.individual.map((category) => renderCategory(category))}
+      </div>
+     </TabsContent>
 
- <TabsContent value="group" className="mt-4 border rounded-lg p-4">
- <div className="space-y-2">
- {standards.group.map((category) => renderCategory(category))}
- </div>
- </TabsContent>
- </Tabs>
+     <TabsContent value="group" className="mt-4 border border-border/40 rounded-lg p-4 bg-muted/20">
+      <div className="space-y-2">
+       {standards.group.map((category) => renderCategory(category))}
+      </div>
+     </TabsContent>
+    </Tabs>
+   </CardContent>
+  </Card>
 
  <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
  <AlertDialogContent>
@@ -527,6 +549,6 @@ export default function GuidanceStandardsTab() {
  </AlertDialogFooter>
  </AlertDialogContent>
  </AlertDialog>
- </div>
+ </motion.div>
  );
 }

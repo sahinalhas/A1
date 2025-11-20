@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { AppSettings } from "@/lib/app-settings";
+import { motion } from "framer-motion";
 import {
  Card,
  CardContent,
@@ -23,6 +24,7 @@ import {
  AlertDialogTitle,
  AlertDialogTrigger,
 } from "@/components/organisms/AlertDialog";
+import { Shield, Lock, RotateCcw, Download } from "lucide-react";
 
 interface SecuritySettingsTabProps {
  form: UseFormReturn<AppSettings>;
@@ -41,12 +43,20 @@ export default function SecuritySettingsTab({
  const [confirmCode, setConfirmCode] = useState("");
  return (
  <div className="grid gap-4 md:grid-cols-2">
- <Card>
- <CardHeader>
- <CardTitle>Gizlilik ve Güvenlik</CardTitle>
- <CardDescription>Analitik ve veri paylaşımı</CardDescription>
- </CardHeader>
- <CardContent className="space-y-4">
+ <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3 }}
+ >
+  <Card className="border-muted">
+   <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+     <Shield className="h-5 w-5 text-primary" />
+     Gizlilik ve Güvenlik
+    </CardTitle>
+    <CardDescription>Analitik ve veri paylaşımı</CardDescription>
+   </CardHeader>
+   <CardContent className="space-y-4">
  <div className="flex items-center gap-2">
  <Checkbox
  id="analytics"
@@ -76,23 +86,33 @@ export default function SecuritySettingsTab({
  </Label>
  </div>
  </CardContent>
- </Card>
+  </Card>
+ </motion.div>
 
- <Card id="secure-reset">
- <CardHeader>
- <CardTitle>Güvenli Sıfırlama</CardTitle>
- <CardDescription>
- Ayarları varsayılana döndürmeden önce ek onay gereklidir.
- </CardDescription>
- </CardHeader>
- <CardContent className="space-y-4">
- <div className="flex items-center gap-2">
- <Button type="button" variant="outline" onClick={onExport}>
- Dışa Aktar (JSON)
- </Button>
- <span className="text-xs text-muted-foreground">
- İşlemden önce ayarlarınızı yedekleyin.
- </span>
+ <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3, delay: 0.1 }}
+ >
+  <Card id="secure-reset" className="border-muted">
+   <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+     <Lock className="h-5 w-5 text-primary" />
+     Güvenli Sıfırlama
+    </CardTitle>
+    <CardDescription>
+     Ayarları varsayılana döndürmeden önce ek onay gereklidir.
+    </CardDescription>
+   </CardHeader>
+   <CardContent className="space-y-4">
+ <div className="p-3 rounded-lg border border-border/40 bg-muted/30">
+  <Button type="button" variant="outline" onClick={onExport} className="gap-2">
+   <Download className="h-4 w-4" />
+   Dışa Aktar (JSON)
+  </Button>
+  <p className="text-xs text-muted-foreground mt-2">
+   İşlemden önce ayarlarınızı yedekleyin.
+  </p>
  </div>
  <div className="flex items-center gap-2">
  <Checkbox
@@ -177,7 +197,8 @@ export default function SecuritySettingsTab({
  </AlertDialogContent>
  </AlertDialog>
  </CardContent>
- </Card>
+  </Card>
+ </motion.div>
  </div>
  );
 }
