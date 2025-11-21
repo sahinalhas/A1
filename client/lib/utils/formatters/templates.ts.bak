@@ -440,11 +440,12 @@ export async function applyScheduleTemplate(
  subjectId: subjectIdMap.get(templateSlot.subjectId) || templateSlot.subjectId
  }));
  
-  const existingSlots = replaceExisting ? [] : loadWeeklySlots();
-  const allSlots = [...existingSlots, ...newSlots];
-  
-  await saveWeeklySlots(allSlots);
-
+ await apiClient.post('/api/study/weekly-slots', newSlots, {
+ showSuccessToast: false,
+ showErrorToast: false
+ });
+ 
+ window.dispatchEvent(new CustomEvent('weeklySlotsUpdated'));
 
  toast.success(`"${template.name}" şablonu uygulandı`, {
  description: `${template.estimatedWeeklyHours} saatlik program eklendi`
