@@ -11,7 +11,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/organisms/Card";
 import { Button } from "@/components/atoms/Button";
-import { Badge } from "@/components/atoms/Badge";
+
 import { Progress } from "@/components/atoms/Progress";
 import { 
  Bot, 
@@ -31,7 +31,7 @@ import {
  CheckCircle2,
  ExternalLink
 } from "lucide-react";
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { Student } from "@/lib/storage";
 import { useLiveProfile } from "@/hooks/features/live-profile/live-profile.hooks";
@@ -115,9 +115,6 @@ export function ModernDashboard({
  const navigate = useNavigate();
  const { identity } = useLiveProfile(studentId);
 
- const handleAIChat = () => {
- navigate(`/ai-asistan?student=${studentId}`);
- };
 
  const handleGenerateReport = () => {
  navigate(`/ai-asistan?student=${studentId}&action=report`);
@@ -328,21 +325,7 @@ export function ModernDashboard({
  
  <Card>
  <CardContent className="p-6">
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <Button
- onClick={handleAIChat}
- variant="outline"
- className="h-auto py-4 flex flex-col items-start gap-2"
- >
- <div className="flex items-center gap-2 w-full">
- <Bot className="h-5 w-5 text-primary" />
- <span className="font-semibold">AI Asistan</span>
- </div>
- <span className="text-xs text-muted-foreground text-left">
- Öğrenci hakkında soru sor, analiz al
- </span>
- </Button>
-
+ <div className="grid grid-cols-1 gap-4">
  <Button
  onClick={handleGenerateReport}
  variant="outline"
@@ -357,19 +340,6 @@ export function ModernDashboard({
  </span>
  </Button>
 
- <Button
- onClick={() => navigate(`/ogrenci/${studentId}#risk`)}
- variant="outline"
- className="h-auto py-4 flex flex-col items-start gap-2"
- >
- <div className="flex items-center gap-2 w-full">
- <AlertTriangle className="h-5 w-5 text-orange-600" />
- <span className="font-semibold">Risk Analizi</span>
- </div>
- <span className="text-xs text-muted-foreground text-left">
- Detaylı risk değerlendirmesi gör
- </span>
- </Button>
  </div>
  </CardContent>
  </Card>
@@ -401,15 +371,6 @@ export function ModernDashboard({
  >
  <Shield className="h-4 w-4" />
  Risk Sekmesine Git
- </Button>
- 
- <Button 
- onClick={handleAIChat}
- variant="outline"
- className="gap-2"
- >
- <Bot className="h-4 w-4" />
- AI Danışman
  </Button>
  </div>
  </CardContent>

@@ -1,9 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/organisms/Card";
 import { Progress } from "@/components/atoms/Progress";
 import { Badge } from "@/components/atoms/Badge";
 import { Alert, AlertDescription } from "@/components/atoms/Alert";
-import { Button } from "@/components/atoms/Button";
 import { 
  TrendingUp, 
  Brain, 
@@ -14,11 +13,7 @@ import {
  Sparkles,
  AlertCircle,
  CheckCircle2,
- Bot,
- Loader2
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { 
  RadarChart, 
  PolarGrid, 
@@ -33,8 +28,6 @@ import ProfileChangeTimeline from "@/components/features/profile-sync/ProfileCha
 import ConflictResolutionPanel from "@/components/features/profile-sync/ConflictResolutionPanel";
 import ManualCorrectionPanel from "@/components/features/profile-sync/ManualCorrectionPanel";
 import ConflictResolutionUI from "@/components/features/profile-sync/ConflictResolutionUI";
-import { apiClient } from "@/lib/api/core/client";
-import { AI_ENDPOINTS } from "@/lib/constants/api-endpoints";
 
 interface UnifiedScores {
  akademikSkor: number;
@@ -112,33 +105,6 @@ export function ProfileDashboard({
  completeness,
  isLoading 
 }: ProfileDashboardProps) {
- const navigate = useNavigate();
- const [analyzingRisk, setAnalyzingRisk] = useState(false);
-
- const handleAIAnalysis = async () => {
- navigate(`/ai-asistan?student=${studentId}`);
- };
-
- const handleRiskAnalysis = async () => {
- setAnalyzingRisk(true);
- try {
- await apiClient.post(
- AI_ENDPOINTS.ANALYZE_RISK,
- { studentId },
- {
- showSuccessToast: true,
- successMessage: 'Risk analizi tamamlandı',
- showErrorToast: true,
- }
- );
- 
- navigate(`/ai-asistan?student=${studentId}&action=risk`);
- } catch (error) {
- console.error('Risk analysis error:', error);
- } finally {
- setAnalyzingRisk(false);
- }
- };
 
  const radarData = useMemo(() => {
  if (!scores) return [];
@@ -214,32 +180,6 @@ export function ProfileDashboard({
  {/* Canlı Profil Kartı - YENİ! */}
  <UnifiedProfileCard studentId={studentId} />
 
- {/* AI Action Buttons */}
- <div className="flex gap-2 flex-wrap">
- <Button
- 
- size="sm"
- onClick={handleAIAnalysis}
- className="gap-2"
- >
- <Bot className="h-4 w-4" />
- AI ile Konuş
- </Button>
- <Button
- variant="outline"
- size="sm"
- onClick={handleRiskAnalysis}
- disabled={analyzingRisk}
- className="gap-2"
- >
- {analyzingRisk ? (
- <Loader2 className="h-4 w-4" />
- ) : (
- <Shield className="h-4 w-4" />
- )}
- Risk Analizi
- </Button>
- </div>
 
  {/* Manuel Düzeltme ve Çelişki Çözüm Araçları - YENİ! */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
