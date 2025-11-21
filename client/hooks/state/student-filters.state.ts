@@ -60,7 +60,7 @@ export function useStudentFilters(students: Student[]): UseStudentFiltersReturn 
 
  const matchesClass =
  filters.selectedClass === 'tum' ||
- (student.class || '').startsWith(filters.selectedClass);
+ student.class === filters.selectedClass;
 
  const matchesGender =
  filters.selectedGender === 'tum' ||

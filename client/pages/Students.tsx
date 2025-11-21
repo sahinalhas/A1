@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
@@ -107,6 +107,21 @@ export default function Students() {
 
   const stats = useStudentStats(students);
   const filters = useStudentFilters(students);
+
+  const availableClasses = useMemo(() => {
+    const classes = students
+      .map((student) => student.class)
+      .filter((className): className is string => !!className && className.trim() !== '');
+    const uniqueClasses = Array.from(new Set(classes));
+    return uniqueClasses.sort((a, b) => {
+      const aNum = parseInt(a);
+      const bNum = parseInt(b);
+      if (!isNaN(aNum) && !isNaN(bNum)) {
+        return aNum - bNum;
+      }
+      return a.localeCompare(b, 'tr');
+    });
+  }, [students]);
 
   const sortedStudents = sortStudents(
     filters.filteredStudents,
@@ -649,6 +664,7 @@ export default function Students() {
                 onResetFilters={filters.resetFilters}
                 hasActiveFilters={filters.hasActiveFilters}
                 activeFilterCount={filters.activeFilterCount}
+                availableClasses={availableClasses}
               />
               {!isMobileView && (
                 <TableControls

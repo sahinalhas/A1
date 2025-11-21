@@ -22,6 +22,7 @@ interface AdvancedFiltersProps {
  onResetFilters: () => void;
  hasActiveFilters: boolean;
  activeFilterCount: number;
+ availableClasses?: string[];
 }
 
 export function AdvancedFilters({
@@ -36,6 +37,7 @@ export function AdvancedFilters({
  onResetFilters,
  hasActiveFilters,
  activeFilterCount,
+ availableClasses = [],
 }: AdvancedFiltersProps) {
  return (
  <div className="flex items-center gap-2">
@@ -55,10 +57,11 @@ export function AdvancedFilters({
  </SelectTrigger>
  <SelectContent>
  <SelectItem value="tum">Tüm Sınıflar</SelectItem>
- <SelectItem value="9">9. Sınıf</SelectItem>
- <SelectItem value="10">10. Sınıf</SelectItem>
- <SelectItem value="11">11. Sınıf</SelectItem>
- <SelectItem value="12">12. Sınıf</SelectItem>
+ {availableClasses.map((className) => (
+ <SelectItem key={className} value={className}>
+ {className}
+ </SelectItem>
+ ))}
  </SelectContent>
  </Select>
 
