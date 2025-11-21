@@ -8,7 +8,7 @@ import { Button } from "@/components/atoms/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/Select";
 import { EnhancedTextarea as Textarea } from "@/components/molecules/EnhancedTextarea";
 import { MultiSelect } from "@/components/molecules/MultiSelect";
-import { Activity, Droplet, AlertCircle, Phone, Stethoscope, Calendar } from "lucide-react";
+import { Activity, Droplet, Phone, Calendar } from "lucide-react";
 import {
  BLOOD_TYPES,
  CHRONIC_DISEASES,
@@ -363,67 +363,6 @@ export default function StandardizedHealthSection({
  )}
  />
  </div>
- </div>
- </div>
-
- {/* Doktor Bilgileri & Ek Notlar */}
- <div className="space-y-3 pt-3 border-t">
- <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
- <Stethoscope className="h-3.5 w-3.5" />
- <span>Aile Hekimi & Ek Bilgiler</span>
- </div>
-
- <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
- <FormField
- control={form.control}
- name="physicianName"
- render={({ field }) => (
- <FormItem>
- <FormLabel className="text-xs font-medium">Hekim Adı</FormLabel>
- <FormControl>
- <Input placeholder="Dr. Ad Soyad" {...field} className="h-9 text-sm" />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
-
- <FormField
- control={form.control}
- name="physicianPhone"
- render={({ field }) => (
- <FormItem>
- <FormLabel className="text-xs font-medium">Hekim Telefon</FormLabel>
- <FormControl>
- <Input placeholder="0555 123 45 67" {...field} className="h-9 text-sm" />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
- </div>
-
- <div className="grid grid-cols-1 gap-3">
- <FormField
- control={form.control}
- name="additionalNotes"
- render={({ field }) => (
- <FormItem>
- <FormLabel className="text-xs font-medium flex items-center gap-1.5">
- <AlertCircle className="h-3 w-3" />
- Ek Notlar
- </FormLabel>
- <FormControl>
- <Textarea
- placeholder="Sağlık durumu hakkında ek bilgiler..."
- className="min-h-[65px] text-sm resize-none"
- {...field}
- />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
  </div>
  </div>
 
