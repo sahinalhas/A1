@@ -45,6 +45,9 @@ CREATE TABLE IF NOT EXISTS social_emotional_profiles (
   socialIntegrationLevel TEXT CHECK (socialIntegrationLevel IN ('İYİ_ENTEGRE', 'ORTA_ENTEGRE', 'İZOLE', 'KRİTİK_İZOLASYON')),
   friendshipQuality TEXT CHECK (friendshipQuality IN ('SAĞLIKLI', 'GELIŞEN', 'SORUNLU', 'YOK')),
   peerAcceptance INTEGER,
+  identifiedRiskFactors TEXT, -- JSON array
+  protectiveFactors TEXT, -- JSON array
+  recommendedInterventions TEXT, -- JSON array
   additionalNotes TEXT,
   assessedBy TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

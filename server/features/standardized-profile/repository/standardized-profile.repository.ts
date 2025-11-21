@@ -82,8 +82,9 @@ export class StandardizedProfileRepository {
         empathyLevel, selfAwarenessLevel, emotionRegulationLevel, conflictResolutionLevel,
         leadershipLevel, teamworkLevel, communicationLevel,
         friendCircleSize, friendCircleQuality, socialRole, bullyingStatus,
+        identifiedRiskFactors, protectiveFactors, recommendedInterventions,
         additionalNotes, assessedBy, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       ON CONFLICT(id) DO UPDATE SET
         assessmentDate = excluded.assessmentDate,
         strongSocialSkills = excluded.strongSocialSkills,
@@ -99,6 +100,9 @@ export class StandardizedProfileRepository {
         friendCircleQuality = excluded.friendCircleQuality,
         socialRole = excluded.socialRole,
         bullyingStatus = excluded.bullyingStatus,
+        identifiedRiskFactors = excluded.identifiedRiskFactors,
+        protectiveFactors = excluded.protectiveFactors,
+        recommendedInterventions = excluded.recommendedInterventions,
         additionalNotes = excluded.additionalNotes,
         assessedBy = excluded.assessedBy,
         updated_at = CURRENT_TIMESTAMP
@@ -121,6 +125,9 @@ export class StandardizedProfileRepository {
       profile.friendCircleQuality,
       profile.socialRole,
       profile.bullyingStatus,
+      profile.identifiedRiskFactors ? JSON.stringify(profile.identifiedRiskFactors) : '[]',
+      profile.protectiveFactors ? JSON.stringify(profile.protectiveFactors) : '[]',
+      profile.recommendedInterventions ? JSON.stringify(profile.recommendedInterventions) : '[]',
       profile.additionalNotes,
       profile.assessedBy
     );

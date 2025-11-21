@@ -58,6 +58,11 @@ export interface SocialEmotionalProfile {
   socialRole?: 'LİDER' | 'AKTİF_ÜYE' | 'TAKİPÇİ' | 'GÖZLEMCİ' | 'İZOLE';
   bullyingStatus?: 'YOK' | 'MAĞDUR' | 'FAİL' | 'HER_İKİSİ' | 'GÖZLEMCİ';
   
+  // Risk and Protective Factors
+  identifiedRiskFactors?: string[];
+  protectiveFactors?: string[];
+  recommendedInterventions?: string[];
+  
   additionalNotes?: string;
   assessedBy?: string;
   created_at?: string;
