@@ -1,65 +1,33 @@
 /**
  * Sağlık & Destek Hizmetleri Sekmesi
- * Veri Kategorisi: Destek Sistemleri
- * İçerik: Özel eğitim desteği, risk analizi, müdahale planları
+ * Veri Kategorisi: Risk Yönetimi ve Müdahale Sistemleri
+ * İçerik: Risk analizi, müdahale planları
  */
 
 import { Student } from "@/lib/storage";
-import { Separator } from "@/components/atoms";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
-import { BookOpen, ShieldAlert } from "lucide-react";
-import OzelEgitimSection from "@/components/features/student-profile/sections/OzelEgitimSection";
+import { ShieldAlert } from "lucide-react";
 import EnhancedRiskDashboard from "@/components/features/student-profile/sections/EnhancedRiskDashboard";
 import { motion } from "framer-motion";
 
 interface HealthSupportTabProps {
   studentId: string;
   student: Student;
-  specialEducation?: any[];
   onUpdate: () => void;
 }
 
 export function HealthSupportTab({
   studentId,
   student,
-  specialEducation,
   onUpdate,
 }: HealthSupportTabProps) {
   return (
     <div className="space-y-6">
-      {/* Özel Eğitim Desteği */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Card className="border-2 border-blue-100 bg-gradient-to-br from-blue-50/50 to-white">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <BookOpen className="h-5 w-5 text-blue-600" />
-              Özel Eğitim & Destek Hizmetleri
-            </CardTitle>
-            <CardDescription>
-              RAM raporları, BEP, özel gereksinimler ve destek programları
-            </CardDescription>
-          </CardHeader>
-        </Card>
-        <div className="mt-4">
-          <OzelEgitimSection
-            studentId={studentId}
-            specialEducation={specialEducation || []}
-            onUpdate={onUpdate}
-          />
-        </div>
-      </motion.div>
-
-      <Separator />
-
       {/* Risk Analizi & Müdahale Planları */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
+        transition={{ duration: 0.3 }}
       >
         <Card className="border-2 border-red-100 bg-gradient-to-br from-red-50/50 to-white">
           <CardHeader>

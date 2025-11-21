@@ -105,7 +105,6 @@ export function StudentProfileTabs({
         <HealthSupportTab
           studentId={studentId}
           student={student}
-          specialEducation={data.specialEducation}
           onUpdate={onUpdate}
         />
       </TabsContent>
