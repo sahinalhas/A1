@@ -567,7 +567,7 @@ export default function Reports() {
  onClick={handleRefresh}
  size="sm"
  variant="outline"
- className="gap-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+ className="gap-2 border-white/50 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
  >
  <RefreshCw className="h-4 w-4" />
  Yenile
@@ -576,7 +576,7 @@ export default function Reports() {
  onClick={() => setFiltersOpen(true)}
  size="sm"
  variant="outline"
- className="gap-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+ className="gap-2 border-white/50 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
  >
  <Filter className="h-4 w-4" />
  Filtreler

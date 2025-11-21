@@ -305,7 +305,7 @@ export default function CounselingSessions() {
  onClick={() => setSearchOpen(true)}
  size="default"
  variant="outline"
- className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+ className="border-white/50 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
  >
  <SearchIcon className="mr-2 h-4 w-4" />
  Ara (⌘K)
@@ -314,7 +314,7 @@ export default function CounselingSessions() {
  onClick={() => setReportDialogOpen(true)}
  size="default"
  variant="outline"
- className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
+ className="border-white/50 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm"
  >
  <Download className="mr-2 h-4 w-4" />
  Rapor
