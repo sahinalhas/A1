@@ -3,7 +3,8 @@ import {
  loadTopics, 
  getProgressByStudent, 
  ensureProgressForStudent,
- getWeeklySlotsByStudent 
+ getWeeklySlotsByStudent,
+ loadWeeklySlotsAsync
 } from "../../api/endpoints/study.api";
 
 
@@ -47,6 +48,7 @@ export async function planWeek(
  weekStartISO: string,
 ): Promise<PlannedEntry[]> {
  await ensureProgressForStudent(studentId);
+ await loadWeeklySlotsAsync();
  const slots = getWeeklySlotsByStudent(studentId)
  .slice()
  .sort((a, b) => a.day - b.day || a.start.localeCompare(b.start));
@@ -190,6 +192,7 @@ export async function planWeekSmart(
  weekStartISO: string
 ): Promise<PlannedEntry[]> {
  await ensureProgressForStudent(studentId);
+ await loadWeeklySlotsAsync();
  
  const slots = categorizeSlotsByEnergy(
  getWeeklySlotsByStudent(studentId)

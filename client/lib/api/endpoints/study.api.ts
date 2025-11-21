@@ -189,7 +189,7 @@ export function loadWeeklySlots(): WeeklySlot[] {
  return [];
 }
 
-async function loadWeeklySlotsAsync(): Promise<void> {
+export async function loadWeeklySlotsAsync(): Promise<void> {
  return createApiHandler(
  async () => {
  const json = await apiClient.get<any>('/api/study/weekly-slots', { showErrorToast: false });
