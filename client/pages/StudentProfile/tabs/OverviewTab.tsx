@@ -11,11 +11,16 @@ import {
   Target,
   ArrowRight,
   Info,
-  Sparkles
+  Sparkles,
+  MessageCircle,
+  Users,
+  User
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Student } from "@/lib/storage";
 import ProfileUpdateTimeline from "@/components/features/live-profile/ProfileUpdateTimeline";
+import { useEffect, useState } from "react";
+import { getNotesByStudent } from "@/lib/api/endpoints/notes.api";
 
 interface OverviewTabProps {
   student: Student;
@@ -35,6 +40,30 @@ export function OverviewTab({
   const socialScore = scoresData?.sosyalDuygusalSkor || 0;
   const riskScore = scoresData?.riskSkoru || 0;
   const motivationScore = scoresData?.motivasyonSkor || 0;
+
+  // Görüşme sayıları
+  const [meetingStats, setMeetingStats] = useState({
+    veli: 0,
+    bireysel: 0,
+    grup: 0
+  });
+
+  useEffect(() => {
+    loadMeetingStats();
+  }, [studentId]);
+
+  const loadMeetingStats = async () => {
+    try {
+      const notes = await getNotesByStudent(studentId);
+      const veli = notes.filter(n => n.type === 'Veli').length;
+      const bireysel = notes.filter(n => n.type === 'Bireysel').length;
+      const grup = notes.filter(n => n.type === 'Grup').length;
+      
+      setMeetingStats({ veli, bireysel, grup });
+    } catch (error) {
+      console.error('Error loading meeting stats:', error);
+    }
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-600";
@@ -150,6 +179,35 @@ export function OverviewTab({
           </CardContent>
         </Card>
       </div>
+
+      {/* Görüşme İstatistikleri */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-muted-foreground" />
+            Görüşme & İletişim
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-blue-500" />
+              <span className="text-sm text-muted-foreground">Veli:</span>
+              <span className="text-sm font-semibold">{meetingStats.veli}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-green-500" />
+              <span className="text-sm text-muted-foreground">Bireysel:</span>
+              <span className="text-sm font-semibold">{meetingStats.bireysel}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-purple-500" />
+              <span className="text-sm text-muted-foreground">Grup:</span>
+              <span className="text-sm font-semibold">{meetingStats.grup}</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Profil Tamamlama ve Canlı Senkronizasyon */}
       <ProfileDashboard

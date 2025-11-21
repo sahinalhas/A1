@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   GraduationCap,
-  MessageCircle,
   UserCircle,
   Heart,
   Target,
@@ -9,15 +8,13 @@ import {
   FileText,
   Calendar,
   ClipboardList,
-  Users,
-  Home,
   Wand2,
 } from "lucide-react";
 import { TabConfig } from "./types";
 
 /**
  * Öğrenci Profili Ana Tab Yapılandırması
- * Veri Tipi Odaklı Yapı: 7 Sekme
+ * Veri Tipi Odaklı Yapı: 6 Sekme
  * Profesyonel & Akademik Standartlara Uygun Organizasyon
  */
 export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
@@ -57,13 +54,6 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
     variant: "pills"
   },
   {
-    value: "communication",
-    label: "Görüşme & İletişim",
-    icon: MessageCircle,
-    description: "Görüşme kayıtları, veli iletişimi ve ev ziyaretleri",
-    variant: "pills"
-  },
-  {
     value: "ai-tools",
     label: "AI Araçları",
     icon: Wand2,
@@ -100,11 +90,6 @@ export const STUDENT_TAB_COLORS = {
     gradient: "from-amber-500 to-yellow-500",
     bg: "bg-gradient-to-r from-amber-50/80 to-yellow-50/80 dark:from-amber-950/30 dark:to-yellow-950/30",
     border: "border-amber-200/50 dark:border-amber-800/50",
-  },
-  communication: {
-    gradient: "from-violet-500 to-fuchsia-500",
-    bg: "bg-gradient-to-r from-violet-50/80 to-fuchsia-50/80 dark:from-violet-950/30 dark:to-fuchsia-950/30",
-    border: "border-violet-200/50 dark:border-violet-800/50",
   },
   "ai-tools": {
     gradient: "from-purple-500 to-indigo-500",
@@ -148,23 +133,3 @@ export const STUDENT_ACADEMIC_TABS: TabConfig[] = [
   },
 ];
 
-/**
- * İletişim Merkezi Alt Sekmeleri
- * Communication Center'da kullanılan alt sekmeler
- */
-export const STUDENT_COMMUNICATION_TABS: TabConfig[] = [
-  {
-    value: "tum-gorusmeler",
-    label: "Tüm Görüşmeler",
-    icon: Users,
-    description: "Rehberlik ve veli görüşmeleri",
-    variant: "pills"
-  },
-  {
-    value: "ev-ziyaretleri",
-    label: "Ev Ziyaretleri",
-    icon: Home,
-    description: "Aile ve ev ziyaretleri kayıtları",
-    variant: "pills"
-  },
-];
