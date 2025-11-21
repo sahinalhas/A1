@@ -41,9 +41,9 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
   },
   {
     value: "psychosocial",
-    label: "Sosyal-Duygusal Gelişim",
+    label: "Psikososyal Durum",
     icon: Heart,
-    description: "Sosyal-duygusal gelişim, davranış ve akran ilişkileri",
+    description: "Psikososyal durum, davranış ve akran ilişkileri",
     variant: "pills"
   },
   {

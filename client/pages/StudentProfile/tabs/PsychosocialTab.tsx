@@ -19,7 +19,7 @@ interface PsychosocialTabProps {
 export function PsychosocialTab({ studentId, onUpdate }: PsychosocialTabProps) {
   return (
     <div className="space-y-6">
-      {/* Sosyal-Duygusal Gelişim */}
+      {/* Psikososyal Durum */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -29,7 +29,7 @@ export function PsychosocialTab({ studentId, onUpdate }: PsychosocialTabProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Heart className="h-5 w-5 text-pink-600" />
-              Sosyal-Duygusal Gelişim (SEL)
+              Psikososyal Durum (SEL)
             </CardTitle>
             <CardDescription>
               SEL yetkinlikleri, akran ilişkileri, duygu düzenleme ve sosyal beceriler

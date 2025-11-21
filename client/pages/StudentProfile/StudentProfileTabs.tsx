@@ -1,7 +1,7 @@
 /**
  * Student Profile Tabs - Veri Tipi Odaklı Yapı
  * 6 Ana Sekme: Dashboard, Tanıtıcı Bilgiler, Akademik Durum, 
- * Sosyal-Duygusal Gelişim, Kariyer Rehberliği, AI Araçları
+ * Psikososyal Durum, Kariyer Rehberliği, AI Araçları
  * 
  * Tarih: 21 Kasım 2025
  */
@@ -80,7 +80,7 @@ export function StudentProfileTabs({
         <AcademicTab studentId={studentId} onUpdate={onUpdate} />
       </TabsContent>
 
-      {/* Sosyal-Duygusal Gelişim */}
+      {/* Psikososyal Durum */}
       <TabsContent value="psychosocial" className="space-y-3">
         <PsychosocialTab
           studentId={studentId}
