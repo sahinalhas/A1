@@ -231,6 +231,22 @@ export function createAcademicTables(db: Database.Database): void {
       FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE CASCADE
     );
   `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS attendance_records (
+      id TEXT PRIMARY KEY,
+      studentId TEXT NOT NULL,
+      date TEXT NOT NULL,
+      status TEXT NOT NULL CHECK (status IN ('Devamsız', 'Geç', 'Mevcut', 'Mazeret')),
+      reason TEXT,
+      notes TEXT,
+      recordedBy TEXT,
+      parentNotified BOOLEAN DEFAULT FALSE,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE CASCADE
+    );
+  `);
 }
 
 export function seedSubjectsAndTopics(db: Database.Database): void {

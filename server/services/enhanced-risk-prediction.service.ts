@@ -206,22 +206,26 @@ export class EnhancedRiskPredictionService {
   }
 
   private async calculateAttendanceScore(studentId: string): Promise<number> {
-    const absences = this.db.prepare(`
-      SELECT COUNT(*) as count
-      FROM attendance_records
-      WHERE studentId = ? AND status = 'Devamsız' AND date >= date('now', '-3 months')
-    `).get(studentId) as any;
+    try {
+      const absences = this.db.prepare(`
+        SELECT COUNT(*) as count
+        FROM attendance_records
+        WHERE studentId = ? AND status = 'Devamsız' AND date >= date('now', '-3 months')
+      `).get(studentId) as any;
 
-    const tardies = this.db.prepare(`
-      SELECT COUNT(*) as count
-      FROM attendance_records
-      WHERE studentId = ? AND status = 'Geç' AND date >= date('now', '-3 months')
-    `).get(studentId) as any;
+      const tardies = this.db.prepare(`
+        SELECT COUNT(*) as count
+        FROM attendance_records
+        WHERE studentId = ? AND status = 'Geç' AND date >= date('now', '-3 months')
+      `).get(studentId) as any;
 
-    const absenceScore = Math.min(1, (absences?.count || 0) / 15);
-    const tardyScore = Math.min(1, (tardies?.count || 0) / 20);
-    
-    return absenceScore * 0.7 + tardyScore * 0.3;
+      const absenceScore = Math.min(1, (absences?.count || 0) / 15);
+      const tardyScore = Math.min(1, (tardies?.count || 0) / 20);
+      
+      return absenceScore * 0.7 + tardyScore * 0.3;
+    } catch (error) {
+      return 0;
+    }
   }
 
   private async calculateSocialEmotionalScore(studentId: string): Promise<number> {
@@ -383,7 +387,13 @@ export class EnhancedRiskPredictionService {
   }
 
   private async identifyKeyRiskFactors(studentId: string, factorScores: any) {
-    const factors: unknown[] = [];
+    const factors: Array<{
+      factor: string;
+      severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+      description: string;
+      trend: 'IMPROVING' | 'STABLE' | 'DECLINING';
+      recommendation: string;
+    }> = [];
 
     Object.entries(factorScores).forEach(([key, score]) => {
       if ((score as number) > 0.5) {
@@ -408,7 +418,11 @@ export class EnhancedRiskPredictionService {
   }
 
   private async identifyProtectiveFactors(studentId: string) {
-    const factors: unknown[] = [];
+    const factors: Array<{
+      factor: string;
+      strength: number;
+      description: string;
+    }> = [];
 
     const talents = this.db.prepare(`
       SELECT creativeTalents, physicalTalents, primaryInterests
