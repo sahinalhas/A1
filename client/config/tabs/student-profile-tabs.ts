@@ -5,7 +5,6 @@ import {
   UserCircle,
   Heart,
   Brain,
-  Sparkles,
   Cross,
   Target,
   TrendingUp,
@@ -55,13 +54,6 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
     variant: "pills"
   },
   {
-    value: "developmental",
-    label: "Gelişimsel Değerlendirmeler",
-    icon: Sparkles,
-    description: "Çoklu zeka, öğrenme stili, yetenek ve ilgi alanları",
-    variant: "pills"
-  },
-  {
     value: "health-support",
     label: "Sağlık & Destek",
     icon: Cross,
@@ -107,11 +99,6 @@ export const STUDENT_TAB_COLORS = {
     gradient: "from-pink-500 to-rose-500",
     bg: "bg-gradient-to-r from-pink-50/80 to-rose-50/80 dark:from-pink-950/30 dark:to-rose-950/30",
     border: "border-pink-200/50 dark:border-pink-800/50",
-  },
-  developmental: {
-    gradient: "from-purple-500 to-violet-500",
-    bg: "bg-gradient-to-r from-purple-50/80 to-violet-50/80 dark:from-purple-950/30 dark:to-violet-950/30",
-    border: "border-purple-200/50 dark:border-purple-800/50",
   },
   "health-support": {
     gradient: "from-red-500 to-orange-500",

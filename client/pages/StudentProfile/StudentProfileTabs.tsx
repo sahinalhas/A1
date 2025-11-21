@@ -16,7 +16,6 @@ import { OverviewTab } from "./tabs/OverviewTab";
 import { DemographicsTab } from "./tabs/DemographicsTab";
 import { AcademicTab } from "./tabs/AcademicTab";
 import { PsychosocialTab } from "./tabs/PsychosocialTab";
-import { DevelopmentalTab } from "./tabs/DevelopmentalTab";
 import { HealthSupportTab } from "./tabs/HealthSupportTab";
 import { CareerTab } from "./tabs/CareerTab";
 import { CommunicationTab } from "./tabs/CommunicationTab";
@@ -87,15 +86,6 @@ export function StudentProfileTabs({
       <TabsContent value="psychosocial" className="space-y-3">
         <PsychosocialTab
           studentId={studentId}
-          onUpdate={onUpdate}
-        />
-      </TabsContent>
-
-      {/* Gelişimsel Değerlendirmeler */}
-      <TabsContent value="developmental" className="space-y-3">
-        <DevelopmentalTab
-          studentId={studentId}
-          data={data}
           onUpdate={onUpdate}
         />
       </TabsContent>
