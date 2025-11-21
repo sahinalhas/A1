@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { EnhancedTextarea as Textarea } from "@/components/molecules/EnhancedTextarea";
 import { MultiSelect } from "@/components/molecules/MultiSelect";
 import { Activity, Droplet, AlertCircle, Phone, Stethoscope, Calendar } from "lucide-react";
-import { 
+import {
  BLOOD_TYPES,
  CHRONIC_DISEASES,
  ALLERGIES,
@@ -45,10 +45,10 @@ interface StandardizedHealthSectionProps {
  onUpdate: () => void;
 }
 
-export default function StandardizedHealthSection({ 
- studentId, 
+export default function StandardizedHealthSection({
+ studentId,
  healthData,
- onUpdate 
+ onUpdate
 }: StandardizedHealthSectionProps) {
  const form = useForm<HealthProfileFormValues>({
  resolver: zodResolver(healthProfileSchema),
@@ -90,7 +90,7 @@ export default function StandardizedHealthSection({
  <Activity className="h-5 w-5 text-red-600 dark:text-red-400" />
  </div>
  <div>
- <CardTitle className="text-lg">Standartlaştırılmış Sağlık Profili</CardTitle>
+ <CardTitle className="text-lg">Sağlık Profili</CardTitle>
  <CardDescription className="text-xs">Kategorize sağlık ve tıbbi bilgiler</CardDescription>
  </div>
  </div>
@@ -217,10 +217,10 @@ export default function StandardizedHealthSection({
  <FormItem>
  <FormLabel className="text-xs font-medium">Tıbbi Geçmiş</FormLabel>
  <FormControl>
- <Textarea 
- placeholder="Geçmiş ameliyatlar, hastalıklar..." 
+ <Textarea
+ placeholder="Geçmiş ameliyatlar, hastalıklar..."
  className="min-h-[70px] text-sm resize-none"
- {...field} 
+ {...field}
  />
  </FormControl>
  <FormMessage />
@@ -238,10 +238,10 @@ export default function StandardizedHealthSection({
  <FormItem>
  <FormLabel className="text-xs font-medium">Özel İhtiyaçlar</FormLabel>
  <FormControl>
- <Textarea 
- placeholder="Özel bakım gereksinimleri..." 
+ <Textarea
+ placeholder="Özel bakım gereksinimleri..."
  className="min-h-[70px] text-sm resize-none"
- {...field} 
+ {...field}
  />
  </FormControl>
  <FormMessage />
@@ -256,10 +256,10 @@ export default function StandardizedHealthSection({
  <FormItem>
  <FormLabel className="text-xs font-medium">Fiziksel Kısıtlamalar</FormLabel>
  <FormControl>
- <Textarea 
- placeholder="Hareket kısıtlamaları, fiziksel engeller..." 
+ <Textarea
+ placeholder="Hareket kısıtlamaları, fiziksel engeller..."
  className="min-h-[70px] text-sm resize-none"
- {...field} 
+ {...field}
  />
  </FormControl>
  <FormMessage />
@@ -414,10 +414,10 @@ export default function StandardizedHealthSection({
  Ek Notlar
  </FormLabel>
  <FormControl>
- <Textarea 
- placeholder="Sağlık durumu hakkında ek bilgiler..." 
+ <Textarea
+ placeholder="Sağlık durumu hakkında ek bilgiler..."
  className="min-h-[65px] text-sm resize-none"
- {...field} 
+ {...field}
  />
  </FormControl>
  <FormMessage />
