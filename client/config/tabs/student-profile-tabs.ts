@@ -11,7 +11,6 @@ import {
   ClipboardList,
   Users,
   Home,
-  UserPlus,
   History,
   Wand2,
 } from "lucide-react";
@@ -155,13 +154,6 @@ export const STUDENT_COMMUNICATION_TABS: TabConfig[] = [
     label: "Ev Ziyaretleri",
     icon: Home,
     description: "Aile ve ev ziyaretleri kayıtları",
-    variant: "pills"
-  },
-  {
-    value: "aile-katilimi",
-    label: "Aile Katılımı",
-    icon: UserPlus,
-    description: "Aile katılım etkinlikleri ve değerlendirmeleri",
     variant: "pills"
   },
   {

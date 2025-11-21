@@ -11,7 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms
 import { STUDENT_COMMUNICATION_TABS } from "@/config/tabs";
 import UnifiedMeetingsSection from "./UnifiedMeetingsSection";
 import EvZiyaretleriSection from "./EvZiyaretleriSection";
-import AileKatilimiSection from "./AileKatilimiSection";
 import AIToolsHub from "./AIToolsHub";
 import ProfileUpdateTimeline from "@/components/features/live-profile/ProfileUpdateTimeline";
 import { useState } from "react";
@@ -28,12 +27,11 @@ export default function CommunicationCenter({
  onUpdate
 }: CommunicationCenterProps) {
  const [homeVisitsData, setHomeVisitsData] = useState<any[]>([]);
- const [familyParticipationData, setFamilyParticipationData] = useState<any[]>([]);
 
  return (
  <div className="space-y-6">
  <Tabs defaultValue="tum-gorusmeler" className="space-y-4">
- <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
  {STUDENT_COMMUNICATION_TABS.map((tabConfig) => {
  const Icon = tabConfig.icon;
  return (
@@ -60,14 +58,6 @@ export default function CommunicationCenter({
  <EvZiyaretleriSection
  studentId={studentId}
  homeVisits={homeVisitsData}
- onUpdate={onUpdate}
- />
- </TabsContent>
-
- <TabsContent value="aile-katilimi" className="space-y-4">
- <AileKatilimiSection
- studentId={studentId}
- familyParticipation={familyParticipationData}
  onUpdate={onUpdate}
  />
  </TabsContent>
