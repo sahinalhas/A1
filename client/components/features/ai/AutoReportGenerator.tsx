@@ -4,7 +4,7 @@ import { Button } from '@/components/atoms/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/Select';
 import { Label } from '@/components/atoms/Label';
 import { Textarea } from "@/components/molecules/EnhancedTextarea";
-import { FileText, Download, Loader2, ClipboardCheck } from 'lucide-react';
+import { FileText, Download, Loader2, ClipboardCheck, Calendar } from 'lucide-react';
 import { toast } from '@/hooks/utils/toast.utils';
 
 interface AutoReportGeneratorProps {
