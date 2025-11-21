@@ -812,6 +812,22 @@ export default function WeeklySchedule({ sid }: { sid: string }) {
  </div>
  ))}
  </div>
+ 
+ {/* Hour separator lines */}
+ {[...Array(Math.floor((END_MIN - START_MIN) / 60) + 1)].map((_, i) => {
+ const hourMin = START_MIN + i * 60;
+ if (hourMin > START_MIN && hourMin <= END_MIN) {
+ const top = ((hourMin - START_MIN) / STEP) * ROW_H;
+ return (
+ <div
+ key={`hour-${hourMin}`}
+ className="absolute left-0 right-0 border-t-2 border-border/60 pointer-events-none"
+ style={{ top }}
+ />
+ );
+ }
+ return null;
+ })}
  </div>
  </div>
 
