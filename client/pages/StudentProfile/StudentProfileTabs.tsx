@@ -69,7 +69,7 @@ export function StudentProfileTabs({
         />
       </TabsContent>
 
-      {/* Demografik Bilgiler */}
+      {/* Öğrenci Profili */}
       <TabsContent value="demographics" className="space-y-3">
         <DemographicsTab 
           student={student} 

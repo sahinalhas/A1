@@ -36,9 +36,9 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
   },
   {
     value: "demographics",
-    label: "Demografik Bilgiler",
+    label: "Öğrenci Profili",
     icon: UserCircle,
-    description: "Kimlik bilgileri, iletişim bilgileri ve aile yapısı",
+    description: "Kimlik, iletişim, aile yapısı ve standartlaştırılmış sağlık profili",
     variant: "pills"
   },
   {
