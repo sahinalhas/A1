@@ -13,6 +13,11 @@ import {
   Calendar,
   BarChart3,
   ClipboardList,
+  Users,
+  Home,
+  UserPlus,
+  History,
+  Wand2,
 } from "lucide-react";
 import { TabConfig } from "./types";
 
@@ -164,6 +169,48 @@ export const STUDENT_ACADEMIC_TABS: TabConfig[] = [
     label: "Anketler",
     icon: ClipboardList,
     description: "Öğrenci anketleri ve değerlendirme formları",
+    variant: "pills"
+  },
+];
+
+/**
+ * İletişim Merkezi Alt Sekmeleri
+ * Communication Center'da kullanılan alt sekmeler
+ */
+export const STUDENT_COMMUNICATION_TABS: TabConfig[] = [
+  {
+    value: "tum-gorusmeler",
+    label: "Tüm Görüşmeler",
+    icon: Users,
+    description: "Rehberlik ve veli görüşmeleri",
+    variant: "pills"
+  },
+  {
+    value: "ev-ziyaretleri",
+    label: "Ev Ziyaretleri",
+    icon: Home,
+    description: "Aile ve ev ziyaretleri kayıtları",
+    variant: "pills"
+  },
+  {
+    value: "aile-katilimi",
+    label: "Aile Katılımı",
+    icon: UserPlus,
+    description: "Aile katılım etkinlikleri ve değerlendirmeleri",
+    variant: "pills"
+  },
+  {
+    value: "gecmis",
+    label: "Profil Geçmişi",
+    icon: History,
+    description: "Tüm profil değişiklikleri ve aktivite geçmişi",
+    variant: "pills"
+  },
+  {
+    value: "ai-araclari",
+    label: "AI Araçları",
+    icon: Wand2,
+    description: "AI destekli iletişim ve analiz araçları",
     variant: "pills"
   },
 ];
