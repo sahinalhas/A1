@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Student } from "@/lib/storage";
+import ProfileUpdateTimeline from "@/components/features/live-profile/ProfileUpdateTimeline";
 
 interface OverviewTabProps {
   student: Student;
@@ -193,6 +194,9 @@ export function OverviewTab({
           </div>
         </CardContent>
       </Card>
+
+      {/* Profil Güncelleme Geçmişi */}
+      <ProfileUpdateTimeline studentId={studentId} maxItems={5} />
     </div>
   );
 }

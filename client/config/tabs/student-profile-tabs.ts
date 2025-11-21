@@ -11,57 +11,63 @@ import {
   ClipboardList,
   Users,
   Home,
-  History,
   Wand2,
 } from "lucide-react";
 import { TabConfig } from "./types";
 
 /**
  * Öğrenci Profili Ana Tab Yapılandırması
- * Veri Tipi Odaklı Yapı: 7 Sekme (Genel Bakış + 6 Veri Kategorisi)
+ * Veri Tipi Odaklı Yapı: 7 Sekme
  * Profesyonel & Akademik Standartlara Uygun Organizasyon
  */
 export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
   {
     value: "overview",
-    label: "Genel Bakış",
+    label: "Dashboard",
     icon: LayoutDashboard,
     description: "Özet skorlar, profil tamamlama durumu ve hızlı aksiyonlar",
     variant: "pills"
   },
   {
     value: "demographics",
-    label: "Öğrenci Profili",
+    label: "Tanıtıcı Bilgiler",
     icon: UserCircle,
     description: "Kimlik, iletişim, aile yapısı ve standartlaştırılmış sağlık profili",
     variant: "pills"
   },
   {
     value: "academic",
-    label: "Akademik Veriler",
+    label: "Akademik Durum",
     icon: GraduationCap,
     description: "Notlar, sınavlar, devamsızlık ve akademik performans",
     variant: "pills"
   },
   {
     value: "psychosocial",
-    label: "Psikososyal Profil",
+    label: "Sosyal-Duygusal Gelişim",
     icon: Heart,
     description: "Sosyal-duygusal gelişim, davranış ve akran ilişkileri",
     variant: "pills"
   },
   {
     value: "career",
-    label: "Kariyer & Yaşam",
+    label: "Kariyer Rehberliği",
     icon: Target,
     description: "Kariyer hedefleri, üniversite planlaması ve gelecek vizyonu",
     variant: "pills"
   },
   {
     value: "communication",
-    label: "İletişim Kayıtları",
+    label: "Görüşme & İletişim",
     icon: MessageCircle,
-    description: "Görüşme kayıtları, veli iletişimi ve profesyonel notlar",
+    description: "Görüşme kayıtları, veli iletişimi ve ev ziyaretleri",
+    variant: "pills"
+  },
+  {
+    value: "ai-tools",
+    label: "AI Araçları",
+    icon: Wand2,
+    description: "AI destekli analiz ve rapor oluşturma araçları",
     variant: "pills"
   },
 ];
@@ -99,6 +105,11 @@ export const STUDENT_TAB_COLORS = {
     gradient: "from-violet-500 to-fuchsia-500",
     bg: "bg-gradient-to-r from-violet-50/80 to-fuchsia-50/80 dark:from-violet-950/30 dark:to-fuchsia-950/30",
     border: "border-violet-200/50 dark:border-violet-800/50",
+  },
+  "ai-tools": {
+    gradient: "from-purple-500 to-indigo-500",
+    bg: "bg-gradient-to-r from-purple-50/80 to-indigo-50/80 dark:from-purple-950/30 dark:to-indigo-950/30",
+    border: "border-purple-200/50 dark:border-purple-800/50",
   },
 } as const;
 
@@ -154,20 +165,6 @@ export const STUDENT_COMMUNICATION_TABS: TabConfig[] = [
     label: "Ev Ziyaretleri",
     icon: Home,
     description: "Aile ve ev ziyaretleri kayıtları",
-    variant: "pills"
-  },
-  {
-    value: "gecmis",
-    label: "Profil Geçmişi",
-    icon: History,
-    description: "Tüm profil değişiklikleri ve aktivite geçmişi",
-    variant: "pills"
-  },
-  {
-    value: "ai-araclari",
-    label: "AI Araçları",
-    icon: Wand2,
-    description: "AI destekli iletişim ve analiz araçları",
     variant: "pills"
   },
 ];

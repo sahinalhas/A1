@@ -11,8 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms
 import { STUDENT_COMMUNICATION_TABS } from "@/config/tabs";
 import UnifiedMeetingsSection from "./UnifiedMeetingsSection";
 import EvZiyaretleriSection from "./EvZiyaretleriSection";
-import AIToolsHub from "./AIToolsHub";
-import ProfileUpdateTimeline from "@/components/features/live-profile/ProfileUpdateTimeline";
 import { useState } from "react";
 
 interface CommunicationCenterProps {
@@ -31,7 +29,7 @@ export default function CommunicationCenter({
  return (
  <div className="space-y-6">
  <Tabs defaultValue="tum-gorusmeler" className="space-y-4">
- <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsList className="grid w-full grid-cols-2 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
  {STUDENT_COMMUNICATION_TABS.map((tabConfig) => {
  const Icon = tabConfig.icon;
  return (
@@ -58,24 +56,6 @@ export default function CommunicationCenter({
  <EvZiyaretleriSection
  studentId={studentId}
  homeVisits={homeVisitsData}
- onUpdate={onUpdate}
- />
- </TabsContent>
-
- <TabsContent value="gecmis" className="space-y-4">
- <div className="space-y-4">
- <div className="flex items-center gap-2">
- <h3 className="text-lg font-semibold">Profil Güncelleme Geçmişi</h3>
- <span className="text-sm text-muted-foreground">Tüm değişiklikler ve aktiviteler</span>
- </div>
- <ProfileUpdateTimeline studentId={studentId} />
- </div>
- </TabsContent>
-
- <TabsContent value="ai-araclari" className="space-y-4">
- <AIToolsHub
- studentId={studentId}
- studentName={studentName}
  onUpdate={onUpdate}
  />
  </TabsContent>

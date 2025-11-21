@@ -1,10 +1,9 @@
 /**
  * Student Profile Tabs - Veri Tipi Odaklı Yapı
- * 7 Ana Sekme: Genel Bakış + 6 Veri Kategorisi
- * Profesyonel & Akademik Standartlara Uygun Organizasyon
+ * 7 Ana Sekme: Dashboard, Tanıtıcı Bilgiler, Akademik Durum, 
+ * Sosyal-Duygusal Gelişim, Kariyer Rehberliği, Görüşme & İletişim, AI Araçları
  * 
  * Tarih: 21 Kasım 2025
- * Yapı: Demografik, Akademik, Psikososyal, Kariyer, İletişim
  */
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
@@ -18,6 +17,7 @@ import { AcademicTab } from "./tabs/AcademicTab";
 import { PsychosocialTab } from "./tabs/PsychosocialTab";
 import { CareerTab } from "./tabs/CareerTab";
 import { CommunicationTab } from "./tabs/CommunicationTab";
+import { AIToolsTab } from "./tabs/AIToolsTab";
 
 interface StudentProfileTabsProps {
   student: Student;
@@ -40,7 +40,7 @@ export function StudentProfileTabs({
 
   return (
     <Tabs defaultValue="overview" className="space-y-4">
-      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
         {STUDENT_PROFILE_MAIN_TABS.map((tabConfig) => {
           const Icon = tabConfig.icon;
           return (
@@ -57,7 +57,7 @@ export function StudentProfileTabs({
         })}
       </TabsList>
 
-      {/* Genel Bakış - Dashboard */}
+      {/* Dashboard */}
       <TabsContent value="overview" className="space-y-3">
         <OverviewTab
           student={student}
@@ -67,7 +67,7 @@ export function StudentProfileTabs({
         />
       </TabsContent>
 
-      {/* Öğrenci Profili */}
+      {/* Tanıtıcı Bilgiler */}
       <TabsContent value="demographics" className="space-y-3">
         <DemographicsTab 
           student={student} 
@@ -76,12 +76,12 @@ export function StudentProfileTabs({
         />
       </TabsContent>
 
-      {/* Akademik Veriler */}
+      {/* Akademik Durum */}
       <TabsContent value="academic" className="space-y-3">
         <AcademicTab studentId={studentId} onUpdate={onUpdate} />
       </TabsContent>
 
-      {/* Psikososyal Profil */}
+      {/* Sosyal-Duygusal Gelişim */}
       <TabsContent value="psychosocial" className="space-y-3">
         <PsychosocialTab
           studentId={studentId}
@@ -89,7 +89,7 @@ export function StudentProfileTabs({
         />
       </TabsContent>
 
-      {/* Kariyer & Yaşam Planlama */}
+      {/* Kariyer Rehberliği */}
       <TabsContent value="career" className="space-y-3">
         <CareerTab
           studentId={studentId}
@@ -98,9 +98,18 @@ export function StudentProfileTabs({
         />
       </TabsContent>
 
-      {/* İletişim Kayıtları */}
+      {/* Görüşme & İletişim */}
       <TabsContent value="communication" className="space-y-3">
         <CommunicationTab
+          studentId={studentId}
+          studentName={studentName}
+          onUpdate={onUpdate}
+        />
+      </TabsContent>
+
+      {/* AI Araçları */}
+      <TabsContent value="ai-tools" className="space-y-3">
+        <AIToolsTab
           studentId={studentId}
           studentName={studentName}
           onUpdate={onUpdate}
