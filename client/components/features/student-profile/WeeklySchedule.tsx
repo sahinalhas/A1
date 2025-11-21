@@ -534,6 +534,10 @@ export default function WeeklySchedule({ sid }: { sid: string }) {
  <div className="flex gap-2">
  <ScheduleTemplateDialog
  studentId={sid}
+ onApplied={() => {
+ const updatedSlots = getWeeklySlotsByStudent(sid).slice().sort((a, b) => a.day - b.day || a.start.localeCompare(b.start));
+ pushHistory(updatedSlots, 'template');
+ }}
  />
  
  <Button
