@@ -438,7 +438,7 @@ export async function applyScheduleTemplate(
  subjectId: subjectIdMap.get(templateSlot.subjectId) || templateSlot.subjectId
  }));
  
- await apiClient.post('/api/weekly-slots', newSlots, {
+ await apiClient.post('/api/study/weekly-slots', newSlots, {
  showSuccessToast: false,
  showErrorToast: false
  });

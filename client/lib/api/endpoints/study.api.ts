@@ -192,7 +192,7 @@ export function loadWeeklySlots(): WeeklySlot[] {
 async function loadWeeklySlotsAsync(): Promise<void> {
  return createApiHandler(
  async () => {
- const json = await apiClient.get<any>('/api/weekly-slots', { showErrorToast: false });
+ const json = await apiClient.get<any>('/api/study/weekly-slots', { showErrorToast: false });
  const slots = Array.isArray(json) ? json : (Array.isArray(json?.data) ? json.data : []);
  weeklySlotsCache = slots;
  window.dispatchEvent(new CustomEvent('weeklySlotsUpdated'));
@@ -206,7 +206,7 @@ export async function saveWeeklySlots(v: WeeklySlot[]): Promise<void> {
  const previousCache = weeklySlotsCache ? structuredClone(weeklySlotsCache) : null;
  
  try {
- await apiClient.post('/api/weekly-slots', v, {
+ await apiClient.post('/api/study/weekly-slots', v, {
  showSuccessToast: true,
  successMessage: API_ERROR_MESSAGES.STUDY.WEEKLY_SLOTS_SAVE_SUCCESS,
  errorMessage: API_ERROR_MESSAGES.STUDY.WEEKLY_SLOTS_SAVE_ERROR,
@@ -228,7 +228,7 @@ export async function addWeeklySlot(w: WeeklySlot): Promise<void> {
  const previousCache = weeklySlotsCache ? structuredClone(weeklySlotsCache) : null;
  
  try {
- await apiClient.post('/api/weekly-slots', w, {
+ await apiClient.post('/api/study/weekly-slots', w, {
  showSuccessToast: false,
  errorMessage: API_ERROR_MESSAGES.STUDY.WEEKLY_SLOTS_ADD_ERROR,
  });
@@ -247,7 +247,7 @@ export async function removeWeeklySlot(id: string): Promise<void> {
  const previousCache = weeklySlotsCache ? structuredClone(weeklySlotsCache) : null;
  
  try {
- await apiClient.delete(`/api/weekly-slots/${id}`, {
+ await apiClient.delete(`/api/study/weekly-slots/${id}`, {
  showSuccessToast: false,
  errorMessage: API_ERROR_MESSAGES.STUDY.WEEKLY_SLOTS_DELETE_ERROR,
  });
@@ -265,7 +265,7 @@ export async function updateWeeklySlot(id: string, patch: Partial<WeeklySlot>): 
  const previousCache = weeklySlotsCache ? structuredClone(weeklySlotsCache) : null;
  
  try {
- await apiClient.put(`/api/weekly-slots/${id}`, patch, {
+ await apiClient.put(`/api/study/weekly-slots/${id}`, patch, {
  showSuccessToast: false,
  errorMessage: API_ERROR_MESSAGES.STUDY.WEEKLY_SLOTS_UPDATE_ERROR,
  });
