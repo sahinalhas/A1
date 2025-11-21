@@ -54,15 +54,15 @@ export default function AnketlerSection({ studentId, onUpdate }: AnketlerSection
  staleTime: 5 * 60 * 1000,
  });
 
- // Yanıtları dağıtım bilgileriyle eşleştir
- const enrichedResponses = surveyResponses.map(response => {
+ // Yanıtları dağıtım bilgileriyle eşleştir - Array kontrolü ekle
+ const enrichedResponses = Array.isArray(surveyResponses) ? surveyResponses.map(response => {
  const distribution = distributions.find(d => d.id === response.distributionId);
  return {
  ...response,
  distributionTitle: distribution?.title || 'Anket',
  distributionStatus: distribution?.status || 'unknown',
  };
- });
+ }) : [];
 
  const handleOpenSurveys = () => {
  navigate('/anketler');
