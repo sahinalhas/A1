@@ -11,7 +11,6 @@ import {
   TrendingUp,
   FileText,
   Calendar,
-  BarChart3,
   ClipboardList,
   Users,
   Home,
@@ -155,13 +154,6 @@ export const STUDENT_ACADEMIC_TABS: TabConfig[] = [
     label: "Çalışma Programı",
     icon: Calendar,
     description: "Haftalık çalışma programı ve ders programı",
-    variant: "pills"
-  },
-  {
-    value: "ilerleme",
-    label: "İlerleme Takibi",
-    icon: BarChart3,
-    description: "Dönemsel ilerleme ve gelişim takibi",
     variant: "pills"
   },
   {
