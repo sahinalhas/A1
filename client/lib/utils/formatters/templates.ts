@@ -7,6 +7,7 @@ import {
  getWeeklySlotsByStudent,
  removeWeeklySlot
 } from "../../api/endpoints/study.api";
+import { apiClient } from "../../api/core/client";
 
 const SCHEDULE_TEMPLATES: ScheduleTemplate[] = [
  {
@@ -437,15 +438,10 @@ export async function applyScheduleTemplate(
  subjectId: subjectIdMap.get(templateSlot.subjectId) || templateSlot.subjectId
  }));
  
- const response = await fetch('/api/weekly-slots', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify(newSlots)
+ await apiClient.post('/api/weekly-slots', newSlots, {
+ showSuccessToast: false,
+ showErrorToast: false
  });
- 
- if (!response.ok) {
- throw new Error('Failed to add weekly slots');
- }
  
  window.dispatchEvent(new CustomEvent('weeklySlotsUpdated'));
 

@@ -452,7 +452,7 @@ export async function updateProgress(
  const newCompletedFlag = newRemaining === 0 ? true : p.completedFlag;
  
  const today = new Date().toISOString().split('T')[0];
- const newReviewCount = newCompletedFlag ? (p.reviewCount || 0) + 1 : p.reviewCount;
+ const newReviewCount = newCompletedFlag ? (p.reviewCount || 0) + 1 : (p.reviewCount || 0);
  
  list[pIndex] = {
  ...p,
