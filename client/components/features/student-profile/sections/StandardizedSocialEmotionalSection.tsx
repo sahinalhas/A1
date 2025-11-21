@@ -28,6 +28,9 @@ const socialEmotionalSchema = z.object({
  friendCircleQuality: z.enum(['ZAYIF', 'ORTA', 'İYİ', 'ÇOK_İYİ']).optional(),
  socialRole: z.enum(['LİDER', 'AKTİF_ÜYE', 'TAKİPÇİ', 'GÖZLEMCİ', 'İZOLE']).optional(),
  bullyingStatus: z.enum(['YOK', 'MAĞDUR', 'FAİL', 'HER_İKİSİ', 'GÖZLEMCİ']).optional(),
+ identifiedRiskFactors: z.array(z.string()).optional(),
+ protectiveFactors: z.array(z.string()).optional(),
+ recommendedInterventions: z.array(z.string()).optional(),
  additionalNotes: z.string().optional(),
 });
 
@@ -44,9 +47,7 @@ export default function StandardizedSocialEmotionalSection({
  socialEmotionalData,
  onUpdate 
 }: StandardizedSocialEmotionalSectionProps) {
- const form = useForm<SocialEmotionalFormValues>({
- resolver: zodResolver(socialEmotionalSchema),
- defaultValues: {
+ const formDefaultValues = {
  assessmentDate: new Date().toISOString().slice(0, 10),
  strongSocialSkills: [],
  developingSocialSkills: [],
@@ -61,8 +62,15 @@ export default function StandardizedSocialEmotionalSection({
  friendCircleQuality: undefined,
  socialRole: undefined,
  bullyingStatus: undefined,
+ identifiedRiskFactors: [],
+ protectiveFactors: [],
+ recommendedInterventions: [],
  additionalNotes:"",
- },
+ };
+
+ const form = useForm<SocialEmotionalFormValues>({
+ resolver: zodResolver(socialEmotionalSchema),
+ defaultValues: formDefaultValues,
  });
 
  const { isSubmitting, onSubmit } = useStandardizedProfileSection({
@@ -70,9 +78,51 @@ export default function StandardizedSocialEmotionalSection({
  sectionName: 'Sosyal-duygusal profil',
  apiEndpoint: 'social-emotional',
  form,
- defaultValues: form.getValues(),
+ defaultValues: formDefaultValues,
  onUpdate,
  });
+
+ const riskFactorOptions = [
+ { value: 'DÜŞÜK_AKADEMİK_BAŞARI', label: 'Düşük Akademik Başarı', category: 'Akademik' },
+ { value: 'DEVAMSIZLIK', label: 'Yüksek Devamsızlık', category: 'Akademik' },
+ { value: 'ÖĞRENİM_GÜÇLÜGü', label: 'Öğrenim Güçlüğü', category: 'Akademik' },
+ { value: 'AİLE_ÇATIŞMASI', label: 'Aile İçi Çatışma', category: 'Ailesel' },
+ { value: 'İHMAL', label: 'İhmal/İstismar', category: 'Ailesel' },
+ { value: 'EKONOMİK_ZORLUK', label: 'Ekonomik Zorluk', category: 'Ailesel' },
+ { value: 'MADDE_KULLANIMI', label: 'Madde Kullanımı', category: 'Davranışsal' },
+ { value: 'ŞİDDET', label: 'Şiddet Eğilimi', category: 'Davranışsal' },
+ { value: 'AKRAN_BASKI', label: 'Olumsuz Akran Baskısı', category: 'Sosyal' },
+ { value: 'İZOLASYON', label: 'Sosyal İzolasyon', category: 'Sosyal' },
+ { value: 'DEPRESYON', label: 'Depresyon Belirtileri', category: 'Duygusal' },
+ { value: 'KAYGI', label: 'Yüksek Kaygı', category: 'Duygusal' },
+ { value: 'TRAVMA', label: 'Travma Öyküsü', category: 'Duygusal' },
+ ];
+
+ const protectiveFactorOptions = [
+ { value: 'AİLE_DESTEĞİ', label: 'Güçlü Aile Desteği', category: 'Ailesel' },
+ { value: 'OLUMLU_ROL_MODEL', label: 'Olumlu Rol Model', category: 'Ailesel' },
+ { value: 'AKADEMİK_YETKİNLİK', label: 'Akademik Yetkinlik', category: 'Akademik' },
+ { value: 'OKUL_BAĞLILIĞI', label: 'Okul Bağlılığı', category: 'Akademik' },
+ { value: 'SOSYAL_BECERİLER', label: 'İyi Sosyal Beceriler', category: 'Sosyal' },
+ { value: 'OLUMLU_AKRAN_İLİŞKİLERİ', label: 'Olumlu Akran İlişkileri', category: 'Sosyal' },
+ { value: 'PROBLEM_ÇÖZME', label: 'Problem Çözme Becerisi', category: 'Bireysel' },
+ { value: 'ÖZ_YETERLİLİK', label: 'Yüksek Öz-yeterlilik', category: 'Bireysel' },
+ { value: 'BASAMSAL_İNANÇ', label: 'Olumlu Gelecek İnancı', category: 'Bireysel' },
+ { value: 'TOPLULUK_DESTEĞİ', label: 'Topluluk/Kurum Desteği', category: 'Çevresel' },
+ ];
+
+ const interventionOptions = [
+ { value: 'BİREYSEL_DANIŞMANLIK', label: 'Bireysel Danışmanlık', category: 'Psikolojik Destek' },
+ { value: 'GRUP_DANIŞMANLIK', label: 'Grup Danışmanlığı', category: 'Psikolojik Destek' },
+ { value: 'AİLE_DANIŞMANLIK', label: 'Aile Danışmanlığı', category: 'Psikolojik Destek' },
+ { value: 'AKADEMİK_DESTEK', label: 'Akademik Destek Programı', category: 'Akademik' },
+ { value: 'DERS_ÇALIŞMA_BECERİLERİ', label: 'Ders Çalışma Becerileri', category: 'Akademik' },
+ { value: 'SOSYAL_BECERİ_EĞİTİMİ', label: 'Sosyal Beceri Eğitimi', category: 'Sosyal-Duygusal' },
+ { value: 'ÖFKE_YÖNETİMİ', label: 'Öfke Yönetimi', category: 'Sosyal-Duygusal' },
+ { value: 'STRES_YÖNETİMİ', label: 'Stres Yönetimi', category: 'Sosyal-Duygusal' },
+ { value: 'MENTOR_PROGRAMI', label: 'Mentor Programı', category: 'Destek Sistemleri' },
+ { value: 'OKUL_DIŞI_ETKİNLİK', label: 'Okul Dışı Etkinlik', category: 'Destek Sistemleri' },
+ ];
 
  return (
  <Card>
@@ -102,52 +152,15 @@ export default function StandardizedSocialEmotionalSection({
  )}
  />
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- <FormField
- control={form.control}
- name="strongSocialSkills"
- render={({ field }) => (
- <FormItem>
- <FormLabel>Güçlü Sosyal Beceriler</FormLabel>
- <FormControl>
- <MultiSelect
- options={SOCIAL_SKILLS}
- selected={field.value}
- onChange={field.onChange}
- placeholder="Güçlü becerileri seçin"
- groupByCategory
- />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
-
- <FormField
- control={form.control}
- name="developingSocialSkills"
- render={({ field }) => (
- <FormItem>
- <FormLabel>Geliştirilmesi Gereken Beceriler</FormLabel>
- <FormControl>
- <MultiSelect
- options={SOCIAL_SKILLS}
- selected={field.value}
- onChange={field.onChange}
- placeholder="Gelişim alanlarını seçin"
- groupByCategory
- />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
- </div>
-
- <div className="space-y-6 border-t pt-6">
+ <div className="space-y-4 border-t pt-6">
  <h3 className="text-sm font-semibold text-muted-foreground">
- SEL Yetkinlik Seviyeleri (1-10 Ölçeği)
+ Sosyal Bağlam Değerlendirmesi
  </h3>
+
+ <div className="space-y-6">
+ <h4 className="text-sm font-semibold text-muted-foreground">
+ SEL Yetkinlik Seviyeleri (1-10 Ölçeği)
+ </h4>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  <FormField
@@ -306,12 +319,52 @@ export default function StandardizedSocialEmotionalSection({
  </div>
  </div>
 
- <div className="space-y-4 border-t pt-6">
- <h3 className="text-sm font-semibold text-muted-foreground">
- Sosyal Bağlam Değerlendirmesi
- </h3>
+ <div className="space-y-4 mt-6">
+ <h4 className="text-sm font-semibold text-muted-foreground">
+ Sosyal Beceriler ve Sosyal Roller
+ </h4>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <FormField
+ control={form.control}
+ name="strongSocialSkills"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Güçlü Sosyal Beceriler</FormLabel>
+ <FormControl>
+ <MultiSelect
+ options={SOCIAL_SKILLS}
+ selected={field.value}
+ onChange={field.onChange}
+ placeholder="Güçlü becerileri seçin"
+ groupByCategory
+ />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="developingSocialSkills"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Geliştirilmesi Gereken Beceriler</FormLabel>
+ <FormControl>
+ <MultiSelect
+ options={SOCIAL_SKILLS}
+ selected={field.value}
+ onChange={field.onChange}
+ placeholder="Gelişim alanlarını seçin"
+ groupByCategory
+ />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
  <FormField
  control={form.control}
  name="friendCircleSize"
@@ -409,6 +462,73 @@ export default function StandardizedSocialEmotionalSection({
  </FormItem>
  )}
  />
+ </div>
+
+ <div className="space-y-4 mt-6">
+ <h4 className="text-sm font-semibold text-muted-foreground">
+ Risk ve Koruyucu Faktörler
+ </h4>
+
+ <FormField
+ control={form.control}
+ name="identifiedRiskFactors"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Tespit Edilen Risk Faktörleri</FormLabel>
+ <FormControl>
+ <MultiSelect
+ options={riskFactorOptions}
+ selected={field.value || []}
+ onChange={field.onChange}
+ placeholder="Risk faktörlerini seçin"
+ groupByCategory
+ />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="protectiveFactors"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Koruyucu Faktörler</FormLabel>
+ <FormControl>
+ <MultiSelect
+ options={protectiveFactorOptions}
+ selected={field.value || []}
+ onChange={field.onChange}
+ placeholder="Koruyucu faktörleri seçin"
+ groupByCategory
+ />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="recommendedInterventions"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Önerilen Müdahaleler</FormLabel>
+ <FormControl>
+ <MultiSelect
+ options={interventionOptions}
+ selected={field.value || []}
+ onChange={field.onChange}
+ placeholder="Müdahaleleri seçin"
+ groupByCategory
+ />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+ </div>
  </div>
  </div>
 

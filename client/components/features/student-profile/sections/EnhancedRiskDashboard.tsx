@@ -1,14 +1,12 @@
 /**
  * Enhanced Risk Dashboard
- * Otomatik risk hesaplama, davranış analizi, koruyucu faktörler, müdahale planları
+ * Otomatik risk hesaplama, davranış analizi
  * NOT: Manuel risk girişi YOK - tüm risk bilgileri otomatik hesaplanır
  * 
  * ÖNEMLİ: Dashboard'daki EnhancedRiskCard buraya taşındı
- * Her bilgi tek bir yerde - Dashboard'da sadece özet risk skoru
+ * Risk ve koruyucu faktörler artık Psikososyal Profil sekmesinde
  */
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
-import UnifiedRiskSection from "./UnifiedRiskSection";
 import { EnhancedRiskCard } from "@/components/features/analytics/EnhancedRiskCard";
 import { Student } from "@/lib/storage";
 
@@ -33,13 +31,6 @@ export default function EnhancedRiskDashboard({
  </div>
  <EnhancedRiskCard studentId={studentId} />
  </div>
-
- {/* Birleştirilmiş Risk Bölümleri */}
- <UnifiedRiskSection
- studentId={studentId}
- student={student}
- onUpdate={onUpdate}
- />
  </div>
  );
 }
