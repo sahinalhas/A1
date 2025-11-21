@@ -366,6 +366,27 @@ export default function StandardizedHealthSection({
  </div>
  </div>
 
+ {/* Ek Bilgiler */}
+ <div className="space-y-3 pt-3 border-t">
+ <FormField
+ control={form.control}
+ name="additionalNotes"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="text-xs font-medium">Ek Bilgiler</FormLabel>
+ <FormControl>
+ <Textarea
+ placeholder="Sağlık durumu hakkında ek bilgiler ve açıklamalar..."
+ className="min-h-[80px] text-sm resize-none"
+ {...field}
+ />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+ </div>
+
  <Button type="submit" disabled={isSubmitting} className="w-full h-10">
  {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
  </Button>
