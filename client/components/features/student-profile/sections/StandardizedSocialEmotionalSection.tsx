@@ -79,7 +79,7 @@ export default function StandardizedSocialEmotionalSection({
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
  <Heart className="h-5 w-5" />
- Standartlaştırılmış Sosyal-Duygusal Profil
+ Sosyal-Duygusal Profil
  </CardTitle>
  <CardDescription>
  Ölçülebilir SEL yetkinlikleri ve sosyal etkileşim becerileri
