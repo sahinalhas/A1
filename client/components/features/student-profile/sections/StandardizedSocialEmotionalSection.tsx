@@ -363,7 +363,6 @@ export default function StandardizedSocialEmotionalSection({
  />
  </div>
  </div>
- </div>
 
  <FormField
  control={form.control}
