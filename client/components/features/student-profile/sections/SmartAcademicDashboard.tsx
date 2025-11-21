@@ -1,9 +1,6 @@
 /**
  * Smart Academic Dashboard
  * Akademik performans özeti - mevcut akademik sekmelerini organize eder
- * 
- * ÖNEMLİ: Dashboard'daki PersonalizedLearningCard buraya taşındı
- * Her bilgi tek bir yerde - Dashboard'da sadece özet akademik skoru
  */
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
@@ -13,7 +10,6 @@ import StudentExamResultsSection from "./StudentExamResultsSection";
 import CalismaProgramiSection from "./CalismaProgramiSection";
 import IlerlemeTakibiSection from "./IlerlemeTakibiSection";
 import AnketlerSection from "./AnketlerSection";
-import { PersonalizedLearningCard } from "@/components/features/learning/PersonalizedLearningCard";
 
 interface SmartAcademicDashboardProps {
  studentId: string;
@@ -26,15 +22,6 @@ export default function SmartAcademicDashboard({
 }: SmartAcademicDashboardProps) {
  return (
  <div className="space-y-6">
- {/* AI Destekli Kişiselleştirilmiş Öğrenme Planı */}
- <div className="space-y-4">
- <div className="flex items-center gap-2">
- <h3 className="text-lg font-semibold">Kişiselleştirilmiş Öğrenme Stratejileri</h3>
- <span className="text-sm text-muted-foreground">AI ile özel öğrenme önerileri</span>
- </div>
- <PersonalizedLearningCard studentId={studentId} />
- </div>
-
  {/* Akademik Alt Sekmeler */}
  <Tabs defaultValue="performans" className="space-y-4">
  <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
