@@ -198,7 +198,14 @@ export default function WeeklySchedule({ sid }: { sid: string }) {
  [slots]
  );
 
- const totalMin = weeklyTotalMinutes(sid);
+ const totalMin = useMemo(() => {
+ return sortedSlots.reduce((sum, slot) => {
+ const start = toMin(slot.start);
+ const end = toMin(slot.end);
+ return sum + (end - start);
+ }, 0);
+ }, [sortedSlots]);
+ 
  const warnLow = totalMin < 5 * 60;
  const warnHigh = totalMin > 10 * 60;
 
