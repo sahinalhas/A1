@@ -8,6 +8,11 @@ import {
   Sparkles,
   Cross,
   Target,
+  TrendingUp,
+  FileText,
+  Calendar,
+  BarChart3,
+  ClipboardList,
 } from "lucide-react";
 import { TabConfig } from "./types";
 
@@ -120,3 +125,45 @@ export const STUDENT_TAB_COLORS = {
     border: "border-violet-200/50 dark:border-violet-800/50",
   },
 } as const;
+
+/**
+ * Akademik Dashboard Alt Sekmeleri
+ * Smart Academic Dashboard'da kullanılan alt sekmeler
+ */
+export const STUDENT_ACADEMIC_TABS: TabConfig[] = [
+  {
+    value: "performans",
+    label: "Akademik Performans",
+    icon: TrendingUp,
+    description: "Standart akademik performans değerlendirmeleri",
+    variant: "pills"
+  },
+  {
+    value: "sinavlar",
+    label: "Sınav Sonuçları",
+    icon: FileText,
+    description: "Sınav sonuçları ve detaylı analizler",
+    variant: "pills"
+  },
+  {
+    value: "calisma-programi",
+    label: "Çalışma Programı",
+    icon: Calendar,
+    description: "Haftalık çalışma programı ve ders programı",
+    variant: "pills"
+  },
+  {
+    value: "ilerleme",
+    label: "İlerleme Takibi",
+    icon: BarChart3,
+    description: "Dönemsel ilerleme ve gelişim takibi",
+    variant: "pills"
+  },
+  {
+    value: "anketler",
+    label: "Anketler",
+    icon: ClipboardList,
+    description: "Öğrenci anketleri ve değerlendirme formları",
+    variant: "pills"
+  },
+];
