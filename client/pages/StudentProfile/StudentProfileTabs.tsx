@@ -1,10 +1,10 @@
 /**
  * Student Profile Tabs - Veri Tipi Odaklı Yapı
- * 8 Ana Sekme: Genel Bakış + 7 Veri Kategorisi
+ * 7 Ana Sekme: Genel Bakış + 6 Veri Kategorisi
  * Profesyonel & Akademik Standartlara Uygun Organizasyon
  * 
- * Tarih: 20 Kasım 2025
- * Yapı: Demografik, Akademik, Psikososyal, Gelişimsel, Sağlık & Destek, Kariyer, İletişim
+ * Tarih: 21 Kasım 2025
+ * Yapı: Demografik, Akademik, Psikososyal, Kariyer, İletişim
  */
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
@@ -16,7 +16,6 @@ import { OverviewTab } from "./tabs/OverviewTab";
 import { DemographicsTab } from "./tabs/DemographicsTab";
 import { AcademicTab } from "./tabs/AcademicTab";
 import { PsychosocialTab } from "./tabs/PsychosocialTab";
-import { HealthSupportTab } from "./tabs/HealthSupportTab";
 import { CareerTab } from "./tabs/CareerTab";
 import { CommunicationTab } from "./tabs/CommunicationTab";
 
@@ -41,7 +40,7 @@ export function StudentProfileTabs({
 
   return (
     <Tabs defaultValue="overview" className="space-y-4">
-      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-8 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
         {STUDENT_PROFILE_MAIN_TABS.map((tabConfig) => {
           const Icon = tabConfig.icon;
           return (
@@ -86,15 +85,6 @@ export function StudentProfileTabs({
       <TabsContent value="psychosocial" className="space-y-3">
         <PsychosocialTab
           studentId={studentId}
-          onUpdate={onUpdate}
-        />
-      </TabsContent>
-
-      {/* Sağlık & Destek Hizmetleri */}
-      <TabsContent value="health-support" className="space-y-3">
-        <HealthSupportTab
-          studentId={studentId}
-          student={student}
           onUpdate={onUpdate}
         />
       </TabsContent>

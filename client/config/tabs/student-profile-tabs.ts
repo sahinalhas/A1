@@ -4,8 +4,6 @@ import {
   MessageCircle,
   UserCircle,
   Heart,
-  Brain,
-  Cross,
   Target,
   TrendingUp,
   FileText,
@@ -21,7 +19,7 @@ import { TabConfig } from "./types";
 
 /**
  * Öğrenci Profili Ana Tab Yapılandırması
- * Veri Tipi Odaklı Yapı: 8 Sekme (Genel Bakış + 7 Veri Kategorisi)
+ * Veri Tipi Odaklı Yapı: 7 Sekme (Genel Bakış + 6 Veri Kategorisi)
  * Profesyonel & Akademik Standartlara Uygun Organizasyon
  */
 export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
@@ -51,13 +49,6 @@ export const STUDENT_PROFILE_MAIN_TABS: TabConfig[] = [
     label: "Psikososyal Profil",
     icon: Heart,
     description: "Sosyal-duygusal gelişim, davranış ve akran ilişkileri",
-    variant: "pills"
-  },
-  {
-    value: "health-support",
-    label: "Sağlık & Destek",
-    icon: Cross,
-    description: "Sağlık durumu, özel eğitim, risk analizi ve müdahale planları",
     variant: "pills"
   },
   {
@@ -99,11 +90,6 @@ export const STUDENT_TAB_COLORS = {
     gradient: "from-pink-500 to-rose-500",
     bg: "bg-gradient-to-r from-pink-50/80 to-rose-50/80 dark:from-pink-950/30 dark:to-rose-950/30",
     border: "border-pink-200/50 dark:border-pink-800/50",
-  },
-  "health-support": {
-    gradient: "from-red-500 to-orange-500",
-    bg: "bg-gradient-to-r from-red-50/80 to-orange-50/80 dark:from-red-950/30 dark:to-orange-950/30",
-    border: "border-red-200/50 dark:border-red-800/50",
   },
   career: {
     gradient: "from-amber-500 to-yellow-500",
