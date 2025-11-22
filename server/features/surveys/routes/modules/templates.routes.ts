@@ -72,3 +72,13 @@ export const deleteSurveyTemplateHandler: RequestHandler = (req, res) => {
     res.status(500).json({ success: false, error: 'Anket şablonu silinemedi' });
   }
 };
+
+export const resetSurveyTemplatesToDefaults: RequestHandler = (req, res) => {
+  try {
+    surveyService.resetToDefaults();
+    res.json({ success: true, message: 'Anket şablonları varsayılana sıfırlandı' });
+  } catch (error) {
+    console.error('Error resetting survey templates:', error);
+    res.status(500).json({ success: false, error: 'Anket şablonları sıfırlanamadı' });
+  }
+};

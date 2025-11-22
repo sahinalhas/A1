@@ -16,6 +16,7 @@ router.get("/survey-templates/:id", simpleRateLimit(300, 15 * 60 * 1000), templa
 router.post("/survey-templates", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(30, 15 * 60 * 1000), templatesRoutes.createSurveyTemplate);
 router.put("/survey-templates/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(30, 15 * 60 * 1000), templatesRoutes.updateSurveyTemplateHandler);
 router.delete("/survey-templates/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(20, 15 * 60 * 1000), templatesRoutes.deleteSurveyTemplateHandler);
+router.post("/survey-templates/reset", requireSecureAuth, requireRoleSecure(['admin']), simpleRateLimit(10, 15 * 60 * 1000), templatesRoutes.resetSurveyTemplatesToDefaults);
 
 router.get("/survey-questions/:templateId", simpleRateLimit(300, 15 * 60 * 1000), questionsRoutes.getQuestionsByTemplateId);
 router.post("/survey-questions", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(50, 15 * 60 * 1000), questionsRoutes.createSurveyQuestion);
