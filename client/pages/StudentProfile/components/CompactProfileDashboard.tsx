@@ -165,39 +165,39 @@ export function CompactProfileDashboard({
               Profil Durumu
             </CardTitle>
           </CardHeader>
-          <CardContent className="py-2 space-y-3">
+          <CardContent className="py-1.5 space-y-2">
             <div className="flex items-center justify-center">
-              <div className="relative w-28 h-28">
-                <svg className="w-28 h-28 transform -rotate-90">
+              <div className="relative w-24 h-24">
+                <svg className="w-24 h-24 transform -rotate-90">
                   <circle
-                    cx="56"
-                    cy="56"
-                    r="48"
+                    cx="48"
+                    cy="48"
+                    r="42"
                     stroke="currentColor"
                     strokeWidth="6"
                     fill="transparent"
                     className="text-gray-200"
                   />
                   <circle
-                    cx="56"
-                    cy="56"
-                    r="48"
+                    cx="48"
+                    cy="48"
+                    r="42"
                     stroke="currentColor"
                     strokeWidth="6"
                     fill="transparent"
-                    strokeDasharray={`${(overallScore / 100) * 301.59} 301.59`}
+                    strokeDasharray={`${(overallScore / 100) * 263.89} 263.89`}
                     className="text-primary"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold">{overallScore}</span>
-                  <span className="text-xs text-muted-foreground">Genel</span>
+                  <span className="text-xl font-bold">{overallScore}</span>
+                  <span className="text-[10px] text-muted-foreground">Genel</span>
                 </div>
               </div>
             </div>
             {completeness && (
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-sm">
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Tamamlanma</span>
                   <span className="font-semibold">{completeness.overall}%</span>
                 </div>
