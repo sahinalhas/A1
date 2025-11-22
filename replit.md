@@ -4,6 +4,30 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
+## November 22, 2025 - Survey Defaults System Implementation
+
+### Survey Default Templates - Idempotent Seeding & Reset Functionality
+- **Default Survey Templates System**: Implemented robust defaults mechanism following guidance-standards pattern
+  - Created normalized data structure in `shared/data/default-risk-map-survey.ts` with stable IDs
+  - Default survey: "Sınıf Risk Haritası" (Class Risk Map) with 40+ MEB-compliant risk factors
+  - Added `seedSurveysDefaultTemplates()` function with idempotent INSERT...ON CONFLICT DO UPDATE
+  - Automatic restoration: Missing default templates/questions are recreated on every startup
+  - Question IDs are deterministic and stable for proper upsert behavior
+- **Reset to Defaults Feature**:
+  - Added `resetToDefaults()` method in survey repository and service layers
+  - Created POST `/api/surveys/survey-templates/reset` endpoint with admin authentication
+  - UI: "Varsayılana Sıfırla" button with confirmation dialog on Surveys page
+  - Destructive reset removes all templates (including custom) and restores canonical defaults
+- **Database Integration**: seedSurveysDefaultTemplates() called during schema initialization
+- **Files Modified**: 
+  - `shared/data/default-risk-map-survey.ts` - Default survey data with stable IDs
+  - `server/lib/database/schema/surveys.schema.ts` - Idempotent seeding function
+  - `server/lib/database/schema/index.ts` - Seed function call
+  - `server/features/surveys/repository/templates.repository.ts` - resetToDefaults()
+  - `server/features/surveys/services/modules/templates.service.ts` - resetToDefaults()
+  - `server/features/surveys/index.ts` - POST /reset endpoint
+  - `client/pages/Surveys.tsx` - Reset button with AlertDialog
+
 ## November 22, 2025 - Enhanced Counseling Sessions Dashboard
 
 ### Görüşmeler (Counseling Sessions) Page - Metric Cards Enhancement
