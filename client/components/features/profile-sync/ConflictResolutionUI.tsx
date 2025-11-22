@@ -130,25 +130,11 @@ export default function ConflictResolutionUI({ studentId }: ConflictResolutionUI
  };
 
  if (loading) {
- return (
- <Card className="border-orange-200">
- <CardContent className="p-6">
- <div className=" h-20 bg-gray-200 rounded"></div>
- </CardContent>
- </Card>
- );
+ return null;
  }
 
  if (conflicts.length === 0) {
- return (
- <Card className="border-green-200 bg-green-50">
- <CardContent className="p-6 text-center">
- <CheckCircle2 className="h-12 w-12 text-green-600 mx-auto mb-2" />
- <p className="text-green-700 font-medium">Bekleyen Çelişki Yok</p>
- <p className="text-sm text-green-600 mt-1">Tüm veriler tutarlı</p>
- </CardContent>
- </Card>
- );
+ return null;
  }
 
  return (

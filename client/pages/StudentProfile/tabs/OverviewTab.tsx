@@ -1,7 +1,4 @@
-
-import { ProfileDashboard } from "../components/ProfileDashboard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/organisms/Card";
-import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { Alert, AlertDescription } from "@/components/atoms/Alert";
 import { 
@@ -9,7 +6,6 @@ import {
   Heart, 
   ShieldAlert, 
   Target,
-  ArrowRight,
   Info,
   Sparkles,
   MessageCircle,
@@ -19,6 +15,13 @@ import {
 import { Link } from "react-router-dom";
 import { Student } from "@/lib/storage";
 import ProfileUpdateTimeline from "@/components/features/live-profile/ProfileUpdateTimeline";
+import { CompactProfileDashboard } from "../components/CompactProfileDashboard";
+import { 
+  RecentGradesWidget, 
+  AttendanceWidget, 
+  AlertsWidget, 
+  ActiveInterventionsWidget 
+} from "../components/widgets";
 import { useEffect, useState } from "react";
 import { getNotesByStudent } from "@/lib/api/endpoints/notes.api";
 
@@ -35,13 +38,11 @@ export function OverviewTab({
   scoresData,
   loadingScores,
 }: OverviewTabProps) {
-  // Hızlı özetler için skorları hesapla
   const academicScore = scoresData?.akademikSkor || 0;
   const socialScore = scoresData?.sosyalDuygusalSkor || 0;
   const riskScore = scoresData?.riskSkoru || 0;
   const motivationScore = scoresData?.motivasyonSkor || 0;
 
-  // Görüşme sayıları
   const [meetingStats, setMeetingStats] = useState({
     veli: 0,
     bireysel: 0,
@@ -80,7 +81,7 @@ export function OverviewTab({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Bilgilendirme */}
       <Alert>
         <Info className="h-4 w-4" />
@@ -89,172 +90,162 @@ export function OverviewTab({
         </AlertDescription>
       </Alert>
 
-      {/* Hızlı Özet Kartlar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
+      {/* Hızlı Özet Kartlar - Ana Metrikler */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" />
               Akademik
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${getScoreColor(academicScore)}`}>
+            <div className={`text-2xl font-bold ${getScoreColor(academicScore)}`}>
               {Math.round(academicScore)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {getScoreLabel(academicScore)}
             </p>
-            <Button asChild variant="link" size="sm" className="mt-2 p-0 h-auto">
-              <Link to="#academics" className="flex items-center gap-1">
-                Detaylar <ArrowRight className="h-3 w-3" />
-              </Link>
-            </Button>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Heart className="h-4 w-4" />
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+              <Heart className="h-3 w-3" />
               Sosyal-Duygusal
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${getScoreColor(socialScore)}`}>
+            <div className={`text-2xl font-bold ${getScoreColor(socialScore)}`}>
               {Math.round(socialScore)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {getScoreLabel(socialScore)}
             </p>
-            <Button asChild variant="link" size="sm" className="mt-2 p-0 h-auto">
-              <Link to="#wellbeing" className="flex items-center gap-1">
-                Detaylar <ArrowRight className="h-3 w-3" />
-              </Link>
-            </Button>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <ShieldAlert className="h-4 w-4" />
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+              <ShieldAlert className="h-3 w-3" />
               Risk Seviyesi
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${riskScore > 60 ? 'text-red-600' : riskScore > 30 ? 'text-yellow-600' : 'text-green-600'}`}>
+            <div className={`text-2xl font-bold ${riskScore > 60 ? 'text-red-600' : riskScore > 30 ? 'text-yellow-600' : 'text-green-600'}`}>
               {Math.round(riskScore)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {riskScore > 60 ? 'Yüksek' : riskScore > 30 ? 'Orta' : 'Düşük'}
             </p>
-            <Button asChild variant="link" size="sm" className="mt-2 p-0 h-auto">
-              <Link to="#risk-support" className="flex items-center gap-1">
-                Detaylar <ArrowRight className="h-3 w-3" />
-              </Link>
-            </Button>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Target className="h-4 w-4" />
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+              <Target className="h-3 w-3" />
               Motivasyon
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${getScoreColor(motivationScore)}`}>
+            <div className={`text-2xl font-bold ${getScoreColor(motivationScore)}`}>
               {Math.round(motivationScore)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {getScoreLabel(motivationScore)}
             </p>
-            <Button asChild variant="link" size="sm" className="mt-2 p-0 h-auto">
-              <Link to="#wellbeing" className="flex items-center gap-1">
-                Detaylar <ArrowRight className="h-3 w-3" />
-              </Link>
-            </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Görüşme İstatistikleri */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <MessageCircle className="h-4 w-4 text-muted-foreground" />
-            Görüşme & İletişim
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-blue-500" />
-              <span className="text-sm text-muted-foreground">Veli:</span>
-              <span className="text-sm font-semibold">{meetingStats.veli}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-green-500" />
-              <span className="text-sm text-muted-foreground">Bireysel:</span>
-              <span className="text-sm font-semibold">{meetingStats.bireysel}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-purple-500" />
-              <span className="text-sm text-muted-foreground">Grup:</span>
-              <span className="text-sm font-semibold">{meetingStats.grup}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Ana Dashboard Bölümü - 2/3 + 1/3 Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Sol Kolon - Ana Bilgiler (2/3) */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Profil Tamamlama ve Radar Chart */}
+          <CompactProfileDashboard
+            studentId={studentId}
+            scores={scoresData}
+            isLoading={loadingScores}
+          />
 
-      {/* Profil Tamamlama ve Canlı Senkronizasyon */}
-      <ProfileDashboard
-        studentId={studentId}
-        scores={scoresData}
-        isLoading={loadingScores}
-      />
+          {/* Görüşme İstatistikleri */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                Görüşme & İletişim
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm text-muted-foreground">Veli:</span>
+                  <span className="text-sm font-semibold">{meetingStats.veli}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-green-500" />
+                  <span className="text-sm text-muted-foreground">Bireysel:</span>
+                  <span className="text-sm font-semibold">{meetingStats.bireysel}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-purple-500" />
+                  <span className="text-sm text-muted-foreground">Grup:</span>
+                  <span className="text-sm font-semibold">{meetingStats.grup}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-      {/* Hızlı Aksiyonlar */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            Hızlı Aksiyonlar
-          </CardTitle>
-          <CardDescription>
-            Sık kullanılan işlemler
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Button asChild variant="outline" className="h-auto flex-col py-4">
-              <Link to="/gorusmeler">
-                <div className="text-sm font-medium">Görüşme Ekle</div>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto flex-col py-4">
-              <Link to={`/ai-asistan?student=${studentId}`}>
-                <div className="text-sm font-medium">AI Analiz</div>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto flex-col py-4">
-              <Link to={`#academics`}>
-                <div className="text-sm font-medium">Not Gir</div>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-auto flex-col py-4">
-              <Link to={`#communication`}>
-                <div className="text-sm font-medium">Veli İletişim</div>
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          {/* Son Profil Güncellemeleri - Kompakt */}
+          <ProfileUpdateTimeline studentId={studentId} maxItems={3} />
+        </div>
 
-      {/* Profil Güncelleme Geçmişi */}
-      <ProfileUpdateTimeline studentId={studentId} maxItems={5} />
+        {/* Sağ Kolon - Hızlı Erişim ve Özetler (1/3) */}
+        <div className="space-y-4">
+          {/* Hızlı Aksiyonlar */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" />
+                Hızlı Aksiyonlar
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                <Link to="/gorusmeler">
+                  Görüşme Ekle
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                <Link to={`/ai-asistan?student=${studentId}`}>
+                  AI Analiz
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                <Link to={`#academics`}>
+                  Not Gir
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                <Link to={`#communication`}>
+                  Veli İletişim
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Widget'lar */}
+          <RecentGradesWidget studentId={studentId} />
+          <AttendanceWidget studentId={studentId} />
+          <AlertsWidget studentId={studentId} />
+          <ActiveInterventionsWidget studentId={studentId} />
+        </div>
+      </div>
     </div>
   );
 }
