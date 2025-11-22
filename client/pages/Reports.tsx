@@ -131,36 +131,36 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
 
  const statsCards = useMemo(() => [
     {
-      title: "Toplam Öğrenci",
+      title: "Toplam Uyarı",
       value: overallStats.totalStudents,
-      description: "Sisteme kayıtlı öğrenci sayısı",
+      description: "Sistemde kayıtlı öğrenci",
       icon: Users,
       gradient: "from-blue-500 to-cyan-600",
       change: `${overallStats.totalStudents}`,
     },
     {
-      title: "Ortalama Başarı",
-      value: `%${Math.round(overallStats.averageSuccessRate)}`,
-      description: "Genel başarı tahmini ortalaması",
+      title: "Kritik Uyarılar",
+      value: overallStats.criticalWarnings,
+      description: "Acil müdahale gerektiren",
+      icon: AlertTriangle,
+      gradient: "from-red-500 to-rose-600",
+      change: overallStats.criticalWarnings > 0 ? "Dikkat" : "İyi",
+    },
+    {
+      title: "Yüksek Risk",
+      value: overallStats.atRiskCount,
+      description: "Yakın takip gerektiren",
+      icon: TrendingUp,
+      gradient: "from-amber-500 to-orange-600",
+      change: `${overallStats.atRiskCount}`,
+    },
+    {
+      title: "Risk Dağılımı",
+      value: `%${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}`,
+      description: "Düşük risk oranı",
       icon: Award,
       gradient: "from-emerald-500 to-teal-600",
-      change: "↑ Trend",
-    },
-    {
-      title: "Yüksek Başarı",
-      value: overallStats.highSuccessCount,
-      description: `${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}% başarılı öğrenci`,
-      icon: TrendingUp,
-      gradient: "from-violet-500 to-purple-600",
-      change: `${overallStats.highSuccessCount}`,
-    },
-    {
-      title: "Risk Altında",
-      value: overallStats.atRiskCount,
-      description: "Yakın takip gerektiren öğrenci",
-      icon: AlertTriangle,
-      gradient: "from-amber-500 to-orange-600",
-      change: overallStats.atRiskCount > 0 ? "Dikkat" : "İyi",
+      change: "İyi",
     },
   ], [overallStats]);
 
