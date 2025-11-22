@@ -392,31 +392,31 @@ useEffect(() => {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
         {statsCards.map((stat, index) => (
           <motion.div
             key={stat.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -5, scale: 1.02 }}
+            whileHover={{ y: -3, scale: 1.01 }}
             className="group"
           >
-            <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+            <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity`}></div>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.gradient} shadow-lg`}>
-                    <stat.icon className="h-6 w-6 text-white" />
+              <CardContent className="p-3 md:p-4">
+                <div className="flex items-start justify-between mb-2 md:mb-3">
+                  <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${stat.gradient} shadow-md`}>
+                    <stat.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
                     {stat.trend}
                   </Badge>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                  <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                <div className="space-y-0.5">
+                  <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{stat.title}</p>
+                  <p className="text-xl md:text-2xl font-bold tracking-tight">{stat.value}</p>
+                  <p className="text-[10px] md:text-xs text-muted-foreground truncate">{stat.description}</p>
                 </div>
               </CardContent>
             </Card>
@@ -424,66 +424,69 @@ useEffect(() => {
         ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3 mb-8">
+      <div className="grid gap-4 md:gap-6 md:grid-cols-3 mb-6 md:mb-8">
         <motion.div
           className="md:col-span-2"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-2 hover:shadow-lg transition-all h-full bg-white dark:bg-slate-900">
-            <CardHeader>
+          <Card className="border hover:shadow-lg transition-all h-full bg-white dark:bg-slate-900">
+            <CardHeader className="p-4 md:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <TrendingUp className="h-5 w-5 text-violet-600" />
-                    Haftalık Görüşme Aktivitesi
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                    <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-violet-600 flex-shrink-0" />
+                    <span className="truncate">Haftalık Görüşme Aktivitesi</span>
                   </CardTitle>
-                  <CardDescription>Son 7 günlük görüşme trendi</CardDescription>
+                  <CardDescription className="text-xs md:text-sm mt-1">Son 7 günlük görüşme trendi</CardDescription>
                 </div>
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs ml-2 flex-shrink-0">
                   <Activity className="h-3 w-3" />
-                  Canlı
+                  <span className="hidden sm:inline">Canlı</span>
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6 pt-0 md:pt-0">
               <ChartContainer
                 config={{
                   count: { label: "Görüşme", color: "hsl(262, 83%, 58%)" },
                 }}
-                className="h-[280px]"
+                className="h-[180px] md:h-[240px] w-full"
               >
-                <AreaChart data={weeklyMeetingTrend}>
-                  <defs>
-                    <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
-                  <XAxis
-                    dataKey="day"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    className="text-xs"
-                  />
-                  <YAxis
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    className="text-xs"
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Area
-                    type="monotone"
-                    dataKey="count"
-                    stroke="hsl(262, 83%, 58%)"
-                    strokeWidth={3}
-                    fill="url(#colorGradient)"
-                  />
-                </AreaChart>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={weeklyMeetingTrend} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                    <defs>
+                      <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
+                    <XAxis
+                      dataKey="day"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      className="text-[10px] md:text-xs"
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      className="text-[10px] md:text-xs"
+                      width={30}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="count"
+                      stroke="hsl(262, 83%, 58%)"
+                      strokeWidth={2}
+                      fill="url(#colorGradient)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
           </Card>
