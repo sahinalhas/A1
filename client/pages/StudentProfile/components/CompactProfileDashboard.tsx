@@ -108,7 +108,7 @@ export function CompactProfileDashboard({
       <ConflictResolutionUI studentId={studentId} />
 
       {/* Kompakt Profil Özeti */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Radar Chart - Çok Boyutlu Profil */}
         <Card>
           <CardHeader className="pb-2">
