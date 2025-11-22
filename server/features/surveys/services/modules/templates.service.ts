@@ -1,6 +1,8 @@
 import * as repository from '../../repository/index.js';
 import { sanitizeString } from '../../../../middleware/validation.js';
 import type { SurveyTemplate } from '../../types/surveys.types.js';
+import { seedSurveysDefaultTemplates } from '../../../../lib/database/schema/surveys.schema.js';
+import getDatabase from '../../../../lib/database.js';
 
 export function getAllTemplates() {
   return repository.loadSurveyTemplates();
@@ -32,4 +34,10 @@ export function updateTemplate(id: string, template: Partial<SurveyTemplate>) {
 
 export function deleteTemplate(id: string) {
   repository.deleteSurveyTemplate(id);
+}
+
+export function resetToDefaults(): void {
+  const db = getDatabase();
+  repository.deleteAllTemplates();
+  seedSurveysDefaultTemplates(db);
 }

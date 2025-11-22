@@ -3,7 +3,8 @@ export {
   getSurveyTemplate,
   saveSurveyTemplate,
   updateSurveyTemplate,
-  deleteSurveyTemplate
+  deleteSurveyTemplate,
+  deleteAllTemplates
 } from './templates.repository.js';
 
 export {

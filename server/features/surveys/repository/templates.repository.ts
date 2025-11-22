@@ -121,3 +121,14 @@ export function deleteSurveyTemplate(id: string): void {
     throw error;
   }
 }
+
+export function deleteAllTemplates(): void {
+  try {
+    const db = getDatabase();
+    db.prepare('DELETE FROM survey_questions').run();
+    db.prepare('DELETE FROM survey_templates').run();
+  } catch (error) {
+    console.error('Error deleting all survey templates:', error);
+    throw error;
+  }
+}
