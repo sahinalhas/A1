@@ -56,104 +56,116 @@ export function StudentCard({
  const riskConfig = getRiskConfig(student.risk);
 
  return (
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- whileHover={{ y: -4, scale: 1.01 }}
- transition={{ duration: 0.2 }}
- >
  <Card
  className={`
- group relative overflow-hidden border backdrop-blur-xl bg-gradient-to-br ${riskConfig.gradient}
- hover:shadow-xl transition-all duration-300 ${riskConfig.border} ${riskConfig.glow}
- ${isSelected ? 'ring-2 ring-primary ring-offset-2' : ''}
+ group relative overflow-hidden border-2 backdrop-blur-xl bg-gradient-to-br ${riskConfig.gradient}
+ hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ${riskConfig.border} ${riskConfig.glow}
+ ${isSelected ? 'ring-2 ring-primary ring-offset-2 shadow-xl scale-[1.02]' : ''}
+ cursor-pointer
  `}
+ onClick={() => onView?.(student)}
  >
- <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-white/0 dark:from-white/5 dark:to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+ {/* Animated background overlay */}
+ <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/20 to-transparent dark:from-white/10 dark:via-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
  
- <CardContent className="p-4 md:p-5 relative">
- <div className="space-y-3">
+ {/* Shine effect */}
+ <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+ 
+ <CardContent className="p-5 md:p-6 relative">
+ <div className="space-y-4">
+ {/* Header Section */}
  <div className="flex items-start justify-between">
  <div className="flex items-start gap-3 flex-1 min-w-0">
  {onSelect && (
  <Checkbox
  checked={isSelected}
- onCheckedChange={onSelect}
- className="mt-1.5 flex-shrink-0"
+ onCheckedChange={(checked) => {
+ onSelect(checked as boolean);
+ }}
+ onClick={(e) => e.stopPropagation()}
+ className="mt-2 flex-shrink-0 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
  />
  )}
- <div
- className="flex-1 cursor-pointer min-w-0"
- onClick={() => onView?.(student)}
- >
- <div className="flex items-center gap-2.5 mb-2">
- <div className={`rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-2 shadow-lg`}>
- <User className="h-4 w-4 text-white" />
+ <div className="flex-1 min-w-0">
+ <div className="flex items-center gap-3 mb-2">
+ <div className={`rounded-full bg-gradient-to-br from-violet-500 to-purple-600 p-2.5 shadow-lg ring-2 ring-violet-500/20`}>
+ <User className="h-5 w-5 text-white" />
  </div>
  <div className="flex-1 min-w-0">
- <h3 className="font-bold text-base md:text-lg truncate">
+ <h3 className="font-bold text-lg md:text-xl truncate group-hover:text-primary transition-colors">
  {student.name} {student.surname}
  </h3>
- <p className="text-[10px] md:text-xs text-muted-foreground">
- No: {student.id}
- </p>
+ <div className="flex items-center gap-2 mt-0.5">
+ <Badge variant="secondary" className="text-[10px] font-mono px-2 py-0.5">
+ #{student.id}
+ </Badge>
  </div>
  </div>
  </div>
  </div>
- <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+ </div>
+ <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:rotate-12">
+ <ArrowRight className="h-5 w-5 text-primary flex-shrink-0" />
+ </div>
  </div>
 
- <div className="flex flex-wrap gap-1.5 md:gap-2">
- <Badge variant="outline" className="text-[10px] md:text-xs border-violet-500/30 bg-violet-500/5">
- <GraduationCap className="mr-1 h-3 w-3" />
+ {/* Info Badges */}
+ <div className="flex flex-wrap gap-2">
+ <Badge variant="outline" className="text-xs border-violet-500/40 bg-violet-500/10 hover:bg-violet-500/20 transition-colors">
+ <GraduationCap className="mr-1.5 h-3.5 w-3.5" />
  {student.class}
  </Badge>
- <Badge variant="outline" className="text-[10px] md:text-xs border-blue-500/30 bg-blue-500/5">
- {student.gender === 'E' ? 'Erkek' : 'Kız'}
+ <Badge variant="outline" className="text-xs border-blue-500/40 bg-blue-500/10 hover:bg-blue-500/20 transition-colors">
+ {student.gender === 'E' ? '👨 Erkek' : '👩 Kız'}
  </Badge>
- <Badge className={`text-[10px] md:text-xs border ${riskConfig.badge}`}>
- <AlertTriangle className={`mr-1 h-3 w-3 ${riskConfig.icon}`} />
+ <Badge className={`text-xs border-2 font-medium ${riskConfig.badge} shadow-sm`}>
+ <AlertTriangle className={`mr-1.5 h-3.5 w-3.5 ${riskConfig.icon}`} />
  {student.risk || 'Düşük'}
  </Badge>
  </div>
 
+ {/* Action Buttons */}
  <div className="flex gap-2 pt-3 border-t border-border/50">
  <Button
  asChild
  size="sm"
- variant="outline"
- className="flex-1 text-xs h-9 hover:bg-primary/10 hover:border-primary/30 transition-colors"
+ className="flex-1 text-xs h-10 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-md hover:shadow-lg transition-all"
+ onClick={(e) => e.stopPropagation()}
  >
  <Link to={`/ogrenci/${student.id}`}>
- <Eye className="mr-1.5 h-3.5 w-3.5" />
- Görüntüle
+ <Eye className="mr-2 h-4 w-4" />
+ Profil
  </Link>
  </Button>
  {onEdit && (
  <Button
  size="sm"
- variant="ghost"
- onClick={() => onEdit(student)}
- className="h-9 px-3 hover:bg-primary/10 transition-colors"
+ variant="outline"
+ onClick={(e) => {
+ e.stopPropagation();
+ onEdit(student);
+ }}
+ className="h-10 px-4 hover:bg-orange-500/10 hover:border-orange-500/50 hover:text-orange-600 transition-all"
  >
- <Pencil className="h-3.5 w-3.5" />
+ <Pencil className="h-4 w-4" />
  </Button>
  )}
  {onDelete && (
  <Button
  size="sm"
- variant="ghost"
- onClick={() => onDelete(student)}
- className="h-9 px-3 text-destructive hover:bg-destructive/10 transition-colors"
+ variant="outline"
+ onClick={(e) => {
+ e.stopPropagation();
+ onDelete(student);
+ }}
+ className="h-10 px-4 text-destructive hover:bg-destructive/10 hover:border-destructive/50 transition-all"
  >
- <Trash2 className="h-3.5 w-3.5" />
+ <Trash2 className="h-4 w-4" />
  </Button>
  )}
  </div>
  </div>
  </CardContent>
  </Card>
- </motion.div>
  );
 }

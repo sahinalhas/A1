@@ -705,45 +705,66 @@ export default function Students() {
           <>
             {viewMode === 'grid' || isMobileView ? (
               <motion.div
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-6"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-5 mb-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ staggerChildren: 0.05 }}
+                transition={{ staggerChildren: 0.03 }}
               >
-                {pagination.paginatedItems.map((student) => (
-                  <StudentCard
+                {pagination.paginatedItems.map((student, index) => (
+                  <motion.div
                     key={student.id}
-                    student={student}
-                    isSelected={selectedStudentIds.has(student.id)}
-                    onSelect={(selected) => handleSelectOne(student.id, selected)}
-                    onEdit={onEditClick}
-                    onDelete={onDeleteClick}
-                    onView={handleRowClick}
-                  />
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ 
+                      delay: index * 0.03,
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                  >
+                    <StudentCard
+                      student={student}
+                      isSelected={selectedStudentIds.has(student.id)}
+                      onSelect={(selected) => handleSelectOne(student.id, selected)}
+                      onEdit={onEditClick}
+                      onDelete={onDeleteClick}
+                      onView={handleRowClick}
+                    />
+                  </motion.div>
                 ))}
               </motion.div>
             ) : (
-              <EnhancedStudentTable
-                students={pagination.paginatedItems}
-                selectedIds={selectedStudentIds}
-                onSelectAll={handleSelectAll}
-                onSelectOne={handleSelectOne}
-                onEdit={onEditClick}
-                onDelete={onDeleteClick}
-                onRowClick={handleRowClick}
-                sortColumn={sortColumn}
-                sortDirection={sortDirection}
-                onSort={handleSort}
-                columnVisibility={columnVisibility}
-              />
+              <div className="rounded-xl border border-border/40 overflow-hidden shadow-sm bg-card/50 backdrop-blur-sm">
+                <EnhancedStudentTable
+                  students={pagination.paginatedItems}
+                  selectedIds={selectedStudentIds}
+                  onSelectAll={handleSelectAll}
+                  onSelectOne={handleSelectOne}
+                  onEdit={onEditClick}
+                  onDelete={onDeleteClick}
+                  onRowClick={handleRowClick}
+                  sortColumn={sortColumn}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  columnVisibility={columnVisibility}
+                />
+              </div>
             )}
 
             {pagination.totalPages > 1 && (
-              <div className="flex items-center justify-between mt-6">
-                <p className="text-sm text-muted-foreground">
-                  {pagination.startIndex + 1}-{pagination.endIndex} arası gösteriliyor
-                  (Toplam {pagination.totalItems} öğrenci)
-                </p>
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 p-4 rounded-lg bg-muted/30 backdrop-blur-sm border border-border/40"
+              >
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="font-normal">
+                    {pagination.startIndex + 1}-{pagination.endIndex}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    / {pagination.totalItems} öğrenci
+                  </span>
+                </div>
                 <Pagination>
                   <PaginationContent>
                     <PaginationItem>
@@ -752,7 +773,7 @@ export default function Students() {
                         className={
                           !pagination.canGoPrevious
                             ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
+                            : 'cursor-pointer hover:bg-primary/10 transition-colors'
                         }
                       />
                     </PaginationItem>
@@ -772,7 +793,11 @@ export default function Students() {
                           <PaginationLink
                             onClick={() => pagination.setPage(pageNum)}
                             isActive={pageNum === pagination.currentPage}
-                            className="cursor-pointer"
+                            className={`cursor-pointer transition-all ${
+                              pageNum === pagination.currentPage 
+                                ? 'bg-primary text-primary-foreground shadow-lg scale-110' 
+                                : 'hover:bg-primary/10'
+                            }`}
                           >
                             {pageNum}
                           </PaginationLink>
@@ -785,13 +810,13 @@ export default function Students() {
                         className={
                           !pagination.canGoNext
                             ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
+                            : 'cursor-pointer hover:bg-primary/10 transition-colors'
                         }
                       />
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
-              </div>
+              </motion.div>
             )}
           </>
         )}
