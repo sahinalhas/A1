@@ -111,20 +111,20 @@ export function CompactProfileDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Radar Chart - Çok Boyutlu Profil */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+              <Target className="h-3 w-3 text-primary" />
               Çok Boyutlu Profil
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-1.5">
             {radarData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={180}>
+              <ResponsiveContainer width="100%" height={130}>
                 <RadarChart data={radarData}>
                   <PolarGrid />
                   <PolarAngleAxis 
                     dataKey="subject" 
-                    tick={{ fill: 'hsl(var(--foreground))', fontSize: 11 }}
+                    tick={{ fill: 'hsl(var(--foreground))', fontSize: 10 }}
                   />
                   <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} />
                   <Radar
@@ -150,7 +150,7 @@ export function CompactProfileDashboard({
                 </RadarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[180px] flex items-center justify-center text-muted-foreground text-sm">
+              <div className="h-[130px] flex items-center justify-center text-muted-foreground text-xs">
                 Henüz yeterli veri yok
               </div>
             )}
@@ -159,49 +159,49 @@ export function CompactProfileDashboard({
 
         {/* Profil Tamamlama */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-primary" />
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+              <Sparkles className="h-3 w-3 text-primary" />
               Profil Durumu
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="py-1.5 space-y-2">
             <div className="flex items-center justify-center">
-              <div className="relative w-28 h-28">
-                <svg className="w-28 h-28 transform -rotate-90">
+              <div className="relative w-20 h-20">
+                <svg className="w-20 h-20 transform -rotate-90">
                   <circle
-                    cx="56"
-                    cy="56"
-                    r="48"
+                    cx="40"
+                    cy="40"
+                    r="34"
                     stroke="currentColor"
-                    strokeWidth="8"
+                    strokeWidth="5"
                     fill="transparent"
                     className="text-gray-200"
                   />
                   <circle
-                    cx="56"
-                    cy="56"
-                    r="48"
+                    cx="40"
+                    cy="40"
+                    r="34"
                     stroke="currentColor"
-                    strokeWidth="8"
+                    strokeWidth="5"
                     fill="transparent"
-                    strokeDasharray={`${(overallScore / 100) * 301.59} 301.59`}
+                    strokeDasharray={`${(overallScore / 100) * 213.63} 213.63`}
                     className="text-primary"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold">{overallScore}</span>
-                  <span className="text-xs text-muted-foreground">Genel</span>
+                  <span className="text-lg font-bold">{overallScore}</span>
+                  <span className="text-[9px] text-muted-foreground">Genel</span>
                 </div>
               </div>
             </div>
             {completeness && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Tamamlanma</span>
                   <span className="font-semibold">{completeness.overall}%</span>
                 </div>
-                <Progress value={completeness.overall} className="h-2" />
+                <Progress value={completeness.overall} className="h-1" />
               </div>
             )}
           </CardContent>

@@ -42,35 +42,35 @@ export function AlertsWidget({ studentId }: AlertsWidgetProps) {
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium flex items-center gap-2">
-          <AlertCircle className="h-4 w-4" />
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+          <AlertCircle className="h-3 w-3" />
           Aktif Uyarılar
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="py-2">
         {loading ? (
           <div className="space-y-2">
             <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
             <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
           </div>
         ) : alerts.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {alerts.map((alert, idx) => (
-              <div key={idx} className="flex items-start gap-2">
-                <Badge variant={getSeverityColor(alert.severity)} className="text-xs mt-0.5">
+              <div key={idx} className="flex items-start gap-1.5">
+                <Badge variant={getSeverityColor(alert.severity)} className="text-[10px] px-1.5 py-0 h-5 mt-0.5 shrink-0">
                   {alert.type || 'Uyarı'}
                 </Badge>
-                <span className="text-xs text-muted-foreground line-clamp-2">
+                <span className="text-xs text-muted-foreground line-clamp-2 leading-snug">
                   {alert.message || alert.description || 'Detay yok'}
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-2 text-xs text-green-600">
-            <CheckCircle className="h-4 w-4" />
+          <div className="flex items-center gap-1.5 text-xs text-green-600 justify-center py-2">
+            <CheckCircle className="h-3 w-3" />
             <span>Aktif uyarı yok</span>
           </div>
         )}

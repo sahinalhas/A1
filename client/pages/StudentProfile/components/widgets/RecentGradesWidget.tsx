@@ -50,23 +50,23 @@ export function RecentGradesWidget({ studentId }: RecentGradesWidgetProps) {
   const trendColor = trend === 'up' ? 'text-green-600' : trend === 'down' ? 'text-red-600' : 'text-gray-600';
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xs font-medium flex items-center justify-between">
           <span>Son Notlar</span>
-          <TrendIcon className={`h-4 w-4 ${trendColor}`} />
+          <TrendIcon className={`h-3 w-3 ${trendColor}`} />
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="py-2">
         {loading ? (
           <div className="space-y-2">
             <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
             <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
           </div>
         ) : grades.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {grades.map((grade, idx) => (
-              <div key={idx} className="flex items-center justify-between text-sm">
+              <div key={idx} className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">{grade.term}</span>
                 <span className={`font-semibold ${getGradeColor(grade.gpa || 0)}`}>
                   {grade.gpa?.toFixed(1) || '-'}
@@ -75,7 +75,7 @@ export function RecentGradesWidget({ studentId }: RecentGradesWidgetProps) {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">Henüz not bilgisi yok</p>
+          <p className="text-xs text-muted-foreground text-center py-2">Henüz not bilgisi yok</p>
         )}
       </CardContent>
     </Card>

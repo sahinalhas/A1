@@ -99,7 +99,7 @@ export function OverviewTab({
               Akademik
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-2">
             <div className={`text-2xl font-bold ${getScoreColor(academicScore)}`}>
               {Math.round(academicScore)}
             </div>
@@ -116,7 +116,7 @@ export function OverviewTab({
               Sosyal-Duygusal
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-2">
             <div className={`text-2xl font-bold ${getScoreColor(socialScore)}`}>
               {Math.round(socialScore)}
             </div>
@@ -133,7 +133,7 @@ export function OverviewTab({
               Risk Seviyesi
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-2">
             <div className={`text-2xl font-bold ${riskScore > 60 ? 'text-red-600' : riskScore > 30 ? 'text-yellow-600' : 'text-green-600'}`}>
               {Math.round(riskScore)}
             </div>
@@ -150,7 +150,7 @@ export function OverviewTab({
               Motivasyon
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-2">
             <div className={`text-2xl font-bold ${getScoreColor(motivationScore)}`}>
               {Math.round(motivationScore)}
             </div>
@@ -174,28 +174,28 @@ export function OverviewTab({
 
           {/* Görüşme İstatistikleri */}
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <MessageCircle className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+                <MessageCircle className="h-3 w-3 text-muted-foreground" />
                 Görüşme & İletişim
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm text-muted-foreground">Veli:</span>
-                  <span className="text-sm font-semibold">{meetingStats.veli}</span>
+            <CardContent className="py-2">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-3 w-3 text-blue-500" />
+                  <span className="text-xs text-muted-foreground">Veli:</span>
+                  <span className="text-xs font-semibold">{meetingStats.veli}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-green-500" />
-                  <span className="text-sm text-muted-foreground">Bireysel:</span>
-                  <span className="text-sm font-semibold">{meetingStats.bireysel}</span>
+                <div className="flex items-center gap-1.5">
+                  <User className="h-3 w-3 text-green-500" />
+                  <span className="text-xs text-muted-foreground">Bireysel:</span>
+                  <span className="text-xs font-semibold">{meetingStats.bireysel}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-500" />
-                  <span className="text-sm text-muted-foreground">Grup:</span>
-                  <span className="text-sm font-semibold">{meetingStats.grup}</span>
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-3 w-3 text-purple-500" />
+                  <span className="text-xs text-muted-foreground">Grup:</span>
+                  <span className="text-xs font-semibold">{meetingStats.grup}</span>
                 </div>
               </div>
             </CardContent>
@@ -209,29 +209,29 @@ export function OverviewTab({
         <div className="space-y-4">
           {/* Hızlı Aksiyonlar */}
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-primary" />
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+                <Sparkles className="h-3 w-3 text-primary" />
                 Hızlı Aksiyonlar
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+            <CardContent className="py-2 space-y-1.5">
+              <Button asChild variant="outline" className="w-full justify-start h-8 text-xs" size="sm">
                 <Link to="/gorusmeler">
                   Görüşme Ekle
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+              <Button asChild variant="outline" className="w-full justify-start h-8 text-xs" size="sm">
                 <Link to={`/ai-asistan?student=${studentId}`}>
                   AI Analiz
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+              <Button asChild variant="outline" className="w-full justify-start h-8 text-xs" size="sm">
                 <Link to={`#academics`}>
                   Not Gir
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="w-full justify-start" size="sm">
+              <Button asChild variant="outline" className="w-full justify-start h-8 text-xs" size="sm">
                 <Link to={`#communication`}>
                   Veli İletişim
                 </Link>

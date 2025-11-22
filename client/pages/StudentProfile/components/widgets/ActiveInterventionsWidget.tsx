@@ -33,35 +33,35 @@ export function ActiveInterventionsWidget({ studentId }: ActiveInterventionsWidg
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium flex items-center gap-2">
-          <Target className="h-4 w-4" />
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+          <Target className="h-3 w-3" />
           Aktif Müdahaleler
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="py-2">
         {loading ? (
           <div className="space-y-2">
             <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
             <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
           </div>
         ) : interventions.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {interventions.map((intervention, idx) => (
               <div key={idx} className="text-xs">
-                <div className="font-medium text-foreground">
+                <div className="font-medium text-foreground leading-snug">
                   {intervention.type || intervention.title || 'Müdahale'}
                 </div>
-                <div className="text-muted-foreground">
+                <div className="text-muted-foreground text-[11px] leading-snug line-clamp-1">
                   {intervention.goal || intervention.description || ''}
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <CheckCircle className="h-4 w-4" />
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground justify-center py-2">
+            <CheckCircle className="h-3 w-3" />
             <span>Aktif müdahale yok</span>
           </div>
         )}

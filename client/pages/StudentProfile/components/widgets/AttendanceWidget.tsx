@@ -44,28 +44,28 @@ export function AttendanceWidget({ studentId }: AttendanceWidgetProps) {
   const isHighAbsence = absenceRate > 15;
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xs font-medium flex items-center gap-1.5">
+          <Calendar className="h-3 w-3" />
           Devamsızlık
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="py-2">
         {loading ? (
           <div className="space-y-2">
             <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
             <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold">{stats.absent}</span>
-              <Badge variant={isHighAbsence ? "destructive" : "secondary"}>
+              <span className="text-xl font-bold">{stats.absent}</span>
+              <Badge variant={isHighAbsence ? "destructive" : "secondary"} className="text-xs">
                 {absenceRate.toFixed(0)}%
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground space-y-1">
+            <div className="text-xs text-muted-foreground space-y-0.5">
               <div>Toplam {stats.total} kayıt</div>
               {stats.lastAbsent && (
                 <div className="flex items-center gap-1">
