@@ -60,17 +60,35 @@ const unifiedIdentitySchema = z.object({
  province: z.string().optional(),
  district: z.string().optional(),
  address: z.string().optional(),
- parentName: z.string().optional(),
- parentContact: z.string().optional(),
- parentEmail: z.string().email("Geçerli bir e-posta giriniz").optional().or(z.literal("")),
- parentOccupation: z.string().optional(),
- parentEducation: z.string().optional(),
- secondParentName: z.string().optional(),
- secondParentContact: z.string().optional(),
- secondParentRelation: z.string().optional(),
- numberOfSiblings: z.number().optional(),
+ 
+ motherName: z.string().optional(),
+ motherEducation: z.string().optional(),
  motherOccupation: z.string().optional(),
+ motherEmail: z.string().email("Geçerli bir e-posta giriniz").optional().or(z.literal("")),
+ motherPhone: z.string().optional(),
+ motherVitalStatus: z.enum(["Sağ","Vefat Etmiş"]).optional(),
+ motherLivingStatus: z.enum(["Birlikte","Ayrı"]).optional(),
+ 
+ fatherName: z.string().optional(),
+ fatherEducation: z.string().optional(),
  fatherOccupation: z.string().optional(),
+ fatherEmail: z.string().email("Geçerli bir e-posta giriniz").optional().or(z.literal("")),
+ fatherPhone: z.string().optional(),
+ fatherVitalStatus: z.enum(["Sağ","Vefat Etmiş"]).optional(),
+ fatherLivingStatus: z.enum(["Birlikte","Ayrı"]).optional(),
+ 
+ guardianName: z.string().optional(),
+ guardianRelation: z.string().optional(),
+ guardianPhone: z.string().optional(),
+ guardianEmail: z.string().email("Geçerli bir e-posta giriniz").optional().or(z.literal("")),
+ 
+ numberOfSiblings: z.number().optional(),
+ 
+ livingWith: z.string().optional(),
+ homeRentalStatus: z.string().optional(),
+ homeHeatingType: z.string().optional(),
+ transportationToSchool: z.string().optional(),
+ studentWorkStatus: z.string().optional(),
 });
 
 type UnifiedIdentityFormValues = z.infer<typeof unifiedIdentitySchema>;
@@ -97,17 +115,35 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  province: student.province ||"",
  district: student.district ||"",
  address: student.address ||"",
- parentName: student.parentName ||"",
- parentContact: student.parentContact ||"",
- parentEmail: (student as any).parentEmail ||"",
- parentOccupation: (student as any).parentOccupation ||"",
- parentEducation: (student as any).parentEducation ||"",
- secondParentName: (student as any).secondParentName ||"",
- secondParentContact: (student as any).secondParentContact ||"",
- secondParentRelation: (student as any).secondParentRelation ||"",
- numberOfSiblings: student.numberOfSiblings,
+ 
+ motherName: student.motherName ||"",
+ motherEducation: student.motherEducation ||"",
  motherOccupation: student.motherOccupation ||"",
+ motherEmail: student.motherEmail ||"",
+ motherPhone: student.motherPhone ||"",
+ motherVitalStatus: student.motherVitalStatus,
+ motherLivingStatus: student.motherLivingStatus,
+ 
+ fatherName: student.fatherName ||"",
+ fatherEducation: student.fatherEducation ||"",
  fatherOccupation: student.fatherOccupation ||"",
+ fatherEmail: student.fatherEmail ||"",
+ fatherPhone: student.fatherPhone ||"",
+ fatherVitalStatus: student.fatherVitalStatus,
+ fatherLivingStatus: student.fatherLivingStatus,
+ 
+ guardianName: student.guardianName ||"",
+ guardianRelation: student.guardianRelation ||"",
+ guardianPhone: student.guardianPhone ||"",
+ guardianEmail: student.guardianEmail ||"",
+ 
+ numberOfSiblings: student.numberOfSiblings,
+ 
+ livingWith: student.livingWith ||"",
+ homeRentalStatus: student.homeRentalStatus ||"",
+ homeHeatingType: student.homeHeatingType ||"",
+ transportationToSchool: student.transportationToSchool ||"",
+ studentWorkStatus: student.studentWorkStatus ||"",
  },
  });
 
@@ -126,17 +162,35 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  province: student.province ||"",
  district: student.district ||"",
  address: student.address ||"",
- parentName: student.parentName ||"",
- parentContact: student.parentContact ||"",
- parentEmail: (student as any).parentEmail ||"",
- parentOccupation: (student as any).parentOccupation ||"",
- parentEducation: (student as any).parentEducation ||"",
- secondParentName: (student as any).secondParentName ||"",
- secondParentContact: (student as any).secondParentContact ||"",
- secondParentRelation: (student as any).secondParentRelation ||"",
- numberOfSiblings: student.numberOfSiblings,
+ 
+ motherName: student.motherName ||"",
+ motherEducation: student.motherEducation ||"",
  motherOccupation: student.motherOccupation ||"",
+ motherEmail: student.motherEmail ||"",
+ motherPhone: student.motherPhone ||"",
+ motherVitalStatus: student.motherVitalStatus,
+ motherLivingStatus: student.motherLivingStatus,
+ 
+ fatherName: student.fatherName ||"",
+ fatherEducation: student.fatherEducation ||"",
  fatherOccupation: student.fatherOccupation ||"",
+ fatherEmail: student.fatherEmail ||"",
+ fatherPhone: student.fatherPhone ||"",
+ fatherVitalStatus: student.fatherVitalStatus,
+ fatherLivingStatus: student.fatherLivingStatus,
+ 
+ guardianName: student.guardianName ||"",
+ guardianRelation: student.guardianRelation ||"",
+ guardianPhone: student.guardianPhone ||"",
+ guardianEmail: student.guardianEmail ||"",
+ 
+ numberOfSiblings: student.numberOfSiblings,
+ 
+ livingWith: student.livingWith ||"",
+ homeRentalStatus: student.homeRentalStatus ||"",
+ homeHeatingType: student.homeHeatingType ||"",
+ transportationToSchool: student.transportationToSchool ||"",
+ studentWorkStatus: student.studentWorkStatus ||"",
  });
  }, [student, form]);
 
@@ -429,32 +483,24 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  </CardContent>
  </Card>
 
- {/* Veli Bilgileri */}
+ {/* Anne Bilgileri */}
  <Card>
  <CardHeader className="pb-4">
  <CardTitle className="flex items-center gap-2 text-lg">
  <Users className="h-5 w-5 text-primary" />
- Aile Bilgileri
+ Anne Bilgileri
  </CardTitle>
- <CardDescription>
- Birincil veli ve aile yapısı bilgileri
- </CardDescription>
  </CardHeader>
- <CardContent className="space-y-6">
- <div>
- <h3 className="text-sm font-semibold mb-3 text-muted-foreground">Birincil Veli (Anne/Baba)</h3>
+ <CardContent>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <FormField
  control={form.control}
- name="parentName"
+ name="motherName"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="flex items-center gap-1.5">
- <Users className="h-3.5 w-3.5" />
- Veli Adı Soyadı
- </FormLabel>
+ <FormLabel>Adı Soyadı</FormLabel>
  <FormControl>
- <Input {...field} className="h-10" placeholder="Anne/baba adı soyadı" />
+ <Input {...field} className="h-10" placeholder="Anne adı soyadı" />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -463,12 +509,12 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
 
  <FormField
  control={form.control}
- name="parentContact"
+ name="motherPhone"
  render={({ field }) => (
  <FormItem>
  <FormLabel className="flex items-center gap-1.5">
  <Phone className="h-3.5 w-3.5" />
- Veli Telefon
+ Cep Telefonu
  </FormLabel>
  <FormControl>
  <Input {...field} type="tel" className="h-10" placeholder="+90 5XX XXX XX XX" />
@@ -480,12 +526,12 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
 
  <FormField
  control={form.control}
- name="parentEmail"
+ name="motherEmail"
  render={({ field }) => (
  <FormItem>
  <FormLabel className="flex items-center gap-1.5">
  <Mail className="h-3.5 w-3.5" />
- Veli E-posta
+ E-posta
  </FormLabel>
  <FormControl>
  <Input {...field} type="email" className="h-10" placeholder="ornek@email.com" />
@@ -497,27 +543,10 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
 
  <FormField
  control={form.control}
- name="parentOccupation"
+ name="motherEducation"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="flex items-center gap-1.5">
- <GraduationCap className="h-3.5 w-3.5" />
- Meslek
- </FormLabel>
- <FormControl>
- <Input {...field} className="h-10" placeholder="Meslek" />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
-
- <FormField
- control={form.control}
- name="parentEducation"
- render={({ field }) => (
- <FormItem>
- <FormLabel>Eğitim Durumu</FormLabel>
+ <FormLabel>Öğrenim Durumu</FormLabel>
  <Select onValueChange={field.onChange} value={field.value}>
  <FormControl>
  <SelectTrigger className="h-10">
@@ -538,23 +567,18 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  </FormItem>
  )}
  />
- </div>
- </div>
 
- <div className="border-t pt-4">
- <h3 className="text-sm font-semibold mb-3 text-muted-foreground">İkinci Veli / Acil Durum İletişim</h3>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <FormField
  control={form.control}
- name="secondParentName"
+ name="motherOccupation"
  render={({ field }) => (
  <FormItem>
  <FormLabel className="flex items-center gap-1.5">
- <Users className="h-3.5 w-3.5" />
- Adı Soyadı
+ <Briefcase className="h-3.5 w-3.5" />
+ Meslek
  </FormLabel>
  <FormControl>
- <Input {...field} className="h-10" placeholder="İkinci veli/acil kişi" />
+ <Input {...field} className="h-10" placeholder="Anne mesleği" />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -563,7 +587,230 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
 
  <FormField
  control={form.control}
- name="secondParentContact"
+ name="motherVitalStatus"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Sağlık Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Sağ">Sağ</SelectItem>
+ <SelectItem value="Vefat Etmiş">Vefat Etmiş</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="motherLivingStatus"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Yaşam Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Birlikte">Birlikte</SelectItem>
+ <SelectItem value="Ayrı">Ayrı</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+ </div>
+ </CardContent>
+ </Card>
+
+ {/* Baba Bilgileri */}
+ <Card>
+ <CardHeader className="pb-4">
+ <CardTitle className="flex items-center gap-2 text-lg">
+ <Users className="h-5 w-5 text-primary" />
+ Baba Bilgileri
+ </CardTitle>
+ </CardHeader>
+ <CardContent>
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <FormField
+ control={form.control}
+ name="fatherName"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Adı Soyadı</FormLabel>
+ <FormControl>
+ <Input {...field} className="h-10" placeholder="Baba adı soyadı" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="fatherPhone"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="flex items-center gap-1.5">
+ <Phone className="h-3.5 w-3.5" />
+ Cep Telefonu
+ </FormLabel>
+ <FormControl>
+ <Input {...field} type="tel" className="h-10" placeholder="+90 5XX XXX XX XX" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="fatherEmail"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="flex items-center gap-1.5">
+ <Mail className="h-3.5 w-3.5" />
+ E-posta
+ </FormLabel>
+ <FormControl>
+ <Input {...field} type="email" className="h-10" placeholder="ornek@email.com" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="fatherEducation"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Öğrenim Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="İlkokul">İlkokul</SelectItem>
+ <SelectItem value="Ortaokul">Ortaokul</SelectItem>
+ <SelectItem value="Lise">Lise</SelectItem>
+ <SelectItem value="Ön Lisans">Ön Lisans</SelectItem>
+ <SelectItem value="Lisans">Lisans</SelectItem>
+ <SelectItem value="Yüksek Lisans">Yüksek Lisans</SelectItem>
+ <SelectItem value="Doktora">Doktora</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="fatherOccupation"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="flex items-center gap-1.5">
+ <Briefcase className="h-3.5 w-3.5" />
+ Meslek
+ </FormLabel>
+ <FormControl>
+ <Input {...field} className="h-10" placeholder="Baba mesleği" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="fatherVitalStatus"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Sağlık Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Sağ">Sağ</SelectItem>
+ <SelectItem value="Vefat Etmiş">Vefat Etmiş</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="fatherLivingStatus"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Yaşam Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Birlikte">Birlikte</SelectItem>
+ <SelectItem value="Ayrı">Ayrı</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+ </div>
+ </CardContent>
+ </Card>
+
+ {/* Vasi/Acil İletişim */}
+ <Card>
+ <CardHeader className="pb-4">
+ <CardTitle className="flex items-center gap-2 text-lg">
+ <Phone className="h-5 w-5 text-primary" />
+ Vasi / Acil Durum İletişim
+ </CardTitle>
+ <CardDescription>
+ Anne/baba dışında ulaşılacak kişi bilgileri
+ </CardDescription>
+ </CardHeader>
+ <CardContent>
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <FormField
+ control={form.control}
+ name="guardianName"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Adı Soyadı</FormLabel>
+ <FormControl>
+ <Input {...field} className="h-10" placeholder="Vasi/acil kişi adı soyadı" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="guardianPhone"
  render={({ field }) => (
  <FormItem>
  <FormLabel className="flex items-center gap-1.5">
@@ -580,7 +827,24 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
 
  <FormField
  control={form.control}
- name="secondParentRelation"
+ name="guardianEmail"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="flex items-center gap-1.5">
+ <Mail className="h-3.5 w-3.5" />
+ E-posta
+ </FormLabel>
+ <FormControl>
+ <Input {...field} type="email" className="h-10" placeholder="ornek@email.com" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="guardianRelation"
  render={({ field }) => (
  <FormItem>
  <FormLabel>Yakınlık Derecesi</FormLabel>
@@ -591,13 +855,13 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  </SelectTrigger>
  </FormControl>
  <SelectContent>
- <SelectItem value="Anne">Anne</SelectItem>
- <SelectItem value="Baba">Baba</SelectItem>
  <SelectItem value="Büyükanne">Büyükanne</SelectItem>
  <SelectItem value="Büyükbaba">Büyükbaba</SelectItem>
  <SelectItem value="Teyze/Hala">Teyze/Hala</SelectItem>
  <SelectItem value="Amca/Dayı">Amca/Dayı</SelectItem>
- <SelectItem value="Diğer">Diğer</SelectItem>
+ <SelectItem value="Ağabey/Abla">Ağabey/Abla</SelectItem>
+ <SelectItem value="Diğer Akraba">Diğer Akraba</SelectItem>
+ <SelectItem value="Komşu/Tanıdık">Komşu/Tanıdık</SelectItem>
  </SelectContent>
  </Select>
  <FormMessage />
@@ -605,23 +869,44 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  )}
  />
  </div>
- </div>
+ </CardContent>
+ </Card>
 
- <div className="border-t pt-4">
- <h3 className="text-sm font-semibold mb-3 text-muted-foreground">Aile Yapısı</h3>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ {/* Genel Bilgiler */}
+ <Card>
+ <CardHeader className="pb-4">
+ <CardTitle className="flex items-center gap-2 text-lg">
+ <Home className="h-5 w-5 text-primary" />
+ Genel Bilgiler
+ </CardTitle>
+ <CardDescription>
+ Yaşam durumu, aile yapısı ve ulaşım bilgileri
+ </CardDescription>
+ </CardHeader>
+ <CardContent>
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <FormField
  control={form.control}
- name="motherOccupation"
+ name="livingWith"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="flex items-center gap-1.5">
- <Briefcase className="h-3.5 w-3.5" />
- Anne Mesleği
- </FormLabel>
+ <FormLabel>Kiminle Oturuyor</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
  <FormControl>
- <Input {...field} className="h-10" placeholder="Anne mesleği" />
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
  </FormControl>
+ <SelectContent>
+ <SelectItem value="Anne-Baba">Anne-Baba</SelectItem>
+ <SelectItem value="Sadece Anne">Sadece Anne</SelectItem>
+ <SelectItem value="Sadece Baba">Sadece Baba</SelectItem>
+ <SelectItem value="Büyükanne/Büyükbaba">Büyükanne/Büyükbaba</SelectItem>
+ <SelectItem value="Diğer Akraba">Diğer Akraba</SelectItem>
+ <SelectItem value="Yurt">Yurt</SelectItem>
+ <SelectItem value="Diğer">Diğer</SelectItem>
+ </SelectContent>
+ </Select>
  <FormMessage />
  </FormItem>
  )}
@@ -629,16 +914,99 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
 
  <FormField
  control={form.control}
- name="fatherOccupation"
+ name="homeRentalStatus"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="flex items-center gap-1.5">
- <Briefcase className="h-3.5 w-3.5" />
- Baba Mesleği
- </FormLabel>
+ <FormLabel>Ev Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
  <FormControl>
- <Input {...field} className="h-10" placeholder="Baba mesleği" />
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
  </FormControl>
+ <SelectContent>
+ <SelectItem value="Kendi Evi">Kendi Evi</SelectItem>
+ <SelectItem value="Kiracı">Kiracı</SelectItem>
+ <SelectItem value="Lojman">Lojman</SelectItem>
+ <SelectItem value="Diğer">Diğer</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="homeHeatingType"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Ev Isınma Türü</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Doğalgaz">Doğalgaz</SelectItem>
+ <SelectItem value="Kömür">Kömür</SelectItem>
+ <SelectItem value="Elektrik">Elektrik</SelectItem>
+ <SelectItem value="Soba">Soba</SelectItem>
+ <SelectItem value="Klima">Klima</SelectItem>
+ <SelectItem value="Diğer">Diğer</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="transportationToSchool"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Okula Ulaşım</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Yürüyerek">Yürüyerek</SelectItem>
+ <SelectItem value="Servis">Servis</SelectItem>
+ <SelectItem value="Toplu Taşıma">Toplu Taşıma</SelectItem>
+ <SelectItem value="Aile Aracı">Aile Aracı</SelectItem>
+ <SelectItem value="Bisiklet">Bisiklet</SelectItem>
+ <SelectItem value="Diğer">Diğer</SelectItem>
+ </SelectContent>
+ </Select>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
+ <FormField
+ control={form.control}
+ name="studentWorkStatus"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Çalışma Durumu</FormLabel>
+ <Select onValueChange={field.onChange} value={field.value}>
+ <FormControl>
+ <SelectTrigger className="h-10">
+ <SelectValue placeholder="Seçiniz" />
+ </SelectTrigger>
+ </FormControl>
+ <SelectContent>
+ <SelectItem value="Çalışmıyor">Çalışmıyor</SelectItem>
+ <SelectItem value="Yarı Zamanlı">Yarı Zamanlı</SelectItem>
+ <SelectItem value="Tam Zamanlı">Tam Zamanlı</SelectItem>
+ <SelectItem value="Mevsimlik">Mevsimlik</SelectItem>
+ </SelectContent>
+ </Select>
  <FormMessage />
  </FormItem>
  )}
@@ -667,7 +1035,6 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  </FormItem>
  )}
  />
- </div>
  </div>
  </CardContent>
  </Card>

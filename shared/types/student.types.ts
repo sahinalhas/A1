@@ -25,14 +25,39 @@ export interface Student {
   province?: string;
   district?: string;
   
-  // Parent Information
-  parentName?: string;
-  parentContact?: string;
-  emergencyContact?: string;
-  emergencyPhone?: string;
+  // Mother Information (Anne Bilgileri)
+  motherName?: string;
+  motherEducation?: string;
   motherOccupation?: string;
+  motherEmail?: string;
+  motherPhone?: string;
+  motherVitalStatus?: 'Sağ' | 'Vefat Etmiş';
+  motherLivingStatus?: 'Birlikte' | 'Ayrı';
+  
+  // Father Information (Baba Bilgileri)
+  fatherName?: string;
+  fatherEducation?: string;
   fatherOccupation?: string;
+  fatherEmail?: string;
+  fatherPhone?: string;
+  fatherVitalStatus?: 'Sağ' | 'Vefat Etmiş';
+  fatherLivingStatus?: 'Birlikte' | 'Ayrı';
+  
+  // Guardian Information (Vasi/Acil İletişim)
+  guardianName?: string;
+  guardianRelation?: string;
+  guardianPhone?: string;
+  guardianEmail?: string;
+  
+  // Family Structure (Aile Yapısı)
   numberOfSiblings?: number;
+  
+  // Living Situation (Yaşam Durumu)
+  livingWith?: string; // Kiminle oturuyor
+  homeRentalStatus?: string; // Ev durumu (Kendi Evi, Kiracı, Lojman)
+  homeHeatingType?: string; // Isınma türü
+  transportationToSchool?: string; // Okula ulaşım
+  studentWorkStatus?: string; // Çalışma durumu
   
   // System Information
   enrollmentDate: string;
