@@ -609,37 +609,37 @@ useEffect(() => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <Card className="border-2 mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <Zap className="h-6 w-6 text-amber-600" />
+        <Card className="border mb-6 md:mb-8">
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+              <Zap className="h-5 w-5 md:h-6 md:w-6 text-amber-600" />
               Hızlı Erişim
             </CardTitle>
-            <CardDescription>En sık kullanılan modüllere hızlıca ulaşın</CardDescription>
+            <CardDescription className="text-xs md:text-sm">En sık kullanılan modüllere hızlıca ulaşın</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <CardContent className="p-4 md:p-6 pt-0">
+            <div className="grid grid-cols-3 gap-2 md:gap-4">
               {quickActions.map((action, index) => (
                 <motion.div
                   key={action.title}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.7 + index * 0.05 }}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <Card
-                    className="cursor-pointer border-2 hover:shadow-xl transition-all duration-300 group overflow-hidden"
+                    className="cursor-pointer border hover:shadow-lg transition-all duration-300 group overflow-hidden h-full"
                     onClick={() => navigate(action.href)}
                   >
                     <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity`}></div>
-                    <CardContent className="p-6 relative">
-                      <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${action.gradient} mb-3 shadow-lg`}>
-                        <action.icon className="h-6 w-6 text-white" />
+                    <CardContent className="p-3 md:p-4 relative">
+                      <div className={`inline-flex p-2 md:p-2.5 rounded-lg md:rounded-xl bg-gradient-to-br ${action.gradient} mb-2 md:mb-3 shadow-md`}>
+                        <action.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
                       </div>
-                      <h3 className="font-bold text-lg mb-1">{action.title}</h3>
-                      <p className="text-sm text-muted-foreground">{action.description}</p>
-                      <ArrowRight className="absolute top-6 right-6 h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <h3 className="font-bold text-xs md:text-sm mb-0.5 md:mb-1 truncate">{action.title}</h3>
+                      <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2">{action.description}</p>
+                      <ArrowRight className="absolute top-3 right-3 md:top-4 md:right-4 h-3 w-3 md:h-4 md:w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </CardContent>
                   </Card>
                 </motion.div>
