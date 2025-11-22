@@ -36,6 +36,8 @@ import {
   LineChart,
   KeyRound,
   AlertCircle,
+  Users,
+  Calendar
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
 import { Button } from "@/components/atoms/Button";
@@ -93,6 +95,12 @@ export default function Index() {
   const [weeklyMeetingTrend, setWeeklyMeetingTrend] = useState<any[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [earlyWarnings, setEarlyWarnings] = useState<EarlyWarning[]>([]);
+
+  // Dummy data for the new dashboard cards (replace with actual data fetching)
+  const todayExams = 5;
+  const participationRate = 85;
+  const avgSuccess = 78;
+  const atRiskCount = 12;
 
 useEffect(() => {
     if (students.length === 0) {
@@ -392,37 +400,84 @@ useEffect(() => {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-        {statsCards.map((stat, index) => (
-          <motion.div
-            key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -3, scale: 1.01 }}
-            className="group"
-          >
-            <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity`}></div>
-              <CardContent className="p-3 md:p-4">
-                <div className="flex items-start justify-between mb-2 md:mb-3">
-                  <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${stat.gradient} shadow-md`}>
-                    <stat.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
-                  </div>
-                  <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
-                    {stat.trend}
-                  </Badge>
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{stat.title}</p>
-                  <p className="text-xl md:text-2xl font-bold tracking-tight">{stat.value}</p>
-                  <p className="text-[10px] md:text-xs text-muted-foreground truncate">{stat.description}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+      {/* Gerçek Zamanlı Dashboard */}
+      <Card className="border-2">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5 text-primary" />
+            Gerçek Zamanlı Dashboard
+          </CardTitle>
+          <CardDescription>
+            Güncel performans metrikleri
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {[
+              {
+                title: "Bugünkü Sınavlar",
+                value: todayExams,
+                description: "Aktif sınav oturumu",
+                icon: Users,
+                gradient: "from-blue-500 to-cyan-600",
+                change: `${todayExams}`,
+              },
+              {
+                title: "Katılım Oranı",
+                value: `%${participationRate}`,
+                description: "Genel katılım yüzdesi",
+                icon: Calendar,
+                gradient: "from-purple-500 to-violet-600",
+                change: participationRate >= 80 ? "Yüksek" : "Orta",
+              },
+              {
+                title: "Ortalama Başarı",
+                value: `%${avgSuccess}`,
+                description: "Genel başarı ortalaması",
+                icon: TrendingUp,
+                gradient: "from-emerald-500 to-teal-600",
+                change: "↑ Trend",
+              },
+              {
+                title: "Risk Altında",
+                value: atRiskCount,
+                description: "Yakın takip gerektiren",
+                icon: AlertTriangle,
+                gradient: "from-amber-500 to-orange-600",
+                change: atRiskCount > 0 ? "Dikkat" : "İyi",
+              },
+            ].map((card, index) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -3, scale: 1.01 }}
+              >
+                <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 hover:opacity-5 transition-opacity`}></div>
+                  <CardContent className="p-3 md:p-4">
+                    <div className="flex items-start justify-between mb-2 md:mb-3">
+                      <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${card.gradient} shadow-md`}>
+                        <card.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                      </div>
+                      <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
+                        {card.change}
+                      </Badge>
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
+                      <p className="text-xl md:text-2xl font-bold tracking-tight">{card.value}</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground truncate">{card.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid gap-4 md:gap-6 md:grid-cols-3 mb-6 md:mb-8">
         <motion.div
