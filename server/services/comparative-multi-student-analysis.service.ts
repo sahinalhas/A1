@@ -249,7 +249,7 @@ class ComparativeMultiStudentAnalysisService {
 
 📊 ÖĞRENCİ BAĞLAMLARI:
 ${contexts.map((ctx, i) => `
-ÖĞRENCİ ${i + 1}: ${ctx.student.name}
+ÖĞRENCİ ${i + 1}: ${(ctx as any).student?.name || 'Öğrenci'}
 ${JSON.stringify(ctx, null, 2)}
 `).join('\n---\n')}
 
@@ -329,7 +329,7 @@ Yanıtını JSON formatında ver (TypeScript ComparativeAnalysisReport tipine uy
         const validatedReport = {
           analysisDate: new Date().toISOString(),
           classId: classId !== 'custom' ? classId : undefined,
-          class: students[0]?.class,
+          class: (students[0] as any)?.class,
           studentCount: students.length,
           studentComparisons: Array.isArray(parsed.studentComparisons) ? parsed.studentComparisons : fallback.studentComparisons,
           classPatterns: Array.isArray(parsed.classPatterns) ? parsed.classPatterns : fallback.classPatterns,
@@ -353,8 +353,8 @@ Yanıtını JSON formatında ver (TypeScript ComparativeAnalysisReport tipine uy
 
   private generateBasicAnalysisFromText(classId: string, students: unknown[], text: string): ComparativeAnalysisReport {
     const studentComparisons: StudentComparison[] = students.map(s => ({
-      studentId: s.id,
-      studentName: s.name,
+      studentId: (s as any).id,
+      studentName: (s as any).name,
       academicScore: 50,
       behaviorScore: 50,
       riskLevel: 'ORTA' as const,
@@ -366,14 +366,14 @@ Yanıtını JSON formatında ver (TypeScript ComparativeAnalysisReport tipine uy
     return {
       analysisDate: new Date().toISOString(),
       classId: classId !== 'custom' ? classId : undefined,
-      class: students[0]?.class,
+      class: (students[0] as any)?.class,
       studentCount: students.length,
       studentComparisons,
       classPatterns: [
         {
           patternId: 'pattern-1',
           patternName: 'Genel Sınıf Dinamiği',
-          affectedStudents: students.slice(0, 3).map(s => s.name),
+          affectedStudents: students.slice(0, 3).map(s => (s as any).name),
           frequency: 'ORTA',
           severity: 'ORTA',
           description: 'AI analizi gerekli',
@@ -419,19 +419,19 @@ Yanıtını JSON formatında ver (TypeScript ComparativeAnalysisReport tipine uy
 
   private generateFallbackAnalysis(classId: string, students: unknown[], contexts: unknown[]): ComparativeAnalysisReport {
     const studentComparisons: StudentComparison[] = students.map((s, i) => {
-      const ctx = contexts[i];
-      const academicScore = ctx.scores?.akademikSkor || 50;
-      const behaviorScore = 100 - (ctx.scores?.davranissalRisk || 50);
-      const riskLevel = ctx.risk?.level || 'ORTA';
+      const ctx = contexts[i] as any;
+      const academicScore = ctx?.scores?.akademikSkor || 50;
+      const behaviorScore = 100 - (ctx?.scores?.davranissalRisk || 50);
+      const riskLevel = ctx?.risk?.level || 'ORTA';
 
       return {
-        studentId: s.id,
-        studentName: s.name,
+        studentId: (s as any).id,
+        studentName: (s as any).name,
         academicScore,
         behaviorScore,
         riskLevel,
-        keyStrengths: ctx.talentsInterests?.talents?.slice(0, 3) || ['Değerlendirme gerekli'],
-        keyChallenges: ctx.risk?.factors?.slice(0, 3) || ['Değerlendirme gerekli'],
+        keyStrengths: ctx?.talentsInterests?.talents?.slice(0, 3) || ['Değerlendirme gerekli'],
+        keyChallenges: ctx?.risk?.factors?.slice(0, 3) || ['Değerlendirme gerekli'],
         interventionPriority: riskLevel === 'ÇOK_YÜKSEK' ? 90 : riskLevel === 'YÜKSEK' ? 70 : riskLevel === 'ORTA' ? 50 : 30
       };
     });
