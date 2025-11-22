@@ -12,7 +12,8 @@ import {
   MessageSquare, 
   BarChart3, 
   Brain,
-  Sparkles 
+  Sparkles,
+  RotateCcw
 } from "lucide-react";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { 
@@ -40,8 +41,18 @@ import TemplateSelector from "@/components/features/surveys/TemplateSelector";
 import SurveyAIAnalysis from "@/components/features/ai/SurveyAIAnalysis";
 import SurveyStatsCards from "@/components/features/surveys/SurveyStatsCards";
 import { useSurveyStats } from "@/hooks/features/surveys/survey-stats.hooks";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/core/client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/organisms/AlertDialog";
 
 export default function Surveys() {
   const { toast } = useToast();
@@ -65,6 +76,10 @@ export default function Surveys() {
   const [editingTemplate, setEditingTemplate] = useState<SurveyTemplate | null>(null);
   const [editingDistribution, setEditingDistribution] = useState<any>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  
+  const queryClient = useQueryClient();
 
   const createTemplate = useCreateTemplate();
   const deleteTemplate = useDeleteTemplate();
@@ -124,6 +139,33 @@ export default function Surveys() {
     await deleteTemplate.mutateAsync(template.id);
   };
 
+  const handleResetToDefaults = async () => {
+    try {
+      setIsResetting(true);
+      const response = await apiClient.post<{ success: boolean; message?: string; error?: string }>('/api/surveys/survey-templates/reset');
+      
+      if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ['survey-templates'] });
+        await queryClient.invalidateQueries({ queryKey: ['survey-questions'] });
+        toast({
+          title: 'Başarılı',
+          description: 'Anket şablonları varsayılana sıfırlandı',
+        });
+      } else {
+        throw new Error(response.error || 'Sıfırlama başarısız');
+      }
+    } catch (error) {
+      toast({
+        title: 'Hata',
+        description: error instanceof Error ? error.message : 'Sıfırlama sırasında bir hata oluştu',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsResetting(false);
+      setResetDialogOpen(false);
+    }
+  };
+
 
   if (loading) {
     return (
@@ -170,6 +212,16 @@ export default function Surveys() {
                   Yeni Anket Oluştur
                 </Button>
               </SurveyCreationDialog>
+              
+              <Button 
+                size="default" 
+                variant="outline"
+                onClick={() => setResetDialogOpen(true)}
+                className="bg-white/10 text-white border-white/30 hover:bg-white/20 shadow-lg backdrop-blur-sm"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Varsayılana Sıfırla
+              </Button>
             </div>
           </div>
 
@@ -337,6 +389,24 @@ export default function Surveys() {
           onEditComplete={() => setEditingTemplate(null)}
         />
       )}
+
+      <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Varsayılana Sıfırla</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bu işlem tüm özel anket şablonlarınızı silecek ve varsayılan anketleri geri yükleyecektir.
+              Bu işlem geri alınamaz. Devam etmek istediğinizden emin misiniz?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isResetting}>İptal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleResetToDefaults} disabled={isResetting}>
+              {isResetting ? 'Sıfırlanıyor...' : 'Sıfırla'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
