@@ -585,30 +585,30 @@ export default function Students() {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
         {statsCardsData.map((stat, index) => (
           <motion.div
             key={stat.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -5, scale: 1.02 }}
+            whileHover={{ y: -3, scale: 1.01 }}
           >
-            <Card className="relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+            <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 hover:opacity-5 transition-opacity`}></div>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.gradient} shadow-lg`}>
-                    <stat.icon className="h-6 w-6 text-white" />
+              <CardContent className="p-3 md:p-4">
+                <div className="flex items-start justify-between mb-2 md:mb-3">
+                  <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${stat.gradient} shadow-md`}>
+                    <stat.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
                     {stat.change}
                   </Badge>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                  <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                <div className="space-y-0.5">
+                  <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{stat.title}</p>
+                  <p className="text-xl md:text-2xl font-bold tracking-tight">{stat.value}</p>
+                  <p className="text-[10px] md:text-xs text-muted-foreground truncate">{stat.description}</p>
                 </div>
               </CardContent>
             </Card>
@@ -620,37 +620,41 @@ export default function Students() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="mb-6"
+        className="mb-4 md:mb-6 sticky top-0 z-10"
       >
-        <Card className="border-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-primary" />
-                  Filtreler ve Arama
+        <Card className="border backdrop-blur-xl bg-white/90 dark:bg-slate-900/90 shadow-lg">
+          <CardHeader className="p-3 md:p-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                  <Filter className="h-4 w-4 md:h-5 md:w-5 text-primary flex-shrink-0" />
+                  <span className="truncate">Filtreler ve Arama</span>
                 </CardTitle>
-                <CardDescription>Öğrencileri hızlıca bulun ve filtreleyin</CardDescription>
+                <CardDescription className="text-xs md:text-sm hidden sm:block">Öğrencileri hızlıca bulun ve filtreleyin</CardDescription>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant={viewMode === 'table' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('table')}
-                >
-                  <List className="h-4 w-4" />
-                </Button>
+              <div className="flex gap-1.5 md:gap-2 flex-shrink-0">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
+                  className="h-8 md:h-9 px-2 md:px-3"
                 >
-                  <Grid3x3 className="h-4 w-4" />
+                  <Grid3x3 className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  <span className="ml-1.5 hidden md:inline text-xs">Grid</span>
+                </Button>
+                <Button
+                  variant={viewMode === 'table' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('table')}
+                  className="h-8 md:h-9 px-2 md:px-3"
+                >
+                  <List className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  <span className="ml-1.5 hidden md:inline text-xs">Tablo</span>
                 </Button>
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-3 md:p-4 pt-0">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
               <AdvancedFilters
                 searchQuery={filters.filters.searchQuery}
@@ -700,25 +704,24 @@ export default function Students() {
         ) : (
           <>
             {viewMode === 'grid' || isMobileView ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                {pagination.paginatedItems.map((student, index) => (
-                  <motion.div
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ staggerChildren: 0.05 }}
+              >
+                {pagination.paginatedItems.map((student) => (
+                  <StudentCard
                     key={student.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <StudentCard
-                      student={student}
-                      isSelected={selectedStudentIds.has(student.id)}
-                      onSelect={(selected) => handleSelectOne(student.id, selected)}
-                      onEdit={onEditClick}
-                      onDelete={onDeleteClick}
-                      onView={handleRowClick}
-                    />
-                  </motion.div>
+                    student={student}
+                    isSelected={selectedStudentIds.has(student.id)}
+                    onSelect={(selected) => handleSelectOne(student.id, selected)}
+                    onEdit={onEditClick}
+                    onDelete={onDeleteClick}
+                    onView={handleRowClick}
+                  />
                 ))}
-              </div>
+              </motion.div>
             ) : (
               <EnhancedStudentTable
                 students={pagination.paginatedItems}
