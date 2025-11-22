@@ -90,25 +90,38 @@ export function createSurveysTables(db: Database.Database): void {
 }
 
 export function seedSurveysDefaultTemplates(db: Database.Database): void {
-  const templatesCount = db.prepare('SELECT COUNT(*) as count FROM survey_templates').get() as { count: number };
+  const checkTemplate = db.prepare('SELECT id FROM survey_templates WHERE id = ?');
   
-  if (templatesCount.count > 0) {
-    return;
-  }
-
-  const insertTemplate = db.prepare(`
+  const upsertTemplate = db.prepare(`
     INSERT INTO survey_templates (id, title, description, isActive, createdBy, tags, targetAudience, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+    ON CONFLICT(id) DO UPDATE SET
+      title = excluded.title,
+      description = excluded.description,
+      isActive = excluded.isActive,
+      tags = excluded.tags,
+      targetAudience = excluded.targetAudience,
+      updated_at = datetime('now')
   `);
 
   const insertQuestion = db.prepare(`
     INSERT INTO survey_questions (id, templateId, questionText, questionType, required, orderIndex, options, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    ON CONFLICT(id) DO UPDATE SET
+      questionText = excluded.questionText,
+      questionType = excluded.questionType,
+      required = excluded.required,
+      orderIndex = excluded.orderIndex,
+      options = excluded.options
   `);
 
+  let seededCount = 0;
+  
   const seedTransaction = db.transaction(() => {
     for (const surveyTemplate of DEFAULT_SURVEY_TEMPLATES) {
-      insertTemplate.run(
+      const templateExists = checkTemplate.get(surveyTemplate.template.id);
+      
+      upsertTemplate.run(
         surveyTemplate.template.id,
         surveyTemplate.template.title,
         surveyTemplate.template.description,
@@ -118,9 +131,15 @@ export function seedSurveysDefaultTemplates(db: Database.Database): void {
         surveyTemplate.template.targetAudience
       );
 
+      if (!templateExists) {
+        seededCount++;
+      }
+
       surveyTemplate.questions.forEach((question, index) => {
+        const questionId = question.id || `${surveyTemplate.template.id}-q-${index}`;
+        
         insertQuestion.run(
-          uuidv4(),
+          questionId,
           surveyTemplate.template.id,
           question.questionText,
           question.questionType,
@@ -134,5 +153,7 @@ export function seedSurveysDefaultTemplates(db: Database.Database): void {
 
   seedTransaction();
   
-  console.log(`✅ Varsayılan anketler yüklendi: ${DEFAULT_SURVEY_TEMPLATES.length} anket`);
+  if (seededCount > 0) {
+    console.log(`✅ Varsayılan anketler yüklendi: ${seededCount} yeni anket`);
+  }
 }

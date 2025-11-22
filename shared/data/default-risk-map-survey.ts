@@ -1,4 +1,5 @@
 export interface SurveyQuestion {
+  id?: string;
   questionText: string;
   questionType: 'YES_NO' | 'TEXT' | 'MULTIPLE_CHOICE' | 'SCALE' | 'CHECKBOX';
   required: boolean;
@@ -82,8 +83,10 @@ const riskFactorCategories = [
 ];
 
 riskFactorCategories.forEach(({ category, items }) => {
-  items.forEach(item => {
+  items.forEach((item, index) => {
+    const questionId = `sinif-risk-haritasi-2025-q-${riskMapQuestions.length + 1}`;
     riskMapQuestions.push({
+      id: questionId,
       questionText: item,
       questionType: 'YES_NO',
       required: false,
