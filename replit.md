@@ -2,6 +2,26 @@
 
 Rehber360 is a comprehensive student guidance and management system (Öğrenci Rehberlik Sistemi) for Turkish educational institutions. It facilitates student progress tracking, counseling, survey management, and risk level monitoring. The system incorporates AI-powered insights and a robust Coaching System (Koçluk Sistemi) for academic and personal development. Key features include academic goal tracking (YKS, LGS, TYT, AYT, YDT exam preparation), Multiple Intelligence and Learning Style Assessments, a 360° Evaluation and Achievement System, daily self-assessments, parent collaboration, and AI-Powered Recommendations. It is a full-stack TypeScript application with a React frontend, Express backend, and SQLite database.
 
+# Recent Changes
+
+## November 22, 2025 - Enhanced Counseling Sessions Dashboard
+
+### Görüşmeler (Counseling Sessions) Page - Metric Cards Enhancement
+- **Added 2 New Metric Cards**: Expanded from 2 to 4 metric cards on the dashboard
+  - **Tamamlanan (Completed)**: Shows total completed sessions with completion percentage rate
+  - **Bu Ay (This Month)**: Displays sessions completed this month with weekly breakdown
+- **Layout Update**: Changed grid layout from 2 columns to 4 columns for single-row display
+  - Desktop (lg+): All 4 cards in a single row
+  - Tablet (md): 2x2 grid layout
+  - Mobile: Vertical stacking (1 column)
+- **Component Modified**: `client/components/features/counseling/modern/SessionStatsCards.tsx`
+- **Responsive Design**: StatsGrid component automatically handles responsive breakpoints
+- **All 4 Metric Cards**:
+  1. 🔵 Toplam Görüşme (Total Meetings) - Shows total with individual/group breakdown
+  2. 🟢 Tamamlanan (Completed) - Shows completed count with completion rate percentage
+  3. 🟡 Bu Ay (This Month) - Shows monthly count with weekly comparison
+  4. 🟣 Ortalama Süre (Average Duration) - Shows average duration with total time
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.

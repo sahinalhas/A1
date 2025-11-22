@@ -22,13 +22,17 @@ interface SessionStatsCardsProps {
 export default function SessionStatsCards({ stats, isLoading }: SessionStatsCardsProps) {
   if (isLoading) {
     return (
-      <StatsGrid columns={2}>
-        {[0, 1].map((i) => (
+      <StatsGrid columns={4}>
+        {[0, 1, 2, 3].map((i) => (
           <SkeletonCard key={i} index={i} />
         ))}
       </StatsGrid>
     );
   }
+
+  const completionRate = stats.total > 0 
+    ? Math.round((stats.completed / stats.total) * 100) 
+    : 0;
 
   const cards = [
     {
@@ -37,6 +41,22 @@ export default function SessionStatsCards({ stats, isLoading }: SessionStatsCard
       subtitle: `${stats.individual} bireysel, ${stats.group} grup`,
       icon: Calendar,
       gradient: 'bg-gradient-to-br from-blue-500 to-blue-600',
+    },
+    {
+      title: 'Tamamlanan',
+      value: stats.completed,
+      subtitle: `%${completionRate} tamamlanma oranı`,
+      icon: CheckCircle2,
+      gradient: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
+    },
+    {
+      title: 'Bu Ay',
+      value: stats.completedThisMonth,
+      subtitle: stats.completedThisWeek > 0 
+        ? `Bu hafta: ${stats.completedThisWeek}` 
+        : 'Bu hafta görüşme yok',
+      icon: TrendingUp,
+      gradient: 'bg-gradient-to-br from-amber-500 to-amber-600',
     },
     {
       title: 'Ortalama Süre',
@@ -50,7 +70,7 @@ export default function SessionStatsCards({ stats, isLoading }: SessionStatsCard
   ];
 
   return (
-    <StatsGrid columns={2}>
+    <StatsGrid columns={4}>
       {cards.map((card, index) => (
         <StatCard key={card.title} {...card} delay={index * 0.1} />
       ))}
