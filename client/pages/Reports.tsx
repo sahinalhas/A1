@@ -7,8 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/organisms
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
-import { StatCard } from "@/components/molecules/StatCard";
-import { StatsGrid } from "@/components/molecules/StatsGrid";
 import { 
  Select, 
  SelectContent, 
@@ -156,45 +154,69 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  return (
  <div className="space-y-6">
  {/* Ana İstatistikler */}
- <StatsGrid columns={4}>
- <StatCard
- title="Toplam Öğrenci"
- value={overallStats.totalStudents}
- subtitle="Sisteme kayıtlı öğrenci sayısı"
- icon={Users}
- gradient="bg-gradient-to-br from-blue-500 to-blue-600"
- delay={0}
- />
- 
- <StatCard
- title="Ortalama Başarı"
- value={`%${Math.round(overallStats.averageSuccessRate)}`}
- subtitle="Genel başarı tahmini ortalaması"
- icon={Award}
- gradient="bg-gradient-to-br from-green-500 to-green-600"
- trend={{ value: "Yükseliş trendi", isPositive: true }}
- delay={0.1}
- />
- 
- <StatCard
- title="Yüksek Başarı"
- value={overallStats.highSuccessCount}
- subtitle={`${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}% başarılı öğrenci`}
- icon={TrendingUp}
- gradient="bg-gradient-to-br from-emerald-500 to-emerald-600"
- trend={{ value: `${overallStats.highSuccessCount} öğrenci`, isPositive: true }}
- delay={0.2}
- />
- 
- <StatCard
- title="Risk Altında"
- value={overallStats.atRiskCount}
- subtitle="Yakın takip gerektiren öğrenci"
- icon={AlertTriangle}
- gradient="bg-gradient-to-br from-orange-500 to-orange-600"
- delay={0.3}
- />
- </StatsGrid>
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+ {[
+ {
+ title: "Toplam Öğrenci",
+ value: overallStats.totalStudents,
+ description: "Sisteme kayıtlı öğrenci sayısı",
+ icon: Users,
+ gradient: "from-blue-500 to-cyan-600",
+ change: `${overallStats.totalStudents}`,
+ },
+ {
+ title: "Ortalama Başarı",
+ value: `%${Math.round(overallStats.averageSuccessRate)}`,
+ description: "Genel başarı tahmini ortalaması",
+ icon: Award,
+ gradient: "from-emerald-500 to-teal-600",
+ change: "↑ Trend",
+ },
+ {
+ title: "Yüksek Başarı",
+ value: overallStats.highSuccessCount,
+ description: `${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}% başarılı öğrenci`,
+ icon: TrendingUp,
+ gradient: "from-violet-500 to-purple-600",
+ change: `${overallStats.highSuccessCount}`,
+ },
+ {
+ title: "Risk Altında",
+ value: overallStats.atRiskCount,
+ description: "Yakın takip gerektiren öğrenci",
+ icon: AlertTriangle,
+ gradient: "from-amber-500 to-orange-600",
+ change: overallStats.atRiskCount > 0 ? "Dikkat" : "İyi",
+ },
+ ].map((card, index) => (
+ <motion.div
+ key={card.title}
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ delay: index * 0.1 }}
+ whileHover={{ y: -3, scale: 1.01 }}
+ >
+ <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+ <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 hover:opacity-5 transition-opacity`}></div>
+ <CardContent className="p-3 md:p-4">
+ <div className="flex items-start justify-between mb-2 md:mb-3">
+ <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${card.gradient} shadow-md`}>
+ <card.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
+ </div>
+ <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
+ {card.change}
+ </Badge>
+ </div>
+ <div className="space-y-0.5">
+ <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
+ <p className="text-xl md:text-2xl font-bold tracking-tight">{card.value}</p>
+ <p className="text-[10px] md:text-xs text-muted-foreground truncate">{card.description}</p>
+ </div>
+ </CardContent>
+ </Card>
+ </motion.div>
+ ))}
+ </div>
 
  {/* Uyarı Özeti */}
  {overallStats.activeWarnings > 0 && (

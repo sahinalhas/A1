@@ -1,13 +1,11 @@
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/organisms/Card';
-import { StatCard } from '@/components/molecules/StatCard';
+import { Card, CardContent } from '@/components/organisms/Card';
+import { Badge } from '@/components/atoms/Badge';
 import { StatsGrid, SkeletonCard } from '@/components/molecules/StatsGrid';
 import { 
  FileText, 
  Send, 
  CheckCircle2, 
- Users,
- TrendingUp,
  Clock
 } from 'lucide-react';
 
@@ -40,73 +38,67 @@ export default function SurveyStatsCards({ stats, isLoading }: SurveyStatsCardsP
  {
  title: 'Anket Şablonları',
  value: stats.totalTemplates,
- subtitle: `${stats.recentTemplates} yeni şablon`,
+ description: `${stats.recentTemplates} yeni şablon`,
  icon: FileText,
- gradient: 'bg-gradient-to-br from-blue-500 to-blue-600',
+ gradient: 'from-blue-500 to-cyan-600',
+ change: `+${stats.recentTemplates}`,
  },
  {
  title: 'Dağıtımlar',
  value: stats.totalDistributions,
- subtitle: `${stats.activeDistributions} aktif`,
+ description: `${stats.activeDistributions} aktif`,
  icon: Send,
- gradient: 'bg-gradient-to-br from-purple-500 to-purple-600',
+ gradient: 'from-purple-500 to-violet-600',
+ change: `${stats.activeDistributions}`,
  },
  {
  title: 'Toplam Yanıt',
  value: stats.totalResponses,
- subtitle: `%${stats.responseRate} yanıt oranı`,
+ description: `%${stats.responseRate} yanıt oranı`,
  icon: CheckCircle2,
- gradient: 'bg-gradient-to-br from-green-500 to-green-600',
- trend: stats.responseRate > 70 ? { value: 'Yüksek katılım', isPositive: true } : undefined,
+ gradient: 'from-emerald-500 to-teal-600',
+ change: stats.responseRate > 70 ? '+%' : `%${stats.responseRate}`,
  },
  {
  title: 'Tamamlanan',
  value: stats.completedDistributions,
- subtitle: 'Tamamlanan dağıtım',
+ description: 'Tamamlanan dağıtım',
  icon: Clock,
- gradient: 'bg-gradient-to-br from-amber-500 to-amber-600',
+ gradient: 'from-amber-500 to-orange-600',
+ change: `${stats.completedDistributions}/${stats.totalDistributions}`,
  },
  ];
 
  return (
- <div className="space-y-4">
- <StatsGrid columns={4}>
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
  {cards.map((card, index) => (
- <StatCard key={card.title} {...card} delay={index * 0.1} />
- ))}
- </StatsGrid>
-
- {Object.keys(stats.distributionsByAudience).length > 0 && (
- <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
  <motion.div
+ key={card.title}
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.5 }}
+ transition={{ delay: index * 0.1 }}
+ whileHover={{ y: -3, scale: 1.01 }}
  >
- <Card className="relative overflow-hidden h-full">
- <div className="absolute inset-0 opacity-5 bg-gradient-to-br from-blue-500 to-blue-600" />
- <CardHeader className="pb-2 relative">
- <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
- <Users className="h-4 w-4" />
- Hedef Kitle Dağılımı
- </CardTitle>
- </CardHeader>
- <CardContent className="relative">
- <div className="space-y-2">
- {Object.entries(stats.distributionsByAudience)
- .slice(0, 3)
- .map(([audience, count]) => (
- <div key={audience} className="flex items-center justify-between text-sm">
- <span className="text-muted-foreground capitalize">{audience}</span>
- <span className="font-medium">{count}</span>
+ <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+ <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 hover:opacity-5 transition-opacity`}></div>
+ <CardContent className="p-3 md:p-4">
+ <div className="flex items-start justify-between mb-2 md:mb-3">
+ <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${card.gradient} shadow-md`}>
+ <card.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
  </div>
- ))}
+ <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
+ {card.change}
+ </Badge>
+ </div>
+ <div className="space-y-0.5">
+ <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
+ <p className="text-xl md:text-2xl font-bold tracking-tight">{card.value}</p>
+ <p className="text-[10px] md:text-xs text-muted-foreground truncate">{card.description}</p>
  </div>
  </CardContent>
  </Card>
  </motion.div>
- </div>
- )}
+ ))}
  </div>
  );
 }
