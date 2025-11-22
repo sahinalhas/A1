@@ -1,4 +1,6 @@
 import type Database from 'better-sqlite3';
+import { DEFAULT_SURVEY_TEMPLATES } from '../../../../shared/data/default-risk-map-survey.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export function createSurveysTables(db: Database.Database): void {
   db.exec(`
@@ -85,4 +87,52 @@ export function createSurveysTables(db: Database.Database): void {
       FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE CASCADE
     );
   `);
+}
+
+export function seedSurveysDefaultTemplates(db: Database.Database): void {
+  const templatesCount = db.prepare('SELECT COUNT(*) as count FROM survey_templates').get() as { count: number };
+  
+  if (templatesCount.count > 0) {
+    return;
+  }
+
+  const insertTemplate = db.prepare(`
+    INSERT INTO survey_templates (id, title, description, isActive, createdBy, tags, targetAudience, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+  `);
+
+  const insertQuestion = db.prepare(`
+    INSERT INTO survey_questions (id, templateId, questionText, questionType, required, orderIndex, options, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+  `);
+
+  const seedTransaction = db.transaction(() => {
+    for (const surveyTemplate of DEFAULT_SURVEY_TEMPLATES) {
+      insertTemplate.run(
+        surveyTemplate.template.id,
+        surveyTemplate.template.title,
+        surveyTemplate.template.description,
+        surveyTemplate.template.isActive ? 1 : 0,
+        surveyTemplate.template.createdBy,
+        JSON.stringify(surveyTemplate.template.tags),
+        surveyTemplate.template.targetAudience
+      );
+
+      surveyTemplate.questions.forEach((question, index) => {
+        insertQuestion.run(
+          uuidv4(),
+          surveyTemplate.template.id,
+          question.questionText,
+          question.questionType,
+          question.required ? 1 : 0,
+          index,
+          question.options ? JSON.stringify(question.options) : null
+        );
+      });
+    }
+  });
+
+  seedTransaction();
+  
+  console.log(`✅ Varsayılan anketler yüklendi: ${DEFAULT_SURVEY_TEMPLATES.length} anket`);
 }
