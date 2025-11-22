@@ -165,43 +165,43 @@ export function CompactProfileDashboard({
               Profil Durumu
             </CardTitle>
           </CardHeader>
-          <CardContent className="py-1.5 space-y-2">
+          <CardContent className="py-2 space-y-3">
             <div className="flex items-center justify-center">
-              <div className="relative w-20 h-20">
-                <svg className="w-20 h-20 transform -rotate-90">
+              <div className="relative w-28 h-28">
+                <svg className="w-28 h-28 transform -rotate-90">
                   <circle
-                    cx="40"
-                    cy="40"
-                    r="34"
+                    cx="56"
+                    cy="56"
+                    r="48"
                     stroke="currentColor"
-                    strokeWidth="5"
+                    strokeWidth="6"
                     fill="transparent"
                     className="text-gray-200"
                   />
                   <circle
-                    cx="40"
-                    cy="40"
-                    r="34"
+                    cx="56"
+                    cy="56"
+                    r="48"
                     stroke="currentColor"
-                    strokeWidth="5"
+                    strokeWidth="6"
                     fill="transparent"
-                    strokeDasharray={`${(overallScore / 100) * 213.63} 213.63`}
+                    strokeDasharray={`${(overallScore / 100) * 301.59} 301.59`}
                     className="text-primary"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-lg font-bold">{overallScore}</span>
-                  <span className="text-[9px] text-muted-foreground">Genel</span>
+                  <span className="text-2xl font-bold">{overallScore}</span>
+                  <span className="text-xs text-muted-foreground">Genel</span>
                 </div>
               </div>
             </div>
             {completeness && (
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Tamamlanma</span>
                   <span className="font-semibold">{completeness.overall}%</span>
                 </div>
-                <Progress value={completeness.overall} className="h-1" />
+                <Progress value={completeness.overall} className="h-1.5" />
               </div>
             )}
           </CardContent>
