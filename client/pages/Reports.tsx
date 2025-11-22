@@ -7,12 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/organisms
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/organisms/Tabs";
-import { 
- Select, 
- SelectContent, 
- SelectItem, 
- SelectTrigger, 
- SelectValue 
+import {
+ Select,
+ SelectContent,
+ SelectItem,
+ SelectTrigger,
+ SelectValue,
 } from "@/components/atoms/Select";
 import {
  Dialog,
@@ -41,19 +41,19 @@ import {
 } from "@/components/features/charts/AnalyticsCharts";
 
 // Analytics Functions
-import { 
+import {
  exportAnalyticsData,
 } from "@/lib/analytics";
 
-import { 
+import {
  getReportsOverview,
  invalidateAnalyticsCache,
  type ReportsOverview,
 } from "@/lib/api/endpoints/analytics.api";
 
-import { 
- BarChart3, 
- TrendingUp, 
+import {
+ BarChart3,
+ TrendingUp,
  Users,
  AlertTriangle,
  Award,
@@ -72,7 +72,7 @@ import {
 
 function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
  const { hasPermission } = useAuth();
- 
+
  const { data: reportsData, isLoading: loading, error } = useQuery({
  queryKey: ['reports-overview'],
  queryFn: getReportsOverview,
@@ -93,11 +93,11 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  activeWarnings: 0,
  };
  }
- 
+
  const avgSuccess = reportsData.studentAnalytics.length > 0
  ? reportsData.studentAnalytics.reduce((sum, s) => sum + s.successProbability, 0) / reportsData.studentAnalytics.length
  : 0;
- 
+
  return {
  totalStudents: reportsData.totalStudents,
  averageSuccessRate: Math.round(avgSuccess),
@@ -110,7 +110,7 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
 
  const riskDistribution = useMemo(() => {
  if (!reportsData) return [];
- 
+
  return [
  { name:"Düşük", value: reportsData.riskDistribution.düşük },
  { name:"Orta", value: reportsData.riskDistribution.orta },
@@ -120,7 +120,7 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
 
  const classComparisonData = useMemo(() => {
  if (!reportsData) return [];
- 
+
  return reportsData.classComparisons.map(cls => ({
  category: cls.className,
  current: cls.averageGPA,
@@ -128,6 +128,50 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  target: 3.5,
  }));
  }, [reportsData]);
+
+ const statsCards = useMemo(() => [
+    {
+      title: "Toplam Öğrenci",
+      value: overallStats.totalStudents,
+      description: "Sisteme kayıtlı öğrenci sayısı",
+      icon: Users,
+      gradient: "from-blue-500 to-cyan-600",
+      change: `${overallStats.totalStudents}`,
+    },
+    {
+      title: "Ortalama Başarı",
+      value: `%${Math.round(overallStats.averageSuccessRate)}`,
+      description: "Genel başarı tahmini ortalaması",
+      icon: Award,
+      gradient: "from-emerald-500 to-teal-600",
+      change: "↑ Trend",
+    },
+    {
+      title: "Yüksek Başarı",
+      value: overallStats.highSuccessCount,
+      description: `${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}% başarılı öğrenci`,
+      icon: TrendingUp,
+      gradient: "from-violet-500 to-purple-600",
+      change: `${overallStats.highSuccessCount}`,
+    },
+    {
+      title: "Risk Altında",
+      value: overallStats.atRiskCount,
+      description: "Yakın takip gerektiren öğrenci",
+      icon: AlertTriangle,
+      gradient: "from-amber-500 to-orange-600",
+      change: overallStats.atRiskCount > 0 ? "Dikkat" : "İyi",
+    },
+  ], [overallStats]);
+
+  const stats = useMemo(() => {
+    const total = reportsData?.topWarnings.length || 0;
+    const critical = reportsData?.topWarnings.filter(w => w.severity === "kritik").length || 0;
+    const high = reportsData?.topWarnings.filter(w => w.severity === "yüksek").length || 0;
+    const highRisk = reportsData?.riskDistribution?.yüksek + reportsData?.riskDistribution?.kritik || 0;
+
+    return { total, critical, high, highRisk };
+  }, [reportsData]);
 
  if (loading) {
  return (
@@ -154,69 +198,36 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  return (
  <div className="space-y-6">
  {/* Ana İstatistikler */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
- {[
- {
- title: "Toplam Öğrenci",
- value: overallStats.totalStudents,
- description: "Sisteme kayıtlı öğrenci sayısı",
- icon: Users,
- gradient: "from-blue-500 to-cyan-600",
- change: `${overallStats.totalStudents}`,
- },
- {
- title: "Ortalama Başarı",
- value: `%${Math.round(overallStats.averageSuccessRate)}`,
- description: "Genel başarı tahmini ortalaması",
- icon: Award,
- gradient: "from-emerald-500 to-teal-600",
- change: "↑ Trend",
- },
- {
- title: "Yüksek Başarı",
- value: overallStats.highSuccessCount,
- description: `${overallStats.totalStudents > 0 ? Math.round((overallStats.highSuccessCount / overallStats.totalStudents) * 100) : 0}% başarılı öğrenci`,
- icon: TrendingUp,
- gradient: "from-violet-500 to-purple-600",
- change: `${overallStats.highSuccessCount}`,
- },
- {
- title: "Risk Altında",
- value: overallStats.atRiskCount,
- description: "Yakın takip gerektiren öğrenci",
- icon: AlertTriangle,
- gradient: "from-amber-500 to-orange-600",
- change: overallStats.atRiskCount > 0 ? "Dikkat" : "İyi",
- },
- ].map((card, index) => (
- <motion.div
- key={card.title}
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: index * 0.1 }}
- whileHover={{ y: -3, scale: 1.01 }}
- >
- <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
- <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 hover:opacity-5 transition-opacity`}></div>
- <CardContent className="p-3 md:p-4">
- <div className="flex items-start justify-between mb-2 md:mb-3">
- <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${card.gradient} shadow-md`}>
- <card.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
- </div>
- <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
- {card.change}
- </Badge>
- </div>
- <div className="space-y-0.5">
- <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
- <p className="text-xl md:text-2xl font-bold tracking-tight">{card.value}</p>
- <p className="text-[10px] md:text-xs text-muted-foreground truncate">{card.description}</p>
- </div>
- </CardContent>
- </Card>
- </motion.div>
- ))}
- </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        {statsCards.map((card, index) => (
+          <motion.div
+            key={card.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ y: -3, scale: 1.01 }}
+          >
+            <Card className="relative overflow-hidden border hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-slate-900/50">
+              <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 hover:opacity-5 transition-opacity`}></div>
+              <CardContent className="p-3 md:p-4">
+                <div className="flex items-start justify-between mb-2 md:mb-3">
+                  <div className={`p-2 md:p-2.5 rounded-lg bg-gradient-to-br ${card.gradient} shadow-md`}>
+                    <card.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                  </div>
+                  <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 py-0.5">
+                    {card.change}
+                  </Badge>
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
+                  <p className="text-xl md:text-2xl font-bold tracking-tight">{card.value}</p>
+                  <p className="text-[10px] md:text-xs text-muted-foreground truncate">{card.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
  {/* Uyarı Özeti */}
  {overallStats.activeWarnings > 0 && (
@@ -249,9 +260,9 @@ function OverviewDashboard({ setActiveTab }: { setActiveTab: (tab: string) => vo
  )}
  </div>
  </div>
- <Button 
- variant="outline" 
- size="sm" 
+ <Button
+ variant="outline"
+ size="sm"
  onClick={() => setActiveTab('warnings')}
  className="bg-white hover:bg-orange-50 border-orange-200"
  >
@@ -285,7 +296,7 @@ function ExportSettings() {
  const [exportFormat, setExportFormat] = useState<"json" |"csv">("json");
  const [reportType, setReportType] = useState<string>("all");
  const [includePersonalData, setIncludePersonalData] = useState(false);
- 
+
  const exportPermissions = useMemo(() => {
  return user ? getExportPermissions(user.role) : { canExportAll: false, canExportFiltered: false, allowedFormats: [] };
  }, [user]);
@@ -300,18 +311,18 @@ function ExportSettings() {
  alert(`${exportFormat.toUpperCase()} formatında dışa aktarma izniniz bulunmamaktadır.`);
  return;
  }
- 
+
  try {
  const rawData = await exportAnalyticsData({
  includePersonalData: includePersonalData && hasPermission('view_sensitive_data'),
  });
- 
- const dataString = exportFormat ==="json" 
+
+ const dataString = exportFormat ==="json"
  ? JSON.stringify(rawData, null, 2)
  : convertToCSV(rawData);
- 
- const blob = new Blob([dataString], { 
- type: exportFormat ==="json" ?"application/json" :"text/csv" 
+
+ const blob = new Blob([dataString], {
+ type: exportFormat ==="json" ?"application/json" :"text/csv"
  });
  const url = URL.createObjectURL(blob);
  const a = document.createElement("a");
@@ -326,7 +337,7 @@ function ExportSettings() {
  alert('Rapor ihracı sırasında hata oluştu.');
  }
  };
- 
+
  function convertToCSV(data: any[]): string {
  if (data.length === 0) return '';
  const headers = Object.keys(data[0]);
@@ -363,11 +374,11 @@ function ExportSettings() {
  </SelectContent>
  </Select>
  </div>
- 
+
  <div>
  <label className="text-sm font-medium">Format</label>
- <Select 
- value={exportFormat} 
+ <Select
+ value={exportFormat}
  onValueChange={(value) => setExportFormat(value as"json" |"csv")}
  disabled={!exportPermissions.canExportFiltered}
  >
@@ -385,11 +396,11 @@ function ExportSettings() {
  </Select>
  </div>
  </div>
- 
+
  {hasPermission('view_sensitive_data') && (
  <div className="flex items-center space-x-2">
- <input 
- type="checkbox" 
+ <input
+ type="checkbox"
  id="includePersonalData"
  checked={includePersonalData}
  onChange={(e) => setIncludePersonalData(e.target.checked)}
@@ -399,10 +410,10 @@ function ExportSettings() {
  </label>
  </div>
  )}
- 
+
  <div className="flex gap-2">
- <Button 
- onClick={handleExport} 
+ <Button
+ onClick={handleExport}
  className="gap-2"
  disabled={!exportPermissions.canExportFiltered && !exportPermissions.canExportAll}
  >
@@ -410,8 +421,8 @@ function ExportSettings() {
  Raporu İndir
  </Button>
  <PermissionGuard permission="export_all_data">
- <Button 
- variant="outline" 
+ <Button
+ variant="outline"
  className="gap-2"
  onClick={() => {
  alert('E-posta gönderme özelliği yakında eklenecek. Şu an için raporu indirip manuel olarak gönderebilirsiniz.');
@@ -443,7 +454,7 @@ function ExportSettings() {
  </div>
  <Badge variant="outline">Kapalı</Badge>
  </div>
- 
+
  <div className="flex items-center justify-between">
  <div>
  <div className="font-medium text-sm">Uyarı Bildirimleri</div>
@@ -453,7 +464,7 @@ function ExportSettings() {
  </div>
  <Badge >Açık</Badge>
  </div>
- 
+
  <div className="flex items-center justify-between">
  <div>
  <div className="font-medium text-sm">Veri Saklama</div>
@@ -464,9 +475,9 @@ function ExportSettings() {
  <Badge variant="outline">12 Ay</Badge>
  </div>
  </div>
- 
- <Button 
- variant="outline" 
+
+ <Button
+ variant="outline"
  size="sm"
  onClick={() => navigate('/ayarlar')}
  >
@@ -513,16 +524,16 @@ export default function Reports() {
  }
 
  const format = exportPermissions.allowedFormats[0] as"json" |"csv";
- 
+
  try {
  const rawData = await exportAnalyticsData({
  includePersonalData: hasPermission('view_sensitive_data'),
  });
- 
- const dataString = format ==="json" 
+
+ const dataString = format ==="json"
  ? JSON.stringify(rawData, null, 2)
  : convertToCSV(rawData);
- 
+
  const mimeType = format ==="json" ?"application/json" :"text/csv";
  const blob = new Blob([dataString], { type: mimeType });
  const url = URL.createObjectURL(blob);
@@ -538,7 +549,7 @@ export default function Reports() {
  alert('Rapor ihracı sırasında hata oluştu.');
  }
  };
- 
+
  function convertToCSV(data: any[]): string {
  if (data.length === 0) return '';
  const headers = Object.keys(data[0]);
@@ -548,7 +559,7 @@ export default function Reports() {
  ];
  return csvRows.join('\n');
  }
- 
+
  if (!user) {
  return (
  <div className="flex items-center justify-center min-h-96">
@@ -570,7 +581,7 @@ export default function Reports() {
  <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
  <div className="absolute bottom-0 left-0 w-56 h-56 bg-teal-400/20 rounded-full blur-3xl"></div>
- 
+
  <div className="relative z-10 max-w-full flex items-center justify-between">
  <div className="flex-1">
  <Badge className="mb-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs">
@@ -583,9 +594,9 @@ export default function Reports() {
  <p className="text-sm md:text-base text-white/90 mb-4 max-w-xl leading-relaxed">
  Öğrenci başarı analizleri, karşılaştırmalı raporlar ve erken uyarı sistemi
  </p>
- 
+
  <div className="flex gap-3 flex-wrap mt-3">
- <Button 
+ <Button
  onClick={handleRefresh}
  size="sm"
  variant="outline"
@@ -594,7 +605,7 @@ export default function Reports() {
  <RefreshCw className="h-4 w-4" />
  Yenile
  </Button>
- <Button 
+ <Button
  onClick={() => setFiltersOpen(true)}
  size="sm"
  variant="outline"
@@ -603,7 +614,7 @@ export default function Reports() {
  <Filter className="h-4 w-4" />
  Filtreler
  </Button>
- <Button 
+ <Button
  onClick={handleHeaderExport}
  size="sm"
  className="gap-2 bg-white text-cyan-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300"
@@ -672,7 +683,7 @@ export default function Reports() {
 
  {activeTab ==="predictive" && (
  <div className="mt-4">
- <PermissionGuard 
+ <PermissionGuard
  permission="view_predictive_analysis"
  fallback={
  <div className="text-center py-12 text-muted-foreground">
@@ -687,7 +698,7 @@ export default function Reports() {
 
  {activeTab ==="comparative" && (
  <div className="mt-4">
- <PermissionGuard 
+ <PermissionGuard
  permission="view_comparative_reports"
  fallback={
  <div className="text-center py-12 text-muted-foreground">
@@ -702,7 +713,7 @@ export default function Reports() {
 
  {activeTab ==="progress" && (
  <div className="mt-4">
- <PermissionGuard 
+ <PermissionGuard
  permission="view_progress_charts"
  fallback={
  <div className="text-center py-12 text-muted-foreground">
@@ -717,7 +728,7 @@ export default function Reports() {
 
  {activeTab ==="warnings" && (
  <div className="mt-4">
- <PermissionGuard 
+ <PermissionGuard
  permission="view_early_warnings"
  fallback={
  <div className="text-center py-12 text-muted-foreground">
