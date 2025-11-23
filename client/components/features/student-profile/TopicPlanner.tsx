@@ -347,13 +347,13 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                   </div>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-5 pb-4 pt-2">
+              <AccordionContent className="px-5 pb-3 pt-1">
                 {entries.length === 0 ? (
-                  <div className="py-6 text-center text-sm text-muted-foreground">
+                  <div className="py-4 text-center text-sm text-muted-foreground">
                     Bu gün için plan bulunmuyor.
                   </div>
                 ) : (
-                  <div className="grid gap-3">
+                  <div className="grid gap-2">
                     {entries.map((p, i) => {
                       const sub = subjects.find((s) => s.id === p.subjectId);
                       const top = topics.find((t) => t.id === p.topicId);
@@ -377,7 +377,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                       return (
                         <div
                           key={`${p.topicId}-${i}`}
-                          className={`rounded-lg border p-4 text-sm cursor-pointer hover:shadow-md transition-all hover:-translate-y-0.5 ${
+                          className={`rounded border p-2.5 text-sm cursor-pointer hover:shadow-sm hover:bg-muted/30 transition-all ${
                             isDueForReview
                               ? 'bg-red-50 dark:bg-red-950/20 border-red-300 dark:border-red-800'
                               : isUpcomingReview
@@ -387,68 +387,60 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                           title={`${sub?.name}${sub?.category ? ` (${sub.category})` : ""} — ${top?.name}${isDueForReview ? '\n🔄 BUGÜN TEKRAR EDİLMELİ!' : isUpcomingReview ? '\n📅 Yakında tekrar' : ''}\nTıklayarak hızlıca yönetin`}
                           onClick={() => setSelectedTopicId(p.topicId)}
                         >
-                          <div className="flex items-start justify-between gap-3 min-w-0">
-                            <div className="flex items-start gap-3 min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-2 min-w-0">
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
                               {(isDueForReview || isUpcomingReview) && (
-                                <RefreshCcw className={`h-4 w-4 mt-0.5 flex-shrink-0 ${isDueForReview ? 'text-red-600' : 'text-blue-600'}`} />
+                                <RefreshCcw className={`h-3.5 w-3.5 flex-shrink-0 ${isDueForReview ? 'text-red-600' : 'text-blue-600'}`} />
                               )}
-                              <div className="min-w-0 flex-1 space-y-2">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <Badge variant="outline" className="font-mono text-xs">
-                                    {p.start}–{p.end}
-                                  </Badge>
-                                  <span className="font-medium">
-                                    {sub?.name}
-                                    {sub?.category ? ` (${sub.category})` : ""}
-                                  </span>
-                                </div>
-                                <div className="text-base font-semibold text-foreground">
-                                  {top?.name}
-                                </div>
-                              </div>
+                              <Badge variant="outline" className="font-mono text-[11px] px-1.5 py-0 h-5 flex-shrink-0">
+                                {p.start}–{p.end}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground truncate">
+                                {sub?.name}{sub?.category && ` (${sub.category})`}
+                              </span>
+                              <span className="font-medium truncate">
+                                {top?.name}
+                              </span>
                             </div>
-                            <div className="flex flex-col items-end gap-2">
-                              <div className="flex items-center gap-1.5 flex-wrap justify-end">
-                                {deadlineInfo && (
-                                  <Badge className={`text-[10px] px-1.5 py-0.5 h-5 ${deadlineInfo.color}`} variant="outline">
-                                    <Clock className="size-3 mr-0.5" />
-                                    {deadlineInfo.text}
-                                  </Badge>
-                                )}
-                                {energyInfo && (
-                                  <div className={`${energyInfo.color}`} title={energyInfo.title}>
-                                    <energyInfo.icon className="size-4" />
-                                  </div>
-                                )}
-                                {top?.difficultyScore && top.difficultyScore >= 7 && (
-                                  <Badge className="text-[10px] px-1.5 py-0.5 h-5 bg-red-50 text-red-700" variant="outline">
-                                    Zor
-                                  </Badge>
-                                )}
-                                {top?.priority && top.priority >= 7 && (
-                                  <Badge className="text-[10px] px-1.5 py-0.5 h-5 bg-purple-50 text-purple-700" variant="outline">
-                                    <AlertCircle className="size-3 mr-0.5" />
-                                    Önemli
-                                  </Badge>
-                                )}
-                              </div>
-                              <span className="text-sm text-muted-foreground font-medium whitespace-nowrap">
-                                {p.allocated} dakika
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                              {deadlineInfo && (
+                                <Badge className={`text-[10px] px-1 py-0 h-4 ${deadlineInfo.color}`} variant="outline">
+                                  <Clock className="size-2.5 mr-0.5" />
+                                  {deadlineInfo.text}
+                                </Badge>
+                              )}
+                              {energyInfo && (
+                                <div className={`${energyInfo.color}`} title={energyInfo.title}>
+                                  <energyInfo.icon className="size-3.5" />
+                                </div>
+                              )}
+                              {top?.difficultyScore && top.difficultyScore >= 7 && (
+                                <Badge className="text-[9px] px-1 py-0 h-4 bg-red-50 text-red-700" variant="outline">
+                                  Zor
+                                </Badge>
+                              )}
+                              {top?.priority && top.priority >= 7 && (
+                                <Badge className="text-[9px] px-1 py-0 h-4 bg-purple-50 text-purple-700" variant="outline">
+                                  <AlertCircle className="size-2.5 mr-0.5" />
+                                  Önemli
+                                </Badge>
+                              )}
+                              <span className="text-xs text-muted-foreground font-medium whitespace-nowrap ml-1">
+                                {p.allocated}dk
                               </span>
                             </div>
                           </div>
-                          <div className="mt-3 space-y-1.5">
-                            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                          <div className="mt-1.5 flex items-center gap-2">
+                            <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
                               <div
                                 className="h-full bg-primary transition-all"
                                 style={{ width: `${pct}%` }}
                                 aria-label={`Tamamlanma: ${pct}%`}
                               />
                             </div>
-                            <div className="flex items-center justify-between text-xs text-muted-foreground">
-                              <span>Kalan: {p.remainingAfter} dk</span>
-                              <span className="font-medium">%{pct} tamamlandı</span>
-                            </div>
+                            <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                              %{pct} · {p.remainingAfter}dk kaldı
+                            </span>
                           </div>
                         </div>
                       );

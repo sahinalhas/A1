@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 interface PlanEntry {
   date: string;
@@ -36,7 +36,7 @@ export function generateTopicPlanPDF(
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
-  });
+  }) as jsPDF & { lastAutoTable?: { finalY: number } };
 
   const DAYS = [
     { value: 1, label: 'Pazartesi' },
@@ -126,7 +126,7 @@ export function generateTopicPlanPDF(
       ];
     });
 
-    (doc as any).autoTable({
+    autoTable(doc, {
       startY: yPos,
       head: [['Saat', 'Ders', 'Konu', 'Süre', 'İlerleme']],
       body: tableData,
@@ -162,7 +162,7 @@ export function generateTopicPlanPDF(
       },
     });
 
-    yPos = (doc as any).lastAutoTable.finalY + 8;
+    yPos = (doc.lastAutoTable?.finalY || yPos) + 8;
   });
 
   if (yPos > pageHeight - 30) {
