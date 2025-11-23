@@ -447,12 +447,15 @@ export async function updateProgress(
  if (pIndex < 0 || !t) return;
  
  const p = list[pIndex];
+ const wasCompleted = p.completedFlag;
  const newCompleted = p.completed + minutes;
  const newRemaining = Math.max(0, t.avgMinutes - newCompleted);
- const newCompletedFlag = newRemaining === 0 ? true : p.completedFlag;
+ const newCompletedFlag = newRemaining === 0;
  
  const today = new Date().toISOString().split('T')[0];
- const newReviewCount = newCompletedFlag ? (p.reviewCount || 0) + 1 : (p.reviewCount || 0);
+ 
+ // Only start spaced repetition on FIRST completion
+ const shouldStartReview = !wasCompleted && newCompletedFlag;
  
  list[pIndex] = {
  ...p,
@@ -460,8 +463,8 @@ export async function updateProgress(
  remaining: newRemaining,
  completedFlag: newCompletedFlag,
  lastStudied: today,
- reviewCount: newReviewCount,
- nextReviewDate: newCompletedFlag ? calculateNextReviewDate(newReviewCount) : p.nextReviewDate,
+ reviewCount: shouldStartReview ? 1 : p.reviewCount,
+ nextReviewDate: shouldStartReview ? calculateNextReviewDate(1) : p.nextReviewDate,
  };
  
  await saveProgress(list);
@@ -480,11 +483,52 @@ export async function setCompletedFlag(
  const t = topics.find((tt) => tt.id === topicId);
  if (pIndex < 0 || !t) return;
  
+ const p = list[pIndex];
+ const today = new Date().toISOString().split('T')[0];
+ 
+ // If marking as complete for the first time, start spaced repetition
+ const wasNotCompleted = !p.completedFlag;
+ const shouldStartReview = wasNotCompleted && done;
+ 
  list[pIndex] = {
- ...list[pIndex],
+ ...p,
  completedFlag: done,
- completed: done ? t.avgMinutes : list[pIndex].completed,
- remaining: done ? 0 : list[pIndex].remaining,
+ completed: done ? t.avgMinutes : p.completed,
+ remaining: done ? 0 : p.remaining,
+ lastStudied: done ? today : p.lastStudied,
+ reviewCount: shouldStartReview ? 1 : p.reviewCount,
+ nextReviewDate: shouldStartReview ? calculateNextReviewDate(1) : (done ? p.nextReviewDate : undefined),
+ };
+ 
+ await saveProgress(list);
+}
+
+export async function reviewTopic(
+ studentId: string,
+ topicId: string,
+) {
+ const list = loadProgress();
+ const pIndex = list.findIndex(
+ (x) => x.studentId === studentId && x.topicId === topicId,
+ );
+ if (pIndex < 0) return;
+ 
+ const p = list[pIndex];
+ 
+ // Only review topics that are completed
+ if (!p.completedFlag) {
+ console.warn('Cannot review topic that is not completed');
+ return;
+ }
+ 
+ const today = new Date().toISOString().split('T')[0];
+ const newReviewCount = (p.reviewCount || 0) + 1;
+ 
+ list[pIndex] = {
+ ...p,
+ lastStudied: today,
+ reviewCount: newReviewCount,
+ nextReviewDate: calculateNextReviewDate(newReviewCount),
  };
  
  await saveProgress(list);
