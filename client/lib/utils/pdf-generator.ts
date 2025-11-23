@@ -1,5 +1,5 @@
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface PlanEntry {
   date: string;
@@ -23,151 +23,18 @@ interface Topic {
   avgMinutes?: number;
 }
 
-const dayColors: Record<number, string> = {
-  1: '#E8F4FD',
-  2: '#FDE8F3',
-  3: '#E8FDE8',
-  4: '#FDF3E8',
-  5: '#F0E8FD',
-  6: '#FDE8F3',
-  7: '#FDE8E8',
+// Pastel renk paleti - her gün için canlı soft renkler
+const dayColors: Record<number, { header: [number, number, number]; light: [number, number, number]; dark: [number, number, number] }> = {
+  1: { header: [100, 180, 220], light: [230, 245, 255], dark: [70, 130, 180] },      // Pastel Mavi (Pazartesi)
+  2: { header: [255, 140, 170], light: [255, 235, 245], dark: [220, 80, 130] },      // Pastel Pembe (Salı)
+  3: { header: [130, 220, 150], light: [235, 255, 240], dark: [60, 170, 100] },      // Pastel Yeşil (Çarşamba)
+  4: { header: [255, 200, 100], light: [255, 245, 210], dark: [220, 140, 40] },      // Pastel Turuncu (Perşembe)
+  5: { header: [150, 180, 255], light: [240, 245, 255], dark: [80, 120, 220] },      // Pastel Lila (Cuma)
+  6: { header: [220, 160, 220], light: [250, 235, 250], dark: [180, 100, 180] },     // Pastel Mor (Cumartesi)
+  7: { header: [255, 160, 160], light: [255, 240, 240], dark: [220, 80, 80] },       // Pastel Kırmızı (Pazar)
 };
 
-const dayHeaderColors: Record<number, string> = {
-  1: '#64B4DC',
-  2: '#FF8AAA',
-  3: '#82DC96',
-  4: '#FFC864',
-  5: '#9680FF',
-  6: '#DC82DC',
-  7: '#FF8080',
-};
-
-function generateHTML(
-  plan: PlanEntry[],
-  planByDate: Map<string, PlanEntry[]>,
-  weekStart: string,
-  subjects: Subject[],
-  topics: Topic[],
-  studentId: string,
-  studentName?: string
-): string {
-  const DAYS = [
-    { value: 1, label: 'Pazartesi' },
-    { value: 2, label: 'Salı' },
-    { value: 3, label: 'Çarşamba' },
-    { value: 4, label: 'Perşembe' },
-    { value: 5, label: 'Cuma' },
-    { value: 6, label: 'Cumartesi' },
-    { value: 7, label: 'Pazar' },
-  ];
-
-  const startDate = new Date(weekStart + 'T00:00:00');
-  const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
-  const dateRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
-  const totalMinutes = plan.reduce((sum, p) => sum + p.allocated, 0);
-  const totalHours = Math.floor(totalMinutes / 60);
-  const totalMins = totalMinutes % 60;
-
-  let daysHTML = '';
-
-  DAYS.forEach((day) => {
-    const date = dateFromWeekStartLocal(weekStart, day.value);
-    const entries = (planByDate.get(date) || [])
-      .slice()
-      .sort((a, b) => a.start.localeCompare(b.start));
-
-    if (entries.length === 0) return;
-
-    const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
-    const bgColor = dayColors[day.value];
-    const headerColor = dayHeaderColors[day.value];
-
-    let tableRows = '';
-    entries.forEach((p) => {
-      const sub = subjects.find((s) => s.id === p.subjectId);
-      const top = topics.find((t) => t.id === p.topicId);
-      const total = top?.avgMinutes || 0;
-      const pct = total > 0 ? Math.round(((total - p.remainingAfter) / total) * 100) : 0;
-      const progressColor = pct >= 75 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
-
-      tableRows += `
-        <tr style="border-bottom: 1px solid rgba(0,0,0,0.04);">
-          <td style="padding: 10px 12px; font-size: 12px; font-weight: 600; color: #667eea;">${p.start.substring(0, 5)}</td>
-          <td style="padding: 10px 12px; font-size: 12px; color: #2d3748;">${sub?.name || '-'}</td>
-          <td style="padding: 10px 12px; font-size: 12px; color: #2d3748;">${top?.name || '-'}</td>
-          <td style="padding: 10px 12px; font-size: 12px; text-align: center; font-weight: 500; color: #2d3748;">${p.allocated}dk</td>
-          <td style="padding: 8px 12px; font-size: 12px;">
-            <div style="background: #e2e8f0; border-radius: 4px; height: 22px; position: relative; overflow: hidden; display: flex; align-items: center;">
-              <div style="width: ${pct}%; height: 100%; background: ${progressColor}; transition: width 0.3s ease;"></div>
-              <span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; color: #2d3748; z-index: 1;">${pct}%</span>
-            </div>
-          </td>
-        </tr>
-      `;
-    });
-
-    daysHTML += `
-      <div style="margin-bottom: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); page-break-inside: avoid;">
-        <div style="background: ${headerColor}; color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
-          <div>
-            <h3 style="font-size: 15px; margin: 0; padding: 0; margin-bottom: 3px;">${day.label}</h3>
-            <p style="font-size: 11px; opacity: 0.9; margin: 0; padding: 0;">${date}</p>
-          </div>
-          <div style="font-size: 13px; opacity: 0.95;">${dayTotal} dakika</div>
-        </div>
-        <div style="background: ${bgColor}; padding: 0;">
-          <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: rgba(0,0,0,0.03); border-bottom: 1px solid rgba(0,0,0,0.08);">
-                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 12%;">Saat</th>
-                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 22%;">Ders</th>
-                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 38%;">Konu</th>
-                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 12%;">Süre</th>
-                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 16%;">İlerleme</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${tableRows}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  });
-
-  return `
-    <div style="background: white; padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; color: #2d3748; line-height: 1.5;">
-      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 10px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
-        <h1 style="font-size: 26px; font-weight: 700; margin: 0 0 6px 0; letter-spacing: -0.5px;">📚 Haftalık Konu Planı</h1>
-        <p style="font-size: 13px; opacity: 0.95; margin: 0 0 16px 0;">${studentName ? `Öğrenci: ${studentName}` : `Öğrenci ID: ${studentId}`}</p>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-          <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); padding: 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(255, 255, 255, 0.2);">
-            <strong style="display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600;">📅 Dönem</strong>
-            ${dateRange}
-          </div>
-          <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); padding: 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(255, 255, 255, 0.2);">
-            <strong style="display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600;">⏱️ Toplam Süre</strong>
-            ${totalHours}s ${totalMins}dk
-          </div>
-          <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); padding: 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(255, 255, 255, 0.2);">
-            <strong style="display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600;">📖 Toplam Konular</strong>
-            ${plan.length} konu
-          </div>
-        </div>
-      </div>
-      <div>
-        ${daysHTML}
-      </div>
-      <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096;">
-        <p style="margin: 0 0 4px 0;"><strong style="color: #4a5568;">Oluşturulma:</strong> ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}</p>
-        <p style="margin: 0;">Rehber360 - Öğrenci Rehberlik Sistemi</p>
-      </div>
-    </div>
-  `;
-}
-
-export async function generateTopicPlanPDF(
+export function generateTopicPlanPDF(
   plan: PlanEntry[],
   planByDate: Map<string, PlanEntry[]>,
   weekStart: string,
@@ -177,79 +44,198 @@ export async function generateTopicPlanPDF(
   studentName?: string,
   options: { download?: boolean; print?: boolean } = { download: true, print: false }
 ) {
-  try {
-    const htmlContent = generateHTML(plan, planByDate, weekStart, subjects, topics, studentId, studentName);
-    const fileName = `Haftalik_Konu_Plani_${weekStart}_${studentName?.replace(/[^a-zA-Z0-9]/g, '_') || studentId}.pdf`;
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  }) as jsPDF & { lastAutoTable?: { finalY: number } };
 
-    // Create temporary container
-    const container = document.createElement('div');
-    container.innerHTML = htmlContent;
-    container.style.display = 'block';
-    container.style.position = 'fixed';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.zIndex = '-10000';
-    container.style.visibility = 'hidden';
-    container.style.width = '210mm';
-    container.style.height = 'auto';
-    container.style.padding = '0';
-    container.style.margin = '0';
-    document.body.appendChild(container);
+  const DAYS = [
+    { value: 1, label: 'Pazartesi', shortLabel: 'Paz' },
+    { value: 2, label: 'Salı', shortLabel: 'Sal' },
+    { value: 3, label: 'Carsamba', shortLabel: 'Car' },
+    { value: 4, label: 'Persembe', shortLabel: 'Per' },
+    { value: 5, label: 'Cuma', shortLabel: 'Cum' },
+    { value: 6, label: 'Cumartesi', shortLabel: 'Cum' },
+    { value: 7, label: 'Pazar', shortLabel: 'Paz' },
+  ];
 
-    // Wait for rendering
-    await new Promise(resolve => setTimeout(resolve, 100));
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 12;
+  let yPos = margin;
+  let isFirstPage = true;
 
-    // Convert to canvas
-    const canvas = await html2canvas(container, {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-    });
+  // ===== FIRST PAGE HEADER =====
+  const addHeader = () => {
+    if (!isFirstPage) return;
 
-    // Create PDF
-    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
+    const headerColors = dayColors[1].header;
+    doc.setFillColor(headerColors[0], headerColors[1], headerColors[2]);
+    doc.rect(0, 0, pageWidth, 28, 'F');
 
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth - 10;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    doc.setFontSize(16);
+    doc.setFont('courier', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text('Haftalik Konu Plani', margin, 8);
 
-    let yPos = 5;
+    doc.setFontSize(9);
+    doc.setFont('courier', 'normal');
+    doc.setTextColor(240, 255, 255);
+    const displayName = studentName ? `Ogrenci: ${studentName}` : `Ogrenci ID: ${studentId}`;
+    doc.text(displayName, margin, 15);
 
-    // Add pages
-    pdf.addImage(imgData, 'JPEG', 5, yPos, imgWidth, imgHeight);
-    yPos += imgHeight + 5;
+    const startDate = new Date(weekStart + 'T00:00:00');
+    const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+    const dateRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    const totalMinutes = plan.reduce((sum, p) => sum + p.allocated, 0);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const totalMins = totalMinutes % 60;
 
-    while (yPos > pageHeight) {
-      pdf.addPage();
-      yPos -= pageHeight;
-      pdf.addImage(imgData, 'JPEG', 5, yPos - (imgHeight + 5), imgWidth, imgHeight);
-      yPos += 5;
+    doc.setFontSize(8);
+    doc.text(`Donem: ${dateRange}  |  Toplam: ${totalHours}s ${totalMins}dk  |  Konular: ${plan.length}`, margin, 22);
+
+    yPos = 32;
+    isFirstPage = false;
+  };
+
+  addHeader();
+
+  // ===== DAILY SECTIONS =====
+  DAYS.forEach((day, index) => {
+    const date = dateFromWeekStartLocal(weekStart, day.value);
+    const entries = (planByDate.get(date) || [])
+      .slice()
+      .sort((a, b) => a.start.localeCompare(b.start));
+
+    if (entries.length === 0) return;
+
+    const dayColor = dayColors[day.value];
+    const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
+
+    // Add new page if needed
+    if (yPos > pageHeight - 45) {
+      doc.addPage();
+      yPos = margin;
     }
 
-    // Clean up
-    document.body.removeChild(container);
+    // Day section header - pastel background
+    doc.setFillColor(dayColor.light[0], dayColor.light[1], dayColor.light[2]);
+    doc.rect(margin - 1, yPos - 4, pageWidth - 2 * margin + 2, 10, 'F');
 
-    // Download or print
-    if (options.download) {
-      pdf.save(fileName);
-    } else if (options.print) {
-      const printWindow = window.open(pdf.output('bloburi'), '_blank');
-      if (printWindow) {
-        setTimeout(() => {
-          printWindow.print();
-        }, 500);
-      }
-    }
-  } catch (error) {
-    console.error('PDF oluşturulurken hata:', error);
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(dayColor.dark[0], dayColor.dark[1], dayColor.dark[2]);
+    doc.text(`${day.label} • ${date}`, margin + 1.5, yPos + 1.5);
+
+    doc.setFontSize(9);
+    doc.text(`${dayTotal} dakika`, pageWidth - margin - 15, yPos + 1.5);
+
+    yPos += 11;
+
+    // Create table data
+    const tableData = entries.map((p) => {
+      const sub = subjects.find((s) => s.id === p.subjectId);
+      const top = topics.find((t) => t.id === p.topicId);
+      const total = top?.avgMinutes || 0;
+      const pct = total > 0 ? Math.round(((total - p.remainingAfter) / total) * 100) : 0;
+
+      return [
+        p.start.substring(0, 5),
+        sub?.name || '',
+        top?.name || '',
+        `${p.allocated}dk`,
+        `%${pct}`,
+      ];
+    });
+
+    // Day-specific table with colored header
+    const tableConfig: any = {
+      startY: yPos,
+      head: [['Saat', 'Ders', 'Konu', 'Sure', 'Ilerleme']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: {
+        fillColor: [dayColor.header[0], dayColor.header[1], dayColor.header[2]],
+        textColor: [255, 255, 255],
+        fontSize: 8,
+        font: 'courier',
+        fontStyle: 'bold',
+        halign: 'left',
+        cellPadding: 2,
+        lineColor: [200, 200, 200],
+        lineWidth: 0.4,
+      },
+      bodyStyles: {
+        textColor: [50, 50, 50],
+        fontSize: 7,
+        font: 'courier',
+        cellPadding: 1.5,
+        lineColor: [220, 220, 220],
+        lineWidth: 0.2,
+      },
+      alternateRowStyles: {
+        fillColor: [dayColor.light[0], dayColor.light[1], dayColor.light[2]],
+      },
+      columnStyles: {
+        0: { cellWidth: 22, fontStyle: 'bold', textColor: dayColor.dark, halign: 'center' },
+        1: { cellWidth: 32 },
+        2: { cellWidth: 65 },
+        3: { cellWidth: 18, halign: 'center' },
+        4: { cellWidth: 16, halign: 'center', fontStyle: 'bold', textColor: dayColor.dark },
+      },
+      margin: { left: margin, right: margin, top: 0, bottom: 8 },
+      didDrawPage: function (data: any) {
+        yPos = data.cursor.y;
+      },
+    };
+
+    autoTable(doc, tableConfig);
+    yPos = (doc.lastAutoTable?.finalY || yPos) + 6;
+  });
+
+  // ===== FOOTER =====
+  const pageCount = doc.internal.pages.length;
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(6);
+    doc.setTextColor(150, 150, 150);
+    doc.setFont('courier', 'normal');
+
+    const footerY = pageHeight - 4;
+    doc.text(
+      `Olusturulma: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR').substring(0, 5)}`,
+      margin,
+      footerY
+    );
+
+    doc.setFont('courier', 'bold');
+    doc.setTextColor(120, 120, 120);
+    doc.text(`Sayfa ${i}/${pageCount}`, pageWidth - margin - 15, footerY);
+
+    doc.setTextColor(100, 140, 200);
+    doc.text('Rehber360 - Ogrenci Rehberlik Sistemi', pageWidth - margin - 50, footerY);
   }
+
+  const fileName = `Haftalik_Konu_Plani_${weekStart}_${studentName?.replace(/[^a-zA-Z0-9]/g, '_') || studentId}.pdf`;
+
+  if (options.print) {
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const printWindow = window.open(url, '_blank');
+    if (printWindow) {
+      printWindow.onload = () => {
+        printWindow.print();
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      };
+    }
+  } else if (options.download) {
+    doc.save(fileName);
+  }
+
+  return doc;
 }
 
 function dateFromWeekStartLocal(weekStartISO: string, day: number) {
