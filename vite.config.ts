@@ -78,7 +78,7 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('react-hook-form') || id.includes('@hookform')) {
               return 'vendor-forms';
             }
-            if (id.includes('xlsx') || id.includes('jspdf')) {
+            if (id.includes('xlsx') || id.includes('@react-pdf/renderer')) {
               return 'export';
             }
             if (id.includes('zod')) {
