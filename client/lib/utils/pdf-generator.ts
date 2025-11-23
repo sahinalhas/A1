@@ -35,7 +35,7 @@ const COLORS = {
   line: [224, 224, 224]      // İnce çizgiler
 };
 
-export function generateCompactPlan(
+export function generateTopicPlanPDF(
   plan: PlanEntry[],
   planByDate: Map<string, PlanEntry[]>,
   weekStart: string,
@@ -193,12 +193,12 @@ export function generateCompactPlan(
           fontSize: 7, // Küçük font (Sığması için kritik)
           cellPadding: 1.5,
           overflow: 'ellipsize',
-          textColor: COLORS.text,
+          textColor: COLORS.text as [number, number, number],
           lineWidth: 0, // Çizgisiz
         },
         headStyles: {
           fillColor: [245, 245, 245],
-          textColor: COLORS.primary,
+          textColor: COLORS.primary as [number, number, number],
           fontStyle: 'bold',
           lineWidth: 0,
         },
