@@ -1,85 +1,91 @@
-# 📚 Konu Takibi Sistemi - Kapsamlı Geliştirme Planı
+# 📚 Konu Takibi Sistemi - Revize Geliştirme Planı (v2)
 
-**Tarih:** 23 Kasım 2025  
-**Amaç:** Öğrencilerin konu bazlı çalışma performansını kaydetmek, spaced repetition ile tekrar planlamak ve haftalık görüşmelerde kullanmak.
+**Tarih:** 23 Kasım 2025 (Güncelleme)  
+**Amaç:** Mevcut çalışma programı sistemine entegre konu performans takibi, spaced repetition ve rozet sistemi.
 
 ---
 
 ## 🎯 GENEL BAKIŞ
 
 ### Sistemin Amacı
-- Öğrencilerin konu bazlı performansını kaydetmek ve izlemek
-- Spaced repetition algoritması ile tekrar planı otomatik oluşturmak
-- Haftalık görüşmelerde kullanılacak akıllı plan önermek
-- Rozet sistemi ile öğrenciyi motive etmek
-- Şık PDF çıktısı ile haftalık program dağıtmak
-- Konu bazında ustalık seviyesi takibi (5 seviye: Başlanmadı → Uzman)
+- Haftalık görüşmelerde konu bazlı performans girişi (soru sayısı, doğru/yanlış, süre, zorluk)
+- Konu ustalık seviyesi takibi (0: Başlanmadı → 5: Uzman/Tamamlandı)
+- **Tamamlanan konular yeni planlarda önerilmez** ✅
+- **Tamamlanmış bir konunun işareti geri alınırsa, tekrar plana girebilir** ✅
+- Spaced repetition ile akıllı tekrar önerileri
+- Rozet sistemi ile motivasyon
+- Şık PDF çıktısı ile haftalık program dağıtımı
 
-### Kullanım Senaryosu (Haftalık Görüşme)
+### 💡 Senin İş Akışın (Haftalık Görüşme)
 
 ```
 📅 Pazartesi 09:00 - Ahmet'in Görüşme Saati
 
-1. [PERFORMANS GİRİŞİ]
-   - Geçen hafta verilen konuların sonuçlarını gir
-   - "Üçgenler: 20 soru, 17 doğru, 3 yanlış, 45 dakika, Orta zorluk"
-   - Sistem otomatik ustalık seviyesi hesaplar
-
-2. [SİSTEM ÖNERİSİ GÖRÜR]
-   📋 BU HAFTA İÇİN PLAN ÖNERİSİ:
+1. [ÖĞRENCİ GELDİ]
+   - Geçen hafta verdiğin konuları nasıl yaptığını soruyor
    
+2. [PERFORMANS GİRİŞİ - Hızlı Mod]
+   Konu Takip sekmesinde:
+   ✅ "Üçgenler" → 20 soru, 17 doğru, 45 dk, Orta → Kaydet
+   ✅ "Limit" → Zaten biliyordu → [Tamamlandı] checkbox işaretle
+   ✅ "Denklemler" → Çalışmadı → Performans girme
+   
+3. [SİSTEM PLAN ÖNERİSİ OLUŞTUR]
+   "Plan Öner" butonuna bas:
+   
+   📋 SISTEM ÖNERİSİ:
    ✨ YENİ KONULAR (3-5 konu):
-   - Denklemler (TYT Matematik)
-   - Fonksiyonlar (TYT Matematik)
+      - Fonksiyonlar (TYT Matematik)
+      - Türev (AYT Matematik)
+      ❌ Limit (ÇIKMIYOR - Tamamlandı olarak işaretli!)
    
    🔄 TEKRAR KONULARı (Spaced Repetition):
-   - İntegral (%80 başarı, 15 gün önce → pekiştirme zamanı!)
-   - Türev (%75 başarı, 7 gün önce → tekrar et)
+      - Üçgenler (%85 başarı, 7 gün önce → pekiştirme zamanı!)
+      - İntegral (%72 başarı, 3 gün gecikmiş → acil tekrar!)
    
    🏆 MOTIVASYON:
-   - 7 günlük streak! 🔥
-   - "Matematik Ustası" rozetine 2 konu kaldı
-   - Bu hafta 3 rozet kazanabilir!
-
-3. [PLAN ONAYLAMA]
-   - Önerileri gözden geçir
-   - İstersen ekle/çıkar
-   - Onaylayınca PDF oluştur
-
-4. [PDF VER]
-   - Şık tasarımlı haftalık çalışma planı
-   - QR kod ile öğrenci ilerlemesini görebilir (ileriki faz)
-   - Rozetler ve motivasyon mesajları
-
+      - 8 günlük streak! 🔥
+      - "Matematik Ustası" rozetine 3 konu kaldı
+   
+4. [PLAN ONAYLA & PDF AL]
+   - İstersen ekle/çıkar → Kaydet
+   - PDF oluştur → Yazdır → Öğrenciye ver
+   
 5. [ÖĞRENCİ GİTTİ]
-   - Planını aldı, bu hafta çalışacak
-   - Bir sonraki hafta geldiğinde döngü tekrarlanır
+   - Bu hafta çalışacak
+   - Bir sonraki hafta yine gelip döngü tekrarlanır
 ```
 
-### Kullanıcı Akışı (Şu An vs İleride)
+### 🔄 Tamamlanma Mantığı
 
-**Şu An (Tek Kullanıcı - Sadece Sen):**
-- Sen giriş yapıyorsun
-- Tüm öğrencilerin performansını sen giriyorsun
-- PDF yazdırıp öğrencilere dağıtıyorsun
-
-**İleriki Aşama (Multi-User):**
-- Öğretmenler kendi hesabıyla giriş
-- Öğrenciler kendi performanslarını girebilir
-- Veliler çocuğunun ilerlemesini görebilir
-- Mobil app desteği
+**Önemli Kurallar:**
+1. **Mastery Level 5 (Uzman) = Tamamlandı** → Yeni plan önerilerinde ÇIKMAZ
+2. **Tamamlanmış bir konunun mastery'sini düşürürsen** → Tekrar plana girebilir
+3. **Spaced repetition sadece Mastery 1-4 için çalışır**
+4. Öğrenci bazı konuları zaten biliyorsa → Direkt "Tamamlandı" checkbox'ı işaretle
 
 ---
 
-## 🗄️ 1. VERİTABANI ŞEMASI
+## 🗄️ VERİTABANI ŞEMASI
 
-### Yeni Tablo: `topic_performance`
+### ✅ Mevcut Tablolar (Kullanılacak)
+
+Sistemde zaten var:
+- `subjects` - Dersler
+- `topics` - Konular
+- `study_assignments` - Öğrenciye atanan konular
+- `progress` - Konu ilerleme durumu
+
+### 🆕 Yeni Tablo: `topic_performance`
+
+Performans geçmişi (kaç soru, doğru/yanlış, süre, zorluk):
 
 ```sql
-CREATE TABLE topic_performance (
+CREATE TABLE IF NOT EXISTS topic_performance (
   id TEXT PRIMARY KEY,
   student_id TEXT NOT NULL,
   topic_id TEXT NOT NULL,
+  assignment_id TEXT,
   date TEXT NOT NULL,
   questions_solved INTEGER NOT NULL,
   correct_answers INTEGER NOT NULL,
@@ -87,78 +93,124 @@ CREATE TABLE topic_performance (
   duration_minutes INTEGER,
   difficulty_feedback TEXT CHECK(difficulty_feedback IN ('very_easy', 'easy', 'medium', 'hard', 'very_hard')),
   notes TEXT,
-  mastery_level INTEGER DEFAULT 0,
-  success_rate REAL,
+  success_rate REAL NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-  FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+  FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE,
+  FOREIGN KEY (assignment_id) REFERENCES study_assignments(id) ON DELETE SET NULL
 );
 
 CREATE INDEX idx_topic_performance_student ON topic_performance(student_id);
 CREATE INDEX idx_topic_performance_topic ON topic_performance(topic_id);
 CREATE INDEX idx_topic_performance_date ON topic_performance(date DESC);
+CREATE INDEX idx_topic_performance_assignment ON topic_performance(assignment_id);
 ```
 
-### Yeni Tablo: `weekly_plans`
+### 🔄 Mevcut `progress` Tablosu Genişletme
 
 ```sql
-CREATE TABLE weekly_plans (
+-- Mevcut progress tablosuna yeni kolonlar
+ALTER TABLE progress ADD COLUMN mastery_level INTEGER DEFAULT 0 CHECK(mastery_level BETWEEN 0 AND 5);
+ALTER TABLE progress ADD COLUMN success_rate_avg REAL DEFAULT 0;
+ALTER TABLE progress ADD COLUMN attempt_count INTEGER DEFAULT 0;
+ALTER TABLE progress ADD COLUMN last_performance_date TEXT;
+ALTER TABLE progress ADD COLUMN next_review_date TEXT;
+
+-- Mastery Seviyeleri:
+-- 0: Başlanmadı (hiç çalışılmamış)
+-- 1: Başlangıç (%0-40 başarı)
+-- 2: Orta (%41-60 başarı)
+-- 3: İyi (%61-80 başarı)
+-- 4: Çok İyi (%81-95 başarı)
+-- 5: Uzman (%95+ başarı veya manuel "Tamamlandı" işareti) → PLANLARDA ÇIKMAZ!
+```
+
+### 🆕 Haftalık Planlar - İlişkisel Tasarım
+
+**JSON yerine ilişkisel yapı:**
+
+```sql
+-- Ana plan tablosu
+CREATE TABLE IF NOT EXISTS weekly_plans (
   id TEXT PRIMARY KEY,
   student_id TEXT NOT NULL,
   week_start_date TEXT NOT NULL,
   week_end_date TEXT NOT NULL,
-  new_topics TEXT NOT NULL,
-  review_topics TEXT NOT NULL,
-  status TEXT DEFAULT 'active' CHECK(status IN ('draft', 'active', 'completed')),
+  status TEXT DEFAULT 'active' CHECK(status IN ('draft', 'active', 'completed', 'cancelled')),
   pdf_path TEXT,
+  created_by TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Plan konuları (ilişkisel)
+CREATE TABLE IF NOT EXISTS weekly_plan_topics (
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL,
+  topic_id TEXT NOT NULL,
+  topic_type TEXT NOT NULL CHECK(topic_type IN ('new', 'review')),
+  priority INTEGER DEFAULT 0,
+  review_reason TEXT,
+  estimated_duration_minutes INTEGER,
+  completed INTEGER DEFAULT 0,
+  FOREIGN KEY (plan_id) REFERENCES weekly_plans(id) ON DELETE CASCADE,
+  FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_weekly_plans_student ON weekly_plans(student_id);
 CREATE INDEX idx_weekly_plans_date ON weekly_plans(week_start_date DESC);
+CREATE INDEX idx_weekly_plan_topics_plan ON weekly_plan_topics(plan_id);
+CREATE INDEX idx_weekly_plan_topics_topic ON weekly_plan_topics(topic_id);
 ```
 
-### Yeni Tablo: `badges`
+### 🏆 Rozet Sistemi
 
 ```sql
-CREATE TABLE badges (
+-- Rozet tanımları
+CREATE TABLE IF NOT EXISTS badges (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT NOT NULL,
   icon TEXT NOT NULL,
-  criteria_type TEXT NOT NULL,
+  criteria_type TEXT NOT NULL CHECK(criteria_type IN ('mastery_count', 'streak', 'total_questions', 'perfect_week')),
   criteria_value INTEGER NOT NULL,
-  category TEXT NOT NULL
+  category TEXT NOT NULL CHECK(category IN ('mastery', 'streak', 'questions', 'achievement'))
 );
 
-CREATE TABLE student_badges (
+-- Öğrenci rozetleri
+CREATE TABLE IF NOT EXISTS student_badges (
   id TEXT PRIMARY KEY,
   student_id TEXT NOT NULL,
   badge_id TEXT NOT NULL,
   earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-  FOREIGN KEY (badge_id) REFERENCES badges(id) ON DELETE CASCADE
+  FOREIGN KEY (badge_id) REFERENCES badges(id) ON DELETE CASCADE,
+  UNIQUE(student_id, badge_id)
 );
 
 CREATE INDEX idx_student_badges_student ON student_badges(student_id);
 ```
 
-### Öğrenci Tablosuna Ekleme
+### 👤 Öğrenci Tablosu Genişletme
 
 ```sql
 ALTER TABLE students ADD COLUMN target_exams TEXT DEFAULT '[]';
 ALTER TABLE students ADD COLUMN current_streak INTEGER DEFAULT 0;
 ALTER TABLE students ADD COLUMN longest_streak INTEGER DEFAULT 0;
 ALTER TABLE students ADD COLUMN last_activity_date TEXT;
+ALTER TABLE students ADD COLUMN total_questions_solved INTEGER DEFAULT 0;
+ALTER TABLE students ADD COLUMN expert_topic_count INTEGER DEFAULT 0;
 ```
 
 ---
 
-## 🔧 2. BACKEND API
+## 🔧 BACKEND API
 
 ### Dizin Yapısı
+
 ```
 server/features/topic-performance/
 ├── types/
@@ -167,9 +219,9 @@ server/features/topic-performance/
 │   └── topic-performance.repository.ts
 ├── services/
 │   ├── topic-performance.service.ts
-│   ├── mastery-calculator.service.ts
-│   ├── spaced-repetition.service.ts
-│   └── badge.service.ts
+│   ├── mastery-calculator.service.ts (Ustalık hesaplama)
+│   ├── spaced-repetition.service.ts (Tekrar planlama)
+│   └── badge.service.ts (Rozet sistemi)
 ├── routes/
 │   └── topic-performance.routes.ts
 └── index.ts
@@ -181,7 +233,8 @@ server/features/weekly-plans/
 │   └── weekly-plan.repository.ts
 ├── services/
 │   ├── weekly-plan.service.ts
-│   └── pdf-generator.service.ts
+│   ├── plan-generator.service.ts (Akıllı plan önerisi)
+│   └── pdf-generator.service.ts (PDF oluşturma)
 ├── routes/
 │   └── weekly-plan.routes.ts
 └── index.ts
@@ -189,788 +242,1148 @@ server/features/weekly-plans/
 
 ### API Endpoint'leri
 
-#### Performans Yönetimi
-- `POST /api/topic-performance` - Yeni performans kaydı oluştur
-- `GET /api/topic-performance/student/:studentId` - Öğrencinin tüm performans kayıtları
-- `GET /api/topic-performance/topic/:topicId/student/:studentId` - Belirli konuya ait kayıtlar
-- `PUT /api/topic-performance/:id` - Performans kaydı güncelle
-- `DELETE /api/topic-performance/:id` - Performans kaydı sil
+#### 🎯 Performans Yönetimi
 
-#### Haftalık Plan
-- `POST /api/weekly-plans/generate/:studentId` - Haftalık plan önerisi oluştur
-  - Sistem otomatik spaced repetition + yeni konu önerir
-  - Response: `{ newTopics: [], reviewTopics: [], badges: [], streak: 7 }`
-  
-- `POST /api/weekly-plans` - Haftalık planı kaydet (onaylandıktan sonra)
-- `GET /api/weekly-plans/student/:studentId` - Öğrencinin tüm planları
-- `GET /api/weekly-plans/:id/pdf` - PDF oluştur ve indir
-- `PUT /api/weekly-plans/:id` - Planı güncelle
+```
+POST   /api/topic-performance                      - Yeni performans kaydı oluştur
+GET    /api/topic-performance/student/:studentId  - Öğrencinin tüm performans kayıtları
+GET    /api/topic-performance/topic/:topicId      - Belirli konuya ait kayıtlar
+PUT    /api/topic-performance/:id                 - Performans kaydı güncelle
+DELETE /api/topic-performance/:id                 - Performans kaydı sil
+GET    /api/topic-performance/analytics/:studentId - Analitik özet
+```
 
-#### Spaced Repetition
-- `GET /api/spaced-repetition/due/:studentId` - Tekrar edilmesi gereken konular
-  - Query params: `?date=2025-11-23`
-  - Response: Algoritma ile hesaplanmış tekrar listesi
+#### 📊 Ustalık (Mastery) Yönetimi
 
-#### Rozetler
-- `GET /api/badges` - Tüm rozetler
-- `GET /api/badges/student/:studentId` - Öğrencinin kazandığı rozetler
-- `GET /api/badges/student/:studentId/progress` - Rozet ilerlemesi
-  - "10 Konu Uzman" rozetine 2 konu kaldı
+```
+GET    /api/progress/student/:studentId           - Öğrencinin tüm konu ilerlemeleri
+PUT    /api/progress/:id/mastery                  - Mastery level güncelle (manuel tamamlandı işareti)
+POST   /api/progress/calculate-mastery            - Performansa göre mastery hesapla
+GET    /api/progress/summary/:studentId           - Mastery özeti (kaç konu tamamlandı, vb.)
+```
 
-#### Analitik
-- `GET /api/topic-performance/analytics/student/:studentId` - Öğrenci analitikleri
-- `GET /api/topic-performance/analytics/class` - Sınıf geneli analitik
-- `GET /api/topic-performance/mastery-summary/:studentId` - Ustalık özeti
+#### 📋 Haftalık Plan
 
-#### Hedef Sınav
-- `PUT /api/students/:id/target-exams` - Hedef sınavları güncelle
+```
+POST   /api/weekly-plans/generate/:studentId      - Akıllı plan önerisi oluştur
+       Response: { newTopics: [], reviewTopics: [], badges: [], streak: 7 }
+       
+POST   /api/weekly-plans                          - Planı kaydet
+GET    /api/weekly-plans/student/:studentId       - Öğrencinin tüm planları
+GET    /api/weekly-plans/:id                      - Plan detayı
+PUT    /api/weekly-plans/:id                      - Plan güncelle
+DELETE /api/weekly-plans/:id                      - Plan sil
+GET    /api/weekly-plans/:id/pdf                  - PDF oluştur ve indir
+```
+
+#### 🔄 Spaced Repetition
+
+```
+GET    /api/spaced-repetition/due/:studentId      - Tekrar edilmesi gereken konular
+       Query: ?date=2025-11-23&excludeCompleted=true
+       
+GET    /api/spaced-repetition/upcoming/:studentId - Yaklaşan tekrar konuları (7 gün içinde)
+```
+
+#### 🏆 Rozetler
+
+```
+GET    /api/badges                                - Tüm rozet tanımları
+GET    /api/badges/student/:studentId             - Öğrencinin kazandığı rozetler
+GET    /api/badges/student/:studentId/progress    - Rozet ilerleme durumu
+POST   /api/badges/check/:studentId               - Rozet kontrol et ve kazandır (otomatik)
+```
 
 ---
 
-## 🧮 3. SPACED REPETITION ALGORİTMASI
+## 🧮 SPACED REPETITION ALGORİTMASI (Düzeltilmiş)
 
-### Dosya: `spaced-repetition.service.ts`
+### ❌ Eski Hatalı Algoritma Sorunu
 
 ```typescript
+// ❌ YANLIŞ: Deneme sayısı arttıkça aralık uzuyor!
+const attemptBonus = Math.min(attemptCount * 2, 14);
+intervalDays += attemptBonus;
+
+// Örnek: %50 başarı, 10 deneme
+// intervalDays = 3 + (10 * 2) = 23 gün → YANLIŞ!
+// Öğrenci zorlanıyor ama tekrarı 23 gün sonraya atılıyor!
+```
+
+### ✅ Yeni Doğru Algoritma
+
+```typescript
+// spaced-repetition.service.ts
+
 interface ReviewSchedule {
   topicId: string;
   topicName: string;
+  subjectName: string;
   lastStudied: string;
   successRate: number;
   masteryLevel: number;
+  attemptCount: number;
   nextReviewDate: string;
-  priority: 'high' | 'medium' | 'low';
+  daysUntilReview: number;
+  priority: 'urgent' | 'high' | 'medium' | 'low';
   reason: string;
 }
 
+/**
+ * Başarı oranına göre tekrar aralığı hesaplama
+ * KURAL: Başarı düşükse → KISA aralık, Başarı yüksekse → UZUN aralık
+ */
 function calculateNextReviewDate(
   lastStudied: Date,
   successRate: number,
+  masteryLevel: number,
   attemptCount: number
 ): Date {
   let intervalDays: number;
   
-  // Başarı oranına göre aralık belirleme
-  if (successRate < 60) {
+  // 1. Başarı oranına göre temel aralık
+  if (successRate < 40) {
+    // Çok zayıf: 2 gün sonra
+    intervalDays = 2;
+  } else if (successRate < 60) {
     // Zayıf: 3 gün sonra
     intervalDays = 3;
+  } else if (successRate < 70) {
+    // Orta-Alt: 5 gün sonra
+    intervalDays = 5;
   } else if (successRate < 80) {
     // Orta: 7 gün sonra
     intervalDays = 7;
   } else if (successRate < 90) {
     // İyi: 14 gün sonra
     intervalDays = 14;
+  } else if (successRate < 95) {
+    // Çok iyi: 21 gün sonra
+    intervalDays = 21;
   } else {
     // Uzman: 30 gün sonra
     intervalDays = 30;
   }
   
-  // Deneme sayısına göre bonus
-  const attemptBonus = Math.min(attemptCount * 2, 14);
-  intervalDays += attemptBonus;
+  // 2. Deneme sayısına göre AKILLI düzeltme
+  // KURAL: İlk denemelerde daha sık tekrar, sonra seyrekleşir
+  if (attemptCount === 1) {
+    // İlk deneme: Aralığı %50 azalt (daha sık tekrar)
+    intervalDays = Math.max(1, Math.floor(intervalDays * 0.5));
+  } else if (attemptCount === 2) {
+    // İkinci deneme: Aralığı %25 azalt
+    intervalDays = Math.max(1, Math.floor(intervalDays * 0.75));
+  } else if (attemptCount >= 3 && successRate >= 80) {
+    // 3+ deneme + yüksek başarı: Aralığı %20 arttır (pekişmiş)
+    intervalDays = Math.floor(intervalDays * 1.2);
+  }
   
+  // 3. Mastery level'a göre düzeltme
+  if (masteryLevel === 4 && successRate >= 90) {
+    // Neredeyse uzman: Uzun aralık ver
+    intervalDays = Math.max(intervalDays, 21);
+  } else if (masteryLevel <= 1) {
+    // Başlangıç: Kısa aralık zorla
+    intervalDays = Math.min(intervalDays, 5);
+  }
+  
+  // 4. Tarihi hesapla
   const nextDate = new Date(lastStudied);
   nextDate.setDate(nextDate.getDate() + intervalDays);
   
   return nextDate;
 }
 
-function getReviewPriority(daysOverdue: number): 'high' | 'medium' | 'low' {
-  if (daysOverdue > 7) return 'high';
+function getReviewPriority(
+  daysOverdue: number,
+  successRate: number
+): 'urgent' | 'high' | 'medium' | 'low' {
+  // Gecikmiş mi?
+  if (daysOverdue > 7) return 'urgent';
+  if (daysOverdue > 3) return 'high';
   if (daysOverdue > 0) return 'medium';
+  
+  // Yaklaşan + düşük başarı
+  if (daysOverdue >= -2 && successRate < 60) return 'high';
+  
   return 'low';
 }
 
 async function getDueTopicsForStudent(
   studentId: string,
-  targetDate: Date = new Date()
+  targetDate: Date = new Date(),
+  excludeCompleted: boolean = true
 ): Promise<ReviewSchedule[]> {
-  // Öğrencinin tüm performans kayıtlarını al
-  const performances = await getStudentPerformances(studentId);
-  
-  // Konu bazında grupla
-  const topicGroups = groupByTopic(performances);
+  // 1. Öğrencinin progress kayıtlarını al
+  const progressRecords = await db.all(`
+    SELECT 
+      p.*,
+      t.name as topic_name,
+      s.name as subject_name
+    FROM progress p
+    JOIN topics t ON p.topicId = t.id
+    JOIN subjects s ON t.subjectId = s.id
+    WHERE p.studentId = ?
+      AND p.lastStudied IS NOT NULL
+      ${excludeCompleted ? 'AND p.mastery_level < 5' : ''}
+    ORDER BY p.last_performance_date DESC
+  `, [studentId]);
   
   const dueTopics: ReviewSchedule[] = [];
   
-  for (const [topicId, records] of Object.entries(topicGroups)) {
-    const lastRecord = records[records.length - 1];
+  for (const record of progressRecords) {
+    // Mastery Level 5 (Tamamlandı) → ATLA
+    if (excludeCompleted && record.mastery_level === 5) {
+      continue;
+    }
+    
+    // Hiç çalışılmamış (mastery 0) → ATLA
+    if (record.mastery_level === 0) {
+      continue;
+    }
+    
+    const lastStudied = new Date(record.last_performance_date || record.lastStudied);
     const nextReviewDate = calculateNextReviewDate(
-      new Date(lastRecord.date),
-      lastRecord.successRate,
-      records.length
+      lastStudied,
+      record.success_rate_avg || 0,
+      record.mastery_level,
+      record.attempt_count || 1
     );
     
     // Tekrar tarihi geldi mi veya geçti mi?
-    if (nextReviewDate <= targetDate) {
-      const daysOverdue = Math.floor(
-        (targetDate.getTime() - nextReviewDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
+    const daysUntilReview = Math.floor(
+      (nextReviewDate.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    
+    if (daysUntilReview <= 0) {
+      const daysOverdue = Math.abs(daysUntilReview);
       
       dueTopics.push({
-        topicId,
-        topicName: lastRecord.topic.name,
-        lastStudied: lastRecord.date,
-        successRate: lastRecord.successRate,
-        masteryLevel: lastRecord.masteryLevel,
+        topicId: record.topicId,
+        topicName: record.topic_name,
+        subjectName: record.subject_name,
+        lastStudied: lastStudied.toISOString(),
+        successRate: record.success_rate_avg || 0,
+        masteryLevel: record.mastery_level,
+        attemptCount: record.attempt_count || 1,
         nextReviewDate: nextReviewDate.toISOString(),
-        priority: getReviewPriority(daysOverdue),
-        reason: generateReviewReason(lastRecord.successRate, daysOverdue)
+        daysUntilReview,
+        priority: getReviewPriority(daysOverdue, record.success_rate_avg || 0),
+        reason: generateReviewReason(record.success_rate_avg || 0, daysOverdue, record.mastery_level)
       });
     }
   }
   
-  // Önceliğe göre sırala
+  // Öncelik sırasına göre sırala
   return dueTopics.sort((a, b) => {
-    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
     return priorityOrder[a.priority] - priorityOrder[b.priority];
   });
 }
 
-function generateReviewReason(successRate: number, daysOverdue: number): string {
+function generateReviewReason(
+  successRate: number,
+  daysOverdue: number,
+  masteryLevel: number
+): string {
   if (daysOverdue > 7) {
     return `${daysOverdue} gün gecikmiş! Unutma riski yüksek.`;
+  } else if (daysOverdue > 3) {
+    return `${daysOverdue} gün gecikmiş, acil tekrar gerekli.`;
+  } else if (successRate < 50) {
+    return `%${Math.round(successRate)} başarı - çok zayıf, sık tekrar et!`;
   } else if (successRate < 70) {
-    return `%${successRate} başarı - pekiştirme gerekiyor.`;
-  } else if (successRate >= 90) {
-    return `%${successRate} başarı - ustalığı korumak için tekrar.`;
+    return `%${Math.round(successRate)} başarı - pekiştirme gerekiyor.`;
+  } else if (successRate >= 90 && masteryLevel === 4) {
+    return `%${Math.round(successRate)} başarı - uzmanlığa yakın, son pekiştirme!`;
   } else {
-    return `%${successRate} başarı - iyileştirme zamanı.`;
+    return `%${Math.round(successRate)} başarı - iyileştirme zamanı.`;
   }
 }
 ```
 
 ---
 
-## 🏆 4. ROZET SİSTEMİ
-
-### Rozet Kategorileri ve Örnekleri
+## 🎓 MASTERY LEVEL HESAPLAMA
 
 ```typescript
-const DEFAULT_BADGES = [
-  // Ustalık Rozetleri
-  {
-    id: 'master_5',
-    name: 'İlk Adım',
-    description: '5 konuda uzman seviyesine ulaş',
-    icon: '🌱',
-    criteriaType: 'mastery_count',
-    criteriaValue: 5,
-    category: 'mastery'
-  },
-  {
-    id: 'master_10',
-    name: 'Matematik Ustası',
-    description: '10 konuda uzman seviyesine ulaş',
-    icon: '🎓',
-    criteriaType: 'mastery_count',
-    criteriaValue: 10,
-    category: 'mastery'
-  },
-  {
-    id: 'master_25',
-    name: 'Konu Kralı',
-    description: '25 konuda uzman seviyesine ulaş',
-    icon: '👑',
-    criteriaType: 'mastery_count',
-    criteriaValue: 25,
-    category: 'mastery'
-  },
-  
-  // Streak Rozetleri
-  {
-    id: 'streak_7',
-    name: 'Kararlı',
-    description: '7 gün üst üste çalış',
-    icon: '🔥',
-    criteriaType: 'streak',
-    criteriaValue: 7,
-    category: 'streak'
-  },
-  {
-    id: 'streak_30',
-    name: 'Disiplin',
-    description: '30 gün üst üste çalış',
-    icon: '💪',
-    criteriaType: 'streak',
-    criteriaValue: 30,
-    category: 'streak'
-  },
-  
-  // Soru Rozetleri
-  {
-    id: 'questions_100',
-    name: 'Soru Avcısı',
-    description: '100 soru çöz',
-    icon: '🎯',
-    criteriaType: 'total_questions',
-    criteriaValue: 100,
-    category: 'questions'
-  },
-  {
-    id: 'questions_500',
-    name: 'Soru Makinesi',
-    description: '500 soru çöz',
-    icon: '⚡',
-    criteriaType: 'total_questions',
-    criteriaValue: 500,
-    category: 'questions'
-  },
-  
-  // Başarı Rozetleri
-  {
-    id: 'perfect_week',
-    name: 'Mükemmel Hafta',
-    description: 'Bir hafta %90+ başarı',
-    icon: '⭐',
-    criteriaType: 'perfect_week',
-    criteriaValue: 90,
-    category: 'achievement'
+// mastery-calculator.service.ts
+
+/**
+ * Performans kaydına göre mastery level hesapla
+ * KURAL: %95+ başarı → Uzman (5), altında kademeli artış
+ */
+function calculateMasteryLevel(
+  currentMastery: number,
+  newSuccessRate: number,
+  averageSuccessRate: number,
+  attemptCount: number
+): number {
+  // Manuel "Tamamlandı" işareti varsa (mastery 5), değiştirme
+  if (currentMastery === 5) {
+    return 5;
   }
-];
-```
-
-### Rozet İlerleme Hesaplama
-
-```typescript
-interface BadgeProgress {
-  badge: Badge;
-  current: number;
-  target: number;
-  percentage: number;
-  earned: boolean;
-  message: string;
+  
+  // Ortalama başarı oranına göre mastery
+  let newMastery: number;
+  
+  if (averageSuccessRate >= 95) {
+    newMastery = 5; // Uzman - TamamlandI
+  } else if (averageSuccessRate >= 85) {
+    newMastery = 4; // Çok İyi
+  } else if (averageSuccessRate >= 70) {
+    newMastery = 3; // İyi
+  } else if (averageSuccessRate >= 50) {
+    newMastery = 2; // Orta
+  } else {
+    newMastery = 1; // Başlangıç
+  }
+  
+  // Ani düşüşü engelle (maksimum 1 seviye düşebilir)
+  if (newMastery < currentMastery - 1) {
+    newMastery = currentMastery - 1;
+  }
+  
+  // Ani yükselişi engelle (yeterli deneme yoksa)
+  if (newMastery > currentMastery + 1 && attemptCount < 3) {
+    newMastery = currentMastery + 1;
+  }
+  
+  return Math.max(0, Math.min(5, newMastery));
 }
 
-async function getBadgeProgress(studentId: string): Promise<BadgeProgress[]> {
-  const allBadges = await getAllBadges();
-  const studentBadges = await getStudentBadges(studentId);
-  const studentStats = await getStudentStats(studentId);
+/**
+ * Performans kaydı oluşturulduğunda otomatik güncelle
+ */
+async function updateProgressAfterPerformance(
+  studentId: string,
+  topicId: string,
+  performanceData: {
+    questionsSolved: number;
+    correctAnswers: number;
+    wrongAnswers: number;
+    successRate: number;
+  }
+): Promise<void> {
+  // 1. Mevcut progress kaydını al
+  let progress = await getProgress(studentId, topicId);
   
-  return allBadges.map(badge => {
-    const earned = studentBadges.some(sb => sb.badgeId === badge.id);
-    let current = 0;
-    
-    switch (badge.criteriaType) {
-      case 'mastery_count':
-        current = studentStats.expertTopicCount;
-        break;
-      case 'streak':
-        current = studentStats.currentStreak;
-        break;
-      case 'total_questions':
-        current = studentStats.totalQuestionsSolved;
-        break;
-    }
-    
-    const percentage = Math.min(100, (current / badge.criteriaValue) * 100);
-    const remaining = Math.max(0, badge.criteriaValue - current);
-    
-    return {
-      badge,
-      current,
-      target: badge.criteriaValue,
-      percentage,
-      earned,
-      message: earned 
-        ? `🎉 Kazandın!` 
-        : `${remaining} ${badge.criteriaType} kaldı!`
-    };
+  if (!progress) {
+    // İlk kez çalışılan konu
+    progress = await createProgress(studentId, topicId);
+  }
+  
+  // 2. Ortalama başarı oranını hesapla
+  const allPerformances = await getTopicPerformances(studentId, topicId);
+  const avgSuccessRate = 
+    allPerformances.reduce((sum, p) => sum + p.success_rate, 0) / allPerformances.length;
+  
+  // 3. Mastery level hesapla
+  const newMastery = calculateMasteryLevel(
+    progress.mastery_level,
+    performanceData.successRate,
+    avgSuccessRate,
+    allPerformances.length
+  );
+  
+  // 4. Next review date hesapla
+  const nextReviewDate = calculateNextReviewDate(
+    new Date(),
+    avgSuccessRate,
+    newMastery,
+    allPerformances.length
+  );
+  
+  // 5. Progress güncelle
+  await updateProgress(progress.id, {
+    mastery_level: newMastery,
+    success_rate_avg: avgSuccessRate,
+    attempt_count: allPerformances.length,
+    last_performance_date: new Date().toISOString(),
+    next_review_date: nextReviewDate.toISOString(),
+    updated_at: new Date().toISOString()
   });
+  
+  // 6. Öğrenci istatistiklerini güncelle
+  await updateStudentStats(studentId);
+  
+  // 7. Rozet kontrol et
+  await checkAndAwardBadges(studentId);
 }
-```
 
----
-
-## 📄 5. PDF OLUŞTURMA SERVİSİ
-
-### Dosya: `pdf-generator.service.ts`
-
-**Kullanılacak Kütüphane:** `jspdf` + `jspdf-autotable` (zaten kurulu)
-
-### Şık ve Zarif Tasarım Özellikleri
-
-```typescript
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-
-async function generateWeeklyPlanPDF(
-  student: Student,
-  weeklyPlan: WeeklyPlan,
-  reviewTopics: ReviewSchedule[],
-  badgeProgress: BadgeProgress[]
-): Promise<Buffer> {
-  const doc = new jsPDF();
-  
-  // RENK PALETİ
-  const colors = {
-    primary: [59, 130, 246],      // Mavi
-    secondary: [139, 92, 246],    // Mor
-    success: [34, 197, 94],       // Yeşil
-    warning: [234, 179, 8],       // Sarı
-    danger: [239, 68, 68],        // Kırmızı
-    gray: [156, 163, 175],        // Gri
-    light: [243, 244, 246],       // Açık gri
-    dark: [31, 41, 55]            // Koyu gri
-  };
-  
-  // BAŞLIK BÖLÜMÜ
-  doc.setFillColor(...colors.primary);
-  doc.rect(0, 0, 210, 40, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Haftalık Çalışma Planı', 105, 20, { align: 'center' });
-  
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`${student.name} ${student.surname}`, 105, 30, { align: 'center' });
-  
-  // TARİH VE SINIAV BİLGİSİ
-  let y = 50;
-  doc.setTextColor(...colors.dark);
-  doc.setFontSize(10);
-  doc.text(`📅 ${formatDate(weeklyPlan.weekStartDate)} - ${formatDate(weeklyPlan.weekEndDate)}`, 20, y);
-  doc.text(`🎯 Hedef Sınavlar: ${student.targetExams.join(', ')}`, 120, y);
-  
-  // STREAK VE MOTIVASYON
-  y += 15;
-  doc.setFillColor(...colors.warning);
-  doc.roundedRect(15, y - 8, 180, 15, 3, 3, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`🔥 ${student.currentStreak} Günlük Streak! Harikasın!`, 105, y, { align: 'center' });
-  
-  // YENİ KONULAR
-  y += 25;
-  doc.setTextColor(...colors.dark);
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('✨ Bu Haftanın Konuları', 20, y);
-  
-  y += 10;
-  const newTopics = JSON.parse(weeklyPlan.newTopics);
-  autoTable(doc, {
-    startY: y,
-    head: [['Ders', 'Konu', 'Sınav Tipi']],
-    body: newTopics.map(t => [t.subject, t.name, t.category]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: colors.primary,
-      fontSize: 10,
-      fontStyle: 'bold'
-    },
-    bodyStyles: {
-      fontSize: 9
-    },
-    alternateRowStyles: {
-      fillColor: colors.light
-    }
+/**
+ * Manuel "Tamamlandı" işareti
+ */
+async function markTopicAsCompleted(
+  studentId: string,
+  topicId: string
+): Promise<void> {
+  await updateProgress(progressId, {
+    mastery_level: 5,
+    success_rate_avg: 100,
+    updated_at: new Date().toISOString()
   });
   
-  // TEKRAR KONULARı
-  y = doc.lastAutoTable.finalY + 15;
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...colors.dark);
-  doc.text('🔄 Tekrar Edilecek Konular (Spaced Repetition)', 20, y);
+  await updateStudentStats(studentId);
+  await checkAndAwardBadges(studentId);
+}
+
+/**
+ * "Tamamlandı" işaretini geri al
+ */
+async function unmarkTopicAsCompleted(
+  studentId: string,
+  topicId: string
+): Promise<void> {
+  // Önceki mastery'ye geri dön (performans geçmişinden hesapla)
+  const allPerformances = await getTopicPerformances(studentId, topicId);
   
-  y += 10;
-  if (reviewTopics.length > 0) {
-    autoTable(doc, {
-      startY: y,
-      head: [['Konu', 'Son Başarı', 'Neden Tekrar?']],
-      body: reviewTopics.map(t => [
-        t.topicName,
-        `%${t.successRate}`,
-        t.reason
-      ]),
-      theme: 'striped',
-      headStyles: {
-        fillColor: colors.secondary,
-        fontSize: 10,
-        fontStyle: 'bold'
-      },
-      bodyStyles: {
-        fontSize: 9
-      },
-      columnStyles: {
-        2: { cellWidth: 70 }
-      }
+  if (allPerformances.length > 0) {
+    const avgSuccessRate = 
+      allPerformances.reduce((sum, p) => sum + p.success_rate, 0) / allPerformances.length;
+    
+    let newMastery = 0;
+    if (avgSuccessRate >= 85) newMastery = 4;
+    else if (avgSuccessRate >= 70) newMastery = 3;
+    else if (avgSuccessRate >= 50) newMastery = 2;
+    else newMastery = 1;
+    
+    await updateProgress(progressId, {
+      mastery_level: newMastery,
+      success_rate_avg: avgSuccessRate,
+      updated_at: new Date().toISOString()
     });
   } else {
-    doc.setFontSize(10);
-    doc.setTextColor(...colors.gray);
-    doc.text('Bu hafta tekrar konusu yok. Yeni konulara odaklan!', 20, y + 5);
+    // Hiç performans yoksa sıfırla
+    await updateProgress(progressId, {
+      mastery_level: 0,
+      success_rate_avg: 0,
+      updated_at: new Date().toISOString()
+    });
   }
   
-  // ROZET İLERLEMESİ
-  y = doc.lastAutoTable.finalY + 15 || y + 20;
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...colors.dark);
-  doc.text('🏆 Rozet İlerlemen', 20, y);
-  
-  y += 10;
-  const nearBadges = badgeProgress
-    .filter(b => !b.earned && b.percentage >= 50)
-    .slice(0, 3);
-  
-  nearBadges.forEach((badge, index) => {
-    const boxY = y + (index * 25);
-    
-    // Progress bar arka plan
-    doc.setFillColor(...colors.light);
-    doc.roundedRect(20, boxY, 170, 20, 3, 3, 'F');
-    
-    // Progress bar dolgu
-    const progressWidth = (badge.percentage / 100) * 170;
-    doc.setFillColor(...colors.success);
-    doc.roundedRect(20, boxY, progressWidth, 20, 3, 3, 'F');
-    
-    // Metin
-    doc.setTextColor(...colors.dark);
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`${badge.badge.icon} ${badge.badge.name}`, 25, boxY + 8);
-    
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text(badge.message, 25, boxY + 15);
-    
-    doc.setTextColor(...colors.primary);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`%${Math.round(badge.percentage)}`, 180, boxY + 12, { align: 'right' });
-  });
-  
-  // FOOTER
-  const pageHeight = doc.internal.pageSize.height;
-  doc.setFillColor(...colors.primary);
-  doc.rect(0, pageHeight - 20, 210, 20, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(9);
-  doc.text('Rehber360 - Başarıya Giden Yol', 105, pageHeight - 10, { align: 'center' });
-  
-  // QR KOD (İleriki faz için placeholder)
-  doc.setFontSize(8);
-  doc.text('QR kod ile ilerlemeni takip et (yakında!)', 105, pageHeight - 5, { align: 'center' });
-  
-  return Buffer.from(doc.output('arraybuffer'));
+  await updateStudentStats(studentId);
 }
 ```
 
 ---
 
-## 🎨 6. FRONTEND - KONU PLANLAYICI (Haftalık Görüşme Ekranı)
+## 📋 HAFTALIK PLAN ÖNERİSİ
 
-### Dosya: `client/components/features/student-profile/TopicPlanner.tsx`
+```typescript
+// plan-generator.service.ts
 
-### Yeni Bölümler
+interface PlanSuggestion {
+  newTopics: Topic[];           // Yeni konular
+  reviewTopics: ReviewSchedule[];  // Tekrar konuları (spaced repetition)
+  badges: BadgeProgress[];      // Yaklaşan rozetler
+  streak: number;               // Günlük streak
+  totalPlannedHours: number;    // Toplam tahmini süre
+}
 
-#### 1. Geçen Hafta Performans Girişi
-- Her konunun yanında "✓ Sonuç Gir" butonu
-- `QuickPerformanceDialog` componenti açılır
-
-#### 2. Bu Hafta Plan Önerisi (YENİ!)
-```tsx
-<Card>
-  <CardHeader>
-    <CardTitle>Bu Haftanın Planı</CardTitle>
-    <Button onClick={generateWeeklyPlan}>
-      <Sparkles /> Plan Öner
-    </Button>
-  </CardHeader>
+async function generateWeeklyPlanSuggestion(
+  studentId: string,
+  targetDate: Date = new Date()
+): Promise<PlanSuggestion> {
+  // 1. Tekrar konularını al (Mastery 1-4, tamamlanmayanlar)
+  const reviewTopics = await getDueTopicsForStudent(
+    studentId,
+    targetDate,
+    true  // excludeCompleted = true → Mastery 5 çıkmasın!
+  );
   
-  <CardContent>
-    {/* Yeni Konular */}
-    <div className="mb-6">
-      <h3>✨ Yeni Konular</h3>
-      <TopicSelector 
-        selectedTopics={newTopics}
-        onChange={setNewTopics}
-      />
-    </div>
-    
-    {/* Sistem Önerisi: Tekrar Konuları */}
-    <div className="mb-6">
-      <h3>🔄 Tekrar Önerilen Konular</h3>
-      {reviewTopics.map(topic => (
-        <ReviewTopicCard 
-          topic={topic}
-          reason={topic.reason}
-          priority={topic.priority}
-          onToggle={toggleReviewTopic}
-        />
-      ))}
-    </div>
-    
-    {/* Rozet ve Motivasyon */}
-    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-lg">
-      <h3>🏆 Bu Hafta Kazanılabilir Rozetler</h3>
-      {nearBadges.map(badge => (
-        <BadgeProgressCard badge={badge} />
-      ))}
-      
-      <div className="mt-4">
-        <Flame className="inline" /> {student.currentStreak} günlük streak!
-      </div>
-    </div>
-    
-    {/* Aksiyon Butonları */}
-    <div className="flex gap-4 mt-6">
-      <Button onClick={savePlan}>
-        <Save /> Planı Kaydet
-      </Button>
-      <Button onClick={generatePDF} variant="outline">
-        <FileDown /> PDF İndir
-      </Button>
-    </div>
-  </CardContent>
-</Card>
-```
+  // 2. Yeni konu önerisi (henüz başlanmayan veya az çalışılan)
+  const newTopics = await suggestNewTopics(studentId, {
+    excludeCompleted: true,  // Tamamlananlar ÇIKMASIN
+    limit: 5,
+    preferSubjects: await getStudentTargetExamSubjects(studentId)
+  });
+  
+  // 3. Rozet ilerlemesi
+  const badges = await getBadgeProgress(studentId);
+  const nearBadges = badges
+    .filter(b => !b.earned && b.percentage >= 50)
+    .sort((a, b) => b.percentage - a.percentage)
+    .slice(0, 3);
+  
+  // 4. Streak hesapla
+  const student = await getStudent(studentId);
+  const streak = calculateCurrentStreak(studentId);
+  
+  // 5. Toplam süre tahmini
+  const totalHours = estimateTotalDuration(newTopics, reviewTopics);
+  
+  return {
+    newTopics,
+    reviewTopics: reviewTopics.slice(0, 8),  // En fazla 8 tekrar konusu
+    badges: nearBadges,
+    streak,
+    totalPlannedHours: totalHours
+  };
+}
 
-### Yeni Component'ler
-```
-client/components/features/topic-performance/
-├── QuickPerformanceDialog.tsx
-├── ReviewTopicCard.tsx (tekrar önerisi kartı)
-├── BadgeProgressCard.tsx (rozet ilerleme kartı)
-└── WeeklyPlanGenerator.tsx (ana component)
+/**
+ * Yeni konu önerisi
+ * KURAL: Mastery 5 olanlar ÇIKMASıN
+ */
+async function suggestNewTopics(
+  studentId: string,
+  options: {
+    excludeCompleted: boolean;
+    limit: number;
+    preferSubjects: string[];
+  }
+): Promise<Topic[]> {
+  const { excludeCompleted, limit, preferSubjects } = options;
+  
+  // Öğrencinin tüm progress kayıtlarını al
+  const progressMap = await getStudentProgressMap(studentId);
+  
+  // Tüm konuları al
+  const allTopics = await db.all(`
+    SELECT t.*, s.name as subject_name
+    FROM topics t
+    JOIN subjects s ON t.subjectId = s.id
+    WHERE s.category IN (${preferSubjects.map(() => '?').join(',')})
+    ORDER BY t.priority DESC, t.order ASC
+  `, preferSubjects);
+  
+  const suggestions: Topic[] = [];
+  
+  for (const topic of allTopics) {
+    const progress = progressMap.get(topic.id);
+    
+    // Tamamlanan konular ÇıKMASıN
+    if (excludeCompleted && progress?.mastery_level === 5) {
+      continue;
+    }
+    
+    // Henüz başlanmayan veya düşük mastery
+    if (!progress || progress.mastery_level <= 2) {
+      suggestions.push(topic);
+    }
+    
+    if (suggestions.length >= limit) break;
+  }
+  
+  return suggestions;
+}
 ```
 
 ---
 
-## 📊 7. FRONTEND - ÖĞRENCİ PROFİLİ (Detaylı Takip)
+## 🔒 GÜVENLİK & VALIDASYON STRATEJİSİ
 
-### Dosya: `client/pages/StudentProfile/StudentProfile.tsx`
+### Authentication & Authorization
 
-### Yeni Sekme: "Konu Takibi"
+```typescript
+// Tüm API'larda middleware kullan
+app.use('/api/topic-performance', requireAuth);
+app.use('/api/weekly-plans', requireAuth);
 
-Önceki plandaki özelliklere ek olarak:
+// Sadece kendi öğrencilerine erişim (role bazlı)
+async function checkStudentAccess(req, res, next) {
+  const { studentId } = req.params;
+  const user = req.user;
+  
+  if (user.role === 'admin') {
+    return next();  // Admin herkese erişebilir
+  }
+  
+  if (user.role === 'counselor') {
+    // Danışman sadece kendi öğrencilerine
+    const student = await getStudent(studentId);
+    if (student.counselorId === user.id) {
+      return next();
+    }
+  }
+  
+  return res.status(403).json({ error: 'Bu öğrenciye erişim izniniz yok' });
+}
+```
 
-#### Ek Özellikler:
-- **Streak Göstergesi:** GitHub-style calendar heatmap
-- **Rozet Vitrin:** Kazanılan rozetler showcase
-- **Tekrar Planı:** Yaklaşan tekrar konuları
+### Validation (Zod)
+
+```typescript
+// types/topic-performance.types.ts
+
+import { z } from 'zod';
+
+export const CreatePerformanceSchema = z.object({
+  studentId: z.string().uuid(),
+  topicId: z.string().uuid(),
+  assignmentId: z.string().uuid().optional(),
+  questionsSolved: z.number().int().positive(),
+  correctAnswers: z.number().int().nonnegative(),
+  wrongAnswers: z.number().int().nonnegative(),
+  durationMinutes: z.number().int().positive().max(300),  // Max 5 saat
+  difficultyFeedback: z.enum(['very_easy', 'easy', 'medium', 'hard', 'very_hard']).optional(),
+  notes: z.string().max(500).optional()
+}).refine(data => {
+  // Doğru + Yanlış = Toplam Soru
+  return data.correctAnswers + data.wrongAnswers === data.questionsSolved;
+}, {
+  message: 'Doğru + Yanlış cevaplar toplam soru sayısına eşit olmalı'
+});
+
+// Route'da kullan
+router.post('/topic-performance', async (req, res) => {
+  try {
+    const validated = CreatePerformanceSchema.parse(req.body);
+    const result = await topicPerformanceService.create(validated);
+    res.json(result);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ errors: error.errors });
+    }
+    throw error;
+  }
+});
+```
+
+### Error Handling
+
+```typescript
+// Global error handler
+app.use((error, req, res, next) => {
+  console.error('[API Error]', error);
+  
+  if (error instanceof z.ZodError) {
+    return res.status(400).json({
+      error: 'Validation Error',
+      details: error.errors
+    });
+  }
+  
+  if (error.code === 'SQLITE_CONSTRAINT') {
+    return res.status(409).json({
+      error: 'Veritabanı kısıtlama hatası',
+      message: 'Bu kayıt zaten mevcut veya geçersiz ilişki'
+    });
+  }
+  
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? error.message : 'Bir hata oluştu'
+  });
+});
+```
+
+---
+
+## 🛠️ DATABASE MIGRATION STRATEJİSİ
+
+```typescript
+// server/lib/database/migrations/topic-tracking-migration.ts
+
+export function runTopicTrackingMigration(db: Database.Database): void {
+  console.log('📊 Running Topic Tracking Migration...');
+  
+  // 1. topic_performance tablosu
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS topic_performance (
+      id TEXT PRIMARY KEY,
+      student_id TEXT NOT NULL,
+      topic_id TEXT NOT NULL,
+      assignment_id TEXT,
+      date TEXT NOT NULL,
+      questions_solved INTEGER NOT NULL,
+      correct_answers INTEGER NOT NULL,
+      wrong_answers INTEGER NOT NULL,
+      duration_minutes INTEGER,
+      difficulty_feedback TEXT CHECK(difficulty_feedback IN ('very_easy', 'easy', 'medium', 'hard', 'very_hard')),
+      notes TEXT,
+      success_rate REAL NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+      FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE,
+      FOREIGN KEY (assignment_id) REFERENCES study_assignments(id) ON DELETE SET NULL
+    );
+  `);
+  
+  // 2. progress tablosu genişletme (güvenli ALTER TABLE)
+  const progressColumns = db.pragma('table_info(progress)');
+  const existingColumns = progressColumns.map(c => c.name);
+  
+  if (!existingColumns.includes('mastery_level')) {
+    db.exec('ALTER TABLE progress ADD COLUMN mastery_level INTEGER DEFAULT 0 CHECK(mastery_level BETWEEN 0 AND 5)');
+  }
+  if (!existingColumns.includes('success_rate_avg')) {
+    db.exec('ALTER TABLE progress ADD COLUMN success_rate_avg REAL DEFAULT 0');
+  }
+  if (!existingColumns.includes('attempt_count')) {
+    db.exec('ALTER TABLE progress ADD COLUMN attempt_count INTEGER DEFAULT 0');
+  }
+  if (!existingColumns.includes('last_performance_date')) {
+    db.exec('ALTER TABLE progress ADD COLUMN last_performance_date TEXT');
+  }
+  if (!existingColumns.includes('next_review_date')) {
+    db.exec('ALTER TABLE progress ADD COLUMN next_review_date TEXT');
+  }
+  
+  // 3. weekly_plans tablosu
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS weekly_plans (
+      id TEXT PRIMARY KEY,
+      student_id TEXT NOT NULL,
+      week_start_date TEXT NOT NULL,
+      week_end_date TEXT NOT NULL,
+      status TEXT DEFAULT 'active' CHECK(status IN ('draft', 'active', 'completed', 'cancelled')),
+      pdf_path TEXT,
+      created_by TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+      FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+    );
+  `);
+  
+  // 4. weekly_plan_topics tablosu
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS weekly_plan_topics (
+      id TEXT PRIMARY KEY,
+      plan_id TEXT NOT NULL,
+      topic_id TEXT NOT NULL,
+      topic_type TEXT NOT NULL CHECK(topic_type IN ('new', 'review')),
+      priority INTEGER DEFAULT 0,
+      review_reason TEXT,
+      estimated_duration_minutes INTEGER,
+      completed INTEGER DEFAULT 0,
+      FOREIGN KEY (plan_id) REFERENCES weekly_plans(id) ON DELETE CASCADE,
+      FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+    );
+  `);
+  
+  // 5. badges tablosu
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS badges (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      description TEXT NOT NULL,
+      icon TEXT NOT NULL,
+      criteria_type TEXT NOT NULL CHECK(criteria_type IN ('mastery_count', 'streak', 'total_questions', 'perfect_week')),
+      criteria_value INTEGER NOT NULL,
+      category TEXT NOT NULL CHECK(category IN ('mastery', 'streak', 'questions', 'achievement'))
+    );
+  `);
+  
+  // 6. student_badges tablosu
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS student_badges (
+      id TEXT PRIMARY KEY,
+      student_id TEXT NOT NULL,
+      badge_id TEXT NOT NULL,
+      earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+      FOREIGN KEY (badge_id) REFERENCES badges(id) ON DELETE CASCADE,
+      UNIQUE(student_id, badge_id)
+    );
+  `);
+  
+  // 7. students tablosu genişletme
+  const studentColumns = db.pragma('table_info(students)');
+  const existingStudentColumns = studentColumns.map(c => c.name);
+  
+  if (!existingStudentColumns.includes('target_exams')) {
+    db.exec("ALTER TABLE students ADD COLUMN target_exams TEXT DEFAULT '[]'");
+  }
+  if (!existingStudentColumns.includes('current_streak')) {
+    db.exec('ALTER TABLE students ADD COLUMN current_streak INTEGER DEFAULT 0');
+  }
+  if (!existingStudentColumns.includes('longest_streak')) {
+    db.exec('ALTER TABLE students ADD COLUMN longest_streak INTEGER DEFAULT 0');
+  }
+  if (!existingStudentColumns.includes('last_activity_date')) {
+    db.exec('ALTER TABLE students ADD COLUMN last_activity_date TEXT');
+  }
+  if (!existingStudentColumns.includes('total_questions_solved')) {
+    db.exec('ALTER TABLE students ADD COLUMN total_questions_solved INTEGER DEFAULT 0');
+  }
+  if (!existingStudentColumns.includes('expert_topic_count')) {
+    db.exec('ALTER TABLE students ADD COLUMN expert_topic_count INTEGER DEFAULT 0');
+  }
+  
+  // 8. İndeksler oluştur
+  createTopicTrackingIndexes(db);
+  
+  // 9. Varsayılan rozetleri ekle
+  seedDefaultBadges(db);
+  
+  console.log('✅ Topic Tracking Migration completed');
+}
+
+function createTopicTrackingIndexes(db: Database.Database): void {
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_topic_performance_student ON topic_performance(student_id);
+    CREATE INDEX IF NOT EXISTS idx_topic_performance_topic ON topic_performance(topic_id);
+    CREATE INDEX IF NOT EXISTS idx_topic_performance_date ON topic_performance(date DESC);
+    CREATE INDEX IF NOT EXISTS idx_topic_performance_assignment ON topic_performance(assignment_id);
+    CREATE INDEX IF NOT EXISTS idx_weekly_plans_student ON weekly_plans(student_id);
+    CREATE INDEX IF NOT EXISTS idx_weekly_plans_date ON weekly_plans(week_start_date DESC);
+    CREATE INDEX IF NOT EXISTS idx_weekly_plan_topics_plan ON weekly_plan_topics(plan_id);
+    CREATE INDEX IF NOT EXISTS idx_weekly_plan_topics_topic ON weekly_plan_topics(topic_id);
+    CREATE INDEX IF NOT EXISTS idx_student_badges_student ON student_badges(student_id);
+  `);
+}
+
+function seedDefaultBadges(db: Database.Database): void {
+  // Rozet verileri ekle (DEFAULT_BADGES)
+  // ...
+}
+```
+
+---
+
+## 🎨 FRONTEND - KONU TAKİBİ SEKMESI
+
+### 📍 Navigasyon Yapısı
 
 ```tsx
-<Tabs>
+// client/pages/StudentProfile/StudentProfile.tsx
+
+<Tabs defaultValue="overview">
   <TabsList>
     <TabsTrigger value="overview">Genel Bakış</TabsTrigger>
-    <TabsTrigger value="topics">Konular</TabsTrigger>
-    <TabsTrigger value="badges">Rozetler</TabsTrigger>
-    <TabsTrigger value="history">Haftalık Planlar</TabsTrigger>
+    
+    {/* ✅ AKADEMİK DURUM ALTINDA KONU TAKİP */}
+    <TabsTrigger value="academic-status">Akademik Durum</TabsTrigger>
+    
+    <TabsTrigger value="counseling">Görüşmeler</TabsTrigger>
+    <TabsTrigger value="ai-insights">AI İçgörüler</TabsTrigger>
   </TabsList>
   
-  <TabsContent value="overview">
-    {/* MasterySummaryCard */}
-    {/* ProgressChart */}
-    {/* StreakCalendar (YENİ!) */}
-  </TabsContent>
-  
-  <TabsContent value="badges">
-    <BadgeShowcase 
-      earnedBadges={earnedBadges}
-      progress={badgeProgress}
-    />
-  </TabsContent>
-  
-  <TabsContent value="history">
-    <WeeklyPlanHistory plans={weeklyPlans} />
+  <TabsContent value="academic-status">
+    <Tabs defaultValue="overview">
+      <TabsList>
+        <TabsTrigger value="overview">Genel</TabsTrigger>
+        <TabsTrigger value="exams">Sınav Sonuçları</TabsTrigger>
+        
+        {/* ✅ KONU TAKİP AKADEMİK DURUM ALTINDA */}
+        <TabsTrigger value="topic-tracking">Konu Takibi</TabsTrigger>
+        
+        <TabsTrigger value="goals">Hedefler</TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="topic-tracking">
+        <TopicTrackingTab studentId={studentId} />
+      </TabsContent>
+    </Tabs>
   </TabsContent>
 </Tabs>
 ```
 
----
+### 🎯 Konu Takip Sekmesi Bileşenleri
 
-## 📈 8. FRONTEND - RAPORLAR SAYFASI
+```tsx
+// client/components/features/topic-tracking/TopicTrackingTab.tsx
 
-Önceki plandaki özellikler aynı kalıyor, ek olarak:
-- Rozet dağılımı grafiği
-- Sınıf geneli streak istatistiği
-
----
-
-## 🧮 9. USTALIK SEVİYESİ HESAPLAMA
-
-Önceki plandaki algoritma aynen kalıyor.
-
----
-
-## 🎯 10. HEDEF SINAV YÖNETİMİ
-
-Önceki plandaki filtre mantığı aynen kalıyor.
-
----
-
-## 📋 11. GELIŞTIRME ADIMLARI (Öncelikli Sıra)
-
-### Faz 1: Veritabanı ve Backend (2 gün)
-- [ ] 1.1. `topic_performance` tablosu oluştur
-- [ ] 1.2. `weekly_plans` tablosu oluştur
-- [ ] 1.3. `badges` ve `student_badges` tabloları oluştur
-- [ ] 1.4. `students` tablosuna `target_exams`, `current_streak`, `longest_streak` ekle
-- [ ] 1.5. Default badges verilerini seed et
-- [ ] 1.6. Repository oluştur (`topic-performance.repository.ts`)
-- [ ] 1.7. Repository oluştur (`weekly-plan.repository.ts`)
-- [ ] 1.8. Servis: `topic-performance.service.ts`
-- [ ] 1.9. Servis: `mastery-calculator.service.ts`
-- [ ] 1.10. Servis: `spaced-repetition.service.ts` (KRİTİK!)
-- [ ] 1.11. Servis: `badge.service.ts`
-- [ ] 1.12. Servis: `weekly-plan.service.ts`
-- [ ] 1.13. Servis: `pdf-generator.service.ts` (ŞIK TASARIM!)
-- [ ] 1.14. API routes: Performans endpoint'leri
-- [ ] 1.15. API routes: Haftalık plan endpoint'leri
-- [ ] 1.16. API routes: Rozet endpoint'leri
-- [ ] 1.17. API routes: Spaced repetition endpoint
-- [ ] 1.18. Tüm API'leri ana `index.ts`'e bağla
-
-### Faz 2: Haftalık Plan Özelliği (Frontend) (2 gün)
-- [ ] 2.1. `WeeklyPlanGenerator.tsx` ana component oluştur
-- [ ] 2.2. `QuickPerformanceDialog.tsx` (performans girişi)
-- [ ] 2.3. `ReviewTopicCard.tsx` (tekrar önerisi kartı)
-- [ ] 2.4. `BadgeProgressCard.tsx` (rozet ilerleme)
-- [ ] 2.5. `TopicSelector.tsx` (yeni konu seçici)
-- [ ] 2.6. "Plan Öner" butonu API entegrasyonu
-- [ ] 2.7. Tekrar konuları gösterimi (spaced repetition)
-- [ ] 2.8. Rozet ve motivasyon bölümü
-- [ ] 2.9. "Planı Kaydet" fonksiyonu
-- [ ] 2.10. "PDF İndir" butonu entegrasyonu
-- [ ] 2.11. `TopicPlanner.tsx` içine entegre et
-
-### Faz 3: Öğrenci Profili - Konu Takibi Sekmesi (2 gün)
-- [ ] 3.1. `TopicTrackingTab.tsx` ana component
-- [ ] 3.2. `MasterySummaryCard.tsx` (özet kartlar)
-- [ ] 3.3. `TopicMasteryList.tsx` (konu listesi)
-- [ ] 3.4. `ProgressChart.tsx` (zaman grafiği)
-- [ ] 3.5. `SubjectHeatmap.tsx` (heatmap)
-- [ ] 3.6. `StreakCalendar.tsx` (GitHub-style takvim - YENİ!)
-- [ ] 3.7. `BadgeShowcase.tsx` (rozet vitrini - YENİ!)
-- [ ] 3.8. `WeeklyPlanHistory.tsx` (plan geçmişi - YENİ!)
-- [ ] 3.9. `PerformanceEntryForm.tsx` (manuel giriş)
-- [ ] 3.10. Hedef sınav seçici ekle
-- [ ] 3.11. Filtre mantığı (hedef sınavlar/tümü)
-- [ ] 3.12. API entegrasyonu
-- [ ] 3.13. StudentProfile.tsx'e sekme ekle
-
-### Faz 4: Raporlar Sayfası (1 gün)
-- [ ] 4.1. `TopicPerformanceReport.tsx`
-- [ ] 4.2. `ClassHeatmap.tsx`
-- [ ] 4.3. `StudentComparisonTable.tsx`
-- [ ] 4.4. `ClassTrendChart.tsx`
-- [ ] 4.5. `ClassBadgeDistribution.tsx` (YENİ!)
-- [ ] 4.6. Filtre bölümü
-- [ ] 4.7. API entegrasyonu
-- [ ] 4.8. Excel export
-- [ ] 4.9. Reports.tsx'e sekme ekle
-
-### Faz 5: Test ve İyileştirme (1 gün)
-- [ ] 5.1. Spaced repetition algoritması test et
-- [ ] 5.2. Rozet sistemi test et
-- [ ] 5.3. PDF çıktısı test et (şıklık kontrolü!)
-- [ ] 5.4. Haftalık plan akışı end-to-end test
-- [ ] 5.5. Frontend componentleri test et
-- [ ] 5.6. Responsive tasarım kontrolü
-- [ ] 5.7. Hata durumları test et
-- [ ] 5.8. Performans optimizasyonu
-
-### Faz 6: Multi-User Desteği (İleriki Aşama - 3 gün)
-- [ ] 6.1. Authentication sistemi (öğretmen/öğrenci/veli)
-- [ ] 6.2. Role-based permissions
-- [ ] 6.3. Öğrenci self-service performans girişi
-- [ ] 6.4. Öğretmen onay sistemi
-- [ ] 6.5. Veli görüntüleme paneli
-- [ ] 6.6. QR kod entegrasyonu
-- [ ] 6.7. Mobil responsive iyileştirmeler
-
----
-
-## ✅ 12. TAMAMLANMA KRİTERLERİ
-
-**Faz 1-5 Tamamlandığında:**
-- [x] Veritabanı şeması ve migration çalışıyor
-- [x] Spaced repetition algoritması doğru hesaplıyor
-- [x] Haftalık plan önerisi oluşturuluyor (yeni + tekrar konular)
-- [x] Rozet sistemi çalışıyor ve ilerleme gösteriliyor
-- [x] Şık PDF çıktısı oluşturuluyor
-- [x] Konu planlayıcıda hızlı performans girişi çalışıyor
-- [x] Öğrenci profilinde konu takibi sekmesi eksiksiz
-- [x] Raporlar sayfasında toplu analiz çalışıyor
-- [x] Streak takibi çalışıyor
-- [x] Hedef sınav filtreleme doğru çalışıyor
-- [x] Grafikler ve heatmap doğru gösteriliyor
-- [x] Responsive tasarım uyumlu
-- [x] Tüm validasyon ve hata yönetimi eksiksiz
-
----
-
-## 🚀 13. GELECEKTEKİ İYİLEŞTİRMELER
-
-**v2.0 (Multi-User):**
-- Öğretmen/öğrenci/veli hesapları
-- Mobil uygulama
-- QR kod ile hızlı erişim
-- Push bildirimleri
-
-**v3.0 (AI & Gamification):**
-- AI destekli konu önerileri
-- Yarışma ve liderboard
-- Sosyal özellikler (arkadaşlarla karşılaştırma)
-- Video çözüm entegrasyonu
-
----
-
-## 📝 14. PDF ÇIKTI ÖRNEĞİ
-
-### Sayfa Düzeni:
+export function TopicTrackingTab({ studentId }: { studentId: string }) {
+  return (
+    <div className="space-y-6">
+      {/* 1. Özet Kartlar */}
+      <div className="grid grid-cols-4 gap-4">
+        <StatCard 
+          title="Toplam Konu" 
+          value={stats.totalTopics}
+          icon={<BookOpen />}
+        />
+        <StatCard 
+          title="Tamamlanan" 
+          value={stats.completedTopics}
+          icon={<CheckCircle />}
+          color="green"
+        />
+        <StatCard 
+          title="Çalışılan" 
+          value={stats.inProgressTopics}
+          icon={<Clock />}
+          color="blue"
+        />
+        <StatCard 
+          title="Günlük Streak" 
+          value={stats.currentStreak}
+          icon={<Flame />}
+          color="orange"
+        />
+      </div>
+      
+      {/* 2. Haftalık Plan Oluşturma */}
+      <WeeklyPlanGenerator studentId={studentId} />
+      
+      {/* 3. Konu Listesi (Mastery gösterimi) */}
+      <TopicMasteryList studentId={studentId} />
+      
+      {/* 4. Tekrar Planı */}
+      <UpcomingReviewsWidget studentId={studentId} />
+      
+      {/* 5. Rozet Vitrini */}
+      <BadgeShowcase studentId={studentId} />
+    </div>
+  );
+}
 ```
-┌─────────────────────────────────────────────────┐
-│  [MAVİ HEADER]                                  │
-│  Haftalık Çalışma Planı                         │
-│  Ahmet Yılmaz - 11-A                            │
-└─────────────────────────────────────────────────┘
 
-📅 22 Kasım - 29 Kasım 2025    🎯 TYT, AYT
+### 📝 Hızlı Performans Giriş Dialogu
 
-┌─────────────────────────────────────────────────┐
-│ 🔥 7 Günlük Streak! Harikasın!                  │
-└─────────────────────────────────────────────────┘
+```tsx
+// client/components/features/topic-tracking/QuickPerformanceDialog.tsx
 
-✨ Bu Haftanın Konuları
-┌──────────────┬────────────────────┬────────────┐
-│ Ders         │ Konu               │ Sınav Tipi │
-├──────────────┼────────────────────┼────────────┤
-│ Matematik    │ Denklemler         │ TYT        │
-│ Fizik        │ Kuvvet ve Hareket  │ TYT        │
-└──────────────┴────────────────────┴────────────┘
-
-🔄 Tekrar Edilecek Konular
-┌────────────────┬───────────┬──────────────────────┐
-│ Konu           │ Başarı    │ Neden Tekrar?        │
-├────────────────┼───────────┼──────────────────────┤
-│ İntegral       │ %80       │ Ustalığı korumak için│
-│ Türev          │ %75       │ Pekiştirme gerekiyor │
-└────────────────┴───────────┴──────────────────────┘
-
-🏆 Rozet İlerlemen
-┌─────────────────────────────────────────────────┐
-│ 🎓 Matematik Ustası        [████████░░] 80%     │
-│    2 konu kaldı!                                │
-├─────────────────────────────────────────────────┤
-│ 💪 Disiplin                [███░░░░░░░] 23%     │
-│    23 gün kaldı!                                │
-└─────────────────────────────────────────────────┘
-
-[MAVİ FOOTER]
-Rehber360 - Başarıya Giden Yol
-QR kod ile ilerlemeni takip et (yakında!)
+export function QuickPerformanceDialog({ 
+  studentId,
+  topicId,
+  topicName,
+  onSave 
+}: Props) {
+  const [formData, setFormData] = useState({
+    questionsSolved: 0,
+    correctAnswers: 0,
+    wrongAnswers: 0,
+    durationMinutes: 0,
+    difficultyFeedback: 'medium',
+    notes: ''
+  });
+  
+  return (
+    <Dialog>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{topicName} - Performans Girişi</DialogTitle>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          {/* Soru Sayısı */}
+          <div>
+            <Label>Toplam Soru Sayısı</Label>
+            <Input 
+              type="number" 
+              value={formData.questionsSolved}
+              onChange={e => setFormData({...formData, questionsSolved: +e.target.value})}
+            />
+          </div>
+          
+          {/* Doğru Cevaplar */}
+          <div>
+            <Label>Doğru Cevaplar</Label>
+            <Input 
+              type="number" 
+              value={formData.correctAnswers}
+              onChange={e => setFormData({...formData, correctAnswers: +e.target.value})}
+            />
+          </div>
+          
+          {/* Yanlış Cevaplar */}
+          <div>
+            <Label>Yanlış Cevaplar</Label>
+            <Input 
+              type="number" 
+              value={formData.wrongAnswers}
+              onChange={e => setFormData({...formData, wrongAnswers: +e.target.value})}
+            />
+          </div>
+          
+          {/* Süre */}
+          <div>
+            <Label>Süre (dakika)</Label>
+            <Input 
+              type="number" 
+              value={formData.durationMinutes}
+              onChange={e => setFormData({...formData, durationMinutes: +e.target.value})}
+            />
+          </div>
+          
+          {/* Zorluk */}
+          <div>
+            <Label>Zorluk Seviyesi</Label>
+            <Select 
+              value={formData.difficultyFeedback}
+              onValueChange={v => setFormData({...formData, difficultyFeedback: v})}
+            >
+              <SelectItem value="very_easy">Çok Kolay</SelectItem>
+              <SelectItem value="easy">Kolay</SelectItem>
+              <SelectItem value="medium">Orta</SelectItem>
+              <SelectItem value="hard">Zor</SelectItem>
+              <SelectItem value="very_hard">Çok Zor</SelectItem>
+            </Select>
+          </div>
+          
+          {/* Başarı Oranı (Otomatik Hesaplanan) */}
+          <Alert>
+            <TrendingUp className="h-4 w-4" />
+            <AlertDescription>
+              Başarı Oranı: {calculateSuccessRate(formData)}%
+            </AlertDescription>
+          </Alert>
+          
+          {/* Notlar */}
+          <div>
+            <Label>Notlar (Opsiyonel)</Label>
+            <Textarea 
+              value={formData.notes}
+              onChange={e => setFormData({...formData, notes: e.target.value})}
+              placeholder="Ekstra notlar..."
+            />
+          </div>
+        </div>
+        
+        <DialogFooter>
+          <Button onClick={() => handleSave(formData)}>
+            Kaydet
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 ```
+
+### 📊 Konu Ustalık Listesi
+
+```tsx
+// client/components/features/topic-tracking/TopicMasteryList.tsx
+
+export function TopicMasteryList({ studentId }: { studentId: string }) {
+  const { data: topicsWithProgress } = useQuery({
+    queryKey: ['topic-mastery', studentId],
+    queryFn: () => api.get(`/progress/student/${studentId}`)
+  });
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Konu Bazlı İlerleme</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {topicsWithProgress?.map(topic => (
+          <div key={topic.id} className="flex items-center justify-between p-3 border-b">
+            {/* Konu Adı */}
+            <div className="flex-1">
+              <p className="font-medium">{topic.topicName}</p>
+              <p className="text-sm text-muted-foreground">{topic.subjectName}</p>
+            </div>
+            
+            {/* Mastery Level */}
+            <div className="flex items-center gap-4">
+              <MasteryBadge level={topic.masteryLevel} />
+              
+              {/* Hızlı Aksiyonlar */}
+              <div className="flex gap-2">
+                {/* Performans Gir */}
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => openPerformanceDialog(topic)}
+                >
+                  <Plus /> Sonuç Gir
+                </Button>
+                
+                {/* Tamamlandı Checkbox */}
+                <Checkbox 
+                  checked={topic.masteryLevel === 5}
+                  onCheckedChange={checked => {
+                    if (checked) {
+                      markAsCompleted(studentId, topic.topicId);
+                    } else {
+                      unmarkAsCompleted(studentId, topic.topicId);
+                    }
+                  }}
+                />
+                <Label>Tamamlandı</Label>
+              </div>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
+function MasteryBadge({ level }: { level: number }) {
+  const config = {
+    0: { label: 'Başlanmadı', color: 'gray', icon: <Circle /> },
+    1: { label: 'Başlangıç', color: 'red', icon: <Target /> },
+    2: { label: 'Orta', color: 'yellow', icon: <TrendingUp /> },
+    3: { label: 'İyi', color: 'blue', icon: <Award /> },
+    4: { label: 'Çok İyi', color: 'purple', icon: <Star /> },
+    5: { label: 'Uzman', color: 'green', icon: <CheckCircle /> }
+  }[level];
+  
+  return (
+    <Badge className={`bg-${config.color}-500`}>
+      {config.icon} {config.label}
+    </Badge>
+  );
+}
+```
+
+---
+
+## 📄 PDF OLUŞTURMA
+
+(Önceki tasarım aynı, sadece ilişkisel veri kullan)
+
+```typescript
+// weekly-plan-topics tablosundan konuları al
+const planTopics = await db.all(`
+  SELECT 
+    wpt.*,
+    t.name as topic_name,
+    s.name as subject_name,
+    s.category as exam_category
+  FROM weekly_plan_topics wpt
+  JOIN topics t ON wpt.topic_id = t.id
+  JOIN subjects s ON t.subjectId = s.id
+  WHERE wpt.plan_id = ?
+  ORDER BY wpt.topic_type, wpt.priority DESC
+`, [planId]);
+
+const newTopics = planTopics.filter(t => t.topic_type === 'new');
+const reviewTopics = planTopics.filter(t => t.topic_type === 'review');
+
+// PDF oluştur...
+```
+
+---
+
+## 🚀 DEPLOYMENT PLANI
+
+### Faz 1: Veritabanı & Backend (1 hafta)
+1. Migration script'lerini çalıştır
+2. Repository katmanı
+3. Service katmanı (mastery, spaced-repetition, badge)
+4. API endpoint'leri
+5. Testler
+
+### Faz 2: Frontend (1 hafta)
+1. Konu Takip sekmesi UI
+2. Performans giriş dialogları
+3. Mastery listesi
+4. Haftalık plan oluşturma
+
+### Faz 3: PDF & Rozet (3 gün)
+1. PDF generator servisi
+2. Rozet sistemi UI
+3. Streak hesaplama
+
+### Faz 4: Test & Polish (2 gün)
+1. End-to-end testler
+2. Bug fixing
+3. Performans optimizasyonu
+
+---
+
+## ✅ ÖNEMLİ HATIRLATMALAR
+
+1. **Tamamlanan Konular (Mastery 5) YENİ PLANLARDA ÇIKMAZ** ✅
+2. **Tamamlanmış işareti geri alınırsa tekrar plana girebilir** ✅
+3. **Spaced repetition sadece Mastery 1-4 için çalışır** ✅
+4. **Başarı oranı düşükse tekrar aralığı KISA** ✅
+5. **İlişkisel tablolar kullan, JSON değil** ✅
+6. **Konu Takip sekmesi Akademik Durum altında** ✅
+7. **Güvenlik, validasyon, error handling ekle** ✅
+8. **Migration stratejisi hazır** ✅
 
 ---
 
 **Son Güncelleme:** 23 Kasım 2025  
-**Tahmini Tamamlanma Süresi:** 8 gün (2 backend + 2 haftalık plan + 2 profil + 1 rapor + 1 test)  
-**Durum:** 📝 Güncellenmiş Plan Hazır - Geliştirme Başlıyor
+**Durum:** Hazır - Geliştirmeye Başlanabilir ✅
