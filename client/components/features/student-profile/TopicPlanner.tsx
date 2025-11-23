@@ -24,6 +24,7 @@ import {
  setCompletedFlag,
  saveProgress,
  loadProgress,
+ reviewTopic,
 } from "@/lib/storage";
 import { Switch } from "@/components/atoms/Switch";
 import { Label } from "@/components/atoms/Label";
@@ -594,7 +595,46 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-4">
+              {/* Tekrar Bilgileri */}
+              {selectedTopicProgress.completedFlag && selectedTopicProgress.nextReviewDate && (
+                <div className="space-y-2 pt-2 border-t">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <RefreshCcw className="h-4 w-4 text-blue-600" />
+                    <span>Akıllı Tekrar Bilgileri</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="p-2 rounded bg-gray-50">
+                      <div className="text-xs text-muted-foreground">Tekrar Sayısı</div>
+                      <div className="font-medium">{selectedTopicProgress.reviewCount || 0}. tekrar</div>
+                    </div>
+                    <div className="p-2 rounded bg-gray-50">
+                      <div className="text-xs text-muted-foreground">Son Çalışma</div>
+                      <div className="font-medium">{selectedTopicProgress.lastStudied || '-'}</div>
+                    </div>
+                    <div className="col-span-2 p-2 rounded bg-blue-50 border border-blue-200">
+                      <div className="text-xs text-blue-700">Bir Sonraki Tekrar</div>
+                      <div className="font-medium text-blue-900">{selectedTopicProgress.nextReviewDate}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-between gap-2 pt-4">
+                {selectedTopicProgress.completedFlag && selectedTopicProgress.nextReviewDate && (
+                  <Button
+                    variant="default"
+                    className="bg-blue-600 hover:bg-blue-700"
+                    onClick={async () => {
+                      await reviewTopic(sid, selectedTopicId!);
+                      setProgress(getProgressByStudent(sid));
+                      setRefresh((r) => r + 1);
+                    }}
+                  >
+                    <RefreshCcw className="h-4 w-4 mr-2" />
+                    Tekrarı Tamamla
+                  </Button>
+                )}
+                <div className="flex-1" />
                 <Button variant="outline" onClick={() => setSelectedTopicId(null)}>
                   Kapat
                 </Button>
