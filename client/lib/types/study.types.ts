@@ -58,6 +58,9 @@ export type TopicProgress = {
  lastStudied?: string;
  reviewCount?: number;
  nextReviewDate?: string;
+ questionsSolved?: number;
+ questionsCorrect?: number;
+ questionsWrong?: number;
 };
 
 export type ScheduleTemplate = {

@@ -69,6 +69,12 @@ export function createAcademicTables(db: Database.Database): void {
       remaining INTEGER DEFAULT 0,
       lastStudied DATETIME,
       notes TEXT,
+      completedFlag INTEGER DEFAULT 0,
+      reviewCount INTEGER DEFAULT 0,
+      nextReviewDate TEXT,
+      questionsSolved INTEGER DEFAULT 0,
+      questionsCorrect INTEGER DEFAULT 0,
+      questionsWrong INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE CASCADE,
@@ -76,6 +82,39 @@ export function createAcademicTables(db: Database.Database): void {
       UNIQUE(studentId, topicId)
     );
   `);
+
+  const progressColumns = db.prepare("PRAGMA table_info(progress)").all() as Array<{ name: string }>;
+  const columnNames = progressColumns.map(col => col.name);
+
+  if (!columnNames.includes('completedFlag')) {
+    db.exec(`ALTER TABLE progress ADD COLUMN completedFlag INTEGER DEFAULT 0;`);
+    console.log('✅ Migration: Added completedFlag column to progress');
+  }
+
+  if (!columnNames.includes('reviewCount')) {
+    db.exec(`ALTER TABLE progress ADD COLUMN reviewCount INTEGER DEFAULT 0;`);
+    console.log('✅ Migration: Added reviewCount column to progress');
+  }
+
+  if (!columnNames.includes('nextReviewDate')) {
+    db.exec(`ALTER TABLE progress ADD COLUMN nextReviewDate TEXT;`);
+    console.log('✅ Migration: Added nextReviewDate column to progress');
+  }
+
+  if (!columnNames.includes('questionsSolved')) {
+    db.exec(`ALTER TABLE progress ADD COLUMN questionsSolved INTEGER DEFAULT 0;`);
+    console.log('✅ Migration: Added questionsSolved column to progress');
+  }
+
+  if (!columnNames.includes('questionsCorrect')) {
+    db.exec(`ALTER TABLE progress ADD COLUMN questionsCorrect INTEGER DEFAULT 0;`);
+    console.log('✅ Migration: Added questionsCorrect column to progress');
+  }
+
+  if (!columnNames.includes('questionsWrong')) {
+    db.exec(`ALTER TABLE progress ADD COLUMN questionsWrong INTEGER DEFAULT 0;`);
+    console.log('✅ Migration: Added questionsWrong column to progress');
+  }
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS academic_goals (

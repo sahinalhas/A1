@@ -86,6 +86,23 @@ export default function SubjectTrackingSection({
     onUpdate();
   };
 
+  const handleUpdateQuestionStats = async (
+    topicId: string, 
+    field: 'questionsSolved' | 'questionsCorrect' | 'questionsWrong',
+    value: number
+  ) => {
+    const list = progress;
+    const pIndex = list.findIndex(p => p.topicId === topicId);
+    if (pIndex >= 0) {
+      const updated = list.map(p => 
+        p.topicId === topicId ? { ...p, [field]: value } : p
+      );
+      const { saveProgress } = await import("@/lib/storage");
+      await saveProgress(updated);
+      setRefresh((r) => r + 1);
+    }
+  };
+
   const getCategoryColor = (category?: string) => {
     switch (category) {
       case 'TYT':
@@ -208,47 +225,90 @@ export default function SubjectTrackingSection({
                       return (
                         <div
                           key={topic.id}
-                          className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                          className={`p-3 rounded-lg border transition-colors ${
                             isCompleted
                               ? 'bg-green-50 border-green-200'
                               : 'bg-white hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-3 flex-1">
-                            <Checkbox
-                              checked={isCompleted}
-                              onCheckedChange={() => handleToggleComplete(topic.id, isCompleted)}
-                              className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                            />
-                            <div className="flex items-center gap-2">
-                              {isCompleted ? (
-                                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                              ) : (
-                                <Circle className="h-4 w-4 text-gray-400" />
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-3 flex-1">
+                              <Checkbox
+                                checked={isCompleted}
+                                onCheckedChange={() => handleToggleComplete(topic.id, isCompleted)}
+                                className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                              />
+                              <div className="flex items-center gap-2">
+                                {isCompleted ? (
+                                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                ) : (
+                                  <Circle className="h-4 w-4 text-gray-400" />
+                                )}
+                                <span
+                                  className={`${
+                                    isCompleted ? 'text-green-900 font-medium' : 'text-gray-700'
+                                  }`}
+                                >
+                                  {topic.name}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              {topicProgress && (
+                                <>
+                                  <span>
+                                    {topicProgress.completed} / {topic.avgMinutes} dk
+                                  </span>
+                                  {topicProgress.lastStudied && (
+                                    <Badge variant="outline" className="text-xs">
+                                      Son: {new Date(topicProgress.lastStudied).toLocaleDateString('tr-TR')}
+                                    </Badge>
+                                  )}
+                                </>
                               )}
-                              <span
-                                className={`${
-                                  isCompleted ? 'text-green-900 font-medium' : 'text-gray-700'
-                                }`}
-                              >
-                                {topic.name}
-                              </span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            {topicProgress && (
-                              <>
-                                <span>
-                                  {topicProgress.completed} / {topic.avgMinutes} dk
-                                </span>
-                                {topicProgress.lastStudied && (
-                                  <Badge variant="outline" className="text-xs">
-                                    Son: {new Date(topicProgress.lastStudied).toLocaleDateString('tr-TR')}
-                                  </Badge>
-                                )}
-                              </>
-                            )}
-                          </div>
+                          {topicProgress && (
+                            <div className="flex items-center gap-4 pl-9 text-sm">
+                              <div className="flex items-center gap-2">
+                                <Label className="text-xs text-muted-foreground">Çözülen:</Label>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  value={topicProgress.questionsSolved || 0}
+                                  onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsSolved', parseInt(e.target.value) || 0)}
+                                  className="h-7 w-16 text-xs"
+                                />
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Label className="text-xs text-green-600">Doğru:</Label>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max={topicProgress.questionsSolved || 0}
+                                  value={topicProgress.questionsCorrect || 0}
+                                  onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsCorrect', parseInt(e.target.value) || 0)}
+                                  className="h-7 w-16 text-xs border-green-200"
+                                />
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Label className="text-xs text-red-600">Yanlış:</Label>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max={topicProgress.questionsSolved || 0}
+                                  value={topicProgress.questionsWrong || 0}
+                                  onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsWrong', parseInt(e.target.value) || 0)}
+                                  className="h-7 w-16 text-xs border-red-200"
+                                />
+                              </div>
+                              {(topicProgress.questionsCorrect || 0) + (topicProgress.questionsWrong || 0) > 0 && (
+                                <Badge variant="secondary" className="text-xs">
+                                  %{Math.round(((topicProgress.questionsCorrect || 0) / ((topicProgress.questionsCorrect || 0) + (topicProgress.questionsWrong || 0))) * 100)} başarı
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     })}

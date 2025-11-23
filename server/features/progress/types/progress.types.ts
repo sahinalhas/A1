@@ -6,6 +6,12 @@ export interface Progress {
   remaining: number;
   lastStudied?: string;
   notes?: string;
+  completedFlag?: boolean;
+  reviewCount?: number;
+  nextReviewDate?: string;
+  questionsSolved?: number;
+  questionsCorrect?: number;
+  questionsWrong?: number;
 }
 
 export interface AcademicGoal {
