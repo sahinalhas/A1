@@ -129,11 +129,6 @@ export default function SubjectTrackingSection({
     field: 'questionsSolved' | 'questionsCorrect' | 'questionsWrong',
     value: number
   ) => {
-    // Update local state immediately for responsive UI
-    setProgress(prev => prev.map(p => 
-      p.topicId === topicId ? { ...p, [field]: value } : p
-    ));
-
     // Debounce the API call
     const timeoutKey = `${topicId}-${field}`;
     if (updateTimeoutRef.current[timeoutKey]) {
@@ -149,15 +144,17 @@ export default function SubjectTrackingSection({
       try {
         await saveProgress(updated);
         await loadProgressAsync();
-        setProgress(getProgressByStudent(studentId));
+        const freshProgress = getProgressByStudent(studentId);
+        setProgress(freshProgress);
         onUpdate();
       } catch (error) {
         console.error('Error updating question stats:', error);
-        // Revert on error
+        // Reload from database on error
         await loadProgressAsync();
-        setProgress(getProgressByStudent(studentId));
+        const revertedProgress = getProgressByStudent(studentId);
+        setProgress(revertedProgress);
       }
-    }, 1000); // Wait 1 second after last change before saving
+    }, 500); // Reduced to 500ms for faster saving
   }, [studentId, onUpdate]);
 
   const getCategoryColor = (category?: string) => {
@@ -331,7 +328,13 @@ export default function SubjectTrackingSection({
                                   type="number"
                                   min="0"
                                   value={topicProgress.questionsSolved || ''}
-                                  onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsSolved', parseInt(e.target.value) || 0)}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value) || 0;
+                                    setProgress(prev => prev.map(p => 
+                                      p.topicId === topic.id ? { ...p, questionsSolved: newValue } : p
+                                    ));
+                                    handleUpdateQuestionStats(topic.id, 'questionsSolved', newValue);
+                                  }}
                                   className="h-7 w-16 text-xs"
                                   placeholder="0"
                                 />
@@ -343,7 +346,13 @@ export default function SubjectTrackingSection({
                                   min="0"
                                   max={topicProgress.questionsSolved || 0}
                                   value={topicProgress.questionsCorrect || ''}
-                                  onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsCorrect', parseInt(e.target.value) || 0)}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value) || 0;
+                                    setProgress(prev => prev.map(p => 
+                                      p.topicId === topic.id ? { ...p, questionsCorrect: newValue } : p
+                                    ));
+                                    handleUpdateQuestionStats(topic.id, 'questionsCorrect', newValue);
+                                  }}
                                   className="h-7 w-16 text-xs border-green-200"
                                   placeholder="0"
                                 />
@@ -355,7 +364,13 @@ export default function SubjectTrackingSection({
                                   min="0"
                                   max={topicProgress.questionsSolved || 0}
                                   value={topicProgress.questionsWrong || ''}
-                                  onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsWrong', parseInt(e.target.value) || 0)}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value) || 0;
+                                    setProgress(prev => prev.map(p => 
+                                      p.topicId === topic.id ? { ...p, questionsWrong: newValue } : p
+                                    ));
+                                    handleUpdateQuestionStats(topic.id, 'questionsWrong', newValue);
+                                  }}
                                   className="h-7 w-16 text-xs border-red-200"
                                   placeholder="0"
                                 />
