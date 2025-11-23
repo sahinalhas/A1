@@ -84,7 +84,23 @@ export default function SubjectTrackingSection({
     const cats = new Set(subjects.map((s) => s.category).filter(Boolean));
     // Remove 'School' category if it exists
     cats.delete('School');
-    return Array.from(cats) as string[];
+    const categoriesArray = Array.from(cats) as string[];
+    
+    // Sort categories in specific order: LGS, TYT, AYT, YDT
+    const order = ['LGS', 'TYT', 'AYT', 'YDT'];
+    return categoriesArray.sort((a, b) => {
+      const indexA = order.indexOf(a);
+      const indexB = order.indexOf(b);
+      
+      // If both are in the order array, sort by their position
+      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+      // If only a is in the order array, it comes first
+      if (indexA !== -1) return -1;
+      // If only b is in the order array, it comes first
+      if (indexB !== -1) return 1;
+      // Otherwise, sort alphabetically
+      return a.localeCompare(b);
+    });
   }, [subjects]);
 
   // Set initial category when categories are loaded
