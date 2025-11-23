@@ -44,7 +44,7 @@ export default function SubjectTrackingSection({
   const [topics, setTopics] = useState<Awaited<ReturnType<typeof loadTopics>>>([]);
   const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressByStudent>>>([]);
   const [refresh, setRefresh] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const updateTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
 
@@ -80,14 +80,22 @@ export default function SubjectTrackingSection({
     };
   }, [studentId, refresh]);
 
+  // Set initial category when categories are loaded
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategory) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory]);
+
   const categories = useMemo(() => {
     const cats = new Set(subjects.map((s) => s.category).filter(Boolean));
-    return ['all' as const, ...Array.from(cats)] as string[];
+    // Remove 'School' category if it exists
+    cats.delete('School');
+    return Array.from(cats) as string[];
   }, [subjects]);
 
   const filteredSubjects = useMemo(() => {
-    if (selectedCategory === 'all') return subjects;
-    return subjects.filter((s) => s.category === selectedCategory);
+    return subjects.filter((s) => s.category === selectedCategory && s.category !== 'School');
   }, [subjects, selectedCategory]);
 
   const getTopicProgress = (topicId: string) => {
@@ -154,9 +162,7 @@ export default function SubjectTrackingSection({
   };
 
   const getCategoryStats = (category: string) => {
-    const subjectsInCategory = category === 'all' 
-      ? subjects 
-      : subjects.filter(s => s.category === category);
+    const subjectsInCategory = subjects.filter(s => s.category === category);
 
     const topicsInCategory = topics.filter(t => 
       subjectsInCategory.some(s => s.id === t.subjectId)
@@ -207,7 +213,7 @@ export default function SubjectTrackingSection({
               onClick={() => setSelectedCategory(cat)}
               className="gap-2"
             >
-              {cat === 'all' ? 'Tümü' : cat}
+              {cat}
               <Badge variant="secondary" className="ml-1">
                 {getCategoryStats(cat).completed}/{getCategoryStats(cat).total}
               </Badge>
