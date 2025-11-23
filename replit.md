@@ -4,6 +4,27 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
+## November 23, 2025 - Topic-Based Plan UI Enhancement & PDF Export
+
+### Konu Bazlı Plan - Enhanced UX with Accordion & PDF Features
+- **Improved Visual Design**: Completely redesigned the topic plan view for better readability and reduced eye strain
+  - Replaced flat list with **Accordion structure** for collapsible day grouping
+  - Each day shows summary (date, topic count, total minutes) in trigger, expandable for details
+  - All days default to expanded for quick overview
+  - Enhanced spacing, typography, and color contrast for better legibility
+  - Larger touch targets and smoother hover transitions
+  - Progress bars now show percentage completion alongside remaining time
+- **PDF Export & Print Features**: 
+  - Added "PDF İndir" button for downloading ink-friendly PDF reports
+  - Added "Yazdır" button that opens PDF in new tab and triggers print dialog
+  - PDF design is elegant, minimal, and optimized for printing (muted colors, clean layout)
+  - Includes weekly summary, day-by-day breakdown with tables, and metadata footer
+  - Generated using `jsPDF` and `jspdf-autotable` for professional table formatting
+- **Files Modified**:
+  - `client/components/features/student-profile/TopicPlanner.tsx` - Accordion UI + PDF buttons
+  - `client/lib/utils/pdf-generator.ts` - New PDF generation utility with print support
+- **Benefits**: Users can now easily navigate through days, export plans for offline reference, and print clean reports
+
 ## November 22, 2025 - Survey Defaults System Implementation
 
 ### Survey Default Templates - Idempotent Seeding & Reset Functionality
