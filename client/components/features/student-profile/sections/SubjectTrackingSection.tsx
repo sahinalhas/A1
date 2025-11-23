@@ -330,9 +330,10 @@ export default function SubjectTrackingSection({
                                 <Input
                                   type="number"
                                   min="0"
-                                  value={topicProgress.questionsSolved || 0}
+                                  value={topicProgress.questionsSolved || ''}
                                   onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsSolved', parseInt(e.target.value) || 0)}
                                   className="h-7 w-16 text-xs"
+                                  placeholder="0"
                                 />
                               </div>
                               <div className="flex items-center gap-2">
@@ -341,9 +342,10 @@ export default function SubjectTrackingSection({
                                   type="number"
                                   min="0"
                                   max={topicProgress.questionsSolved || 0}
-                                  value={topicProgress.questionsCorrect || 0}
+                                  value={topicProgress.questionsCorrect || ''}
                                   onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsCorrect', parseInt(e.target.value) || 0)}
                                   className="h-7 w-16 text-xs border-green-200"
+                                  placeholder="0"
                                 />
                               </div>
                               <div className="flex items-center gap-2">
@@ -352,9 +354,10 @@ export default function SubjectTrackingSection({
                                   type="number"
                                   min="0"
                                   max={topicProgress.questionsSolved || 0}
-                                  value={topicProgress.questionsWrong || 0}
+                                  value={topicProgress.questionsWrong || ''}
                                   onChange={(e) => handleUpdateQuestionStats(topic.id, 'questionsWrong', parseInt(e.target.value) || 0)}
                                   className="h-7 w-16 text-xs border-red-200"
+                                  placeholder="0"
                                 />
                               </div>
                               {(topicProgress.questionsCorrect || 0) + (topicProgress.questionsWrong || 0) > 0 && (
