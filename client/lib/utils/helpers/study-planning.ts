@@ -337,9 +337,9 @@ export async function planWeekSmart(
  const bestTopic = candidateTopics[0].topic;
  const prog = progMap.get(bestTopic.id)!;
  
- // For review topics, allocate appropriate time with dynamic remaining calc
+ // For review topics, allocate appropriate time with max 60 minute limit
  const effectiveRemaining = prog.isReview 
-   ? Math.min(prog.remaining || 15, 30)
+   ? Math.min(prog.remaining || 30, 60)
    : prog.remaining;
  
  const allocated = Math.min(remainingTime, effectiveRemaining, maxAllowedPerSlot - usedInSlot);
