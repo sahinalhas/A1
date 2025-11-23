@@ -411,22 +411,22 @@ function calculateNextReviewDate(reviewCount: number): string {
  
  switch (reviewCount) {
  case 0:
- daysToAdd = 1;
- break;
- case 1:
- daysToAdd = 3;
- break;
- case 2:
  daysToAdd = 7;
  break;
- case 3:
+ case 1:
  daysToAdd = 14;
  break;
- case 4:
+ case 2:
  daysToAdd = 30;
  break;
- default:
+ case 3:
  daysToAdd = 60;
+ break;
+ case 4:
+ daysToAdd = 120;
+ break;
+ default:
+ daysToAdd = 180;
  break;
  }
  
