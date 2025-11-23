@@ -360,9 +360,9 @@ export default function SubjectTrackingSection({
                                   placeholder="0"
                                 />
                               </div>
-                              {(topicProgress.questionsCorrect || 0) + (topicProgress.questionsWrong || 0) > 0 && (
+                              {(topicProgress.questionsSolved || 0) > 0 && (
                                 <Badge variant="secondary" className="text-xs">
-                                  %{Math.round(((topicProgress.questionsCorrect || 0) / ((topicProgress.questionsCorrect || 0) + (topicProgress.questionsWrong || 0))) * 100)} başarı
+                                  %{Math.round(((topicProgress.questionsCorrect || 0) / (topicProgress.questionsSolved || 1)) * 100)} başarı
                                 </Badge>
                               )}
                             </div>
