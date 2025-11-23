@@ -8,6 +8,7 @@ import { STUDENT_ACADEMIC_TABS } from "@/config/tabs";
 import StandardizedAcademicSection from "./StandardizedAcademicSection";
 import StudentExamResultsSection from "./StudentExamResultsSection";
 import CalismaProgramiSection from "./CalismaProgramiSection";
+import SubjectTrackingSection from "./SubjectTrackingSection";
 import AnketlerSection from "./AnketlerSection";
 
 interface SmartAcademicDashboardProps {
@@ -23,7 +24,7 @@ export default function SmartAcademicDashboard({
  <div className="space-y-6">
  {/* Akademik Alt Sekmeler */}
  <Tabs defaultValue="performans" className="space-y-4">
- <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
+ <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-white/80 backdrop-blur-sm border border-border/40 shadow-sm">
  {STUDENT_ACADEMIC_TABS.map((tabConfig) => {
  const Icon = tabConfig.icon;
  return (
@@ -52,6 +53,10 @@ export default function SmartAcademicDashboard({
 
  <TabsContent value="calisma-programi" className="space-y-4">
  <CalismaProgramiSection studentId={studentId} />
+ </TabsContent>
+
+ <TabsContent value="konu-takibi" className="space-y-4">
+ <SubjectTrackingSection studentId={studentId} onUpdate={onUpdate} />
  </TabsContent>
 
  <TabsContent value="anketler" className="space-y-4">

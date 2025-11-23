@@ -1,0 +1,271 @@
+import { useEffect, useState, useMemo } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/organisms/Card";
+import { Badge } from "@/components/atoms/Badge";
+import { Checkbox } from "@/components/atoms/Checkbox";
+import { Input } from "@/components/atoms/Input";
+import { Button } from "@/components/atoms/Button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/organisms/Accordion";
+import {
+  loadSubjects,
+  loadTopics,
+  getProgressByStudent,
+  ensureProgressForStudent,
+  setCompletedFlag,
+  updateProgress,
+} from "@/lib/storage";
+import { CheckCircle2, Circle, BookOpen, Target } from "lucide-react";
+import { Label } from "@/components/atoms/Label";
+
+interface SubjectTrackingSectionProps {
+  studentId: string;
+  onUpdate: () => void;
+}
+
+export default function SubjectTrackingSection({
+  studentId,
+  onUpdate,
+}: SubjectTrackingSectionProps) {
+  const [subjects, setSubjects] = useState<Awaited<ReturnType<typeof loadSubjects>>>([]);
+  const [topics, setTopics] = useState<Awaited<ReturnType<typeof loadTopics>>>([]);
+  const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressByStudent>>>([]);
+  const [refresh, setRefresh] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  useEffect(() => {
+    ensureProgressForStudent(studentId).then(() => {
+      setSubjects(loadSubjects());
+      setTopics(loadTopics());
+      setProgress(getProgressByStudent(studentId));
+    });
+
+    const handleUpdate = () => {
+      setSubjects(loadSubjects());
+      setTopics(loadTopics());
+      setProgress(getProgressByStudent(studentId));
+    };
+
+    window.addEventListener('subjectsUpdated', handleUpdate);
+    window.addEventListener('topicsUpdated', handleUpdate);
+    window.addEventListener('progressUpdated', handleUpdate);
+
+    return () => {
+      window.removeEventListener('subjectsUpdated', handleUpdate);
+      window.removeEventListener('topicsUpdated', handleUpdate);
+      window.removeEventListener('progressUpdated', handleUpdate);
+    };
+  }, [studentId, refresh]);
+
+  const categories = useMemo(() => {
+    const cats = new Set(subjects.map((s) => s.category).filter(Boolean));
+    return ['all' as const, ...Array.from(cats)] as string[];
+  }, [subjects]);
+
+  const filteredSubjects = useMemo(() => {
+    if (selectedCategory === 'all') return subjects;
+    return subjects.filter((s) => s.category === selectedCategory);
+  }, [subjects, selectedCategory]);
+
+  const getTopicProgress = (topicId: string) => {
+    return progress.find((p) => p.topicId === topicId);
+  };
+
+  const handleToggleComplete = async (topicId: string, currentState: boolean) => {
+    await setCompletedFlag(studentId, topicId, !currentState);
+    setRefresh((r) => r + 1);
+    onUpdate();
+  };
+
+  const getCategoryColor = (category?: string) => {
+    switch (category) {
+      case 'TYT':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'AYT':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'LGS':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'YDT':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'School':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getCategoryStats = (category: string) => {
+    const subjectsInCategory = category === 'all' 
+      ? subjects 
+      : subjects.filter(s => s.category === category);
+    
+    const topicsInCategory = topics.filter(t => 
+      subjectsInCategory.some(s => s.id === t.subjectId)
+    );
+    
+    const completedTopics = topicsInCategory.filter(t => {
+      const prog = getTopicProgress(t.id);
+      return prog?.completedFlag;
+    });
+
+    return {
+      total: topicsInCategory.length,
+      completed: completedTopics.length,
+      percentage: topicsInCategory.length > 0 
+        ? Math.round((completedTopics.length / topicsInCategory.length) * 100)
+        : 0,
+    };
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              Konu Takibi
+            </CardTitle>
+            <CardDescription>
+              Konuların tamamlanma durumunu takip edin ve çalışma planınızı optimize edin
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <Target className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              {getCategoryStats(selectedCategory).completed} / {getCategoryStats(selectedCategory).total} tamamlandı
+            </span>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex gap-2 flex-wrap">
+          {categories.map((cat) => (
+            <Button
+              key={cat}
+              variant={selectedCategory === cat ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSelectedCategory(cat)}
+              className="gap-2"
+            >
+              {cat === 'all' ? 'Tümü' : cat}
+              <Badge variant="secondary" className="ml-1">
+                {getCategoryStats(cat).completed}/{getCategoryStats(cat).total}
+              </Badge>
+            </Button>
+          ))}
+        </div>
+
+        <Accordion type="multiple" className="w-full">
+          {filteredSubjects.map((subject) => {
+            const subjectTopics = topics.filter((t) => t.subjectId === subject.id);
+            const completedCount = subjectTopics.filter(t => getTopicProgress(t.id)?.completedFlag).length;
+            
+            if (subjectTopics.length === 0) return null;
+
+            return (
+              <AccordionItem key={subject.id} value={subject.id}>
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex items-center justify-between w-full pr-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium">{subject.name}</span>
+                      {subject.category && (
+                        <Badge variant="outline" className={getCategoryColor(subject.category)}>
+                          {subject.category}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">
+                        {completedCount} / {subjectTopics.length}
+                      </span>
+                      <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-green-500 transition-all"
+                          style={{
+                            width: `${subjectTopics.length > 0 ? (completedCount / subjectTopics.length) * 100 : 0}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2 pt-2">
+                    {subjectTopics.map((topic) => {
+                      const topicProgress = getTopicProgress(topic.id);
+                      const isCompleted = topicProgress?.completedFlag || false;
+
+                      return (
+                        <div
+                          key={topic.id}
+                          className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                            isCompleted
+                              ? 'bg-green-50 border-green-200'
+                              : 'bg-white hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 flex-1">
+                            <Checkbox
+                              checked={isCompleted}
+                              onCheckedChange={() => handleToggleComplete(topic.id, isCompleted)}
+                              className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                            />
+                            <div className="flex items-center gap-2">
+                              {isCompleted ? (
+                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <Circle className="h-4 w-4 text-gray-400" />
+                              )}
+                              <span
+                                className={`${
+                                  isCompleted ? 'text-green-900 font-medium' : 'text-gray-700'
+                                }`}
+                              >
+                                {topic.name}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {topicProgress && (
+                              <>
+                                <span>
+                                  {topicProgress.completed} / {topic.avgMinutes} dk
+                                </span>
+                                {topicProgress.lastStudied && (
+                                  <Badge variant="outline" className="text-xs">
+                                    Son: {new Date(topicProgress.lastStudied).toLocaleDateString('tr-TR')}
+                                  </Badge>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+
+        {filteredSubjects.length === 0 && (
+          <div className="text-center py-8 text-muted-foreground">
+            <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
+            <p>Bu kategoride ders bulunamadı</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}

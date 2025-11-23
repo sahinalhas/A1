@@ -9,6 +9,7 @@ import {
   Calendar,
   ClipboardList,
   Wand2,
+  ListChecks,
 } from "lucide-react";
 import { TabConfig } from "./types";
 
@@ -122,6 +123,13 @@ export const STUDENT_ACADEMIC_TABS: TabConfig[] = [
     label: "Çalışma Programı",
     icon: Calendar,
     description: "Haftalık çalışma programı ve ders programı",
+    variant: "pills"
+  },
+  {
+    value: "konu-takibi",
+    label: "Konu Takibi",
+    icon: ListChecks,
+    description: "Konu bazlı ilerleme ve soru takibi",
     variant: "pills"
   },
   {
