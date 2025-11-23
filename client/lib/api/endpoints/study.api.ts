@@ -5,7 +5,8 @@ import type {
  StudySession, 
  WeeklySlot, 
  TopicProgress,
- ScheduleTemplate
+ ScheduleTemplate,
+ PlannedEntry
 } from "../../types/study.types";
 import { apiClient, createApiHandler } from '../core/client';
 import { API_ERROR_MESSAGES } from "../../constants/messages.constants";
@@ -611,4 +612,34 @@ export async function deleteStudyAssignment(id: string): Promise<void> {
  successMessage: 'Ödev silindi',
  errorMessage: 'Ödev silinemedi',
  });
+}
+
+export async function savePlannedTopics(
+ studentId: string,
+ weekStartDate: string,
+ plannedTopics: PlannedEntry[]
+): Promise<void> {
+ return apiClient.post(
+ `/api/study/planned-topics/${studentId}/${weekStartDate}`,
+ plannedTopics,
+ {
+ showSuccessToast: false,
+ errorMessage: 'Konu bazlı plan kaydedilemedi',
+ }
+ );
+}
+
+export async function getPlannedTopics(
+ studentId: string,
+ weekStartDate: string
+): Promise<PlannedEntry[]> {
+ try {
+ return await apiClient.get<PlannedEntry[]>(
+ `/api/study/planned-topics/${studentId}/${weekStartDate}`,
+ { showErrorToast: false }
+ );
+ } catch (error) {
+ console.error('Error loading planned topics:', error);
+ return [];
+ }
 }

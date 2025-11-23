@@ -24,3 +24,16 @@ export interface WeeklySlotResponse {
   end: string;
   subjectId: string;
 }
+
+export interface PlannedTopic {
+  id: string;
+  studentId: string;
+  weekStartDate: string;
+  date: string;
+  start: string;
+  end: string;
+  subjectId: string;
+  topicId: string;
+  allocated: number;
+  remainingAfter: number;
+}

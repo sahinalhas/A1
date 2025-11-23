@@ -1,5 +1,5 @@
 import * as repository from '../repository/study.repository.js';
-import type { StudyAssignment, WeeklySlot, WeeklySlotResponse } from '../types/study.types.js';
+import type { StudyAssignment, WeeklySlot, WeeklySlotResponse, PlannedTopic } from '../types/study.types.js';
 import { randomUUID } from 'crypto';
 
 export function validateStudyAssignment(assignment: any): { valid: boolean; error?: string } {
@@ -164,4 +164,37 @@ export function deleteSlot(id: string): void {
   }
   
   repository.deleteWeeklySlot(id);
+}
+
+export function savePlannedTopics(plannedTopics: any, studentId: string, weekStartDate: string): void {
+  if (!Array.isArray(plannedTopics)) {
+    throw new Error("Konu planı dizi olmalıdır");
+  }
+  if (!studentId || !weekStartDate) {
+    throw new Error("Öğrenci ID ve hafta başlangıç tarihi gerekli");
+  }
+  
+  repository.deletePlannedTopicsByWeek(studentId, weekStartDate);
+  
+  const topics: PlannedTopic[] = plannedTopics.map((t: any) => ({
+    id: t.id || randomUUID(),
+    studentId,
+    weekStartDate,
+    date: t.date,
+    start: t.start,
+    end: t.end,
+    subjectId: t.subjectId,
+    topicId: t.topicId,
+    allocated: t.allocated,
+    remainingAfter: t.remainingAfter,
+  }));
+  
+  repository.insertPlannedTopics(topics);
+}
+
+export function getPlannedTopics(studentId: string, weekStartDate: string): PlannedTopic[] {
+  if (!studentId || !weekStartDate) {
+    throw new Error("Öğrenci ID ve hafta başlangıç tarihi gerekli");
+  }
+  return repository.getPlannedTopics(studentId, weekStartDate);
 }

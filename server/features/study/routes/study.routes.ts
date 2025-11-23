@@ -127,3 +127,30 @@ export const deleteWeeklySlotHandler: RequestHandler = (req, res) => {
       .json({ success: false, error: errorMessage });
   }
 };
+
+export const savePlannedTopicsHandler: RequestHandler = (req, res) => {
+  try {
+    const { studentId, weekStartDate } = req.params;
+    const plannedTopics = req.body;
+    
+    studyService.savePlannedTopics(plannedTopics, studentId, weekStartDate);
+    res.json({ success: true, message: 'Konu bazlı plan kaydedildi' });
+  } catch (error) {
+    console.error('Error saving planned topics:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Konu bazlı plan kaydedilemedi';
+    res.status(400).json({ success: false, error: errorMessage });
+  }
+};
+
+export const getPlannedTopicsHandler: RequestHandler = (req, res) => {
+  try {
+    const { studentId, weekStartDate } = req.params;
+    
+    const topics = studyService.getPlannedTopics(studentId, weekStartDate);
+    res.json(topics);
+  } catch (error) {
+    console.error('Error getting planned topics:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Konu bazlı plan getirilirken hata oluştu';
+    res.status(400).json({ success: false, error: errorMessage });
+  }
+};

@@ -1,5 +1,5 @@
 import getDatabase from '../../../lib/database.js';
-import type { StudyAssignment, WeeklySlot } from '../types/study.types.js';
+import type { StudyAssignment, WeeklySlot, PlannedTopic } from '../types/study.types.js';
 
 let statements: any = null;
 let isInitialized = false;
@@ -31,6 +31,12 @@ function ensureInitialized(): void {
       WHERE id = ?
     `),
     deleteWeeklySlot: db.prepare('DELETE FROM weekly_slots WHERE id = ?'),
+    getPlannedTopics: db.prepare('SELECT * FROM planned_topics WHERE studentId = ? AND weekStartDate = ? ORDER BY date, start'),
+    insertPlannedTopic: db.prepare(`
+      INSERT OR REPLACE INTO planned_topics (id, studentId, weekStartDate, date, start, end, subjectId, topicId, allocated, remainingAfter, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `),
+    deletePlannedTopicsByWeek: db.prepare('DELETE FROM planned_topics WHERE studentId = ? AND weekStartDate = ?'),
   };
   
   isInitialized = true;
@@ -142,6 +148,39 @@ export function deleteWeeklySlot(id: string): void {
     statements.deleteWeeklySlot.run(id);
   } catch (error) {
     console.error('Error deleting weekly slot:', error);
+    throw error;
+  }
+}
+
+export function getPlannedTopics(studentId: string, weekStartDate: string): PlannedTopic[] {
+  try {
+    ensureInitialized();
+    return statements.getPlannedTopics.all(studentId, weekStartDate) as PlannedTopic[];
+  } catch (error) {
+    console.error('Error getting planned topics:', error);
+    return [];
+  }
+}
+
+export function insertPlannedTopics(topics: PlannedTopic[]): void {
+  try {
+    ensureInitialized();
+    const insert = statements.insertPlannedTopic;
+    for (const t of topics) {
+      insert.run(t.id, t.studentId, t.weekStartDate, t.date, t.start, t.end, t.subjectId, t.topicId, t.allocated, t.remainingAfter);
+    }
+  } catch (error) {
+    console.error('Error inserting planned topics:', error);
+    throw error;
+  }
+}
+
+export function deletePlannedTopicsByWeek(studentId: string, weekStartDate: string): void {
+  try {
+    ensureInitialized();
+    statements.deletePlannedTopicsByWeek.run(studentId, weekStartDate);
+  } catch (error) {
+    console.error('Error deleting planned topics:', error);
     throw error;
   }
 }

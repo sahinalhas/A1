@@ -91,10 +91,17 @@ export async function planWeek(
  if (remain <= 0) continue;
  let guard = 0;
  let currentStartMin = minutesBetween("00:00", s.start);
- while (remain > 0 && guard++ < 200) {
+ const slotStartTime = minutesBetween("00:00", s.start);
+ const slotEndTime = minutesBetween("00:00", s.end);
+ const maxAllowedPerSlot = slotEndTime - slotStartTime;
+ let usedInSlot = 0;
+ 
+ while (remain > 0 && guard++ < 200 && usedInSlot < maxAllowedPerSlot) {
  const nxt = pickNext(s.subjectId);
  if (!nxt) break;
- const alloc = Math.min(remain, nxt.remaining);
+ const alloc = Math.min(remain, nxt.remaining, maxAllowedPerSlot - usedInSlot);
+ if (alloc <= 0) break;
+ 
  const date = dateFromWeekStart(weekStartISO, s.day);
  const startH = String(Math.floor(currentStartMin / 60)).padStart(2,"0");
  const startM = String(currentStartMin % 60).padStart(2,"0");
@@ -117,6 +124,7 @@ export async function planWeek(
  st.remaining = remainingAfter;
  if (st.remaining === 0) st.done = true;
  remain -= alloc;
+ usedInSlot += alloc;
  currentStartMin = endMin;
  }
  }
@@ -268,8 +276,12 @@ export async function planWeekSmart(
  let remainingTime = minutesBetween(slot.start, slot.end);
  let currentMin = minutesBetween("00:00", slot.start);
  let guard = 0;
+ const slotStartTime = minutesBetween("00:00", slot.start);
+ const slotEndTime = minutesBetween("00:00", slot.end);
+ const maxAllowedPerSlot = slotEndTime - slotStartTime;
+ let usedInSlot = 0;
  
- while (remainingTime > 0 && guard++ < 200) {
+ while (remainingTime > 0 && guard++ < 200 && usedInSlot < maxAllowedPerSlot) {
  const candidateTopics = subjectTopics
  .filter(t => {
  const prog = progMap.get(t.id);
@@ -306,12 +318,14 @@ export async function planWeekSmart(
  const bestTopic = candidateTopics[0].topic;
  const prog = progMap.get(bestTopic.id)!;
  
- // For review topics, allocate smaller chunks (15-30 min)
+ // For review topics, allocate smaller chunks but don't exceed remaining
  const effectiveRemaining = prog.isReview 
-   ? Math.min(30, prog.remaining || 30)
+   ? Math.min(prog.remaining || 15, 30)
    : prog.remaining;
  
- const allocated = Math.min(remainingTime, effectiveRemaining);
+ const allocated = Math.min(remainingTime, effectiveRemaining, maxAllowedPerSlot - usedInSlot);
+ 
+ if (allocated <= 0) break;
  
  const date = dateFromWeekStart(weekStartISO, slot.day);
  const startH = String(Math.floor(currentMin / 60)).padStart(2,"0");
@@ -329,7 +343,7 @@ export async function planWeekSmart(
  subjectId: slot.subjectId,
  topicId: bestTopic.id,
  allocated,
- remainingAfter: prog.isReview ? 0 : prog.remaining - allocated
+ remainingAfter: prog.isReview ? 0 : Math.max(0, prog.remaining - allocated)
  });
  
  // Review topics don't reduce remaining minutes
@@ -339,6 +353,7 @@ export async function planWeekSmart(
  }
  
  remainingTime -= allocated;
+ usedInSlot += allocated;
  currentMin = endMin;
  }
  }
