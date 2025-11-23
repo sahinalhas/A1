@@ -207,12 +207,12 @@ export default function TopicPlanner({ sid, studentName }: { sid: string; studen
  }
  };
 
-  const handleExportPDF = () => {
-    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: true, print: false });
+  const handleExportPDF = async () => {
+    await generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: true, print: false });
   };
 
-  const handlePrintPDF = () => {
-    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: false, print: true });
+  const handlePrintPDF = async () => {
+    await generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: false, print: true });
   };
 
  return (

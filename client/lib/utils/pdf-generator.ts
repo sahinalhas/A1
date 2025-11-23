@@ -1,4 +1,5 @@
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface PlanEntry {
   date: string;
@@ -91,15 +92,15 @@ function generateHTML(
       const progressColor = pct >= 75 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
 
       tableRows += `
-        <tr>
-          <td class="time-cell">${p.start.substring(0, 5)}</td>
-          <td>${sub?.name || '-'}</td>
-          <td>${top?.name || '-'}</td>
-          <td class="duration-cell">${p.allocated}dk</td>
-          <td class="progress-cell">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${pct}%; background: ${progressColor};"></div>
-              <span class="progress-text">${pct}%</span>
+        <tr style="border-bottom: 1px solid rgba(0,0,0,0.04);">
+          <td style="padding: 10px 12px; font-size: 12px; font-weight: 600; color: #667eea;">${p.start.substring(0, 5)}</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #2d3748;">${sub?.name || '-'}</td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #2d3748;">${top?.name || '-'}</td>
+          <td style="padding: 10px 12px; font-size: 12px; text-align: center; font-weight: 500; color: #2d3748;">${p.allocated}dk</td>
+          <td style="padding: 8px 12px; font-size: 12px;">
+            <div style="background: #e2e8f0; border-radius: 4px; height: 22px; position: relative; overflow: hidden; display: flex; align-items: center;">
+              <div style="width: ${pct}%; height: 100%; background: ${progressColor}; transition: width 0.3s ease;"></div>
+              <span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; color: #2d3748; z-index: 1;">${pct}%</span>
             </div>
           </td>
         </tr>
@@ -107,23 +108,23 @@ function generateHTML(
     });
 
     daysHTML += `
-      <div class="day-section">
-        <div class="day-header" style="background: ${headerColor};">
-          <div class="day-info">
-            <h3>${day.label}</h3>
-            <p>${date}</p>
+      <div style="margin-bottom: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); page-break-inside: avoid;">
+        <div style="background: ${headerColor}; color: white; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
+          <div>
+            <h3 style="font-size: 15px; margin: 0; padding: 0; margin-bottom: 3px;">${day.label}</h3>
+            <p style="font-size: 11px; opacity: 0.9; margin: 0; padding: 0;">${date}</p>
           </div>
-          <div class="day-duration">${dayTotal} dakika</div>
+          <div style="font-size: 13px; opacity: 0.95;">${dayTotal} dakika</div>
         </div>
-        <div class="day-content" style="background: ${bgColor};">
-          <table>
+        <div style="background: ${bgColor}; padding: 0;">
+          <table style="width: 100%; border-collapse: collapse;">
             <thead>
-              <tr>
-                <th style="width: 12%;">Saat</th>
-                <th style="width: 22%;">Ders</th>
-                <th style="width: 38%;">Konu</th>
-                <th style="width: 12%;">Süre</th>
-                <th style="width: 16%;">İlerleme</th>
+              <tr style="background: rgba(0,0,0,0.03); border-bottom: 1px solid rgba(0,0,0,0.08);">
+                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 12%;">Saat</th>
+                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 22%;">Ders</th>
+                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 38%;">Konu</th>
+                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 12%;">Süre</th>
+                <th style="padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; width: 16%;">İlerleme</th>
               </tr>
             </thead>
             <tbody>
@@ -136,225 +137,37 @@ function generateHTML(
   });
 
   return `
-    <!DOCTYPE html>
-    <html lang="tr">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Haftalık Konu Planı</title>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-          background: #f8f9fa;
-          color: #2d3748;
-          line-height: 1.5;
-        }
-        .container {
-          background: white;
-          padding: 32px;
-        }
-        .header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 28px;
-          border-radius: 10px;
-          margin-bottom: 28px;
-          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
-        }
-        .header h1 {
-          font-size: 26px;
-          font-weight: 700;
-          margin-bottom: 6px;
-          letter-spacing: -0.5px;
-        }
-        .header p {
-          font-size: 13px;
-          opacity: 0.95;
-          margin-bottom: 16px;
-        }
-        .header-info {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-        }
-        .info-item {
-          background: rgba(255, 255, 255, 0.12);
-          backdrop-filter: blur(10px);
-          padding: 10px;
-          border-radius: 6px;
-          font-size: 11px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .info-item strong {
-          display: block;
-          font-size: 12px;
-          margin-bottom: 4px;
-          font-weight: 600;
-        }
-        .day-section {
-          margin-bottom: 20px;
-          border-radius: 8px;
-          overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-        .day-header {
-          color: white;
-          padding: 14px 16px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-weight: 600;
-        }
-        .day-info h3 {
-          font-size: 15px;
-          margin-bottom: 3px;
-        }
-        .day-info p {
-          font-size: 11px;
-          opacity: 0.9;
-        }
-        .day-duration {
-          font-size: 13px;
-          opacity: 0.95;
-        }
-        .day-content {
-          padding: 0;
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        thead tr {
-          background: rgba(0, 0, 0, 0.03);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        th {
-          padding: 10px 12px;
-          text-align: left;
-          font-size: 11px;
-          font-weight: 600;
-          color: #4a5568;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        tbody tr {
-          border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        tbody tr:hover {
-          background: rgba(0, 0, 0, 0.01);
-        }
-        td {
-          padding: 10px 12px;
-          font-size: 12px;
-          color: #2d3748;
-        }
-        .time-cell {
-          font-weight: 600;
-          color: #667eea;
-        }
-        .duration-cell {
-          text-align: center;
-          font-weight: 500;
-        }
-        .progress-cell {
-          padding: 8px 12px;
-        }
-        .progress-bar {
-          background: #e2e8f0;
-          border-radius: 4px;
-          height: 22px;
-          position: relative;
-          overflow: hidden;
-          display: flex;
-          align-items: center;
-        }
-        .progress-fill {
-          height: 100%;
-          transition: width 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-        }
-        .progress-text {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 10px;
-          font-weight: 700;
-          color: #2d3748;
-          z-index: 1;
-        }
-        .footer {
-          margin-top: 32px;
-          padding-top: 16px;
-          border-top: 1px solid #e2e8f0;
-          text-align: center;
-          font-size: 10px;
-          color: #718096;
-        }
-        .footer p {
-          margin-bottom: 4px;
-        }
-        .footer strong {
-          color: #4a5568;
-        }
-        @page {
-          margin: 0;
-          size: A4;
-        }
-        @media print {
-          body {
-            background: white;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            padding: 16px;
-            background: white;
-            box-shadow: none;
-          }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>📚 Haftalık Konu Planı</h1>
-          <p>${studentName ? `Öğrenci: ${studentName}` : `Öğrenci ID: ${studentId}`}</p>
-          <div class="header-info">
-            <div class="info-item">
-              <strong>📅 Dönem</strong>
-              ${dateRange}
-            </div>
-            <div class="info-item">
-              <strong>⏱️ Toplam Süre</strong>
-              ${totalHours}s ${totalMins}dk
-            </div>
-            <div class="info-item">
-              <strong>📖 Toplam Konular</strong>
-              ${plan.length} konu
-            </div>
+    <div style="background: white; padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; color: #2d3748; line-height: 1.5;">
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 28px; border-radius: 10px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
+        <h1 style="font-size: 26px; font-weight: 700; margin: 0 0 6px 0; letter-spacing: -0.5px;">📚 Haftalık Konu Planı</h1>
+        <p style="font-size: 13px; opacity: 0.95; margin: 0 0 16px 0;">${studentName ? `Öğrenci: ${studentName}` : `Öğrenci ID: ${studentId}`}</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); padding: 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(255, 255, 255, 0.2);">
+            <strong style="display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600;">📅 Dönem</strong>
+            ${dateRange}
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); padding: 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(255, 255, 255, 0.2);">
+            <strong style="display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600;">⏱️ Toplam Süre</strong>
+            ${totalHours}s ${totalMins}dk
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); padding: 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(255, 255, 255, 0.2);">
+            <strong style="display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600;">📖 Toplam Konular</strong>
+            ${plan.length} konu
           </div>
         </div>
-        <div class="content">
-          ${daysHTML}
-        </div>
-        <div class="footer">
-          <p><strong>Oluşturulma:</strong> ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}</p>
-          <p>Rehber360 - Öğrenci Rehberlik Sistemi</p>
-        </div>
       </div>
-    </body>
-    </html>
+      <div>
+        ${daysHTML}
+      </div>
+      <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096;">
+        <p style="margin: 0 0 4px 0;"><strong style="color: #4a5568;">Oluşturulma:</strong> ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}</p>
+        <p style="margin: 0;">Rehber360 - Öğrenci Rehberlik Sistemi</p>
+      </div>
+    </div>
   `;
 }
 
-export function generateTopicPlanPDF(
+export async function generateTopicPlanPDF(
   plan: PlanEntry[],
   planByDate: Map<string, PlanEntry[]>,
   weekStart: string,
@@ -365,46 +178,74 @@ export function generateTopicPlanPDF(
   options: { download?: boolean; print?: boolean } = { download: true, print: false }
 ) {
   try {
-    const html = generateHTML(plan, planByDate, weekStart, subjects, topics, studentId, studentName);
-    const element = document.createElement('div');
-    element.innerHTML = html;
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
+    const htmlContent = generateHTML(plan, planByDate, weekStart, subjects, topics, studentId, studentName);
     const fileName = `Haftalik_Konu_Plani_${weekStart}_${studentName?.replace(/[^a-zA-Z0-9]/g, '_') || studentId}.pdf`;
 
-    const opt = {
-      margin: 5,
-      filename: fileName,
-      image: { type: 'jpeg' as const, quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] },
-    };
+    // Create temporary container
+    const container = document.createElement('div');
+    container.innerHTML = htmlContent;
+    container.style.display = 'block';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.zIndex = '-10000';
+    container.style.visibility = 'hidden';
+    container.style.width = '210mm';
+    container.style.height = 'auto';
+    container.style.padding = '0';
+    container.style.margin = '0';
+    document.body.appendChild(container);
 
-    if (options.print) {
-      html2pdf()
-        .set(opt as any)
-        .from(element)
-        .toPdf()
-        .get('pdf')
-        .then((pdf: any) => {
-          const printWindow = window.open(pdf.output('bloburi'), '_blank');
-          if (printWindow) {
-            setTimeout(() => {
-              printWindow.print();
-            }, 100);
-          }
-          document.body.removeChild(element);
-        });
-    } else if (options.download) {
-      html2pdf()
-        .set(opt as any)
-        .from(element)
-        .save()
-        .then(() => {
-          document.body.removeChild(element);
-        });
+    // Wait for rendering
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Convert to canvas
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+    });
+
+    // Create PDF
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth - 10;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let yPos = 5;
+
+    // Add pages
+    pdf.addImage(imgData, 'JPEG', 5, yPos, imgWidth, imgHeight);
+    yPos += imgHeight + 5;
+
+    while (yPos > pageHeight) {
+      pdf.addPage();
+      yPos -= pageHeight;
+      pdf.addImage(imgData, 'JPEG', 5, yPos - (imgHeight + 5), imgWidth, imgHeight);
+      yPos += 5;
+    }
+
+    // Clean up
+    document.body.removeChild(container);
+
+    // Download or print
+    if (options.download) {
+      pdf.save(fileName);
+    } else if (options.print) {
+      const printWindow = window.open(pdf.output('bloburi'), '_blank');
+      if (printWindow) {
+        setTimeout(() => {
+          printWindow.print();
+        }, 500);
+      }
     }
   } catch (error) {
     console.error('PDF oluşturulurken hata:', error);
