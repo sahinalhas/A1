@@ -13,11 +13,13 @@ import AnketlerSection from "./AnketlerSection";
 
 interface SmartAcademicDashboardProps {
  studentId: string;
+ studentName?: string;
  onUpdate: () => void;
 }
 
 export default function SmartAcademicDashboard({
  studentId,
+ studentName,
  onUpdate
 }: SmartAcademicDashboardProps) {
  return (
@@ -52,7 +54,7 @@ export default function SmartAcademicDashboard({
  </TabsContent>
 
  <TabsContent value="calisma-programi" className="space-y-4">
- <CalismaProgramiSection studentId={studentId} />
+ <CalismaProgramiSection studentId={studentId} studentName={studentName} />
  </TabsContent>
 
  <TabsContent value="konu-takibi" className="space-y-4">

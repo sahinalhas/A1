@@ -74,7 +74,7 @@ function getEnergyIcon(energyLevel?: 'high' | 'medium' | 'low') {
  return { icon: Clock, color: 'text-gray-600', title: 'Düşük enerji' };
 }
 
-export default function TopicPlanner({ sid }: { sid: string }) {
+export default function TopicPlanner({ sid, studentName }: { sid: string; studentName?: string }) {
  const [subjects, setSubjects] = useState<Awaited<ReturnType<typeof loadSubjects>>>([]);
  const [topics, setTopics] = useState<Awaited<ReturnType<typeof loadTopics>>>([]);
  const [weekStart, setWeekStart] = useState(() =>
@@ -208,11 +208,11 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  };
 
   const handleExportPDF = () => {
-    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, { download: true, print: false });
+    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: true, print: false });
   };
 
   const handlePrintPDF = () => {
-    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, { download: false, print: true });
+    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: false, print: true });
   };
 
  return (

@@ -23,6 +23,14 @@ interface Topic {
   avgMinutes?: number;
 }
 
+// Color scheme for different exam types
+const categoryColors: Record<string, { header: [number, number, number]; light: [number, number, number] }> = {
+  'TYT': { header: [59, 130, 246], light: [219, 234, 254] },      // Blue
+  'AYT': { header: [168, 85, 247], light: [243, 232, 255] },      // Purple
+  'YDT': { header: [249, 115, 22], light: [255, 237, 213] },      // Orange
+  'default': { header: [100, 116, 139], light: [241, 245, 249] }  // Slate
+};
+
 export function generateTopicPlanPDF(
   plan: PlanEntry[],
   planByDate: Map<string, PlanEntry[]>,
@@ -30,6 +38,7 @@ export function generateTopicPlanPDF(
   subjects: Subject[],
   topics: Topic[],
   studentId: string,
+  studentName?: string,
   options: { download?: boolean; print?: boolean } = { download: true, print: false }
 ) {
   const doc = new jsPDF({
@@ -53,36 +62,59 @@ export function generateTopicPlanPDF(
   const margin = 15;
   let yPos = margin;
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(18);
-  doc.text('Haftalık Konu Planı', margin, yPos);
-  yPos += 8;
+  // ===== HEADER SECTION (Colorful Banner) =====
+  doc.setFillColor(59, 130, 246);
+  doc.rect(0, 0, pageWidth, 40, 'F');
 
+  // Logo / Title
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(255, 255, 255);
+  doc.text('📚 Haftalık Konu Planı', margin + 2, 12);
+
+  // Subtitle with student name
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100);
-  
+  doc.setTextColor(219, 234, 254);
+  const displayName = studentName ? `Öğrenci: ${studentName}` : `Öğrenci ID: ${studentId}`;
+  doc.text(displayName, margin + 2, 20);
+
+  yPos = 42;
+
+  // ===== INFO SECTION =====
+  doc.setTextColor(40, 40, 40);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+
   const startDate = new Date(weekStart + 'T00:00:00');
   const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
   const dateRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
-  doc.text(dateRange, margin, yPos);
-  yPos += 10;
-
-  doc.setDrawColor(220);
-  doc.line(margin, yPos, pageWidth - margin, yPos);
-  yPos += 8;
 
   const totalMinutes = plan.reduce((sum, p) => sum + p.allocated, 0);
   const totalHours = Math.floor(totalMinutes / 60);
   const totalMins = totalMinutes % 60;
 
-  doc.setFontSize(9);
-  doc.setTextColor(80);
-  doc.text(`Toplam Çalışma Süresi: ${totalHours} saat ${totalMins} dakika`, margin, yPos);
-  yPos += 6;
-  doc.text(`Toplam Konu Sayısı: ${plan.length}`, margin, yPos);
-  yPos += 10;
+  // Info cards
+  const infoItems = [
+    `📅 ${dateRange}`,
+    `⏱️ Toplam: ${totalHours}s ${totalMins}dk`,
+    `📖 ${plan.length} Konu`
+  ];
 
+  let infoX = margin;
+  for (const item of infoItems) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text(item, infoX, yPos);
+    infoX += 65;
+  }
+
+  yPos += 12;
+  doc.setDrawColor(200, 200, 200);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  yPos += 8;
+
+  // ===== DAILY SECTIONS =====
   DAYS.forEach((day) => {
     const date = dateFromWeekStartLocal(weekStart, day.value);
     const entries = (planByDate.get(date) || [])
@@ -91,34 +123,42 @@ export function generateTopicPlanPDF(
 
     if (entries.length === 0) return;
 
-    if (yPos > pageHeight - 50) {
+    if (yPos > pageHeight - 60) {
       doc.addPage();
       yPos = margin;
     }
 
-    doc.setFillColor(245, 245, 250);
-    doc.rect(margin, yPos - 5, pageWidth - 2 * margin, 10, 'F');
+    // Day header with colored background
+    const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
+    
+    doc.setFillColor(59, 130, 246);
+    doc.rect(margin, yPos - 6, pageWidth - 2 * margin, 10, 'F');
 
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
-    doc.setTextColor(0);
-    doc.text(`${day.label} - ${date}`, margin + 2, yPos);
+    doc.setTextColor(255, 255, 255);
+    doc.text(`${day.label} • ${date}`, margin + 3, yPos + 1);
 
-    const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
-    doc.setTextColor(100);
-    doc.text(`${dayTotal} dk`, pageWidth - margin - 15, yPos);
-    yPos += 8;
+    doc.setTextColor(219, 234, 254);
+    doc.text(`${dayTotal} dakika`, pageWidth - margin - 20, yPos + 1);
 
+    yPos += 10;
+
+    // Create table data with color coding
     const tableData = entries.map((p) => {
       const sub = subjects.find((s) => s.id === p.subjectId);
       const top = topics.find((t) => t.id === p.topicId);
       const total = top?.avgMinutes || 0;
       const pct = total > 0 ? Math.round(((total - p.remainingAfter) / total) * 100) : 0;
 
+      // Get category color
+      const cat = sub?.category || 'default';
+      const colors = categoryColors[cat] || categoryColors['default'];
+
       return [
-        `${p.start} - ${p.end}`,
+        `${p.start}-${p.end}`,
         `${sub?.name || ''}${sub?.category ? ` (${sub.category})` : ''}`,
         top?.name || '',
         `${p.allocated} dk`,
@@ -126,65 +166,72 @@ export function generateTopicPlanPDF(
       ];
     });
 
-    autoTable(doc, {
+    // Table with colored headers based on category
+    const tableConfig: any = {
       startY: yPos,
       head: [['Saat', 'Ders', 'Konu', 'Süre', 'İlerleme']],
       body: tableData,
-      theme: 'plain',
+      theme: 'grid',
       headStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [100, 100, 100],
-        fontSize: 8,
+        fillColor: [59, 130, 246],
+        textColor: [255, 255, 255],
+        fontSize: 9,
         fontStyle: 'bold',
         halign: 'left',
-        cellPadding: 2,
+        cellPadding: 3,
       },
       bodyStyles: {
         textColor: [40, 40, 40],
         fontSize: 8,
-        cellPadding: 2,
-        lineColor: [230, 230, 230],
-        lineWidth: 0.1,
+        cellPadding: 2.5,
+        lineColor: [219, 234, 254],
+        lineWidth: 0.5,
       },
       alternateRowStyles: {
-        fillColor: [252, 252, 254],
+        fillColor: [248, 250, 252],
       },
       columnStyles: {
         0: { cellWidth: 25, fontStyle: 'bold' },
         1: { cellWidth: 35 },
         2: { cellWidth: 70 },
         3: { cellWidth: 20, halign: 'right' },
-        4: { cellWidth: 18, halign: 'right' },
+        4: { cellWidth: 18, halign: 'center', fontStyle: 'bold' },
       },
       margin: { left: margin, right: margin },
       didDrawPage: function (data: any) {
         yPos = data.cursor.y + 5;
       },
-    });
+    };
 
+    autoTable(doc, tableConfig);
     yPos = (doc.lastAutoTable?.finalY || yPos) + 8;
   });
 
-  if (yPos > pageHeight - 30) {
+  // ===== FOOTER SECTION =====
+  if (yPos > pageHeight - 20) {
     doc.addPage();
     yPos = margin;
   }
 
-  yPos += 5;
-  doc.setDrawColor(220);
+  yPos = pageHeight - 15;
+  doc.setDrawColor(200, 200, 200);
   doc.line(margin, yPos, pageWidth - margin, yPos);
-  yPos += 5;
 
+  yPos += 4;
   doc.setFontSize(7);
-  doc.setTextColor(150);
+  doc.setTextColor(120, 120, 120);
+  doc.setFont('helvetica', 'normal');
   doc.text(
-    `Oluşturulma Tarihi: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}`,
+    `Oluşturulma: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}`,
     margin,
     yPos
   );
-  doc.text('Rehber360 - Öğrenci Rehberlik Sistemi', pageWidth - margin - 50, yPos);
 
-  const fileName = `Haftalik_Konu_Plani_${weekStart}.pdf`;
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(59, 130, 246);
+  doc.text('Rehber360 - Öğrenci Rehberlik Sistemi', pageWidth - margin - 60, yPos);
+
+  const fileName = `Haftalik_Konu_Plani_${weekStart}_${studentName?.replace(/\s+/g, '_') || studentId}.pdf`;
   
   if (options.print) {
     const blob = doc.output('blob');

@@ -77,7 +77,7 @@ export function StudentProfileTabs({
 
       {/* Akademik Durum */}
       <TabsContent value="academic" className="space-y-3">
-        <AcademicTab studentId={studentId} onUpdate={onUpdate} />
+        <AcademicTab studentId={studentId} studentName={studentName} onUpdate={onUpdate} />
       </TabsContent>
 
       {/* Psikososyal Durum */}
