@@ -51,7 +51,7 @@ function getDeadlineUrgency(deadline?: string) {
  const daysUntil = Math.floor(
  (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
  );
- 
+
  if (daysUntil < 0) return { level: 'expired', text: 'Geçti', color: 'text-red-600 bg-red-50' };
  if (daysUntil <= 3) return { level: 'urgent', text: `${daysUntil}g`, color: 'text-red-600 bg-red-50' };
  if (daysUntil <= 7) return { level: 'soon', text: `${daysUntil}g`, color: 'text-orange-600 bg-orange-50' };
@@ -78,22 +78,22 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
  const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressByStudent>>>([]);
- 
+
  const updateTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
 
  useEffect(() => {
  setSubjects(loadSubjects());
  setTopics(loadTopics());
  setProgress(getProgressByStudent(sid));
- 
+
  const handleSubjectsUpdate = () => setSubjects(loadSubjects());
  const handleTopicsUpdate = () => setTopics(loadTopics());
  const handleProgressUpdate = () => setProgress(getProgressByStudent(sid));
- 
+
  window.addEventListener('subjectsUpdated', handleSubjectsUpdate);
  window.addEventListener('topicsUpdated', handleTopicsUpdate);
  window.addEventListener('progressUpdated', handleProgressUpdate);
- 
+
  return () => {
  window.removeEventListener('subjectsUpdated', handleSubjectsUpdate);
  window.removeEventListener('topicsUpdated', handleTopicsUpdate);
@@ -138,7 +138,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
   };
 
   const handleUpdateQuestionStats = useCallback(async (
-    topicId: string, 
+    topicId: string,
     field: 'questionsSolved' | 'questionsCorrect' | 'questionsWrong',
     value: number
   ) => {
@@ -149,14 +149,14 @@ export default function TopicPlanner({ sid }: { sid: string }) {
 
     updateTimeoutRef.current[timeoutKey] = setTimeout(async () => {
       setProgress(prevProgress => {
-        const updated = prevProgress.map(p => 
+        const updated = prevProgress.map(p =>
           p.topicId === topicId ? { ...p, [field]: value } : p
         );
-        
+
         saveProgress(updated).catch(error => {
           console.error('Error updating question stats:', error);
         });
-        
+
         return updated;
       });
     }, 500);
@@ -203,7 +203,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  Planı Uygula
  </Button>
  </div>
- 
+
  <div className="flex flex-col sm:flex-row gap-4">
  <div className="space-y-1 flex-1">
  <div className="flex items-center space-x-2">
@@ -218,12 +218,12 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  </div>
  {useSmartPlanning && (
  <p className="text-xs text-muted-foreground ml-10">
- Konular deadline, öncelik, zorluk ve enerji seviyesine göre en uygun saatlere yerleştirilir. 
+ Konular deadline, öncelik, zorluk ve enerji seviyesine göre en uygun saatlere yerleştirilir.
  Sabah saatleri (08:00-11:00) zor konular, öğleden sonra (14:00-17:00) orta, akşam düşük enerji gerektiren konular için kullanılır.
  </p>
  )}
  </div>
- 
+
  <div className="flex gap-2">
  <Button
  variant={viewMode === 'list' ? 'default' : 'outline'}
@@ -310,15 +310,26 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  : 0;
  const deadlineInfo = getDeadlineUrgency(top?.deadline);
  const energyInfo = getEnergyIcon(top?.energyLevel);
+ const isDueForReview = getTopicsDueForReview(sid).find(r => r.topicId === p.topicId);
+ const isUpcomingReview = getUpcomingReviews(sid).find(r => r.topicId === p.topicId);
  return (
  <div
  key={`${p.topicId}-${i}`}
- className={`rounded border p-2 text-sm cursor-pointer hover:shadow-md transition-shadow ${pill(sub?.category)}`}
- title={`${sub?.name}${sub?.category ? ` (${sub.category})` :""} — ${top?.name}\nTıklayarak hızlıca yönetin`}
+ className={`rounded border p-2 text-sm cursor-pointer hover:shadow-md transition-shadow ${
+ isDueForReview
+ ? 'bg-red-50 dark:bg-red-950/20 border-red-300 dark:border-red-800'
+ : isUpcomingReview
+ ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-300 dark:border-blue-800'
+ : pill(sub?.category)
+ }`}
+ title={`${sub?.name}${sub?.category ? ` (${sub.category})` :""} — ${top?.name}${isDueForReview ? '\n🔄 BUGÜN TEKRAR EDİLMELİ!' : isUpcomingReview ? '\n📅 Yakında tekrar' : ''}\nTıklayarak hızlıca yönetin`}
                      onClick={() => setSelectedTopicId(p.topicId)}
  >
  <div className="flex items-center justify-between gap-2 min-w-0">
  <div className="flex items-center gap-2 min-w-0">
+ {(isDueForReview || isUpcomingReview) && (
+   <RefreshCcw className={`h-3 w-3 ${isDueForReview ? 'text-red-600' : 'text-blue-600'}`} />
+ )}
  <Badge variant="outline">
  {p.start}–{p.end}
  </Badge>
@@ -391,7 +402,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  <RefreshCcw className="h-4 w-4 text-blue-600" />
  <h3 className="text-sm font-medium">Akıllı Tekrar (Spaced Repetition)</h3>
  </div>
- 
+
  {getTopicsDueForReview(sid).length > 0 && (
  <>
  <div className="space-y-2">
@@ -422,7 +433,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  <Separator />
  </>
  )}
- 
+
  {getUpcomingReviews(sid).length > 0 && (
  <div className="space-y-2">
  <div className="flex items-center gap-2 text-xs font-medium text-blue-600">
@@ -467,16 +478,16 @@ export default function TopicPlanner({ sid }: { sid: string }) {
               Bu konuyu hızlıca yönetin - tamamlanma durumu ve soru istatistikleri
             </DialogDescription>
           </DialogHeader>
-          
+
           {selectedTopicProgress && (
             <div className="space-y-4 py-4">
               {/* Tamamlama Checkbox */}
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                 <Checkbox
                   checked={selectedTopicProgress.completedFlag || false}
-                  onCheckedChange={() => 
+                  onCheckedChange={() =>
                     handleToggleComplete(
-                      selectedTopicId!, 
+                      selectedTopicId!,
                       selectedTopicProgress.completedFlag || false
                     )
                   }
@@ -497,7 +508,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
               {/* Soru İstatistikleri */}
               <div className="space-y-3">
                 <Label className="text-sm font-semibold">Soru İstatistikleri</Label>
-                
+
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-2">
                     <Label className="text-xs text-muted-foreground">Çözülen</Label>
@@ -507,7 +518,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                       value={selectedTopicProgress.questionsSolved || ''}
                       onChange={(e) => {
                         const newValue = parseInt(e.target.value) || 0;
-                        setProgress(prev => prev.map(p => 
+                        setProgress(prev => prev.map(p =>
                           p.topicId === selectedTopicId ? { ...p, questionsSolved: newValue } : p
                         ));
                         handleUpdateQuestionStats(selectedTopicId!, 'questionsSolved', newValue);
@@ -526,7 +537,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                       value={selectedTopicProgress.questionsCorrect || ''}
                       onChange={(e) => {
                         const newValue = parseInt(e.target.value) || 0;
-                        setProgress(prev => prev.map(p => 
+                        setProgress(prev => prev.map(p =>
                           p.topicId === selectedTopicId ? { ...p, questionsCorrect: newValue } : p
                         ));
                         handleUpdateQuestionStats(selectedTopicId!, 'questionsCorrect', newValue);
@@ -545,7 +556,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
                       value={selectedTopicProgress.questionsWrong || ''}
                       onChange={(e) => {
                         const newValue = parseInt(e.target.value) || 0;
-                        setProgress(prev => prev.map(p => 
+                        setProgress(prev => prev.map(p =>
                           p.topicId === selectedTopicId ? { ...p, questionsWrong: newValue } : p
                         ));
                         handleUpdateQuestionStats(selectedTopicId!, 'questionsWrong', newValue);
