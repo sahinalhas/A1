@@ -292,25 +292,26 @@ export default function SubjectTrackingSection({
                           }`}
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-3 flex-1">
-                              <Checkbox
-                                checked={isCompleted}
-                                onCheckedChange={() => handleToggleComplete(topic.id, isCompleted)}
-                                className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                              />
-                              <div className="flex items-center gap-2">
-                                {isCompleted ? (
-                                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                ) : (
-                                  <Circle className="h-4 w-4 text-gray-400" />
-                                )}
-                                <span
-                                  className={`${
+                            <div 
+                              className="flex items-center gap-3 flex-1 cursor-pointer"
+                              onClick={() => handleToggleComplete(topic.id, isCompleted)}
+                            >
+                              <div className="flex items-center gap-3 p-1 rounded hover:bg-gray-100 transition-colors">
+                                <Checkbox
+                                  checked={isCompleted}
+                                  onCheckedChange={() => handleToggleComplete(topic.id, isCompleted)}
+                                  className="h-5 w-5 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                                />
+                                <Label 
+                                  className={`cursor-pointer text-base ${
                                     isCompleted ? 'text-green-900 font-medium' : 'text-gray-700'
                                   }`}
                                 >
                                   {topic.name}
-                                </span>
+                                  {isCompleted && (
+                                    <CheckCircle2 className="inline-block h-4 w-4 ml-2 text-green-600" />
+                                  )}
+                                </Label>
                               </div>
                             </div>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
