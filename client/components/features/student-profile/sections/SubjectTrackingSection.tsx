@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -25,7 +25,8 @@ import {
   loadProgressAsync,
   ensureProgressForStudent,
   setCompletedFlag,
-  updateProgress,
+  saveProgress,
+  loadProgress,
 } from "@/lib/storage";
 import { CheckCircle2, Circle, BookOpen, Target } from "lucide-react";
 import { Label } from "@/components/atoms/Label";
@@ -45,6 +46,8 @@ export default function SubjectTrackingSection({
   const [refresh, setRefresh] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
+  const updateTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
+
   useEffect(() => {
     const loadData = async () => {
       await Promise.all([
@@ -52,7 +55,7 @@ export default function SubjectTrackingSection({
         loadTopicsAsync(),
         ensureProgressForStudent(studentId).then(() => loadProgressAsync())
       ]);
-      
+
       setSubjects(loadSubjects());
       setTopics(loadTopics());
       setProgress(getProgressByStudent(studentId));
@@ -97,24 +100,41 @@ export default function SubjectTrackingSection({
     onUpdate();
   };
 
-  const handleUpdateQuestionStats = async (
+  const handleUpdateQuestionStats = useCallback(async (
     topicId: string, 
     field: 'questionsSolved' | 'questionsCorrect' | 'questionsWrong',
     value: number
   ) => {
-    const list = progress;
-    const pIndex = list.findIndex(p => p.topicId === topicId);
-    if (pIndex >= 0) {
-      const updated = list.map(p => 
-        p.topicId === topicId ? { ...p, [field]: value } : p
-      );
-      const { saveProgress, loadProgressAsync, getProgressByStudent } = await import("@/lib/api/endpoints/study.api");
-      await saveProgress(updated);
-      await loadProgressAsync();
-      setProgress(getProgressByStudent(studentId));
-      setRefresh((r) => r + 1);
+    // Update local state immediately for responsive UI
+    setProgress(prev => prev.map(p => 
+      p.topicId === topicId ? { ...p, [field]: value } : p
+    ));
+
+    // Debounce the API call
+    const timeoutKey = `${topicId}-${field}`;
+    if (updateTimeoutRef.current[timeoutKey]) {
+      clearTimeout(updateTimeoutRef.current[timeoutKey]);
     }
-  };
+
+    updateTimeoutRef.current[timeoutKey] = setTimeout(async () => {
+      const list = loadProgress();
+      const updated = list.map(p => 
+        p.topicId === topicId && p.studentId === studentId ? { ...p, [field]: value } : p
+      );
+
+      try {
+        await saveProgress(updated);
+        await loadProgressAsync();
+        setProgress(getProgressByStudent(studentId));
+        onUpdate();
+      } catch (error) {
+        console.error('Error updating question stats:', error);
+        // Revert on error
+        await loadProgressAsync();
+        setProgress(getProgressByStudent(studentId));
+      }
+    }, 1000); // Wait 1 second after last change before saving
+  }, [studentId, onUpdate]);
 
   const getCategoryColor = (category?: string) => {
     switch (category) {
@@ -137,11 +157,11 @@ export default function SubjectTrackingSection({
     const subjectsInCategory = category === 'all' 
       ? subjects 
       : subjects.filter(s => s.category === category);
-    
+
     const topicsInCategory = topics.filter(t => 
       subjectsInCategory.some(s => s.id === t.subjectId)
     );
-    
+
     const completedTopics = topicsInCategory.filter(t => {
       const prog = getTopicProgress(t.id);
       return prog?.completedFlag;
@@ -199,7 +219,7 @@ export default function SubjectTrackingSection({
           {filteredSubjects.map((subject) => {
             const subjectTopics = topics.filter((t) => t.subjectId === subject.id);
             const completedCount = subjectTopics.filter(t => getTopicProgress(t.id)?.completedFlag).length;
-            
+
             if (subjectTopics.length === 0) return null;
 
             return (
