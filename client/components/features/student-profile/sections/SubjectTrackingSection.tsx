@@ -47,6 +47,7 @@ export default function SubjectTrackingSection({
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const updateTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
+  const isUpdatingRef = useRef(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -64,9 +65,11 @@ export default function SubjectTrackingSection({
     loadData();
 
     const handleUpdate = () => {
-      setSubjects(loadSubjects());
-      setTopics(loadTopics());
-      setProgress(getProgressByStudent(studentId));
+      if (!isUpdatingRef.current) {
+        setSubjects(loadSubjects());
+        setTopics(loadTopics());
+        setProgress(getProgressByStudent(studentId));
+      }
     };
 
     window.addEventListener('subjectsUpdated', handleUpdate);
@@ -136,22 +139,30 @@ export default function SubjectTrackingSection({
     }
 
     updateTimeoutRef.current[timeoutKey] = setTimeout(async () => {
-      const list = loadProgress();
-      const updated = list.map(p => 
-        p.topicId === topicId && p.studentId === studentId ? { ...p, [field]: value } : p
-      );
-
-      try {
-        await saveProgress(updated);
-        onUpdate();
-      } catch (error) {
-        console.error('Error updating question stats:', error);
-        // Reload from database on error
-        await loadProgressAsync();
-        const revertedProgress = getProgressByStudent(studentId);
-        setProgress(revertedProgress);
-      }
-    }, 500); // Reduced to 500ms for faster saving
+      isUpdatingRef.current = true;
+      
+      setProgress(prevProgress => {
+        const updated = prevProgress.map(p => 
+          p.topicId === topicId ? { ...p, [field]: value } : p
+        );
+        
+        saveProgress(updated).catch(error => {
+          console.error('Error updating question stats:', error);
+          loadProgressAsync().then(() => {
+            const revertedProgress = getProgressByStudent(studentId);
+            setProgress(revertedProgress);
+          });
+        }).finally(() => {
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 100);
+        });
+        
+        return updated;
+      });
+      
+      onUpdate();
+    }, 500);
   }, [studentId, onUpdate]);
 
   const getCategoryColor = (category?: string) => {
