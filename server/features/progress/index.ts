@@ -9,7 +9,7 @@ router.use(requireSecureAuth);
 
 router.get("/", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(200, 15 * 60 * 1000), progressRoutes.getAllProgressHandler);
 router.get("/:studentId", simpleRateLimit(200, 15 * 60 * 1000), progressRoutes.getProgress);
-router.post("/", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), progressRoutes.saveProgressHandler);
+router.post("/", simpleRateLimit(50, 15 * 60 * 1000), progressRoutes.saveProgressHandler);
 
 router.get("/academic-goals/:studentId", simpleRateLimit(200, 15 * 60 * 1000), progressRoutes.getAcademicGoals);
 router.post("/academic-goals", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), progressRoutes.saveAcademicGoalsHandler);

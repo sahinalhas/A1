@@ -29,6 +29,20 @@ export const saveProgressHandler: RequestHandler = (req, res) => {
     if (!Array.isArray(progress)) {
       return res.status(400).json({ error: ERROR_MESSAGES.EXPECTED_ARRAY_OF_PROGRESS });
     }
+    
+    // Allow students to save their own progress, admins/counselors/teachers can save anyone's
+    const userRole = (req as any).user?.role;
+    const isAdmin = ['admin', 'counselor', 'teacher'].includes(userRole);
+    
+    if (!isAdmin) {
+      // If not admin, verify all progress records belong to current user
+      const userId = (req as any).user?.id;
+      const allOwnProgress = progress.every(p => p.studentId === userId);
+      if (!allOwnProgress) {
+        return res.status(403).json({ error: 'Sadece kendi progress\'inizi güncelleyebilirsiniz' });
+      }
+    }
+    
     progressService.saveProgress(progress);
     res.json({ success: true, message: `${progress.length} ${SUCCESS_MESSAGES.PROGRESS_SAVED}` });
   } catch (error) {
