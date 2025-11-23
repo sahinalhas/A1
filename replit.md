@@ -4,26 +4,29 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
-## November 23, 2025 - Topic-Based Plan UI Enhancement & PDF Export
+## November 23, 2025 - Modern PDF Export with Professional Design
 
-### Konu Bazlı Plan - Enhanced UX with Accordion & PDF Features
-- **Improved Visual Design**: Completely redesigned the topic plan view for better readability and reduced eye strain
-  - Replaced flat list with **Accordion structure** for collapsible day grouping
-  - Each day shows summary (date, topic count, total minutes) in trigger, expandable for details
-  - All days default to expanded for quick overview
-  - Enhanced spacing, typography, and color contrast for better legibility
-  - Larger touch targets and smoother hover transitions
-  - Progress bars now show percentage completion alongside remaining time
-- **PDF Export & Print Features**: 
-  - Added "PDF İndir" button for downloading ink-friendly PDF reports
-  - Added "Yazdır" button that opens PDF in new tab and triggers print dialog
-  - PDF design is elegant, minimal, and optimized for printing (muted colors, clean layout)
-  - Includes weekly summary, day-by-day breakdown with tables, and metadata footer
-  - Generated using `jsPDF` and `jspdf-autotable` for professional table formatting
+### Haftalık Konu Planı - Professional PDF Generation
+- **Modern Design**: Implemented html2pdf.js for pixel-perfect PDF rendering
+  - Gradient header with student name, semester info, and summary metrics (emoji-enhanced)
+  - Pastel color scheme for each day (Mavi, Pembe, Yeşil, Turuncu, Lila, Mor, Kırmızı)
+  - Elegant table styling with hover effects, progress bars, and color-coded urgency
+  - Responsive layout optimized for A4 printing
+- **Turkish Language Support**: Full UTF-8 support with correct characters
+  - Properly rendered: Çarşamba, Perşembe, İlerleme, Öğrenci, etc.
+  - No transcription needed - native Turkish text in PDF
+- **Features**:
+  - PDF Download with professional naming: `Haftalik_Konu_Plani_[tarih]_[ogrenci].pdf`
+  - Print preview with print dialog integration
+  - Day-by-day breakdown with time, subject, topic, duration, and progress percentage
+  - Progress bars with color coding (Green ≥75%, Amber ≥50%, Red <50%)
+  - Metadata footer with generation timestamp and institution branding
 - **Files Modified**:
-  - `client/components/features/student-profile/TopicPlanner.tsx` - Accordion UI + PDF buttons
-  - `client/lib/utils/pdf-generator.ts` - New PDF generation utility with print support
-- **Benefits**: Users can now easily navigate through days, export plans for offline reference, and print clean reports
+  - `client/lib/utils/pdf-generator.ts` - Complete rewrite with html2pdf + modern HTML/CSS
+  - `client/components/features/student-profile/TopicPlanner.tsx` - Integrated PDF export
+  - `client/components/features/student-profile/sections/CalismaProgramiSection.tsx` - Student name prop added
+  - `client/pages/StudentProfile/StudentProfileTabs.tsx` - Passes studentName to Academic tab
+- **Benefits**: Professional, print-ready reports that teachers and parents can easily download and share
 
 ## November 22, 2025 - Survey Defaults System Implementation
 
