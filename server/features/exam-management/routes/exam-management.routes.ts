@@ -778,12 +778,12 @@ export const markAlertRead: RequestHandler = (req, res) => {
 };
 
 // PDF Reports
-export const generateDetailedPDFReport: RequestHandler = (req, res) => {
+export const generateDetailedPDFReport: RequestHandler = async (req, res) => {
   try {
     const { studentId, examTypeId } = req.params;
     
     const report = pdfReportService.generateStudentDetailedReport(studentId, examTypeId);
-    const pdfBuffer = pdfReportService.generatePDF(report);
+    const pdfBuffer = await pdfReportService.generatePDF(report);
     
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="rapor-${studentId}.pdf"`);

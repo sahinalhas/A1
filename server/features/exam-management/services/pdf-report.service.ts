@@ -109,9 +109,11 @@ export function exportReportAsJSON(reportData: ReportData): string {
 // ============================================================================
 
 import type { PDFReportConfig, StudentDetailedReport } from '../../../../shared/types/exam-management.types.js';
-import jsPDF from 'jspdf';
+import React from 'react';
+import { pdf } from '@react-pdf/renderer';
 import * as fs from 'fs';
 import * as path from 'path';
+import { StudentReportDocument } from '../components/StudentReportDocument.js';
 
 export function generateStudentDetailedReport(studentId: string, examTypeId: string, config?: Partial<PDFReportConfig>): StudentDetailedReport {
   const db = getDatabase();
@@ -247,86 +249,15 @@ export function generateStudentDetailedReport(studentId: string, examTypeId: str
   return report;
 }
 
-export function generatePDF(report: StudentDetailedReport): Buffer {
-  const doc = new jsPDF();
-  
-  doc.setFont('helvetica');
-  
-  doc.setFontSize(20);
-  doc.text('Ogrenci Sinav Raporu', 105, 20, { align: 'center' });
-  
-  doc.setFontSize(12);
-  doc.text(`Ogrenci: ${report.student_info.name}`, 20, 40);
-  doc.text(`Sinif: ${report.student_info.class}`, 20, 50);
-  
-  doc.setFontSize(14);
-  doc.text('Ozet', 20, 70);
-  doc.setFontSize(10);
-  doc.text(`Toplam Sinav: ${report.summary.total_exams}`, 20, 80);
-  doc.text(`Ortalama Performans: ${report.summary.avg_performance.toFixed(2)}`, 20, 90);
-  doc.text(`En Iyi Performans: ${report.summary.best_performance.toFixed(2)}`, 20, 100);
-  
-  doc.setFontSize(14);
-  doc.text('Ders Bazli Performans', 20, 120);
-  doc.setFontSize(10);
-  let yPos = 130;
-  
-  for (const subject of report.performance_by_subject) {
-    doc.text(`${subject.subject_name}: ${subject.avg_net.toFixed(2)} (${subject.strength_level})`, 20, yPos);
-    yPos += 10;
-    
-    if (yPos > 270) {
-      doc.addPage();
-      yPos = 20;
-    }
-  }
-  
-  if (report.goal_progress.length > 0) {
-    yPos += 10;
-    doc.setFontSize(14);
-    doc.text('Hedefler', 20, yPos);
-    yPos += 10;
-    doc.setFontSize(10);
-    
-    for (const goal of report.goal_progress) {
-      doc.text(
-        `${goal.subject_name || 'Genel'}: ${goal.current_net}/${goal.target_net} (%${goal.progress_percentage.toFixed(0)})`,
-        20,
-        yPos
-      );
-      yPos += 10;
-      
-      if (yPos > 270) {
-        doc.addPage();
-        yPos = 20;
-      }
-    }
-  }
-  
-  yPos += 10;
-  doc.setFontSize(14);
-  doc.text('Oneriler', 20, yPos);
-  yPos += 10;
-  doc.setFontSize(10);
-  
-  for (const rec of report.recommendations) {
-    doc.text(`- ${rec}`, 20, yPos);
-    yPos += 10;
-    
-    if (yPos > 270) {
-      doc.addPage();
-      yPos = 20;
-    }
-  }
-  
-  doc.setFontSize(8);
-  doc.text(`Olusturulma Tarihi: ${new Date(report.generated_at).toLocaleDateString('tr-TR')}`, 20, 285);
-  
-  return Buffer.from(doc.output('arraybuffer'));
+export async function generatePDF(report: StudentDetailedReport): Promise<Buffer> {
+  const doc = React.createElement(StudentReportDocument, { report }) as any;
+  const pdfStream = pdf(doc);
+  const buffer = await pdfStream.toBuffer();
+  return buffer as unknown as Buffer;
 }
 
-export function savePDFReport(report: StudentDetailedReport, filename: string): string {
-  const pdfBuffer = generatePDF(report);
+export async function savePDFReport(report: StudentDetailedReport, filename: string): Promise<string> {
+  const pdfBuffer = await generatePDF(report);
   
   const reportsDir = path.join(process.cwd(), 'reports');
   if (!fs.existsSync(reportsDir)) {

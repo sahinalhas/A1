@@ -107,7 +107,7 @@ const StudentListDocument: React.FC<StudentListDocumentProps> = ({ students }) =
           {students.map((student, index) => (
             <View
               key={student.id}
-              style={[styles.tableRow, index % 2 === 1 ? styles.tableRowAlt : null]}
+              style={[styles.tableRow, ...(index % 2 === 1 ? [styles.tableRowAlt] : [])]}
             >
               <Text style={[styles.cell, styles.col1]}>{student.id}</Text>
               <Text style={[styles.cell, styles.col2]}>{student.name}</Text>
