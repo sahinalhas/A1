@@ -455,6 +455,7 @@ export async function updateProgress(
  const today = new Date().toISOString().split('T')[0];
  
  // Only start spaced repetition on FIRST completion
+ // If already completed, keep existing review data intact
  const shouldStartReview = !wasCompleted && newCompletedFlag;
  
  list[pIndex] = {
@@ -496,7 +497,8 @@ export async function setCompletedFlag(
  completed: done ? t.avgMinutes : p.completed,
  remaining: done ? 0 : p.remaining,
  lastStudied: done ? today : p.lastStudied,
- reviewCount: shouldStartReview ? 1 : p.reviewCount,
+ // Initialize review system on first completion, preserve on uncomplete
+ reviewCount: shouldStartReview ? 1 : (done ? p.reviewCount : p.reviewCount),
  nextReviewDate: shouldStartReview ? calculateNextReviewDate(1) : (done ? p.nextReviewDate : undefined),
  };
  
@@ -507,6 +509,7 @@ export async function reviewTopic(
  studentId: string,
  topicId: string,
 ) {
+ // Reload fresh progress data to avoid stale cache
  const list = loadProgress();
  const pIndex = list.findIndex(
  (x) => x.studentId === studentId && x.topicId === topicId,
@@ -522,7 +525,9 @@ export async function reviewTopic(
  }
  
  const today = new Date().toISOString().split('T')[0];
- const newReviewCount = (p.reviewCount || 0) + 1;
+ // Ensure reviewCount starts from 1 if not initialized
+ const currentReviewCount = p.reviewCount || 1;
+ const newReviewCount = currentReviewCount + 1;
  
  list[pIndex] = {
  ...p,
@@ -531,6 +536,7 @@ export async function reviewTopic(
  nextReviewDate: calculateNextReviewDate(newReviewCount),
  };
  
+ // Persist changes to storage
  await saveProgress(list);
 }
 
