@@ -417,7 +417,7 @@ function calculateNextReviewDate(reviewCount: number): string {
  daysToAdd = 90;
  break;
  default:
- daysToAdd = 180;
+ daysToAdd = 9999;
  break;
  }
  
