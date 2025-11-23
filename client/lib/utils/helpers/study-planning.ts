@@ -6,7 +6,8 @@ import {
  getWeeklySlotsByStudent,
  loadWeeklySlotsAsync,
  getTopicsDueForReview,
- getUpcomingReviews
+ getUpcomingReviews,
+ savePlannedTopics
 } from "../../api/endpoints/study.api";
 
 
@@ -128,6 +129,13 @@ export async function planWeek(
  currentStartMin = endMin;
  }
  }
+ 
+ try {
+ await savePlannedTopics(studentId, weekStartISO, out);
+ } catch (error) {
+ console.error('Failed to save planned topics:', error);
+ }
+ 
  return out;
 }
 

@@ -18,4 +18,8 @@ router.post("/weekly-slots", simpleRateLimit(50, 15 * 60 * 1000), studyRoutes.sa
 router.put("/weekly-slots/:id", simpleRateLimit(50, 15 * 60 * 1000), studyRoutes.updateWeeklySlotHandler);
 router.delete("/weekly-slots/:id", simpleRateLimit(50, 15 * 60 * 1000), studyRoutes.deleteWeeklySlotHandler);
 
+// Planned topics routes - Konu bazlı plan
+router.get("/planned-topics/:studentId/:weekStartDate", simpleRateLimit(200, 15 * 60 * 1000), studyRoutes.getPlannedTopicsHandler);
+router.post("/planned-topics/:studentId/:weekStartDate", simpleRateLimit(50, 15 * 60 * 1000), studyRoutes.savePlannedTopicsHandler);
+
 export default router;
