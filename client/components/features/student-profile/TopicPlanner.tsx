@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Badge } from "@/components/atoms/Badge";
-import { Clock, AlertCircle, Zap, TrendingUp, RefreshCcw, Calendar, CheckCircle2, Circle } from "lucide-react";
+import { Clock, AlertCircle, Zap, TrendingUp, RefreshCcw, Calendar, CheckCircle2, Circle, Download, Printer } from "lucide-react";
 import {
  loadSubjects,
  loadTopics,
@@ -37,6 +37,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/organisms/Dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/organisms/Accordion";
+import { generateTopicPlanPDF } from "@/lib/utils/pdf-generator";
 
 function mondayOf(dateISO: string) {
  const d = new Date(dateISO +"T00:00:00");
@@ -183,15 +190,47 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  setRefresh((x) => x + 1);
  };
 
+  const handleExportPDF = () => {
+    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, { download: true, print: false });
+  };
+
+  const handlePrintPDF = () => {
+    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, { download: false, print: true });
+  };
+
  return (
  <Card>
  <CardHeader>
- <CardTitle>Konu Bazlı Plan</CardTitle>
+ <CardTitle className="flex items-center justify-between">
+  <span>Konu Bazlı Plan</span>
+  <div className="flex gap-2">
+    <Button 
+      variant="outline" 
+      size="sm" 
+      onClick={handleExportPDF}
+      disabled={plan.length === 0}
+      title="PDF olarak indir"
+    >
+      <Download className="h-4 w-4 mr-2" />
+      PDF İndir
+    </Button>
+    <Button 
+      variant="outline" 
+      size="sm" 
+      onClick={handlePrintPDF}
+      disabled={plan.length === 0}
+      title="PDF'i yazdır"
+    >
+      <Printer className="h-4 w-4 mr-2" />
+      Yazdır
+    </Button>
+  </div>
+ </CardTitle>
  <CardDescription>
  Takvim 2 — Konular, Takvim 1 ders bloklarına sırayla yerleştirilir
  </CardDescription>
  </CardHeader>
- <CardContent className="space-y-4">
+ <CardContent className="space-y-5">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
  <div className="md:col-span-2">
  <Input
@@ -264,136 +303,165 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  topics={topics}
  />
  ) : (
- <div className="rounded-md border divide-y">
- {DAYS.map((d) => {
- const date = dateFromWeekStartLocal(weekStart, d.value);
- const entries = (planByDate.get(date) || [])
- .slice()
- .sort((a, b) => a.start.localeCompare(b.start));
- const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
- const pill = (cat?: string) =>
- cat ==="TYT"
- ?"bg-primary/10 border-primary/30"
- : cat ==="AYT"
- ?"bg-accent/10 border-accent/30"
- : cat ==="YDT"
- ?"bg-amber-500/10 border-amber-500/30"
- :"bg-muted/40 border-muted-foreground/20";
- return (
- <div key={d.value} className="p-3 space-y-2">
- <div className="flex items-center justify-between">
- <div className="text-sm font-medium">
- {d.label} — {date}
- </div>
- <div className="text-xs text-muted-foreground">
- Toplam: {dayTotal} dk
- </div>
- </div>
- {entries.length === 0 ? (
- <div className="text-xs text-muted-foreground">Plan yok.</div>
- ) : (
- <div className="grid gap-2">
- {entries.map((p, i) => {
- const sub = subjects.find((s) => s.id === p.subjectId);
- const top = topics.find((t) => t.id === p.topicId);
- const total = top?.avgMinutes || 0;
- const pct =
- total > 0
- ? Math.min(
- 100,
- Math.max(
- 0,
- Math.round(
- ((total - p.remainingAfter) / total) * 100,
- ),
- ),
- )
- : 0;
- const deadlineInfo = getDeadlineUrgency(top?.deadline);
- const energyInfo = getEnergyIcon(top?.energyLevel);
- const isDueForReview = getTopicsDueForReview(sid).find(r => r.topicId === p.topicId);
- const isUpcomingReview = getUpcomingReviews(sid).find(r => r.topicId === p.topicId);
- return (
- <div
- key={`${p.topicId}-${i}`}
- className={`rounded border p-2 text-sm cursor-pointer hover:shadow-md transition-shadow ${
- isDueForReview
- ? 'bg-red-50 dark:bg-red-950/20 border-red-300 dark:border-red-800'
- : isUpcomingReview
- ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-300 dark:border-blue-800'
- : pill(sub?.category)
- }`}
- title={`${sub?.name}${sub?.category ? ` (${sub.category})` :""} — ${top?.name}${isDueForReview ? '\n🔄 BUGÜN TEKRAR EDİLMELİ!' : isUpcomingReview ? '\n📅 Yakında tekrar' : ''}\nTıklayarak hızlıca yönetin`}
-                     onClick={() => setSelectedTopicId(p.topicId)}
- >
- <div className="flex items-center justify-between gap-2 min-w-0">
- <div className="flex items-center gap-2 min-w-0">
- {(isDueForReview || isUpcomingReview) && (
-   <RefreshCcw className={`h-3 w-3 ${isDueForReview ? 'text-red-600' : 'text-blue-600'}`} />
- )}
- <Badge variant="outline">
- {p.start}–{p.end}
- </Badge>
- <span className="truncate">
- {sub?.name}
- {sub?.category
- ? ` (${sub.category})`
- :""} — {top?.name}
- </span>
- </div>
- <div className="flex items-center gap-1">
- {deadlineInfo && (
- <Badge className={`text-[10px] px-1 py-0 h-5 ${deadlineInfo.color}`} variant="outline">
- <Clock className="size-3 mr-0.5" />
- {deadlineInfo.text}
- </Badge>
- )}
- {energyInfo && (
- <div className={`${energyInfo.color}`} title={energyInfo.title}>
- <energyInfo.icon className="size-3.5" />
- </div>
- )}
- {top?.difficultyScore && top.difficultyScore >= 7 && (
- <Badge className="text-[10px] px-1 py-0 h-5 bg-red-50 text-red-700" variant="outline">
- Zor
- </Badge>
- )}
- {top?.priority && top.priority >= 7 && (
- <Badge className="text-[10px] px-1 py-0 h-5 bg-purple-50 text-purple-700" variant="outline">
- <AlertCircle className="size-3 mr-0.5" />
- Önemli
- </Badge>
- )}
- <span className="text-xs text-muted-foreground whitespace-nowrap">
- {p.allocated} dk
- </span>
- </div>
- </div>
- <div className="mt-2 h-1.5 w-full rounded bg-muted overflow-hidden">
- <div
- className="h-full bg-primary"
- style={{ width: `${pct}%` }}
- aria-label={`Tamamlanma: ${pct}%`}
- />
- </div>
- <div className="mt-1 text-[11px] text-muted-foreground">
- Kalan: {p.remainingAfter} dk
- </div>
- </div>
- );
- })}
- </div>
- )}
- </div>
- );
- })}
- {plan.length === 0 && (
- <div className="p-3 text-sm text-muted-foreground">
- Plan bulunamadı. Önce Haftalık Ders Çizelgesi ekleyin ve konuları
- yükleyin.
- </div>
- )}
- </div>
+  <div className="rounded-lg border bg-card">
+    {plan.length === 0 ? (
+      <div className="p-6 text-center text-sm text-muted-foreground">
+        Plan bulunamadı. Önce Haftalık Ders Çizelgesi ekleyin ve konuları yükleyin.
+      </div>
+    ) : (
+      <Accordion type="multiple" defaultValue={DAYS.map(d => d.value.toString())} className="w-full">
+        {DAYS.map((d) => {
+          const date = dateFromWeekStartLocal(weekStart, d.value);
+          const entries = (planByDate.get(date) || [])
+            .slice()
+            .sort((a, b) => a.start.localeCompare(b.start));
+          const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
+          const pill = (cat?: string) =>
+            cat === "TYT"
+              ? "bg-primary/10 border-primary/30"
+              : cat === "AYT"
+              ? "bg-accent/10 border-accent/30"
+              : cat === "YDT"
+              ? "bg-amber-500/10 border-amber-500/30"
+              : "bg-muted/40 border-muted-foreground/20";
+          
+          return (
+            <AccordionItem key={d.value} value={d.value.toString()} className="border-b last:border-0">
+              <AccordionTrigger className="px-5 py-4 hover:bg-muted/30 transition-colors">
+                <div className="flex items-center justify-between w-full pr-4">
+                  <div className="flex items-center gap-3">
+                    <div className="text-base font-semibold">{d.label}</div>
+                    <Badge variant="outline" className="font-normal">
+                      {date}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    {entries.length > 0 && (
+                      <Badge variant="secondary" className="font-medium">
+                        {entries.length} konu
+                      </Badge>
+                    )}
+                    <div className="text-sm text-muted-foreground font-medium">
+                      {dayTotal > 0 ? `${dayTotal} dakika` : 'Plan yok'}
+                    </div>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-5 pb-4 pt-2">
+                {entries.length === 0 ? (
+                  <div className="py-6 text-center text-sm text-muted-foreground">
+                    Bu gün için plan bulunmuyor.
+                  </div>
+                ) : (
+                  <div className="grid gap-3">
+                    {entries.map((p, i) => {
+                      const sub = subjects.find((s) => s.id === p.subjectId);
+                      const top = topics.find((t) => t.id === p.topicId);
+                      const total = top?.avgMinutes || 0;
+                      const pct =
+                        total > 0
+                          ? Math.min(
+                              100,
+                              Math.max(
+                                0,
+                                Math.round(
+                                  ((total - p.remainingAfter) / total) * 100,
+                                ),
+                              ),
+                            )
+                          : 0;
+                      const deadlineInfo = getDeadlineUrgency(top?.deadline);
+                      const energyInfo = getEnergyIcon(top?.energyLevel);
+                      const isDueForReview = getTopicsDueForReview(sid).find(r => r.topicId === p.topicId);
+                      const isUpcomingReview = getUpcomingReviews(sid).find(r => r.topicId === p.topicId);
+                      return (
+                        <div
+                          key={`${p.topicId}-${i}`}
+                          className={`rounded-lg border p-4 text-sm cursor-pointer hover:shadow-md transition-all hover:-translate-y-0.5 ${
+                            isDueForReview
+                              ? 'bg-red-50 dark:bg-red-950/20 border-red-300 dark:border-red-800'
+                              : isUpcomingReview
+                              ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-300 dark:border-blue-800'
+                              : pill(sub?.category)
+                          }`}
+                          title={`${sub?.name}${sub?.category ? ` (${sub.category})` : ""} — ${top?.name}${isDueForReview ? '\n🔄 BUGÜN TEKRAR EDİLMELİ!' : isUpcomingReview ? '\n📅 Yakında tekrar' : ''}\nTıklayarak hızlıca yönetin`}
+                          onClick={() => setSelectedTopicId(p.topicId)}
+                        >
+                          <div className="flex items-start justify-between gap-3 min-w-0">
+                            <div className="flex items-start gap-3 min-w-0 flex-1">
+                              {(isDueForReview || isUpcomingReview) && (
+                                <RefreshCcw className={`h-4 w-4 mt-0.5 flex-shrink-0 ${isDueForReview ? 'text-red-600' : 'text-blue-600'}`} />
+                              )}
+                              <div className="min-w-0 flex-1 space-y-2">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <Badge variant="outline" className="font-mono text-xs">
+                                    {p.start}–{p.end}
+                                  </Badge>
+                                  <span className="font-medium">
+                                    {sub?.name}
+                                    {sub?.category ? ` (${sub.category})` : ""}
+                                  </span>
+                                </div>
+                                <div className="text-base font-semibold text-foreground">
+                                  {top?.name}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end gap-2">
+                              <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                                {deadlineInfo && (
+                                  <Badge className={`text-[10px] px-1.5 py-0.5 h-5 ${deadlineInfo.color}`} variant="outline">
+                                    <Clock className="size-3 mr-0.5" />
+                                    {deadlineInfo.text}
+                                  </Badge>
+                                )}
+                                {energyInfo && (
+                                  <div className={`${energyInfo.color}`} title={energyInfo.title}>
+                                    <energyInfo.icon className="size-4" />
+                                  </div>
+                                )}
+                                {top?.difficultyScore && top.difficultyScore >= 7 && (
+                                  <Badge className="text-[10px] px-1.5 py-0.5 h-5 bg-red-50 text-red-700" variant="outline">
+                                    Zor
+                                  </Badge>
+                                )}
+                                {top?.priority && top.priority >= 7 && (
+                                  <Badge className="text-[10px] px-1.5 py-0.5 h-5 bg-purple-50 text-purple-700" variant="outline">
+                                    <AlertCircle className="size-3 mr-0.5" />
+                                    Önemli
+                                  </Badge>
+                                )}
+                              </div>
+                              <span className="text-sm text-muted-foreground font-medium whitespace-nowrap">
+                                {p.allocated} dakika
+                              </span>
+                            </div>
+                          </div>
+                          <div className="mt-3 space-y-1.5">
+                            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                              <div
+                                className="h-full bg-primary transition-all"
+                                style={{ width: `${pct}%` }}
+                                aria-label={`Tamamlanma: ${pct}%`}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                              <span>Kalan: {p.remainingAfter} dk</span>
+                              <span className="font-medium">%{pct} tamamlandı</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
+    )}
+  </div>
  )}
 
 
