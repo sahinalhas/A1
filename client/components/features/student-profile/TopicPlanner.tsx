@@ -207,12 +207,20 @@ export default function TopicPlanner({ sid, studentName }: { sid: string; studen
  }
  };
 
-  const handleExportPDF = () => {
-    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: true, print: false });
+  const handleExportPDF = async () => {
+    try {
+      await generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: true, print: false });
+    } catch (error) {
+      console.error('PDF oluşturma hatası:', error);
+    }
   };
 
-  const handlePrintPDF = () => {
-    generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: false, print: true });
+  const handlePrintPDF = async () => {
+    try {
+      await generateTopicPlanPDF(plan, planByDate, weekStart, subjects, topics, sid, studentName, { download: false, print: true });
+    } catch (error) {
+      console.error('PDF yazdırma hatası:', error);
+    }
   };
 
  return (
