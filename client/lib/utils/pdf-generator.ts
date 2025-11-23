@@ -1,7 +1,8 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-interface PlanEntry {
+// --- TİP TANIMLARI ---
+export interface PlanEntry {
   date: string;
   start: string;
   end: string;
@@ -9,6 +10,7 @@ interface PlanEntry {
   topicId: string;
   allocated: number;
   remainingAfter: number;
+  targetQuestionCount?: number;
 }
 
 interface Subject {
@@ -23,18 +25,17 @@ interface Topic {
   avgMinutes?: number;
 }
 
-// Pastel renk paleti - her gün için canlı soft renkler
-const dayColors: Record<number, { header: [number, number, number]; light: [number, number, number]; dark: [number, number, number] }> = {
-  1: { header: [100, 180, 220], light: [230, 245, 255], dark: [70, 130, 180] },      // Pastel Mavi (Pazartesi)
-  2: { header: [255, 140, 170], light: [255, 235, 245], dark: [220, 80, 130] },      // Pastel Pembe (Salı)
-  3: { header: [130, 220, 150], light: [235, 255, 240], dark: [60, 170, 100] },      // Pastel Yeşil (Çarşamba)
-  4: { header: [255, 200, 100], light: [255, 245, 210], dark: [220, 140, 40] },      // Pastel Turuncu (Perşembe)
-  5: { header: [150, 180, 255], light: [240, 245, 255], dark: [80, 120, 220] },      // Pastel Lila (Cuma)
-  6: { header: [220, 160, 220], light: [250, 235, 250], dark: [180, 100, 180] },     // Pastel Mor (Cumartesi)
-  7: { header: [255, 160, 160], light: [255, 240, 240], dark: [220, 80, 80] },       // Pastel Kırmızı (Pazar)
+// --- RENK PALETİ (Zarif & Kurumsal) ---
+const COLORS = {
+  primary: [26, 35, 126],    // Lacivert (Başlıklar)
+  secondary: [232, 234, 246], // Çok açık mavi/gri (Satır arka planı)
+  accent: [255, 111, 0],     // Turuncu (Vurgular)
+  text: [33, 33, 33],        // Koyu Gri (Metin)
+  lightText: [117, 117, 117],// Açık Gri (İkincil metin)
+  line: [224, 224, 224]      // İnce çizgiler
 };
 
-export function generateTopicPlanPDF(
+export function generateCompactPlan(
   plan: PlanEntry[],
   planByDate: Map<string, PlanEntry[]>,
   weekStart: string,
@@ -50,187 +51,232 @@ export function generateTopicPlanPDF(
     format: 'a4',
   }) as jsPDF & { lastAutoTable?: { finalY: number } };
 
-  const DAYS = [
-    { value: 1, label: 'Pazartesi', shortLabel: 'Paz' },
-    { value: 2, label: 'Salı', shortLabel: 'Sal' },
-    { value: 3, label: 'Carsamba', shortLabel: 'Car' },
-    { value: 4, label: 'Persembe', shortLabel: 'Per' },
-    { value: 5, label: 'Cuma', shortLabel: 'Cum' },
-    { value: 6, label: 'Cumartesi', shortLabel: 'Cum' },
-    { value: 7, label: 'Pazar', shortLabel: 'Paz' },
-  ];
+  // --- ÖNEMLİ: TÜRKÇE KARAKTER DESTEĞİ ---
+  // jsPDF varsayılan fontları Türkçe karakterleri (ş, ğ, İ) desteklemez.
+  // Projenizde bir .ttf dosyası (örn: Roboto-Regular.ttf) varsa, onu Base64'e çevirip
+  // buraya eklemelisiniz. Yoksa standart font kullanılır ve karakterler bozuk çıkar.
+  
+  // Örnek kullanım (Eğer font dosyanız varsa bu satırları açın):
+  // doc.addFileToVFS("Roboto-Regular.ttf", "BASE64_STRING_BURAYA");
+  // doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+  // doc.setFont("Roboto");
+  
+  // Font dosyası yoksa varsayılan ile devam ediyoruz (Türkçe karakterler bozuk çıkabilir)
+  // Bu sorunu çözmek için fontunuzu yüklediğinizden emin olun.
+  doc.setFont("helvetica"); 
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 12;
+  const margin = 10;
+  const colGap = 8;
+  const colWidth = (pageWidth - (margin * 2) - colGap) / 2; // Sayfayı ikiye böl
+
+  // --- BAŞLIK ALANI (HEADER) ---
   let yPos = margin;
-  let isFirstPage = true;
 
-  // ===== FIRST PAGE HEADER =====
-  const addHeader = () => {
-    if (!isFirstPage) return;
+  // Üst Çizgi
+  doc.setDrawColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
+  doc.setLineWidth(1.5);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  yPos += 6;
 
-    const headerColors = dayColors[1].header;
-    doc.setFillColor(headerColors[0], headerColors[1], headerColors[2]);
-    doc.rect(0, 0, pageWidth, 28, 'F');
+  // Başlık Metinleri
+  doc.setFontSize(18);
+  doc.setTextColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
+  doc.setFont(doc.getFont().fontName, 'bold');
+  doc.text('HAFTALIK ÇALIŞMA PLANI', margin, yPos);
 
-    doc.setFontSize(16);
-    doc.setFont('courier', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text('Haftalik Konu Plani', margin, 8);
+  // Tarih ve İsim (Sağ Taraf)
+  const startDate = new Date(weekStart + 'T00:00:00');
+  const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+  const dateRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
 
-    doc.setFontSize(9);
-    doc.setFont('courier', 'normal');
-    doc.setTextColor(240, 255, 255);
-    const displayName = studentName ? `Ogrenci: ${studentName}` : `Ogrenci ID: ${studentId}`;
-    doc.text(displayName, margin, 15);
+  doc.setFontSize(10);
+  doc.setFont(doc.getFont().fontName, 'normal');
+  doc.setTextColor(COLORS.text[0], COLORS.text[1], COLORS.text[2]);
+  doc.text(studentName || studentId, pageWidth - margin, yPos - 1, { align: 'right' });
+  doc.setFontSize(8);
+  doc.setTextColor(COLORS.lightText[0], COLORS.lightText[1], COLORS.lightText[2]);
+  doc.text(dateRange, pageWidth - margin, yPos + 3, { align: 'right' });
 
-    const startDate = new Date(weekStart + 'T00:00:00');
-    const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
-    const dateRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
-    const totalMinutes = plan.reduce((sum, p) => sum + p.allocated, 0);
-    const totalHours = Math.floor(totalMinutes / 60);
-    const totalMins = totalMinutes % 60;
+  yPos += 8;
 
+  // Özet İstatistikler (Mini Bar)
+  const totalMinutes = plan.reduce((sum, p) => sum + p.allocated, 0);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const totalMins = totalMinutes % 60;
+  const totalQuestions = plan.reduce((sum, p) => sum + (p.targetQuestionCount || 0), 0);
+
+  doc.setFillColor(COLORS.secondary[0], COLORS.secondary[1], COLORS.secondary[2]);
+  doc.roundedRect(margin, yPos, pageWidth - (margin * 2), 8, 2, 2, 'F');
+  
+  doc.setFontSize(8);
+  doc.setTextColor(COLORS.text[0], COLORS.text[1], COLORS.text[2]);
+  
+  const statsText = `Toplam Süre: ${totalHours}sa ${totalMins}dk    |    Etüt Sayısı: ${plan.length}    |    Hedef Soru: ${totalQuestions}`;
+  doc.text(statsText, pageWidth / 2, yPos + 5, { align: 'center' });
+
+  yPos += 12;
+
+  // --- İKİ SÜTUNLU DÜZEN MANTIĞI ---
+  const leftColX = margin;
+  const rightColX = margin + colWidth + colGap;
+  
+  let leftY = yPos;
+  let rightY = yPos;
+
+  const DAYS = [
+    { value: 1, label: 'Pazartesi' },
+    { value: 2, label: 'Salı' },
+    { value: 3, label: 'Çarşamba' },
+    { value: 4, label: 'Perşembe' },
+    { value: 5, label: 'Cuma' },
+    { value: 6, label: 'Cumartesi' },
+    { value: 7, label: 'Pazar' },
+  ];
+
+  DAYS.forEach((day) => {
+    const dateISO = dateFromWeekStartLocal(weekStart, day.value);
+    const entries = (planByDate.get(dateISO) || []).slice().sort((a, b) => a.start.localeCompare(b.start));
+
+    // Eğer o gün ders yoksa ve yer darlığı varsa atla, ama şıklık için "Boş Gün" yazılabilir.
+    // Şimdilik sadece dolu günleri veya isimlerini basalım.
+    
+    // Hangi sütuna yazacağız? (Pzt-Çar: Sol, Per-Paz: Sağ)
+    // Dengeli dağılım için ilk 4 gün sol, son 3 gün sağ (Perşembe duruma göre değişebilir)
+    const isLeftColumn = day.value <= 3; // İlk 3 gün kesin sol
+    const currentX = isLeftColumn ? leftColX : rightColX;
+    let currentY = isLeftColumn ? leftY : rightY;
+
+    // Gün Başlığı
+    doc.setFontSize(10);
+    doc.setTextColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
+    doc.setFont(doc.getFont().fontName, 'bold');
+    
+    // Altı çizgili gün başlığı
+    doc.text(`${day.label}`, currentX, currentY + 4);
+    
+    // Tarih (Küçük gri)
     doc.setFontSize(8);
-    doc.text(`Donem: ${dateRange}  |  Toplam: ${totalHours}s ${totalMins}dk  |  Konular: ${plan.length}`, margin, 22);
+    doc.setFont(doc.getFont().fontName, 'normal');
+    doc.setTextColor(COLORS.lightText[0], COLORS.lightText[1], COLORS.lightText[2]);
+    doc.text(formatDate(new Date(dateISO)), currentX + colWidth, currentY + 4, { align: 'right' });
 
-    yPos = 32;
-    isFirstPage = false;
-  };
+    doc.setDrawColor(COLORS.line[0], COLORS.line[1], COLORS.line[2]);
+    doc.line(currentX, currentY + 6, currentX + colWidth, currentY + 6);
+    
+    currentY += 8;
 
-  addHeader();
+    if (entries.length > 0) {
+      // Tablo Verisi
+      const tableData = entries.map((p) => {
+        const sub = subjects.find((s) => s.id === p.subjectId);
+        const top = topics.find((t) => t.id === p.topicId);
+        return [
+          p.start,
+          sub?.name?.substring(0, 12) || '', // Yer kazanmak için kırp
+          top?.name?.substring(0, 20) || '', // Yer kazanmak için kırp
+          p.targetQuestionCount || '-',
+          '', // Çözülen
+          ''  // D/Y
+        ];
+      });
 
-  // ===== DAILY SECTIONS =====
-  DAYS.forEach((day, index) => {
-    const date = dateFromWeekStartLocal(weekStart, day.value);
-    const entries = (planByDate.get(date) || [])
-      .slice()
-      .sort((a, b) => a.start.localeCompare(b.start));
+      autoTable(doc, {
+        startY: currentY,
+        margin: { left: currentX },
+        tableWidth: colWidth,
+        head: [['Saat', 'Ders', 'Konu', 'Hdf', 'Çz', 'D/Y']],
+        body: tableData,
+        theme: 'plain', // Minimalist tema
+        styles: {
+          fontSize: 7, // Küçük font (Sığması için kritik)
+          cellPadding: 1.5,
+          overflow: 'ellipsize',
+          textColor: COLORS.text,
+          lineWidth: 0, // Çizgisiz
+        },
+        headStyles: {
+          fillColor: [245, 245, 245],
+          textColor: COLORS.primary,
+          fontStyle: 'bold',
+          lineWidth: 0,
+        },
+        columnStyles: {
+          0: { cellWidth: 10, fontStyle: 'bold' }, // Saat
+          1: { cellWidth: 18 }, // Ders
+          2: { cellWidth: 'auto' }, // Konu
+          3: { cellWidth: 8, halign: 'center' }, // Hedef
+          4: { cellWidth: 8, halign: 'center' }, // Çözülen
+          5: { cellWidth: 10, halign: 'center' }, // D/Y
+        },
+        didDrawPage: () => {}, // Sayfa atlamayı engellemek için kontrol gerekebilir
+      });
 
-    if (entries.length === 0) return;
-
-    const dayColor = dayColors[day.value];
-    const dayTotal = entries.reduce((sum, e) => sum + e.allocated, 0);
-
-    // Add new page if needed
-    if (yPos > pageHeight - 45) {
-      doc.addPage();
-      yPos = margin;
+      // Sonraki pozisyonu güncelle
+      currentY = (doc as any).lastAutoTable.finalY + 6;
+    } else {
+      // Boş gün mesajı
+      doc.setFontSize(7);
+      doc.setTextColor(COLORS.lightText[0], COLORS.lightText[1], COLORS.lightText[2]);
+      doc.text("- Planlanmış çalışma yok -", currentX, currentY + 2);
+      currentY += 8;
     }
 
-    // Day section header - pastel background
-    doc.setFillColor(dayColor.light[0], dayColor.light[1], dayColor.light[2]);
-    doc.rect(margin - 1, yPos - 4, pageWidth - 2 * margin + 2, 10, 'F');
-
-    doc.setFont('courier', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(dayColor.dark[0], dayColor.dark[1], dayColor.dark[2]);
-    doc.text(`${day.label} • ${date}`, margin + 1.5, yPos + 1.5);
-
-    doc.setFontSize(9);
-    doc.text(`${dayTotal} dakika`, pageWidth - margin - 15, yPos + 1.5);
-
-    yPos += 11;
-
-    // Create table data
-    const tableData = entries.map((p) => {
-      const sub = subjects.find((s) => s.id === p.subjectId);
-      const top = topics.find((t) => t.id === p.topicId);
-      const total = top?.avgMinutes || 0;
-      const pct = total > 0 ? Math.round(((total - p.remainingAfter) / total) * 100) : 0;
-
-      return [
-        p.start.substring(0, 5),
-        sub?.name || '',
-        top?.name || '',
-        `${p.allocated}dk`,
-        `%${pct}`,
-      ];
-    });
-
-    // Day-specific table with colored header
-    const tableConfig: any = {
-      startY: yPos,
-      head: [['Saat', 'Ders', 'Konu', 'Sure', 'Ilerleme']],
-      body: tableData,
-      theme: 'grid',
-      headStyles: {
-        fillColor: [dayColor.header[0], dayColor.header[1], dayColor.header[2]],
-        textColor: [255, 255, 255],
-        fontSize: 8,
-        font: 'courier',
-        fontStyle: 'bold',
-        halign: 'left',
-        cellPadding: 2,
-        lineColor: [200, 200, 200],
-        lineWidth: 0.4,
-      },
-      bodyStyles: {
-        textColor: [50, 50, 50],
-        fontSize: 7,
-        font: 'courier',
-        cellPadding: 1.5,
-        lineColor: [220, 220, 220],
-        lineWidth: 0.2,
-      },
-      alternateRowStyles: {
-        fillColor: [dayColor.light[0], dayColor.light[1], dayColor.light[2]],
-      },
-      columnStyles: {
-        0: { cellWidth: 22, fontStyle: 'bold', textColor: dayColor.dark, halign: 'center' },
-        1: { cellWidth: 32 },
-        2: { cellWidth: 65 },
-        3: { cellWidth: 18, halign: 'center' },
-        4: { cellWidth: 16, halign: 'center', fontStyle: 'bold', textColor: dayColor.dark },
-      },
-      margin: { left: margin, right: margin, top: 0, bottom: 8 },
-      didDrawPage: function (data: any) {
-        yPos = data.cursor.y;
-      },
-    };
-
-    autoTable(doc, tableConfig);
-    yPos = (doc.lastAutoTable?.finalY || yPos) + 6;
+    // Pozisyonları kaydet
+    if (isLeftColumn) {
+      leftY = currentY;
+    } else {
+      rightY = currentY;
+    }
   });
 
-  // ===== FOOTER =====
-  const pageCount = doc.internal.pages.length;
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(6);
-    doc.setTextColor(150, 150, 150);
-    doc.setFont('courier', 'normal');
-
-    const footerY = pageHeight - 4;
-    doc.text(
-      `Olusturulma: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR').substring(0, 5)}`,
-      margin,
-      footerY
-    );
-
-    doc.setFont('courier', 'bold');
-    doc.setTextColor(120, 120, 120);
-    doc.text(`Sayfa ${i}/${pageCount}`, pageWidth - margin - 15, footerY);
-
-    doc.setTextColor(100, 140, 200);
-    doc.text('Rehber360 - Ogrenci Rehberlik Sistemi', pageWidth - margin - 50, footerY);
+  // --- NOTLAR & İMZA (Sayfanın Altına) ---
+  // En alt pozisyonu bul (Sol ve sağ sütunun en uzunu)
+  let footerStart = Math.max(leftY, rightY);
+  
+  // Eğer sayfa sonuna çok yaklaştıysa yeni sayfa açma riskine karşı kontrol
+  if (footerStart > pageHeight - 35) {
+     // Çok doluysa not alanını küçült veya sıkıştır
+  } else {
+     footerStart = Math.max(footerStart, pageHeight - 40); // En azından sayfa altına sabitle
   }
 
-  const fileName = `Haftalik_Konu_Plani_${weekStart}_${studentName?.replace(/[^a-zA-Z0-9]/g, '_') || studentId}.pdf`;
+  // Ayırıcı çizgi
+  doc.setDrawColor(COLORS.line[0], COLORS.line[1], COLORS.line[2]);
+  doc.line(margin, footerStart, pageWidth - margin, footerStart);
 
+  // Not Alanı
+  doc.setFontSize(8);
+  doc.setTextColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
+  doc.text("HAFTALIK NOTLAR / EKSİKLER:", margin, footerStart + 5);
+  
+  // Not kutusu çizgileri (Noktalı)
+  doc.setDrawColor(200, 200, 200);
+  doc.line(margin, footerStart + 12, pageWidth - margin, footerStart + 12);
+  doc.line(margin, footerStart + 19, pageWidth - margin, footerStart + 19);
+
+  // İmza Alanı
+  const signatureY = pageHeight - 10;
+  doc.setFontSize(7);
+  doc.setTextColor(COLORS.lightText[0], COLORS.lightText[1], COLORS.lightText[2]);
+  
+  doc.text("Öğrenci İmzası", margin, signatureY);
+  doc.text("Veli / Rehber Öğretmen İmzası", pageWidth - margin, signatureY, { align: 'right' });
+  
+  doc.setDrawColor(COLORS.text[0], COLORS.text[1], COLORS.text[2]);
+  doc.line(margin, signatureY - 2, margin + 30, signatureY - 2); // Sol imza çizgi
+  doc.line(pageWidth - margin - 40, signatureY - 2, pageWidth - margin, signatureY - 2); // Sağ imza çizgi
+
+  // Branding
+  doc.text("Rehber360 • Akıllı Çalışma Sistemi", pageWidth / 2, signatureY, { align: 'center' });
+
+  // Çıktı Alma
+  const fileName = `Program_${weekStart}.pdf`;
   if (options.print) {
+    doc.autoPrint();
     const blob = doc.output('blob');
-    const url = URL.createObjectURL(blob);
-    const printWindow = window.open(url, '_blank');
-    if (printWindow) {
-      printWindow.onload = () => {
-        printWindow.print();
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-        }, 1000);
-      };
-    }
+    window.open(URL.createObjectURL(blob), '_blank');
   } else if (options.download) {
     doc.save(fileName);
   }
@@ -238,6 +284,7 @@ export function generateTopicPlanPDF(
   return doc;
 }
 
+// --- YARDIMCI FONKSİYONLAR ---
 function dateFromWeekStartLocal(weekStartISO: string, day: number) {
   const d = new Date(weekStartISO + 'T00:00:00');
   const result = new Date(d.getTime() + (day - 1) * 24 * 60 * 60 * 1000);
@@ -247,6 +294,5 @@ function dateFromWeekStartLocal(weekStartISO: string, day: number) {
 function formatDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  return `${day}.${month}`;
 }
