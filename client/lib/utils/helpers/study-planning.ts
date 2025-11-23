@@ -289,6 +289,9 @@ export async function planWeekSmart(
  
  // Track daily minutes to respect weekly plan limits
  const dailyMinutes = new Map<number, number>();
+ 
+ // Track which review topics have been assigned this week (prevent duplicates)
+ const assignedReviewTopics = new Set<string>();
 
  for (const slot of slots) {
  const subjectTopics = topicsBySubject.get(slot.subjectId) || [];
@@ -305,8 +308,10 @@ export async function planWeekSmart(
  .filter(t => {
  const prog = progMap.get(t.id);
  
- // Include topics for review even if they are marked as done
- if (prog?.isReview) return true;
+ // Review topics: only if not already assigned this week
+ if (prog?.isReview) {
+   return !assignedReviewTopics.has(t.id);
+ }
  
  if (!prog || prog.done || prog.remaining <= 0) return false;
  
@@ -368,8 +373,10 @@ export async function planWeekSmart(
  remainingAfter: calcRemaining
  });
  
- // Review topics don't reduce remaining minutes
- if (!prog.isReview) {
+ // Mark review topics as assigned for this week
+ if (prog.isReview) {
+   assignedReviewTopics.add(bestTopic.id);
+ } else {
    prog.remaining -= allocated;
    if (prog.remaining <= 0) prog.done = true;
  }
