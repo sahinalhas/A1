@@ -4,7 +4,9 @@ import {
  getProgressByStudent, 
  ensureProgressForStudent,
  getWeeklySlotsByStudent,
- loadWeeklySlotsAsync
+ loadWeeklySlotsAsync,
+ getTopicsDueForReview,
+ getUpcomingReviews
 } from "../../api/endpoints/study.api";
 
 
@@ -121,7 +123,12 @@ export async function planWeek(
  return out;
 }
 
-function smartSortTopics(topics: StudyTopic[], progress: TopicProgress[]) {
+function smartSortTopics(
+  topics: StudyTopic[], 
+  progress: TopicProgress[],
+  dueForReview: TopicProgress[],
+  upcomingReviews: TopicProgress[]
+) {
  const today = new Date();
  
  return topics
@@ -130,18 +137,39 @@ function smartSortTopics(topics: StudyTopic[], progress: TopicProgress[]) {
  
  let score = 0;
  
- if (topic.deadline) {
- const daysUntil = Math.floor(
- (new Date(topic.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
- );
- if (daysUntil <= 7) score += 50;
- else if (daysUntil <= 14) score += 30;
- else if (daysUntil <= 30) score += 10;
+ // PRIORITY 1: Spaced Repetition - topics due for review get highest priority
+ const isDueForReview = dueForReview.find(r => r.topicId === topic.id);
+ if (isDueForReview) {
+   score += 2000;
+   const daysSinceLastStudy = prog?.lastStudied 
+     ? Math.floor((Date.now() - new Date(prog.lastStudied).getTime()) / (1000 * 60 * 60 * 24))
+     : 999;
+   score += Math.min(daysSinceLastStudy * 50, 500);
+ }
+
+ // PRIORITY 2: Upcoming reviews in next 7 days
+ const isUpcomingReview = upcomingReviews.find(r => r.topicId === topic.id);
+ if (isUpcomingReview && !isDueForReview) {
+   score += 800;
  }
  
- score += (topic.priority || 5) * 10;
- score += (topic.difficultyScore || 5) * 5;
+ // PRIORITY 3: Deadline urgency
+ if (topic.deadline) {
+   const daysUntil = Math.floor(
+     (new Date(topic.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+   );
+   if (daysUntil < 0) score += 1000;
+   else if (daysUntil <= 3) score += 500;
+   else if (daysUntil <= 7) score += 300;
+   else if (daysUntil <= 14) score += 150;
+   else if (daysUntil <= 30) score += 50;
+ }
  
+ // PRIORITY 4: Topic priority
+ score += (topic.priority || 5) * 10;
+ 
+ // PRIORITY 5: Difficulty and progress
+ score += (topic.difficultyScore || 5) * 5;
  if (prog && prog.remaining > 120) score += 20;
  if (prog && prog.completed === 0) score += 15;
  
@@ -203,6 +231,10 @@ export async function planWeekSmart(
  const topicsAll = loadTopics();
  const progress = getProgressByStudent(studentId);
  
+ // Get topics due for review (spaced repetition)
+ const dueForReview = getTopicsDueForReview(studentId);
+ const upcomingReviews = getUpcomingReviews(studentId);
+ 
  const topicsBySubject = new Map<string, StudyTopic[]>();
  
  for (const topic of topicsAll) {
@@ -212,17 +244,23 @@ export async function planWeekSmart(
  }
  
  topicsBySubject.forEach((topicList, subjectId) => {
- const sorted = smartSortTopics(topicList, progress);
+ const sorted = smartSortTopics(topicList, progress, dueForReview, upcomingReviews);
  topicsBySubject.set(subjectId, sorted as StudyTopic[]);
  });
  
  const out: PlannedEntry[] = [];
  
- const progMap = new Map<string, { remaining: number; done: boolean }>();
+ const progMap = new Map<string, { remaining: number; done: boolean; isReview: boolean }>();
  for (const t of topicsAll) {
  const p = progress.find((pp) => pp.topicId === t.id);
+ const isDueForReview = dueForReview.some(r => r.topicId === t.id);
+ const isUpcomingReview = upcomingReviews.some(r => r.topicId === t.id);
  if (p)
- progMap.set(t.id, { remaining: p.remaining, done: !!p.completedFlag });
+ progMap.set(t.id, { 
+   remaining: p.remaining, 
+   done: !!p.completedFlag,
+   isReview: isDueForReview || isUpcomingReview
+ });
  }
  
  for (const slot of slots) {
@@ -235,6 +273,10 @@ export async function planWeekSmart(
  const candidateTopics = subjectTopics
  .filter(t => {
  const prog = progMap.get(t.id);
+ 
+ // Include topics for review even if they are marked as done
+ if (prog?.isReview) return true;
+ 
  if (!prog || prog.done || prog.remaining <= 0) return false;
  
  if (t.prerequisites && t.prerequisites.length > 0) {
@@ -263,7 +305,13 @@ export async function planWeekSmart(
  
  const bestTopic = candidateTopics[0].topic;
  const prog = progMap.get(bestTopic.id)!;
- const allocated = Math.min(remainingTime, prog.remaining);
+ 
+ // For review topics, allocate smaller chunks (15-30 min)
+ const effectiveRemaining = prog.isReview 
+   ? Math.min(30, prog.remaining || 30)
+   : prog.remaining;
+ 
+ const allocated = Math.min(remainingTime, effectiveRemaining);
  
  const date = dateFromWeekStart(weekStartISO, slot.day);
  const startH = String(Math.floor(currentMin / 60)).padStart(2,"0");
@@ -281,11 +329,14 @@ export async function planWeekSmart(
  subjectId: slot.subjectId,
  topicId: bestTopic.id,
  allocated,
- remainingAfter: prog.remaining - allocated
+ remainingAfter: prog.isReview ? 0 : prog.remaining - allocated
  });
  
- prog.remaining -= allocated;
- if (prog.remaining <= 0) prog.done = true;
+ // Review topics don't reduce remaining minutes
+ if (!prog.isReview) {
+   prog.remaining -= allocated;
+   if (prog.remaining <= 0) prog.done = true;
+ }
  
  remainingTime -= allocated;
  currentMin = endMin;
