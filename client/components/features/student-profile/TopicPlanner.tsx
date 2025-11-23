@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import {
  Card,
  CardContent,
@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Badge } from "@/components/atoms/Badge";
-import { Clock, AlertCircle, Zap, TrendingUp, RefreshCcw, Calendar } from "lucide-react";
+import { Clock, AlertCircle, Zap, TrendingUp, RefreshCcw, Calendar, CheckCircle2, Circle } from "lucide-react";
 import {
  loadSubjects,
  loadTopics,
@@ -21,10 +21,21 @@ import {
  getProgressByStudent,
  getTopicsDueForReview,
  getUpcomingReviews,
+ setCompletedFlag,
+ saveProgress,
+ loadProgress,
 } from "@/lib/storage";
 import { Switch } from "@/components/atoms/Switch";
 import { Label } from "@/components/atoms/Label";
 import { Separator } from "@/components/atoms/Separator";
+import { Checkbox } from "@/components/atoms/Checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/organisms/Dialog";
 
 function mondayOf(dateISO: string) {
  const d = new Date(dateISO +"T00:00:00");
@@ -65,22 +76,30 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  const [plan, setPlan] = useState<Awaited<ReturnType<typeof planWeek>>>([]);
  const [useSmartPlanning, setUseSmartPlanning] = useState(false);
  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+ const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+ const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressByStudent>>>([]);
+ 
+ const updateTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
 
  useEffect(() => {
  setSubjects(loadSubjects());
  setTopics(loadTopics());
+ setProgress(getProgressByStudent(sid));
  
  const handleSubjectsUpdate = () => setSubjects(loadSubjects());
  const handleTopicsUpdate = () => setTopics(loadTopics());
+ const handleProgressUpdate = () => setProgress(getProgressByStudent(sid));
  
  window.addEventListener('subjectsUpdated', handleSubjectsUpdate);
  window.addEventListener('topicsUpdated', handleTopicsUpdate);
+ window.addEventListener('progressUpdated', handleProgressUpdate);
  
  return () => {
  window.removeEventListener('subjectsUpdated', handleSubjectsUpdate);
  window.removeEventListener('topicsUpdated', handleTopicsUpdate);
+ window.removeEventListener('progressUpdated', handleProgressUpdate);
  };
- }, []);
+ }, [sid]);
 
  useEffect(() => {
  ensureProgressForStudent(sid).then(() => {
@@ -111,6 +130,52 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  }
  return m;
  }, [plan]);
+
+  const handleToggleComplete = async (topicId: string, currentState: boolean) => {
+    await setCompletedFlag(sid, topicId, !currentState);
+    setProgress(getProgressByStudent(sid));
+    setRefresh((r) => r + 1);
+  };
+
+  const handleUpdateQuestionStats = useCallback(async (
+    topicId: string, 
+    field: 'questionsSolved' | 'questionsCorrect' | 'questionsWrong',
+    value: number
+  ) => {
+    const timeoutKey = `${topicId}-${field}`;
+    if (updateTimeoutRef.current[timeoutKey]) {
+      clearTimeout(updateTimeoutRef.current[timeoutKey]);
+    }
+
+    updateTimeoutRef.current[timeoutKey] = setTimeout(async () => {
+      setProgress(prevProgress => {
+        const updated = prevProgress.map(p => 
+          p.topicId === topicId ? { ...p, [field]: value } : p
+        );
+        
+        saveProgress(updated).catch(error => {
+          console.error('Error updating question stats:', error);
+        });
+        
+        return updated;
+      });
+    }, 500);
+  }, []);
+
+  const selectedTopic = useMemo(() => {
+    if (!selectedTopicId) return null;
+    return topics.find(t => t.id === selectedTopicId);
+  }, [selectedTopicId, topics]);
+
+  const selectedSubject = useMemo(() => {
+    if (!selectedTopic) return null;
+    return subjects.find(s => s.id === selectedTopic.subjectId);
+  }, [selectedTopic, subjects]);
+
+  const selectedTopicProgress = useMemo(() => {
+    if (!selectedTopicId) return null;
+    return progress.find(p => p.topicId === selectedTopicId);
+  }, [selectedTopicId, progress]);
 
  const applyPlan = async () => {
  for (const p of plan) await updateProgress(sid, p.topicId, p.allocated);
@@ -248,8 +313,9 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  return (
  <div
  key={`${p.topicId}-${i}`}
- className={`rounded border p-2 text-sm ${pill(sub?.category)}`}
- title={`${sub?.name}${sub?.category ? ` (${sub.category})` :""} — ${top?.name}`}
+ className={`rounded border p-2 text-sm cursor-pointer hover:shadow-md transition-shadow ${pill(sub?.category)}`}
+ title={`${sub?.name}${sub?.category ? ` (${sub.category})` :""} — ${top?.name}\nTıklayarak hızlıca yönetin`}
+                     onClick={() => setSelectedTopicId(p.topicId)}
  >
  <div className="flex items-center justify-between gap-2 min-w-0">
  <div className="flex items-center gap-2 min-w-0">
@@ -386,6 +452,146 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  )}
  </div>
  )}
+
+      {/* Konu Yönetim Dialog'u */}
+      <Dialog open={!!selectedTopicId} onOpenChange={(open) => !open && setSelectedTopicId(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {selectedSubject?.name} - {selectedTopic?.name}
+              {selectedSubject?.category && (
+                <Badge variant="outline">{selectedSubject.category}</Badge>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              Bu konuyu hızlıca yönetin - tamamlanma durumu ve soru istatistikleri
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedTopicProgress && (
+            <div className="space-y-4 py-4">
+              {/* Tamamlama Checkbox */}
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                <Checkbox
+                  checked={selectedTopicProgress.completedFlag || false}
+                  onCheckedChange={() => 
+                    handleToggleComplete(
+                      selectedTopicId!, 
+                      selectedTopicProgress.completedFlag || false
+                    )
+                  }
+                  className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                />
+                <div className="flex items-center gap-2 flex-1">
+                  {selectedTopicProgress.completedFlag ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <Circle className="h-5 w-5 text-gray-400" />
+                  )}
+                  <Label className="text-base cursor-pointer">
+                    {selectedTopicProgress.completedFlag ? 'Tamamlandı' : 'Henüz tamamlanmadı'}
+                  </Label>
+                </div>
+              </div>
+
+              {/* Soru İstatistikleri */}
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold">Soru İstatistikleri</Label>
+                
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Çözülen</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={selectedTopicProgress.questionsSolved || ''}
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value) || 0;
+                        setProgress(prev => prev.map(p => 
+                          p.topicId === selectedTopicId ? { ...p, questionsSolved: newValue } : p
+                        ));
+                        handleUpdateQuestionStats(selectedTopicId!, 'questionsSolved', newValue);
+                      }}
+                      className="h-10"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-xs text-green-600 font-semibold">Doğru</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max={selectedTopicProgress.questionsSolved || 0}
+                      value={selectedTopicProgress.questionsCorrect || ''}
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value) || 0;
+                        setProgress(prev => prev.map(p => 
+                          p.topicId === selectedTopicId ? { ...p, questionsCorrect: newValue } : p
+                        ));
+                        handleUpdateQuestionStats(selectedTopicId!, 'questionsCorrect', newValue);
+                      }}
+                      className="h-10 border-green-200"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-xs text-red-600 font-semibold">Yanlış</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max={selectedTopicProgress.questionsSolved || 0}
+                      value={selectedTopicProgress.questionsWrong || ''}
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value) || 0;
+                        setProgress(prev => prev.map(p => 
+                          p.topicId === selectedTopicId ? { ...p, questionsWrong: newValue } : p
+                        ));
+                        handleUpdateQuestionStats(selectedTopicId!, 'questionsWrong', newValue);
+                      }}
+                      className="h-10 border-red-200"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                {/* Başarı Yüzdesi */}
+                {(selectedTopicProgress.questionsSolved || 0) > 0 && (
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-200">
+                    <span className="text-sm font-medium text-blue-900">Başarı Oranı</span>
+                    <Badge className="text-base px-3 py-1 bg-blue-100 text-blue-700">
+                      %{Math.round(((selectedTopicProgress.questionsCorrect || 0) / (selectedTopicProgress.questionsSolved || 1)) * 100)}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+
+              {/* İlerleme Bilgisi */}
+              <div className="space-y-2 pt-2 border-t">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Tamamlanan Süre</span>
+                  <span className="font-medium">{selectedTopicProgress.completed} / {selectedTopic?.avgMinutes} dk</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-gray-200 overflow-hidden">
+                  <div
+                    className="h-full bg-green-500 transition-all"
+                    style={{
+                      width: `${selectedTopic?.avgMinutes ? (selectedTopicProgress.completed / selectedTopic.avgMinutes) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button variant="outline" onClick={() => setSelectedTopicId(null)}>
+                  Kapat
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
  </CardContent>
  </Card>
  );
