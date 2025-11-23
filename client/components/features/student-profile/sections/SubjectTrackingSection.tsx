@@ -80,19 +80,19 @@ export default function SubjectTrackingSection({
     };
   }, [studentId, refresh]);
 
-  // Set initial category when categories are loaded
-  useEffect(() => {
-    if (categories.length > 0 && !selectedCategory) {
-      setSelectedCategory(categories[0]);
-    }
-  }, [categories, selectedCategory]);
-
   const categories = useMemo(() => {
     const cats = new Set(subjects.map((s) => s.category).filter(Boolean));
     // Remove 'School' category if it exists
     cats.delete('School');
     return Array.from(cats) as string[];
   }, [subjects]);
+
+  // Set initial category when categories are loaded
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategory) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory]);
 
   const filteredSubjects = useMemo(() => {
     return subjects.filter((s) => s.category === selectedCategory && s.category !== 'School');
