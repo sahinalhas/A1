@@ -71,19 +71,6 @@ export default function StandardizedTalentsSection({
  });
 
  return (
- <Card className="border-none">
- <CardHeader className="pb-4">
- <div className="flex items-center gap-3">
- <div className="p-2 rounded-lg bg-purple-50 dark:bg-purple-950/20">
- <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
- </div>
- <div>
- <CardTitle className="text-lg">Yetenek & İlgi Bilgileri</CardTitle>
- <CardDescription className="text-xs">Kategorize yetenekler ve ilgi alanları</CardDescription>
- </div>
- </div>
- </CardHeader>
- <CardContent className="pt-0">
  <Form {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
  {/* Değerlendirme Tarihi */}
@@ -343,7 +330,5 @@ export default function StandardizedTalentsSection({
  </Button>
  </form>
  </Form>
- </CardContent>
- </Card>
  );
 }
