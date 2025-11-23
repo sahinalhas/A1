@@ -78,7 +78,7 @@ export default function StandardizedTalentsSection({
  <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
  </div>
  <div>
- <CardTitle className="text-lg">Yetenek & İlgi Profili</CardTitle>
+ <CardTitle className="text-lg">Yetenek & İlgi Bilgileri</CardTitle>
  <CardDescription className="text-xs">Kategorize yetenekler ve ilgi alanları</CardDescription>
  </div>
  </div>

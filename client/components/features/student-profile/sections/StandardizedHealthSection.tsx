@@ -90,7 +90,7 @@ export default function StandardizedHealthSection({
  <Activity className="h-5 w-5 text-red-600 dark:text-red-400" />
  </div>
  <div>
- <CardTitle className="text-lg">Sağlık Profili</CardTitle>
+ <CardTitle className="text-lg">Sağlık Bilgileri</CardTitle>
  <CardDescription className="text-xs">Kategorize sağlık ve tıbbi bilgiler</CardDescription>
  </div>
  </div>
