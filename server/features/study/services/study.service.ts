@@ -174,6 +174,13 @@ export function savePlannedTopics(plannedTopics: any, studentId: string, weekSta
     throw new Error("Öğrenci ID ve hafta başlangıç tarihi gerekli");
   }
   
+  // Validate each topic entry
+  for (const t of plannedTopics) {
+    if (!t.date || !t.start || !t.end || !t.subjectId || !t.topicId || typeof t.allocated !== 'number') {
+      throw new Error("Konu planı eksik veya hatalı veriler içeriyor");
+    }
+  }
+  
   repository.deletePlannedTopicsByWeek(studentId, weekStartDate);
   
   const topics: PlannedTopic[] = plannedTopics.map((t: any) => ({
@@ -185,8 +192,8 @@ export function savePlannedTopics(plannedTopics: any, studentId: string, weekSta
     end: t.end,
     subjectId: t.subjectId,
     topicId: t.topicId,
-    allocated: t.allocated,
-    remainingAfter: t.remainingAfter,
+    allocated: Number(t.allocated) || 0,
+    remainingAfter: Number(t.remainingAfter) || 0,
   }));
   
   repository.insertPlannedTopics(topics);

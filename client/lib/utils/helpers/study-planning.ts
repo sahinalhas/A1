@@ -87,6 +87,9 @@ export async function planWeek(
  return null;
  };
 
+ // Track daily minutes to respect weekly plan limits
+ const dailyMinutes = new Map<number, number>();
+
  for (const s of slots) {
  let remain = minutesBetween(s.start, s.end);
  if (remain <= 0) continue;
@@ -96,6 +99,9 @@ export async function planWeek(
  const slotEndTime = minutesBetween("00:00", s.end);
  const maxAllowedPerSlot = slotEndTime - slotStartTime;
  let usedInSlot = 0;
+ 
+ // Get current day's total minutes (slot is already part of this day)
+ const currentDayTotal = dailyMinutes.get(s.day) || 0;
  
  while (remain > 0 && guard++ < 200 && usedInSlot < maxAllowedPerSlot) {
  const nxt = pickNext(s.subjectId);
@@ -127,6 +133,7 @@ export async function planWeek(
  remain -= alloc;
  usedInSlot += alloc;
  currentStartMin = endMin;
+ dailyMinutes.set(s.day, (dailyMinutes.get(s.day) || 0) + alloc);
  }
  }
  
@@ -134,6 +141,7 @@ export async function planWeek(
  await savePlannedTopics(studentId, weekStartISO, out);
  } catch (error) {
  console.error('Failed to save planned topics:', error);
+ throw error;
  }
  
  return out;
@@ -279,6 +287,9 @@ export async function planWeekSmart(
  });
  }
  
+ // Track daily minutes to respect weekly plan limits
+ const dailyMinutes = new Map<number, number>();
+
  for (const slot of slots) {
  const subjectTopics = topicsBySubject.get(slot.subjectId) || [];
  let remainingTime = minutesBetween(slot.start, slot.end);
@@ -326,7 +337,7 @@ export async function planWeekSmart(
  const bestTopic = candidateTopics[0].topic;
  const prog = progMap.get(bestTopic.id)!;
  
- // For review topics, allocate smaller chunks but don't exceed remaining
+ // For review topics, allocate appropriate time with dynamic remaining calc
  const effectiveRemaining = prog.isReview 
    ? Math.min(prog.remaining || 15, 30)
    : prog.remaining;
@@ -344,6 +355,9 @@ export async function planWeekSmart(
  const endM = String(endMin % 60).padStart(2,"0");
  const end = `${endH}:${endM}`;
  
+ // Calculate remaining after - always show remainder, even for reviews
+ const calcRemaining = prog.isReview ? 0 : Math.max(0, prog.remaining - allocated);
+ 
  out.push({
  date,
  start,
@@ -351,7 +365,7 @@ export async function planWeekSmart(
  subjectId: slot.subjectId,
  topicId: bestTopic.id,
  allocated,
- remainingAfter: prog.isReview ? 0 : Math.max(0, prog.remaining - allocated)
+ remainingAfter: calcRemaining
  });
  
  // Review topics don't reduce remaining minutes
@@ -363,7 +377,15 @@ export async function planWeekSmart(
  remainingTime -= allocated;
  usedInSlot += allocated;
  currentMin = endMin;
+ dailyMinutes.set(slot.day, (dailyMinutes.get(slot.day) || 0) + allocated);
  }
+ }
+ 
+ try {
+ await savePlannedTopics(studentId, weekStartISO, out);
+ } catch (error) {
+ console.error('Failed to save planned topics:', error);
+ throw error;
  }
  
  return out;

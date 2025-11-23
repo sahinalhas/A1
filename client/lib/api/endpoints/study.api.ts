@@ -619,7 +619,8 @@ export async function savePlannedTopics(
  weekStartDate: string,
  plannedTopics: PlannedEntry[]
 ): Promise<void> {
- return apiClient.post(
+ try {
+ await apiClient.post(
  `/api/study/planned-topics/${studentId}/${weekStartDate}`,
  plannedTopics,
  {
@@ -627,6 +628,18 @@ export async function savePlannedTopics(
  errorMessage: 'Konu bazlı plan kaydedilemedi',
  }
  );
+ 
+ // Verify data was saved by refetching immediately
+ if (plannedTopics.length > 0) {
+ const saved = await getPlannedTopics(studentId, weekStartDate);
+ if (saved.length === 0) {
+ throw new Error('Konu bazlı plan kaydedildi ancak doğrulanmadı');
+ }
+ }
+ } catch (error) {
+ console.error('Error saving planned topics:', error);
+ throw error;
+ }
 }
 
 export async function getPlannedTopics(
