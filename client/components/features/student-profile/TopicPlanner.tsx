@@ -86,6 +86,7 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
  const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressByStudent>>>([]);
+ const [isApplying, setIsApplying] = useState(false);
 
  const updateTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
 
@@ -186,8 +187,24 @@ export default function TopicPlanner({ sid }: { sid: string }) {
   }, [selectedTopicId, progress]);
 
  const applyPlan = async () => {
- for (const p of plan) await updateProgress(sid, p.topicId, p.allocated);
+ setIsApplying(true);
+ try {
+ let completedCount = 0;
+ for (const p of plan) {
+ await updateProgress(sid, p.topicId, p.allocated);
+ completedCount++;
+ }
+ setProgress(getProgressByStudent(sid));
  setRefresh((x) => x + 1);
+ // Show success notification
+ if (completedCount > 0) {
+ console.log(`✅ Plan uygulandı: ${completedCount} konu güncellendi`);
+ }
+ } catch (error) {
+ console.error('Plan uygulanırken hata:', error);
+ } finally {
+ setIsApplying(false);
+ }
  };
 
   const handleExportPDF = () => {
@@ -239,8 +256,11 @@ export default function TopicPlanner({ sid }: { sid: string }) {
  onChange={(e) => setWeekStart(mondayOf(e.target.value))}
  />
  </div>
- <Button onClick={applyPlan} disabled={plan.length === 0}>
- Planı Uygula
+ <Button 
+ onClick={applyPlan} 
+ disabled={plan.length === 0 || isApplying}
+ >
+ {isApplying ? 'Uygulanıyor...' : 'Planı Uygula'}
  </Button>
  </div>
 
