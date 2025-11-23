@@ -18,8 +18,11 @@ import {
 } from "@/components/organisms/Accordion";
 import {
   loadSubjects,
+  loadSubjectsAsync,
   loadTopics,
+  loadTopicsAsync,
   getProgressByStudent,
+  loadProgressAsync,
   ensureProgressForStudent,
   setCompletedFlag,
   updateProgress,
@@ -43,11 +46,19 @@ export default function SubjectTrackingSection({
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
-    ensureProgressForStudent(studentId).then(() => {
+    const loadData = async () => {
+      await Promise.all([
+        loadSubjectsAsync(),
+        loadTopicsAsync(),
+        ensureProgressForStudent(studentId).then(() => loadProgressAsync())
+      ]);
+      
       setSubjects(loadSubjects());
       setTopics(loadTopics());
       setProgress(getProgressByStudent(studentId));
-    });
+    };
+
+    loadData();
 
     const handleUpdate = () => {
       setSubjects(loadSubjects());
@@ -97,8 +108,10 @@ export default function SubjectTrackingSection({
       const updated = list.map(p => 
         p.topicId === topicId ? { ...p, [field]: value } : p
       );
-      const { saveProgress } = await import("@/lib/storage");
+      const { saveProgress, loadProgressAsync, getProgressByStudent } = await import("@/lib/api/endpoints/study.api");
       await saveProgress(updated);
+      await loadProgressAsync();
+      setProgress(getProgressByStudent(studentId));
       setRefresh((r) => r + 1);
     }
   };

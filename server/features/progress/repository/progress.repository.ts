@@ -19,13 +19,19 @@ function ensureStatements() {
     getAllProgress: db.prepare('SELECT * FROM progress ORDER BY lastStudied DESC'),
     getProgressByStudent: db.prepare('SELECT * FROM progress WHERE studentId = ? ORDER BY lastStudied DESC'),
     upsertProgress: db.prepare(`
-      INSERT INTO progress (id, studentId, topicId, completed, remaining, lastStudied, notes)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO progress (id, studentId, topicId, completed, remaining, lastStudied, notes, completedFlag, reviewCount, nextReviewDate, questionsSolved, questionsCorrect, questionsWrong)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(studentId, topicId) DO UPDATE SET
         completed = excluded.completed,
         remaining = excluded.remaining,
         lastStudied = excluded.lastStudied,
         notes = excluded.notes,
+        completedFlag = excluded.completedFlag,
+        reviewCount = excluded.reviewCount,
+        nextReviewDate = excluded.nextReviewDate,
+        questionsSolved = excluded.questionsSolved,
+        questionsCorrect = excluded.questionsCorrect,
+        questionsWrong = excluded.questionsWrong,
         updated_at = CURRENT_TIMESTAMP
     `),
     getAcademicGoalsByStudent: db.prepare('SELECT * FROM academic_goals WHERE studentId = ? ORDER BY deadline'),
@@ -71,7 +77,13 @@ export function saveProgress(progress: Progress[]) {
     for (const p of progress) {
       statements!.upsertProgress.run(
         p.id, p.studentId, p.topicId, p.completed,
-        p.remaining, p.lastStudied, p.notes
+        p.remaining, p.lastStudied, p.notes,
+        p.completedFlag ? 1 : 0,
+        p.reviewCount || 0,
+        p.nextReviewDate || null,
+        p.questionsSolved || 0,
+        p.questionsCorrect || 0,
+        p.questionsWrong || 0
       );
     }
   });

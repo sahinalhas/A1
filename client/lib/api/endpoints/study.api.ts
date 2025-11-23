@@ -300,7 +300,7 @@ export function loadProgress(): TopicProgress[] {
  return [];
 }
 
-async function loadProgressAsync(): Promise<void> {
+export async function loadProgressAsync(): Promise<void> {
  try {
  const json = await apiClient.get<any>('/api/progress', { showErrorToast: false });
  const progress = Array.isArray(json) ? json : (Array.isArray(json?.data) ? json.data : []);
