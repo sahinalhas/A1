@@ -143,9 +143,6 @@ export default function SubjectTrackingSection({
 
       try {
         await saveProgress(updated);
-        await loadProgressAsync();
-        const freshProgress = getProgressByStudent(studentId);
-        setProgress(freshProgress);
         onUpdate();
       } catch (error) {
         console.error('Error updating question stats:', error);
