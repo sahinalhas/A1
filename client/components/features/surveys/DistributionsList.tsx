@@ -91,11 +91,21 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  const { loadStudents } = await import('@/lib/storage');
  const { generateExcelTemplate } = await import('@/lib/excel-template-generator');
  
- const students = loadStudents().filter(s => 
- !distribution.targetClasses || 
- distribution.targetClasses.length === 0 || 
- (s.class && distribution.targetClasses.includes(s.class))
+ const allStudents = loadStudents();
+ let students = allStudents;
+ 
+ // Get students: either from targetStudents, or from targetClasses
+ if (distribution.targetStudents && distribution.targetStudents.length > 0) {
+ // If specific students are set, use them
+ students = allStudents.filter(s => 
+ distribution.targetStudents?.includes(s.id)
  );
+ } else if (distribution.targetClasses && distribution.targetClasses.length > 0) {
+ // If classes are set, use all students in those classes
+ students = allStudents.filter(s => 
+ s.class && distribution.targetClasses.includes(s.class)
+ );
+ }
 
  const base64Excel = generateExcelTemplate({
  survey: { 

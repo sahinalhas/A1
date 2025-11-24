@@ -6,27 +6,32 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 ## November 24, 2025 - Fixed Survey Excel Import, Refactored Templates, & Auto-Filled Student Data
 
-### Part 3: Auto-Fill Student Data in Excel Based on Selected Classes
-- **Feature Added**: When distributing surveys and selecting classes, the Excel template now automatically includes all student data from those classes
+### Part 3: Auto-Fill Student Data in Excel Based on Selected Classes & Distribution Cleanup
+- **Feature Added**: Excel templates now automatically include all student data from selected classes
+- **Two Locations Fixed**:
+  1. **SurveyDistributionDialog.tsx** - When creating new distribution:
+     - Updated `generateAndDownloadExcelTemplate()` to check both targetStudents and targetClasses
+     - Updated `onSubmit()` function with same logic
+     - Button enables when either targetStudents or targetClasses are selected
+  
+  2. **DistributionsList.tsx** - When downloading existing distribution (NEW FIX):
+     - Fixed `handleDownloadExcel()` to properly use targetStudents or targetClasses
+     - Now correctly filters students from database
+     - Excel indir button now shows student data
+  
 - **How It Works**:
-  1. User selects classes in distribution dialog
-  2. Clicks "Şablonu Önizle" or "Dağıtımı Oluştur"
-  3. Excel template is generated with student data pre-filled:
-     - Öğrenci No (Student ID)
-     - Ad (First Name)
-     - Soyad (Last Name)
-     - Sınıf (Class)
-     - Cinsiyet (Gender)
-- **Implementation Details**:
-  - Updated `generateAndDownloadExcelTemplate()` function to check both targetStudents and targetClasses
-  - Updated `onSubmit()` function with same logic
-  - Button now enables when either targetStudents or targetClasses are selected
-- **Files Modified**: `client/components/features/surveys/SurveyDistributionDialog.tsx`
-- **Impact**: Users can now:
-  - Select classes instead of individual students
-  - Immediately download Excel with student info pre-filled
-  - No need to manually enter student data
-  - Faster, cleaner workflow
+  1. User selects classes → Students auto-selected
+  2. Downloads Excel → Student info (No, Ad, Soyad, Sınıf, Cinsiyet) pre-filled
+  3. Or from Distributions page → Same auto-fill for existing distributions
+  
+- **Files Modified**: 
+  - `client/components/features/surveys/SurveyDistributionDialog.tsx`
+  - `client/components/features/surveys/DistributionsList.tsx`
+  
+- **Impact**: 
+  - No need to manually enter student data anywhere
+  - Consistent behavior: create new or download existing
+  - Faster data collection workflow
 
 ### Part 1: Excel Import Algorithm Enhancement - Robust Distribution Lookup & Better Error Messages
 - **Problem Identified**: When uploading survey responses via Excel, the system threw "Anket dağıtımı bulunamadı" (Survey distribution not found) error even when distribution existed
