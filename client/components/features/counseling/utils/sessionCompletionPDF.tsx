@@ -106,10 +106,10 @@ const styles = StyleSheet.create({
     borderLeftColor: '#3b82f6',
   },
   badge: {
-    display: 'inline',
     backgroundColor: '#dbeafe',
     color: '#1e40af',
-    padding: '2 6',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
     fontSize: 7,
     marginRight: 3,
   },
@@ -324,7 +324,12 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
 
           <View style={styles.row}>
             <Text style={styles.label}>Rehberlik Alanı:</Text>
-            <Text style={styles.value}>{topicFullPath || session.topic || '-'}</Text>
+            <Text style={styles.value}>
+              {topicFullPath ? topicFullPath.toLowerCase().split('>').map((part, idx) => {
+                const trimmed = part.trim();
+                return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+              }).join(' > ') : session.topic ? session.topic.toLowerCase().charAt(0).toUpperCase() + session.topic.slice(1) : '-'}
+            </Text>
           </View>
 
           <View style={styles.row}>
