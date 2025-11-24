@@ -307,6 +307,18 @@ export default function EnhancedSessionsTable({
                     const topicTitle = topic?.title;
                     const schoolName = settings?.account?.institution;
                     
+                    const studentData = session.student ? {
+                      gender: undefined,
+                      idNumber: undefined,
+                      studentNumber: session.student.id,
+                      yearEndSuccess: undefined,
+                      absenceDays: undefined,
+                      familyInfo: undefined,
+                      term: undefined,
+                      healthInfo: undefined,
+                      specialEducationInfo: undefined,
+                    } : undefined;
+                    
                     const formData = {
                       topic: session.topic || '',
                       exitTime: session.exitTime || '',
@@ -325,7 +337,7 @@ export default function EnhancedSessionsTable({
                       actionItems: [],
                     } as unknown as CompleteSessionFormValues;
                     
-                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle);
+                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle, studentData);
                     toast({
                       title: "PDF İndirildi",
                       description: "Görüşme bilgileri formu başarıyla indirildi",
