@@ -20,7 +20,8 @@ export function createDistribution(distribution: Partial<SurveyDistribution>) {
     ...distribution,
     title: distribution.title ? sanitizeString(distribution.title) : undefined,
     description: distribution.description ? sanitizeString(distribution.description) : undefined,
-    publicLink: distribution.publicLink || uuidv4()
+    publicLink: distribution.publicLink || uuidv4(),
+    status: distribution.status || 'ACTIVE'
   };
   
   repository.saveSurveyDistribution(sanitizedDistribution);

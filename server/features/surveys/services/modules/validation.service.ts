@@ -1,7 +1,8 @@
 import type { SurveyDistribution, SurveyQuestion } from '../../types/surveys.types.js';
 
 export function validateDistributionStatus(distribution: SurveyDistribution) {
-  if (distribution.status !== 'ACTIVE') {
+  // Allow ACTIVE and DRAFT for public surveys - only reject CLOSED/ARCHIVED
+  if (distribution.status === 'CLOSED' || distribution.status === 'ARCHIVED') {
     throw new Error('Anket artık aktif değil');
   }
 
