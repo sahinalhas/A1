@@ -6,6 +6,7 @@
 import express from 'express';
 import { UnifiedScoringEngine } from '../services/unified-scoring-engine.service.js';
 import { AIProfileAnalyzerService } from '../services/ai-profile-analyzer.service.js';
+import { logger } from '../utils/logger.js';
 
 const router = express.Router();
 const scoringEngine = new UnifiedScoringEngine();
@@ -32,7 +33,7 @@ router.get('/:studentId/scores', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error fetching student scores:', error);
+    logger.error('Error fetching student scores', 'StudentProfileAIRoutes', error);
     res.status(500).json({
       success: false,
       error: 'Failed to calculate student scores'
@@ -70,7 +71,7 @@ router.get('/:studentId/ai-analysis', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error generating AI analysis:', error);
+    logger.error('Error generating AI analysis', 'StudentProfileAIRoutes', error);
     res.status(500).json({
       success: false,
       error: 'Failed to generate AI analysis'
@@ -95,7 +96,7 @@ router.post('/:studentId/recalculate-scores', async (req, res) => {
       data: { scores }
     });
   } catch (error) {
-    console.error('Error recalculating scores:', error);
+    logger.error('Error recalculating scores', 'StudentProfileAIRoutes', error);
     res.status(500).json({
       success: false,
       error: 'Failed to recalculate scores'

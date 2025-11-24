@@ -4,6 +4,18 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
+## November 24, 2025 - Bug Fixes: Logging Consistency Improvements
+
+### Logging Infrastructure Standardization
+- **Issue Found**: Routes `student-profile-ai.routes.ts` and `ai-text-polish.routes.ts` used direct `console.error()` instead of the centralized logger service
+- **Fix Applied**: Updated all error logging to use the proper `logger.error()` from the logger utility
+  - Import added: `import { logger } from '../utils/logger.js'}`
+  - All catch blocks now properly logged: `logger.error('message', 'ContextName', error)`
+- **Benefit**: Consistent error logging across the application, better observability and debugging
+- **Files Modified**: 
+  - `server/routes/student-profile-ai.routes.ts` - 3 error handlers updated
+  - `server/routes/ai-text-polish.routes.ts` - 1 error handler updated
+
 ## November 23, 2025 - Topic-Based Plan UI Enhancement & PDF Export
 
 ### Konu Bazlı Plan - Enhanced UX with Accordion & PDF Features

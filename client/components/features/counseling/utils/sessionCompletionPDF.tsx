@@ -28,73 +28,83 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
+    padding: 40,
     fontFamily: 'Roboto',
     fontSize: 10,
+  },
+  header: {
+    marginBottom: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#4f46e5',
+    paddingBottom: 10,
   },
   title: {
     fontSize: 16,
     fontWeight: 700,
-    textAlign: 'center',
-    marginBottom: 5,
-    textTransform: 'uppercase',
+    color: '#4f46e5',
+    marginBottom: 4,
   },
-  table: {
-    width: '100%',
-    marginTop: 15,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-    borderBottomStyle: 'solid',
-    minHeight: 25,
-  },
-  tableCell: {
-    flex: 1,
-    padding: 5,
-    borderRightWidth: 1,
-    borderRightColor: '#000',
-    borderRightStyle: 'solid',
-    justifyContent: 'center',
-  },
-  tableCellNoBorder: {
-    flex: 1,
-    padding: 5,
-    justifyContent: 'center',
-  },
-  label: {
+  subtitle: {
     fontSize: 9,
-    fontWeight: 700,
+    color: '#666',
   },
-  value: {
-    fontSize: 9,
-    fontWeight: 400,
-    marginTop: 2,
-  },
-  meetingInfo: {
-    marginTop: 20,
-  },
-  meetingRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  meetingLabel: {
-    fontSize: 9,
-    fontWeight: 700,
-    width: 180,
-  },
-  meetingValue: {
-    fontSize: 9,
-    fontWeight: 400,
-    flex: 1,
+  section: {
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    padding: 12,
+    pageBreakInside: 'avoid',
   },
   sectionTitle: {
     fontSize: 11,
     fontWeight: 700,
-    marginTop: 20,
     marginBottom: 10,
-    textDecoration: 'underline',
+    color: '#1f2937',
+    borderBottomWidth: 1,
+    borderBottomColor: '#d1d5db',
+    paddingBottom: 6,
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  label: {
+    fontSize: 9,
+    fontWeight: 700,
+    width: 120,
+    color: '#374151',
+  },
+  value: {
+    fontSize: 9,
+    flex: 1,
+    color: '#1f2937',
+  },
+  notesBox: {
+    backgroundColor: '#f9fafb',
+    padding: 10,
+    marginTop: 8,
+    borderRadius: 4,
+    minHeight: 60,
+  },
+  notesText: {
+    fontSize: 9,
+    lineHeight: 1.5,
+    color: '#374151',
+  },
+  ratingBox: {
+    backgroundColor: '#eff6ff',
+    padding: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#3b82f6',
+  },
+  badge: {
+    display: 'inline',
+    backgroundColor: '#dbeafe',
+    color: '#1e40af',
+    padding: '2 6',
+    fontSize: 8,
+    borderRadius: 2,
+    marginRight: 4,
   },
 });
 
@@ -111,8 +121,9 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
   topicFullPath,
   schoolName,
 }) => {
-  const sessionDate = format(new Date(session.sessionDate), 'dd/MM/yyyy', { locale: tr });
-  
+  const sessionDate = format(new Date(session.sessionDate), 'dd MMMM yyyy', { locale: tr });
+  const generatedDate = format(new Date(), 'dd MMMM yyyy HH:mm', { locale: tr });
+
   const studentName = session.sessionType === 'individual'
     ? `${session.student?.name || ''} ${session.student?.surname || ''}`.trim()
     : session.groupName || 'Grup Görüşmesi';
@@ -142,181 +153,137 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
     'sınırlı': 'Sınırlı',
   };
 
-  // Öğrenci bilgilerini PDF'deki gibi düzenle
-  const studentInfoRows = [
-    [
-      { label: 'Öğrencinin Adı Soyadı:', value: studentName },
-      { label: 'Cinsiyeti:', value: session.student?.gender === 'female' ? 'Kız' : session.student?.gender === 'male' ? 'Erkek' : '' }
-    ],
-    [
-      { label: 'T.C. Kimlik Nu:', value: session.student?.tcIdentityNumber || '' },
-      { label: 'Uyruğu:', value: 'T.C.' }
-    ],
-    [
-      { label: 'Kademe:', value: session.student?.educationLevel || '' },
-      { label: 'Öğrenci Numarası:', value: session.student?.studentNumber || '' }
-    ],
-    [
-      { label: 'Okulu:', value: schoolName || '' },
-      { label: 'Yıl Sonu Başarı:', value: session.student?.yearEndSuccess || '' }
-    ],
-    [
-      { label: 'Sınıfı:', value: session.student?.className || '' },
-      { label: 'Devamsızlık Gün Sayısı:', value: session.student?.absenceDays || '' }
-    ],
-    [
-      { label: 'Aile Bilgisi :', value: session.student?.familyInfo || '' },
-      { label: 'Dönem:', value: session.student?.term || '' }
-    ],
-    [
-      { label: 'Sağlık Bilgisi :', value: session.student?.healthInfo || 'Sürekli hastalığı yok' },
-      { label: 'Özel Eğitim Bilgisi:', value: session.student?.specialEducationInfo || 'Yok' }
-    ]
-  ];
-
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Başlık */}
-        <Text style={styles.title}>GÖRÜŞME BİLGİLERİ FORMU</Text>
-        <Text style={[styles.title, { fontSize: 12, fontWeight: 400, textTransform: 'none' }]}>
-          Rehberlik Hizmetleri
-        </Text>
-
-        {/* Öğrenci Bilgileri Tablosu */}
-        <View style={styles.table}>
-          {studentInfoRows.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.tableRow}>
-              {row.map((cell, cellIndex) => (
-                <View 
-                  key={cellIndex} 
-                  style={cellIndex === row.length - 1 ? styles.tableCellNoBorder : styles.tableCell}
-                >
-                  <Text style={styles.label}>{cell.label}</Text>
-                  <Text style={styles.value}>{cell.value}</Text>
-                </View>
-              ))}
-            </View>
-          ))}
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Görüşme Bilgileri Formu</Text>
+          <Text style={styles.subtitle}>
+            Oluşturma Tarihi: {generatedDate}
+          </Text>
         </View>
 
-        {/* Görüşme Bilgileri */}
-        <View style={styles.meetingInfo}>
-          <View style={styles.meetingRow}>
-            <Text style={styles.meetingLabel}>Görüşme Tarihi ve Saati :</Text>
-            <Text style={styles.meetingValue}>
-              {sessionDate} - {session.entryTime}
-            </Text>
-          </View>
-
-          <View style={styles.meetingRow}>
-            <Text style={styles.meetingLabel}>Görüşme Yeri :</Text>
-            <Text style={styles.meetingValue}>Rehberlik Servisi</Text>
-          </View>
-
-          {topicFullPath && (
-            <View style={styles.meetingRow}>
-              <Text style={styles.meetingLabel}>Rehberlik Alanı :</Text>
-              <Text style={styles.meetingValue}>{topicFullPath}</Text>
+        {/* Temel Bilgiler */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Görüşme Özeti</Text>
+          {schoolName && (
+            <View style={styles.row}>
+              <Text style={styles.label}>Okul:</Text>
+              <Text style={styles.value}>{schoolName}</Text>
             </View>
           )}
-
-          <View style={styles.meetingRow}>
-            <Text style={styles.meetingLabel}>Oturum Sayısı :</Text>
-            <Text style={styles.meetingValue}>0</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Öğrenci:</Text>
+            <Text style={styles.value}>{studentName}</Text>
           </View>
-
-          <View style={styles.meetingRow}>
-            <Text style={styles.meetingLabel}>Öğretmen Adı :</Text>
-            <Text style={styles.meetingValue}></Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Tarih:</Text>
+            <Text style={styles.value}>{sessionDate}</Text>
           </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Saat:</Text>
+            <Text style={styles.value}>
+              {session.entryTime} - {formData.exitTime || '-'}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Türü:</Text>
+            <Text style={styles.value}>
+              {session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}
+            </Text>
+          </View>
+          {topicFullPath && (
+            <View style={styles.row}>
+              <Text style={styles.label}>Konu:</Text>
+              <Text style={styles.value}>{topicFullPath}</Text>
+            </View>
+          )}
         </View>
 
-        {/* Görüşme Detayları */}
-        <Text style={styles.sectionTitle}>Görüşme Detayları</Text>
-        
-        <View style={styles.table}>
-          <View style={styles.tableRow}>
-            <View style={styles.tableCell}>
-              <Text style={styles.label}>Duygusal Durum:</Text>
-              <Text style={styles.value}>{emotionalStateLabels[formData.emotionalState as string] || '-'}</Text>
-            </View>
-            <View style={styles.tableCell}>
-              <Text style={styles.label}>Fiziksel Durum:</Text>
-              <Text style={styles.value}>{physicalStateLabels[formData.physicalState as string] || '-'}</Text>
-            </View>
-            <View style={styles.tableCellNoBorder}>
-              <Text style={styles.label}>İletişim Kalitesi:</Text>
-              <Text style={styles.value}>{communicationLabels[formData.communicationQuality as string] || '-'}</Text>
-            </View>
-          </View>
+        {/* Davranış ve Durum Değerlendirmesi */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Davranış ve Durum Değerlendirmesi</Text>
           
-          <View style={styles.tableRow}>
-            <View style={styles.tableCell}>
+          <View style={styles.ratingBox}>
+            <View style={styles.row}>
+              <Text style={styles.label}>Duygusal Durum:</Text>
+              <Text style={styles.value}>
+                {emotionalStateLabels[formData.emotionalState as string] || '-'}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Fiziksel Durum:</Text>
+              <Text style={styles.value}>
+                {physicalStateLabels[formData.physicalState as string] || '-'}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>İletişim Kalitesi:</Text>
+              <Text style={styles.value}>
+                {communicationLabels[formData.communicationQuality as string] || '-'}
+              </Text>
+            </View>
+            <View style={styles.row}>
               <Text style={styles.label}>İşbirliği Düzeyi:</Text>
               <Text style={styles.value}>{formData.cooperationLevel}/5</Text>
             </View>
-            <View style={styles.tableCellNoBorder}>
-              <Text style={styles.label}>Görüşme Süresi:</Text>
-              <Text style={styles.value}>{session.entryTime} - {formData.exitTime || '-'}</Text>
-            </View>
           </View>
         </View>
 
-        {/* Görüşme Ayrıntıları */}
+        {/* Detaylı Notlar */}
         {formData.detailedNotes && (
-          <>
-            <Text style={styles.sectionTitle}>Görüşme Ayrıntıları</Text>
-            <View style={[styles.tableRow, { minHeight: 100 }]}>
-              <View style={styles.tableCellNoBorder}>
-                <Text style={styles.value}>{formData.detailedNotes}</Text>
-              </View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Görüşme Notları</Text>
+            <View style={styles.notesBox}>
+              <Text style={styles.notesText}>{formData.detailedNotes}</Text>
             </View>
-          </>
+          </View>
         )}
 
         {/* Yapılacaklar */}
         {formData.actionItems && formData.actionItems.length > 0 && (
-          <>
-            <Text style={styles.sectionTitle}>Yapılacaklar</Text>
-            <View style={styles.table}>
-              {formData.actionItems.map((item, index) => (
-                <View key={index} style={styles.tableRow}>
-                  <View style={styles.tableCellNoBorder}>
-                    <Text style={styles.value}>{index + 1}. {item.description}</Text>
-                  </View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Yapılacaklar ({formData.actionItems.length})</Text>
+            {formData.actionItems.map((item, idx) => (
+              <View key={idx} style={{ marginBottom: 8 }}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Madde {idx + 1}:</Text>
+                  <Text style={styles.value}>{item.description || '-'}</Text>
                 </View>
-              ))}
-            </View>
-          </>
+                {item.assignedTo && (
+                  <View style={{ marginLeft: 120, marginTop: 2 }}>
+                    <Text style={{ fontSize: 8, color: '#666' }}>
+                      Atanan: {item.assignedTo}
+                      {item.dueDate && ` • Tarih: ${item.dueDate}`}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
         )}
 
         {/* Takip Planı */}
         {formData.followUpNeeded && (
-          <>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Takip Planı</Text>
-            <View style={styles.table}>
-              <View style={styles.tableRow}>
-                <View style={styles.tableCell}>
-                  <Text style={styles.label}>Takip Tarihi:</Text>
-                  <Text style={styles.value}>
-                    {formData.followUpDate ? format(new Date(formData.followUpDate), 'dd/MM/yyyy', { locale: tr }) : '-'}
-                  </Text>
-                </View>
-                <View style={styles.tableCellNoBorder}>
-                  <Text style={styles.label}>Takip Saati:</Text>
-                  <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
-                </View>
-              </View>
-              {formData.followUpPlan && (
-                <View style={styles.tableRow}>
-                  <View style={styles.tableCellNoBorder}>
-                    <Text style={styles.value}>{formData.followUpPlan}</Text>
-                  </View>
-                </View>
-              )}
+            <View style={styles.row}>
+              <Text style={styles.label}>Takip Tarihi:</Text>
+              <Text style={styles.value}>
+                {formData.followUpDate ? format(new Date(formData.followUpDate), 'dd MMMM yyyy', { locale: tr }) : '-'}
+              </Text>
             </View>
-          </>
+            <View style={styles.row}>
+              <Text style={styles.label}>Takip Saati:</Text>
+              <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
+            </View>
+            {formData.followUpPlan && (
+              <View style={styles.notesBox}>
+                <Text style={styles.notesText}>{formData.followUpPlan}</Text>
+              </View>
+            )}
+          </View>
         )}
       </Page>
     </Document>
@@ -325,28 +292,12 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
 
 export async function generateSessionCompletionPDF(
   session: CounselingSession,
-  formData?: Partial<CompleteSessionFormValues>,
+  formData: CompleteSessionFormValues,
   topicFullPath?: string,
   schoolName?: string
 ) {
-  const defaultFormData: CompleteSessionFormValues = {
-    topic: '',
-    exitTime: new Date().toTimeString().slice(0, 5),
-    detailedNotes: '',
-    actionItems: [],
-    followUpNeeded: false,
-    cooperationLevel: 3,
-    emotionalState: 'sakin',
-    physicalState: 'normal',
-    communicationQuality: 'açık',
-    followUpDate: undefined,
-    followUpTime: undefined,
-  };
-  
-  const finalFormData = { ...defaultFormData, ...formData } as CompleteSessionFormValues;
-  
   const blob = await pdf(
-    <SessionCompletionDocument session={session} formData={finalFormData} topicFullPath={topicFullPath} schoolName={schoolName} />
+    <SessionCompletionDocument session={session} formData={formData} topicFullPath={topicFullPath} schoolName={schoolName} />
   ).toBlob();
 
   const studentName = session.student
@@ -354,7 +305,7 @@ export async function generateSessionCompletionPDF(
     : 'Ogrenci';
 
   const dateStr = format(new Date(session.sessionDate || new Date()), 'yyyyMMdd_HHmm');
-  const fileName = `Gorusme_Bilgileri_Formu_${studentName}_${dateStr}.pdf`;
+  const fileName = `Gorusme_Tamamlama_${studentName}_${dateStr}.pdf`;
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

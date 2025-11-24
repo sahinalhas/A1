@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { AIProviderService } from '../services/ai-provider.service.js';
+import { logger } from '../utils/logger.js';
 
 const router = Router();
 
@@ -46,7 +47,7 @@ SADECE düzeltilmiş metni döndür, ek açıklama yapma.`;
       polishedText: response.trim(),
     });
   } catch (error) {
-    console.error('Text polish error:', error);
+    logger.error('Text polish error', 'AITextPolishRoutes', error);
     
     if (error instanceof z.ZodError) {
       return res.status(400).json({
