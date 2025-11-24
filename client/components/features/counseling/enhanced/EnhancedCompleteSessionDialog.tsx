@@ -41,6 +41,8 @@ import ActionItemsManager from "./ActionItemsManager";
 import AIAnalysisPreview from "../ai/AIAnalysisPreview";
 import { useAISessionAnalysis } from "@/hooks/features/counseling/useAISessionAnalysis";
 import { cn } from "@/lib/utils";
+import { generateSessionCompletionPDF } from "../utils/sessionCompletionPDF";
+import { Download as DownloadIcon } from "lucide-react";
 
 interface EnhancedCompleteSessionDialogProps {
  open: boolean;
@@ -63,6 +65,7 @@ export default function EnhancedCompleteSessionDialog({
  const [datePickerOpen, setDatePickerOpen] = useState(false);
  const [previewOpen, setPreviewOpen] = useState(false);
  const [actionItemsOpen, setActionItemsOpen] = useState(false);
+ const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
  const { toast } = useToast();
 
  const { analyzeSession, analysis, isAnalyzing, clearAnalysis } = useAISessionAnalysis();
@@ -108,6 +111,28 @@ export default function EnhancedCompleteSessionDialog({
  const handleSubmit = (data: CompleteSessionFormValues) => {
  onSubmit(data);
  form.reset();
+ };
+
+ const handleDownloadPDF = async () => {
+ if (!session) return;
+ 
+ try {
+ setIsDownloadingPDF(true);
+ const formValues = form.getValues();
+ await generateSessionCompletionPDF(session, formValues);
+ toast({
+ title: "PDF İndirildi",
+ description: "Görüşme tamamlama raporu başarıyla indirildi",
+ });
+ } catch (error) {
+ toast({
+ title: "Hata",
+ description: "PDF oluşturulurken bir hata oluştu",
+ variant: "destructive",
+ });
+ } finally {
+ setIsDownloadingPDF(false);
+ }
  };
 
  const handleFormSubmit = () => {
@@ -817,8 +842,27 @@ export default function EnhancedCompleteSessionDialog({
  İptal
  </Button>
  <Button 
+ type="button"
+ variant="outline"
+ onClick={handleDownloadPDF}
+ disabled={isPending || isDownloadingPDF}
+ className="h-11 px-5 rounded-xl font-medium gap-2"
+ >
+ {isDownloadingPDF ? (
+ <>
+ <Loader2 className="h-4 w-4 animate-spin" />
+ PDF Hazırlanıyor...
+ </>
+ ) : (
+ <>
+ <DownloadIcon className="h-4 w-4" />
+ PDF İndir
+ </>
+ )}
+ </Button>
+ <Button 
  type="submit" 
- disabled={isPending}
+ disabled={isPending || isDownloadingPDF}
  className="h-11 px-6 rounded-xl font-medium bg-violet-500/90 text-white disabled:opacity-50 disabled:cursor-not-allowed min-w-[180px]"
  >
  {isPending ? (
