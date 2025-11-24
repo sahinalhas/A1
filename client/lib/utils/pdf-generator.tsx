@@ -283,17 +283,23 @@ function dateFromWeekStartLocal(weekStartISO: string, day: number): string {
   return result.toISOString().slice(0, 10);
 }
 
+const MONTHS_TR = [
+  'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+  'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+];
+
 function formatDate(date: Date): string {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = date.getDate();
+  const month = MONTHS_TR[date.getMonth()];
   const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  return `${day} ${month} ${year}`;
 }
 
 function formatDateShort(date: Date): string {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  return `${day}.${month}`;
+  const day = date.getDate();
+  const month = MONTHS_TR[date.getMonth()];
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
 }
 
 interface WeeklyPlanDocumentProps {
