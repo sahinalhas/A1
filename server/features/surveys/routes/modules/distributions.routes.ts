@@ -64,14 +64,17 @@ export const createSurveyDistribution: RequestHandler = (req, res) => {
     // Generate ID if not provided
     const distributionData = {
       ...distribution,
-      id: distribution.id || uuidv4()
+      id: distribution.id || uuidv4(),
+      publicLink: distribution.publicLink || uuidv4()
     };
 
     surveyService.createDistribution(distributionData);
+    const createdDistribution = surveyService.getDistributionById(distributionData.id);
     res.json({ 
       success: true, 
       message: 'Anket dağıtımı başarıyla oluşturuldu',
-      distributionId: distributionData.id 
+      distributionId: distributionData.id,
+      publicLink: createdDistribution?.publicLink 
     });
   } catch (error) {
     console.error('Error creating survey distribution:', error);

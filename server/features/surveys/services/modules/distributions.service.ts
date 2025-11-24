@@ -1,5 +1,6 @@
 import * as repository from '../../repository/index.js';
 import { sanitizeString } from '../../../../middleware/validation.js';
+import { v4 as uuidv4 } from 'uuid';
 import type { SurveyDistribution } from '../../types/surveys.types.js';
 
 export function getAllDistributions() {
@@ -18,7 +19,8 @@ export function createDistribution(distribution: Partial<SurveyDistribution>) {
   const sanitizedDistribution = {
     ...distribution,
     title: distribution.title ? sanitizeString(distribution.title) : undefined,
-    description: distribution.description ? sanitizeString(distribution.description) : undefined
+    description: distribution.description ? sanitizeString(distribution.description) : undefined,
+    publicLink: distribution.publicLink || uuidv4()
   };
   
   repository.saveSurveyDistribution(sanitizedDistribution);

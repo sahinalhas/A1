@@ -81,7 +81,7 @@ export default function DistributionsList({ distributions, onNewDistribution, on
 
  const handleCopyLink = (distribution: SurveyDistribution) => {
  if (distribution.publicLink) {
- const link = `${window.location.origin}/survey/${distribution.publicLink}`;
+ const link = `${window.location.origin}/anket/${distribution.publicLink}`;
  navigator.clipboard.writeText(link);
  toast({
  title:"Link kopyalandı",
