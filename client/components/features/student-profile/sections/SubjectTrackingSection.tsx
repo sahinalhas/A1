@@ -254,7 +254,7 @@ export default function SubjectTrackingSection({
                 <AccordionTrigger className="hover:no-underline">
                   <div className="flex items-center justify-between w-full pr-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-medium">{subject.name}</span>
+                      <span className="font-medium text-sm">{subject.name}</span>
                       {subject.category && (
                         <Badge variant="outline" className={getCategoryColor(subject.category)}>
                           {subject.category}
