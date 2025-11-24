@@ -1,5 +1,6 @@
 import type Database from 'better-sqlite3';
 import { DEFAULT_SURVEY_TEMPLATES } from '../../../../shared/data/default-risk-map-survey.js';
+import { DEFAULT_SURVEY_TEMPLATES_LIFE_WINDOW } from '../../../../shared/data/default-life-window-survey.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createSurveysTables(db: Database.Database): void {
@@ -117,8 +118,13 @@ export function seedSurveysDefaultTemplates(db: Database.Database): void {
 
   let seededCount = 0;
   
+  const allSurveyTemplates = [
+    ...DEFAULT_SURVEY_TEMPLATES,
+    ...DEFAULT_SURVEY_TEMPLATES_LIFE_WINDOW
+  ];
+  
   const seedTransaction = db.transaction(() => {
-    for (const surveyTemplate of DEFAULT_SURVEY_TEMPLATES) {
+    for (const surveyTemplate of allSurveyTemplates) {
       const templateExists = checkTemplate.get(surveyTemplate.template.id);
       
       upsertTemplate.run(
