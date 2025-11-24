@@ -4,6 +4,44 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
+## November 24, 2025 - Fixed Survey Excel Import Algorithm
+
+### Excel Import Algorithm Enhancement - Robust Distribution Lookup & Better Error Messages
+- **Problem Identified**: When uploading survey responses via Excel, the system threw "Anket dağıtımı bulunamadı" (Survey distribution not found) error even when distribution existed
+- **Root Cause**: 
+  - Distribution ID wasn't being properly validated/trimmed before database lookup
+  - Missing error logging made debugging difficult
+  - Poor handling of empty/malformed Excel files
+- **Solutions Implemented**:
+  1. **Distribution ID Validation**: 
+     - Added trimming and empty check on distribution ID
+     - Provides clear error message if ID is missing
+  2. **Enhanced Error Logging**:
+     - Logs all available distribution IDs when lookup fails
+     - Better error messages show what was found vs what was expected
+  3. **Excel File Validation**:
+     - Validates file buffer before parsing
+     - Checks for valid worksheets before processing
+     - Better error messages for file format issues
+  4. **Header Row Detection**:
+     - Case-insensitive header detection (works with "Öğrenci No" or "Student No")
+     - Shows first 5 rows in error message if header not found (helps with debugging)
+  5. **Empty Row Filtering**:
+     - Filters out completely empty rows before processing
+     - Improves efficiency and accuracy of row counting
+  6. **Consistent ID Usage**:
+     - Uses sanitized distribution ID throughout the import process
+     - Ensures database operations use the same ID format
+  7. **Questions Loading**:
+     - Added error handling for template questions lookup
+     - Better error messages when questions can't be loaded
+  8. **Import Summary**:
+     - Improved logging of successful and failed imports
+     - Row counts now reflect actual processed rows (not empty ones)
+- **Files Modified**: 
+  - `server/features/surveys/services/modules/excel-import.service.ts`
+- **Impact**: Users will now see clear, actionable error messages when Excel imports fail, making troubleshooting much easier
+
 ## November 24, 2025 - Enhanced PDF Template & Bug Fixes
 
 ### PDF Template Enhancement - Comprehensive Student & Session Information

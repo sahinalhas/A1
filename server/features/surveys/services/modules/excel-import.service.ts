@@ -30,23 +30,66 @@ export async function importSurveyResponsesFromExcel(
   let data: unknown[] = [];
 
   try {
-    // Validate distribution exists
-    const distribution = distributionsRepo.getSurveyDistribution(distributionId);
+    // Validate distribution ID exists and is not empty
+    const sanitizedDistributionId = (distributionId || '').trim();
+    if (!sanitizedDistributionId) {
+      throw new Error('Dağıtım ID gereklidir');
+    }
+
+    // Validate distribution exists - with logging for debugging
+    let distribution = null;
+    try {
+      distribution = distributionsRepo.getSurveyDistribution(sanitizedDistributionId);
+    } catch (dbError: any) {
+      console.error(`Database error looking up distribution ${sanitizedDistributionId}:`, dbError);
+      throw new Error(`Dağıtım sorgulanırken hata oluştu: ${dbError.message}`);
+    }
+
     if (!distribution) {
-      throw new Error('Anket dağıtımı bulunamadı');
+      // Try to get all distributions to provide better debugging info
+      const allDistributions = distributionsRepo.loadSurveyDistributions();
+      console.error(`Distribution not found. ID: ${sanitizedDistributionId}. Available IDs:`, allDistributions.map(d => d.id));
+      throw new Error(`Anket dağıtımı bulunamadı. İçe aktarılacak dağıtım tanımlı değil. (ID: ${sanitizedDistributionId})`);
     }
 
     // Get questions for this distribution
-    const questions = questionsRepo.getQuestionsByTemplate(distribution.templateId);
+    let questions = null;
+    try {
+      questions = questionsRepo.getQuestionsByTemplate(distribution.templateId);
+    } catch (qError: any) {
+      console.error(`Error getting questions for template ${distribution.templateId}:`, qError);
+      throw new Error(`Anket soruları yüklenirken hata oluştu: ${qError.message}`);
+    }
+
     if (!questions || questions.length === 0) {
-      throw new Error('Anket soruları bulunamadı');
+      throw new Error(`Anket şablonunda soru bulunamadı. Şablon ID: ${distribution.templateId}`);
+    }
+
+    // Validate Excel file buffer
+    if (!fileBuffer || fileBuffer.length === 0) {
+      throw new Error('Excel dosyası boş veya geçersiz');
     }
 
     // Parse Excel file
-    const workbook = XLSX.read(fileBuffer, { type: 'buffer', codepage: 65001 });
+    let workbook;
+    try {
+      workbook = XLSX.read(fileBuffer, { type: 'buffer', codepage: 65001 });
+    } catch (parseError: any) {
+      throw new Error(`Excel dosyası okunurken hata oluştu: ${parseError.message}`);
+    }
+
+    if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+      throw new Error('Excel dosyasında veri sayfası bulunamadı');
+    }
+
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '', raw: false });
+
+    // Validate we have data rows
+    if (!rawData || rawData.length === 0) {
+      throw new Error('Excel dosyası boş veya veri içermiyor');
+    }
 
     // Find header row (skip instructions if present)
     let headerRowIndex = -1;
@@ -54,8 +97,9 @@ export async function importSurveyResponsesFromExcel(
       const row = rawData[i] as any[];
       if (row && row.length > 0) {
         // Check if this row contains the student info header
-        const firstCell = String(row[0] || '').trim();
-        if (firstCell === 'Öğrenci No' || firstCell.includes('Öğrenci No')) {
+        const firstCell = String(row[0] || '').trim().toLowerCase();
+        if (firstCell === 'öğrenci no' || firstCell.includes('öğrenci no') || 
+            firstCell === 'student no' || firstCell.includes('student no')) {
           headerRowIndex = i;
           break;
         }
@@ -63,27 +107,34 @@ export async function importSurveyResponsesFromExcel(
     }
 
     if (headerRowIndex === -1) {
-      throw new Error('Excel dosyasında başlık satırı bulunamadı. "Öğrenci No" içeren bir satır olmalıdır.');
+      // Provide helpful error message with what we found
+      const firstCells = rawData.slice(0, 5).map((r: any) => String(r?.[0] || 'boş')).join(', ');
+      throw new Error(`Excel dosyasında başlık satırı bulunamadı. "Öğrenci No" içeren bir satır olmalıdır. (Bulduğumuz ilk satırlar: ${firstCells})`);
     }
 
     if (headerRowIndex >= rawData.length - 1) {
-      throw new Error('Excel dosyasında veri satırı bulunamadı');
+      throw new Error('Excel dosyasında başlık satırından sonra veri satırı bulunamadı');
     }
 
     const headers = rawData[headerRowIndex] as string[];
     const dataRows = rawData.slice(headerRowIndex + 1);
 
+    // Filter out completely empty rows before processing
+    const nonEmptyRows = dataRows.filter((row: any) => {
+      if (!row || row.length === 0) return false;
+      // Check if any cell has data
+      return row.some((cell: any) => cell !== null && cell !== undefined && String(cell).trim() !== '');
+    });
+
     // Build question map from headers
     const questionMap = buildQuestionMap(headers, questions);
 
     // First pass: validate all rows and collect valid responses
-    for (let rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
-      const row = dataRows[rowIndex] as any[];
-      const excelRow = headerRowIndex + rowIndex + 2;
-
-      if (!row || row.length === 0 || !row[0]) {
-        continue; // Skip empty rows
-      }
+    for (let rowIndex = 0; rowIndex < nonEmptyRows.length; rowIndex++) {
+      const row = nonEmptyRows[rowIndex] as any[];
+      // Calculate actual Excel row number (accounting for header and filtered rows)
+      const actualRowIndexInDataRows = dataRows.indexOf(row);
+      const excelRow = headerRowIndex + actualRowIndexInDataRows + 2;
 
       try {
         const responseData = parseResponseRow(row, headers, questionMap, questions);
@@ -112,10 +163,10 @@ export async function importSurveyResponsesFromExcel(
         const sanitizedStudentInfo = sanitizeExcelData(responseData.studentInfo);
         const sanitizedResponseData = sanitizeExcelData(responseData.responseData);
 
-        // Prepare response for bulk save
+        // Prepare response for bulk save using sanitized distribution ID
         const response: Partial<SurveyResponse> = {
-          id: `response_${distributionId}_${responseData.studentInfo.number}_${Date.now()}_${rowIndex}`,
-          distributionId,
+          id: `response_${sanitizedDistributionId}_${responseData.studentInfo.number}_${Date.now()}_${rowIndex}`,
+          distributionId: sanitizedDistributionId,
           studentId: responseData.studentInfo.number,
           studentInfo: sanitizedStudentInfo as any,
           responseData: sanitizedResponseData as any,
@@ -138,14 +189,19 @@ export async function importSurveyResponsesFromExcel(
     if (validResponses.length > 0) {
       try {
         responsesRepo.bulkSaveSurveyResponses(validResponses);
+        console.log(`Successfully imported ${validResponses.length} survey responses for distribution ${sanitizedDistributionId}`);
       } catch (saveError: any) {
+        console.error(`Error saving responses for distribution ${sanitizedDistributionId}:`, saveError);
         throw new Error(`Yanıtlar kaydedilirken hata oluştu: ${saveError.message}`);
       }
+    } else if (nonEmptyRows.length > 0) {
+      // All rows had errors, provide summary
+      console.warn(`Import completed with 0 successful responses from ${nonEmptyRows.length} data rows`);
     }
 
     return {
       success: errors.length === 0,
-      totalRows: dataRows.length,
+      totalRows: nonEmptyRows.length,
       successCount: validResponses.length,
       errorCount: errors.length,
       errors,
@@ -154,7 +210,7 @@ export async function importSurveyResponsesFromExcel(
 
   } catch (error: any) {
     console.error('Error importing survey responses from Excel:', error);
-    throw new Error(`Excel yükleme hatası: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
   }
 }
 
