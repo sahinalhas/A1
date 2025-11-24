@@ -14,6 +14,7 @@ import { SOCIAL_SKILLS } from "@shared/constants/student-profile-taxonomy";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
 
 const socialEmotionalSchema = z.object({
+ assessmentDate: z.string(),
  strongSocialSkills: z.array(z.string()),
  developingSocialSkills: z.array(z.string()),
  empathyLevel: z.number().min(1).max(10),
@@ -47,6 +48,7 @@ export default function StandardizedSocialEmotionalSection({
  onUpdate 
 }: StandardizedSocialEmotionalSectionProps) {
  const formDefaultValues = {
+ assessmentDate: new Date().toISOString().slice(0, 10),
  strongSocialSkills: [],
  developingSocialSkills: [],
  empathyLevel: 5,
@@ -136,6 +138,20 @@ export default function StandardizedSocialEmotionalSection({
  <CardContent>
  <Form {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+ <FormField
+ control={form.control}
+ name="assessmentDate"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Değerlendirme Tarihi</FormLabel>
+ <FormControl>
+ <Input type="date" {...field} />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
  <div className="space-y-4 border-t pt-6">
  <h4 className="text-sm font-semibold text-muted-foreground">
  Sosyal Beceriler ve Sosyal Roller

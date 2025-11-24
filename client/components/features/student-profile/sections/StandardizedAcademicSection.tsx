@@ -19,6 +19,7 @@ import { useStandardizedProfileSection } from "@/hooks/state/standardized-profil
 import { Textarea } from "@/components/atoms/Textarea";
 
 const academicProfileSchema = z.object({
+ assessmentDate: z.string(),
  strongSubjects: z.array(z.string()),
  weakSubjects: z.array(z.string()),
  strongSkills: z.array(z.string()),
@@ -48,6 +49,7 @@ export default function StandardizedAcademicSection({
  const form = useForm<AcademicProfileFormValues>({
  resolver: zodResolver(academicProfileSchema),
  defaultValues: {
+ assessmentDate: new Date().toISOString().slice(0, 10),
  strongSubjects: [],
  weakSubjects: [],
  strongSkills: [],
@@ -85,6 +87,20 @@ export default function StandardizedAcademicSection({
  <CardContent>
  <Form {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+ <FormField
+ control={form.control}
+ name="assessmentDate"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Değerlendirme Tarihi</FormLabel>
+ <FormControl>
+ <Input type="date" {...field} />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <FormField
  control={form.control}

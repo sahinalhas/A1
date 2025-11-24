@@ -18,6 +18,7 @@ import { useStandardizedProfileSection } from "@/hooks/state/standardized-profil
 import { Textarea } from "@/components/atoms/Textarea";
 
 const talentsInterestsSchema = z.object({
+ assessmentDate: z.string(),
  creativeTalents: z.array(z.string()),
  physicalTalents: z.array(z.string()),
  primaryInterests: z.array(z.string()),
@@ -46,6 +47,7 @@ export default function StandardizedTalentsSection({
  const form = useForm<TalentsInterestsFormValues>({
  resolver: zodResolver(talentsInterestsSchema),
  defaultValues: {
+ assessmentDate: new Date().toISOString().slice(0, 10),
  creativeTalents: [],
  physicalTalents: [],
  primaryInterests: [],
@@ -84,6 +86,24 @@ export default function StandardizedTalentsSection({
  <CardContent className="pt-0">
  <Form {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+ {/* Değerlendirme Tarihi */}
+ <FormField
+ control={form.control}
+ name="assessmentDate"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="text-xs font-medium flex items-center gap-1.5">
+ <Calendar className="h-3 w-3" />
+ Değerlendirme Tarihi
+ </FormLabel>
+ <FormControl>
+ <Input type="date" {...field} className="h-9 text-sm" />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
  {/* Yetenekler */}
  <div className="space-y-3">
  <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">

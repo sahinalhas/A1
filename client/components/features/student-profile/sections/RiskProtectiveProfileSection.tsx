@@ -12,6 +12,7 @@ import { Shield, AlertTriangle } from "lucide-react";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
 
 const riskProtectiveProfileSchema = z.object({
+ assessmentDate: z.string(),
  identifiedRiskFactors: z.array(z.string()),
  protectiveFactors: z.array(z.string()),
  recommendedInterventions: z.array(z.string()),
@@ -47,6 +48,7 @@ export default function RiskProtectiveProfileSection({
  const form = useForm<RiskProtectiveProfileFormValues>({
  resolver: zodResolver(riskProtectiveProfileSchema),
  defaultValues: {
+ assessmentDate: new Date().toISOString().slice(0, 10),
  identifiedRiskFactors: [],
  protectiveFactors: [],
  recommendedInterventions: [],
@@ -147,6 +149,20 @@ export default function RiskProtectiveProfileSection({
  <CardContent>
  <Form {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+ <FormField
+ control={form.control}
+ name="assessmentDate"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel>Değerlendirme Tarihi</FormLabel>
+ <FormControl>
+ <Input type="date" {...field} />
+ </FormControl>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+
  <div className="space-y-4">
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-semibold text-muted-foreground">
