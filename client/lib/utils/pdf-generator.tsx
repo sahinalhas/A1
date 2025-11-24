@@ -48,222 +48,198 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 12,
+    padding: 30,
     fontFamily: 'Roboto',
-    fontSize: 8,
-    backgroundColor: 'white',
-  },
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 0,
-    padding: 0,
-    shadow: 'none',
+    fontSize: 10,
   },
   header: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
-    paddingBottom: 4,
-    marginBottom: 6,
+    borderTopWidth: 3,
+    borderTopColor: '#1a237e',
+    paddingTop: 15,
+    marginBottom: 20,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
+    alignItems: 'flex-start',
   },
   title: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 700,
-    color: '#1e293b',
-    textAlign: 'center',
+    color: '#1a237e',
   },
-  subtitle: {
-    fontSize: 9,
-    color: '#64748b',
-    textAlign: 'center',
-  },
-  studentInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    padding: 4,
-    borderRadius: 0,
-    marginBottom: 6,
+  headerRight: {
+    alignItems: 'flex-end',
   },
   studentName: {
     fontSize: 10,
-    fontWeight: 700,
-    color: '#1e293b',
+    color: '#212121',
   },
   dateRange: {
     fontSize: 8,
-    color: '#475569',
-    fontWeight: 600,
+    color: '#757575',
+    marginTop: 2,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-    gap: 4,
+  statsBox: {
+    backgroundColor: '#e8eaf6',
+    padding: 8,
+    borderRadius: 4,
+    marginTop: 15,
+    marginBottom: 20,
   },
-  statBox: {
-    flex: 1,
-    backgroundColor: '#f1f5f9',
-    padding: 4,
-    borderRadius: 3,
-    alignItems: 'center',
+  statsText: {
+    fontSize: 8,
+    color: '#212121',
+    textAlign: 'center',
   },
-  statBoxSecondary: {
-    backgroundColor: '#f1f5f9',
-  },
-  statBoxTertiary: {
-    backgroundColor: '#f1f5f9',
-  },
-  statValue: {
-    fontSize: 10,
-    fontWeight: 700,
-    color: '#1e293b',
-    marginBottom: 1,
-  },
-  statLabel: {
-    fontSize: 6,
-    color: '#475569',
-    opacity: 1,
-  },
-  daysGrid: {
+  columnsContainer: {
     flexDirection: 'column',
-    gap: 4,
-    marginBottom: 4,
+    gap: 0,
   },
-  dayCard: {
-    backgroundColor: 'white',
-    borderWidth: 0.5,
-    borderColor: '#cbd5e1',
-    borderRadius: 0,
-    padding: 4,
+  column: {
+    flex: 1,
+  },
+  daySection: {
+    marginBottom: 12,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  dayContentColumn: {
+    flex: 2.5,
+  },
+  dayNotesColumn: {
+    flex: 1,
+    paddingLeft: 8,
+    borderLeftWidth: 1,
+    borderLeftColor: '#e0e0e0',
   },
   dayHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 2,
-    paddingBottom: 2,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#cbd5e1',
+    marginBottom: 4,
+    paddingBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
   dayTitle: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: 700,
-    color: '#1e293b',
+    color: '#1a237e',
   },
   dayDate: {
-    fontSize: 7,
-    color: '#475569',
-    fontWeight: 600,
+    fontSize: 8,
+    color: '#757575',
   },
   emptyDay: {
     fontSize: 7,
-    color: '#94a3b8',
+    color: '#9e9e9e',
     fontStyle: 'italic',
-    textAlign: 'center',
-    padding: 4,
+    marginTop: 4,
   },
   table: {
-    marginTop: 1,
+    marginTop: 4,
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#f1f5f9',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#cbd5e1',
-    paddingVertical: 2,
+    backgroundColor: '#f5f5f5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingVertical: 4,
     paddingHorizontal: 2,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
   },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 0.5,
-    borderBottomColor: '#f1f5f9',
-    paddingVertical: 2,
+    borderBottomColor: '#f0f0f0',
+    paddingVertical: 3,
     paddingHorizontal: 2,
   },
   tableCell: {
-    fontSize: 6.5,
-    color: '#334155',
+    fontSize: 7,
+    color: '#212121',
   },
   tableCellHeader: {
-    fontSize: 6.5,
+    fontSize: 7,
     fontWeight: 700,
-    color: '#1e293b',
+    color: '#1a237e',
   },
   colTime: {
-    width: '12%',
+    width: '20%',
   },
   colSubject: {
-    width: '18%',
+    width: '28%',
   },
   colTopic: {
-    width: '38%',
+    width: '32%',
   },
   colTarget: {
-    width: '8%',
+    width: '10%',
     textAlign: 'center',
   },
   colSolved: {
-    width: '12%',
+    width: '10%',
     textAlign: 'center',
   },
-  colCorrect: {
-    width: '12%',
-    textAlign: 'center',
+  notesArea: {
+    fontSize: 7,
+    color: '#757575',
+    marginTop: 2,
+  },
+  notesLine: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#e0e0e0',
+    borderStyle: 'dashed',
+    height: 10,
+    marginBottom: 3,
   },
   footer: {
-    marginTop: 4,
-    paddingTop: 4,
-    borderTopWidth: 0.5,
-    borderTopColor: '#cbd5e1',
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+    right: 30,
   },
   notesSection: {
-    marginBottom: 4,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+    paddingTop: 8,
+    marginBottom: 15,
   },
   notesTitle: {
-    fontSize: 7,
+    fontSize: 8,
     fontWeight: 700,
-    color: '#1e293b',
-    marginBottom: 2,
+    color: '#1a237e',
+    marginBottom: 4,
   },
   noteLine: {
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#cbd5e1',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
     borderStyle: 'dashed',
-    height: 8,
-    marginBottom: 2,
+    height: 15,
   },
   signatureRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 4,
+    marginTop: 10,
   },
   signatureItem: {
     width: '45%',
   },
   signatureLabel: {
-    fontSize: 6,
-    color: '#64748b',
+    fontSize: 7,
+    color: '#757575',
     marginBottom: 2,
   },
   signatureLine: {
-    borderTopWidth: 0.5,
-    borderTopColor: '#475569',
-    width: '100%',
+    borderTopWidth: 1,
+    borderTopColor: '#212121',
+    width: '80%',
   },
   branding: {
-    fontSize: 6,
-    color: '#94a3b8',
+    fontSize: 7,
+    color: '#9e9e9e',
     textAlign: 'center',
-    marginTop: 4,
+    marginTop: 15,
   },
 });
 
@@ -283,17 +259,8 @@ function dateFromWeekStartLocal(weekStartISO: string, day: number): string {
   return result.toISOString().slice(0, 10);
 }
 
-const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-
 function formatDate(date: Date): string {
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = MONTHS_TR[date.getMonth()];
-  const year = date.getFullYear();
-  return `${day} ${month} ${year}`;
-}
-
-function formatDateShort(date: Date): string {
-  const day = date.getDate().toString().padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   return `${day}.${month}`;
 }
@@ -320,7 +287,6 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
   const startDate = new Date(weekStart + 'T00:00:00');
   const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
   const dateRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
-  const shortDateRange = `${formatDateShort(startDate)} - ${formatDateShort(endDate)}`;
 
   const totalMinutes = plan.reduce((sum, p) => sum + p.allocated, 0);
   const totalHours = Math.floor(totalMinutes / 60);
@@ -334,48 +300,60 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
       .sort((a, b) => a.start.localeCompare(b.start));
 
     return (
-      <View key={day.value} style={styles.dayCard}>
-        <View style={styles.dayHeader}>
-          <Text style={styles.dayTitle}>{day.label}</Text>
-          <Text style={styles.dayDate}>{formatDate(new Date(dateISO))}</Text>
+      <View key={day.value} style={styles.daySection}>
+        <View style={styles.dayContentColumn}>
+          <View style={styles.dayHeader}>
+            <Text style={styles.dayTitle}>{day.label}</Text>
+            <Text style={styles.dayDate}>{formatDate(new Date(dateISO))}</Text>
+          </View>
+
+          {entries.length === 0 ? (
+            <Text style={styles.emptyDay}>- Planlanmış çalışma yok -</Text>
+          ) : (
+            <View style={styles.table}>
+              <View style={styles.tableHeader}>
+                <Text style={[styles.tableCellHeader, styles.colTime]}>Saat</Text>
+                <Text style={[styles.tableCellHeader, styles.colSubject]}>Ders</Text>
+                <Text style={[styles.tableCellHeader, styles.colTopic]}>Konu</Text>
+                <Text style={[styles.tableCellHeader, styles.colTarget]}>Hdf</Text>
+                <Text style={[styles.tableCellHeader, styles.colSolved]}>Çz</Text>
+              </View>
+              {entries.map((entry, idx) => {
+                const subject = subjects.find((s) => s.id === entry.subjectId);
+                const topic = topics.find((t) => t.id === entry.topicId);
+                
+                return (
+                  <View key={`${entry.topicId}-${idx}`} style={styles.tableRow}>
+                    <Text style={[styles.tableCell, styles.colTime]}>{entry.start}</Text>
+                    <Text style={[styles.tableCell, styles.colSubject]}>
+                      {subject?.name?.substring(0, 12) || ''}
+                    </Text>
+                    <Text style={[styles.tableCell, styles.colTopic]}>
+                      {topic?.name?.substring(0, 20) || ''}
+                    </Text>
+                    <Text style={[styles.tableCell, styles.colTarget]}>
+                      {entry.targetQuestionCount || '-'}
+                    </Text>
+                    <Text style={[styles.tableCell, styles.colSolved]}>-</Text>
+                  </View>
+                );
+              })}
+            </View>
+          )}
         </View>
 
-        {entries.length === 0 ? (
-          <Text style={styles.emptyDay}>Planlanmış çalışma bulunmuyor</Text>
-        ) : (
-          <View style={styles.table}>
-            <View style={styles.tableHeader}>
-              <Text style={[styles.tableCellHeader, styles.colTime]}>SAAT</Text>
-              <Text style={[styles.tableCellHeader, styles.colSubject]}>DERS</Text>
-              <Text style={[styles.tableCellHeader, styles.colTopic]}>KONU</Text>
-              <Text style={[styles.tableCellHeader, styles.colTarget]}>TOPLAM</Text>
-              <Text style={[styles.tableCellHeader, styles.colSolved]}>ÇÖZÜLEN</Text>
-              <Text style={[styles.tableCellHeader, styles.colCorrect]}>DOĞRU</Text>
-            </View>
-            {entries.map((entry, idx) => {
-              const subject = subjects.find((s) => s.id === entry.subjectId);
-              const topic = topics.find((t) => t.id === entry.topicId);
-              const dayTotal = entries.reduce((sum, e) => sum + (e.targetQuestionCount || 0), 0);
-              
-              return (
-                <View key={`${entry.topicId}-${idx}`} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, styles.colTime]}>{entry.start}-{entry.end}</Text>
-                  <Text style={[styles.tableCell, styles.colSubject]}>
-                    {subject?.name?.substring(0, 10) || ''}
-                  </Text>
-                  <Text style={[styles.tableCell, styles.colTopic]}>
-                    {topic?.name?.substring(0, 18) || ''}
-                  </Text>
-                  <Text style={[styles.tableCell, styles.colTarget]}>
-                    {dayTotal > 0 ? dayTotal : '-'}
-                  </Text>
-                  <Text style={[styles.tableCell, styles.colSolved]}>-</Text>
-                  <Text style={[styles.tableCell, styles.colCorrect]}>-</Text>
-                </View>
-              );
-            })}
-          </View>
-        )}
+        <View style={styles.dayNotesColumn}>
+          <Text style={styles.notesArea}>Notlar:</Text>
+          <View style={styles.notesLine} />
+          <View style={styles.notesLine} />
+          <View style={styles.notesLine} />
+          {entries.length > 3 && (
+            <>
+              <View style={styles.notesLine} />
+              <View style={styles.notesLine} />
+            </>
+          )}
+        </View>
       </View>
     );
   };
@@ -383,57 +361,45 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.container}>
-          <View style={styles.header}>
+        <View style={styles.header}>
+          <View style={styles.headerRow}>
             <Text style={styles.title}>HAFTALIK ÇALIŞMA PLANI</Text>
-            <Text style={styles.subtitle}>Kişiselleştirilmiş Öğrenme Programı</Text>
-          </View>
-
-          <View style={styles.studentInfo}>
-            <Text style={styles.studentName}>{studentName || studentId}</Text>
-            <Text style={styles.dateRange}>{dateRange}</Text>
-          </View>
-
-          <View style={styles.statsContainer}>
-            <View style={styles.statBox}>
-              <Text style={styles.statValue}>{totalHours}sa {totalMins}dk</Text>
-              <Text style={styles.statLabel}>TOPLAM SÜRE</Text>
-            </View>
-            <View style={[styles.statBox, styles.statBoxSecondary]}>
-              <Text style={styles.statValue}>{plan.length}</Text>
-              <Text style={styles.statLabel}>ETÜT SAYISI</Text>
-            </View>
-            <View style={[styles.statBox, styles.statBoxTertiary]}>
-              <Text style={styles.statValue}>{totalQuestions}</Text>
-              <Text style={styles.statLabel}>HEDEF SORU</Text>
+            <View style={styles.headerRight}>
+              <Text style={styles.studentName}>{studentName || studentId}</Text>
+              <Text style={styles.dateRange}>{dateRange}</Text>
             </View>
           </View>
+        </View>
 
-          <View style={styles.daysGrid}>
-            {DAYS.map(renderDaySection)}
+        <View style={styles.statsBox}>
+          <Text style={styles.statsText}>
+            Toplam Süre: {totalHours}sa {totalMins}dk | Etüt Sayısı: {plan.length} | Hedef Soru: {totalQuestions}
+          </Text>
+        </View>
+
+        <View style={styles.columnsContainer}>
+          {DAYS.map(renderDaySection)}
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.notesSection}>
+            <Text style={styles.notesTitle}>HAFTALIK NOTLAR / EKSİKLER:</Text>
+            <View style={styles.noteLine} />
+            <View style={styles.noteLine} />
           </View>
 
-          <View style={styles.footer}>
-            <View style={styles.notesSection}>
-              <Text style={styles.notesTitle}>HAFTALIK DEĞERLENDİRME VE NOTLAR:</Text>
-              <View style={styles.noteLine} />
-              <View style={styles.noteLine} />
-              <View style={styles.noteLine} />
+          <View style={styles.signatureRow}>
+            <View style={styles.signatureItem}>
+              <Text style={styles.signatureLabel}>Öğrenci İmzası</Text>
+              <View style={styles.signatureLine} />
             </View>
-
-            <View style={styles.signatureRow}>
-              <View style={styles.signatureItem}>
-                <Text style={styles.signatureLabel}>Öğrenci İmzası</Text>
-                <View style={styles.signatureLine} />
-              </View>
-              <View style={styles.signatureItem}>
-                <Text style={styles.signatureLabel}>Veli / Rehber Öğretmen İmzası</Text>
-                <View style={styles.signatureLine} />
-              </View>
+            <View style={styles.signatureItem}>
+              <Text style={styles.signatureLabel}>Veli / Rehber Öğretmen İmzası</Text>
+              <View style={styles.signatureLine} />
             </View>
-
-            <Text style={styles.branding}>Rehber360 • Akıllı Çalışma Sistemi • {shortDateRange}</Text>
           </View>
+
+          <Text style={styles.branding}>Rehber360 • Akıllı Çalışma Sistemi</Text>
         </View>
       </Page>
     </Document>
@@ -462,7 +428,7 @@ export async function generateTopicPlanPDF(
     />
   ).toBlob();
 
-  const fileName = `Haftalik_Calisma_Plani_${weekStart}_${studentName || studentId}.pdf`;
+  const fileName = `Haftalik_Calisma_Plani_${weekStart}.pdf`;
 
   if (options.print) {
     const url = URL.createObjectURL(blob);
