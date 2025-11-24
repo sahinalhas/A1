@@ -93,14 +93,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   columnsContainer: {
-    flexDirection: 'row',
-    gap: 20,
+    flexDirection: 'column',
+    gap: 0,
   },
   column: {
     flex: 1,
   },
   daySection: {
-    marginBottom: 15,
+    marginBottom: 12,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  dayContentColumn: {
+    flex: 2.5,
+  },
+  dayNotesColumn: {
+    flex: 1,
+    paddingLeft: 8,
+    borderLeftWidth: 1,
+    borderLeftColor: '#e0e0e0',
   },
   dayHeader: {
     flexDirection: 'row',
@@ -169,6 +180,18 @@ const styles = StyleSheet.create({
   colSolved: {
     width: '10%',
     textAlign: 'center',
+  },
+  notesArea: {
+    fontSize: 7,
+    color: '#757575',
+    marginTop: 2,
+  },
+  notesLine: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#e0e0e0',
+    borderStyle: 'dashed',
+    height: 10,
+    marginBottom: 3,
   },
   footer: {
     position: 'absolute',
@@ -270,9 +293,6 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
   const totalMins = totalMinutes % 60;
   const totalQuestions = plan.reduce((sum, p) => sum + (p.targetQuestionCount || 0), 0);
 
-  const leftDays = DAYS.slice(0, 3);
-  const rightDays = DAYS.slice(3);
-
   const renderDaySection = (day: { value: number; label: string }) => {
     const dateISO = dateFromWeekStartLocal(weekStart, day.value);
     const entries = (planByDate.get(dateISO) || [])
@@ -281,44 +301,59 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
 
     return (
       <View key={day.value} style={styles.daySection}>
-        <View style={styles.dayHeader}>
-          <Text style={styles.dayTitle}>{day.label}</Text>
-          <Text style={styles.dayDate}>{formatDate(new Date(dateISO))}</Text>
+        <View style={styles.dayContentColumn}>
+          <View style={styles.dayHeader}>
+            <Text style={styles.dayTitle}>{day.label}</Text>
+            <Text style={styles.dayDate}>{formatDate(new Date(dateISO))}</Text>
+          </View>
+
+          {entries.length === 0 ? (
+            <Text style={styles.emptyDay}>- Planlanmış çalışma yok -</Text>
+          ) : (
+            <View style={styles.table}>
+              <View style={styles.tableHeader}>
+                <Text style={[styles.tableCellHeader, styles.colTime]}>Saat</Text>
+                <Text style={[styles.tableCellHeader, styles.colSubject]}>Ders</Text>
+                <Text style={[styles.tableCellHeader, styles.colTopic]}>Konu</Text>
+                <Text style={[styles.tableCellHeader, styles.colTarget]}>Hdf</Text>
+                <Text style={[styles.tableCellHeader, styles.colSolved]}>Çz</Text>
+              </View>
+              {entries.map((entry, idx) => {
+                const subject = subjects.find((s) => s.id === entry.subjectId);
+                const topic = topics.find((t) => t.id === entry.topicId);
+                
+                return (
+                  <View key={`${entry.topicId}-${idx}`} style={styles.tableRow}>
+                    <Text style={[styles.tableCell, styles.colTime]}>{entry.start}</Text>
+                    <Text style={[styles.tableCell, styles.colSubject]}>
+                      {subject?.name?.substring(0, 12) || ''}
+                    </Text>
+                    <Text style={[styles.tableCell, styles.colTopic]}>
+                      {topic?.name?.substring(0, 20) || ''}
+                    </Text>
+                    <Text style={[styles.tableCell, styles.colTarget]}>
+                      {entry.targetQuestionCount || '-'}
+                    </Text>
+                    <Text style={[styles.tableCell, styles.colSolved]}>-</Text>
+                  </View>
+                );
+              })}
+            </View>
+          )}
         </View>
 
-        {entries.length === 0 ? (
-          <Text style={styles.emptyDay}>- Planlanmış çalışma yok -</Text>
-        ) : (
-          <View style={styles.table}>
-            <View style={styles.tableHeader}>
-              <Text style={[styles.tableCellHeader, styles.colTime]}>Saat</Text>
-              <Text style={[styles.tableCellHeader, styles.colSubject]}>Ders</Text>
-              <Text style={[styles.tableCellHeader, styles.colTopic]}>Konu</Text>
-              <Text style={[styles.tableCellHeader, styles.colTarget]}>Hdf</Text>
-              <Text style={[styles.tableCellHeader, styles.colSolved]}>Çz</Text>
-            </View>
-            {entries.map((entry, idx) => {
-              const subject = subjects.find((s) => s.id === entry.subjectId);
-              const topic = topics.find((t) => t.id === entry.topicId);
-              
-              return (
-                <View key={`${entry.topicId}-${idx}`} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, styles.colTime]}>{entry.start}</Text>
-                  <Text style={[styles.tableCell, styles.colSubject]}>
-                    {subject?.name?.substring(0, 12) || ''}
-                  </Text>
-                  <Text style={[styles.tableCell, styles.colTopic]}>
-                    {topic?.name?.substring(0, 20) || ''}
-                  </Text>
-                  <Text style={[styles.tableCell, styles.colTarget]}>
-                    {entry.targetQuestionCount || '-'}
-                  </Text>
-                  <Text style={[styles.tableCell, styles.colSolved]}>-</Text>
-                </View>
-              );
-            })}
-          </View>
-        )}
+        <View style={styles.dayNotesColumn}>
+          <Text style={styles.notesArea}>Notlar:</Text>
+          <View style={styles.notesLine} />
+          <View style={styles.notesLine} />
+          <View style={styles.notesLine} />
+          {entries.length > 3 && (
+            <>
+              <View style={styles.notesLine} />
+              <View style={styles.notesLine} />
+            </>
+          )}
+        </View>
       </View>
     );
   };
@@ -343,12 +378,7 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
         </View>
 
         <View style={styles.columnsContainer}>
-          <View style={styles.column}>
-            {leftDays.map(renderDaySection)}
-          </View>
-          <View style={styles.column}>
-            {rightDays.map(renderDaySection)}
-          </View>
+          {DAYS.map(renderDaySection)}
         </View>
 
         <View style={styles.footer}>
