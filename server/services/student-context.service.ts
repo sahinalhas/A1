@@ -83,11 +83,11 @@ export class StudentContextService {
       'SELECT * FROM academic_profiles WHERE studentId = ? ORDER BY assessmentDate DESC LIMIT 1'
     ).get(studentId) as any;
 
-    let exams: unknown[] = [];
+    let exams: Array<{ subject?: string; examName?: string; totalScore?: number; score?: number; grade?: number; examDate: string }> = [];
     try {
       exams = this.db.prepare(
         'SELECT * FROM exam_results WHERE studentId = ? ORDER BY examDate DESC LIMIT 5'
-      ).all(studentId) as any[];
+      ).all(studentId) as Array<{ subject?: string; examName?: string; totalScore?: number; score?: number; grade?: number; examDate: string }>;
     } catch (error) {
       // Table may not exist yet
       exams = [];
@@ -95,7 +95,7 @@ export class StudentContextService {
 
     return {
       gpa: undefined,
-      recentExams: exams.map(exam => ({
+      recentExams: exams.map((exam: any) => ({
         subject: exam.subject || exam.examName,
         score: exam.totalScore || exam.score || exam.grade,
         date: exam.examDate
@@ -376,7 +376,7 @@ export class StudentContextService {
   /**
    * Calculate performance trend from exams
    */
-  private calculatePerformanceTrend(exams: unknown[]): 'improving' | 'declining' | 'stable' {
+  private calculatePerformanceTrend(exams: Array<{ totalScore?: number; score?: number; grade?: number }>): 'improving' | 'declining' | 'stable' {
     if (exams.length < 2) return 'stable';
 
     const recent = exams.slice(0, 3);
@@ -384,8 +384,8 @@ export class StudentContextService {
 
     if (recent.length === 0 || older.length === 0) return 'stable';
 
-    const recentAvg = recent.reduce((sum, e) => sum + (e.totalScore || e.score || e.grade || 0), 0) / recent.length;
-    const olderAvg = older.reduce((sum, e) => sum + (e.totalScore || e.score || e.grade || 0), 0) / older.length;
+    const recentAvg = recent.reduce((sum, e) => sum + ((e as any).totalScore || (e as any).score || (e as any).grade || 0), 0) / recent.length;
+    const olderAvg = older.reduce((sum, e) => sum + ((e as any).totalScore || (e as any).score || (e as any).grade || 0), 0) / older.length;
 
     const diff = recentAvg - olderAvg;
 
@@ -397,11 +397,11 @@ export class StudentContextService {
   /**
    * Analyze behavior trends
    */
-  private analyzeBehaviorTrends(incidents: unknown[]): string {
+  private analyzeBehaviorTrends(incidents: Array<{ behaviorType: string }>): string {
     if (incidents.length === 0) return 'Davranış kaydı yok';
 
     const recent = incidents.slice(0, 5);
-    const positiveCount = recent.filter(i => i.behaviorType === 'OLUMLU').length;
+    const positiveCount = recent.filter((i: any) => i.behaviorType === 'OLUMLU').length;
     const negativeCount = recent.length - positiveCount;
 
     if (positiveCount > negativeCount * 2) {
