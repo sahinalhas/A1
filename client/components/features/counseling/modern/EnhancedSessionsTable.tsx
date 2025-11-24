@@ -16,7 +16,7 @@ import { format } from 'date-fns';
 import { tr } from 'date-fns/locale/tr';
 import type { CounselingSession, CounselingTopic } from '../types';
 import { SESSION_MODE_LABELS, SESSION_LOCATION_LABELS, DISCIPLINE_STATUS_LABELS } from '@shared/constants/common.constants';
-import { generateMeetingFormPDF } from '../utils/meetingFormPDF';
+import { generateSessionCompletionPDF } from '../utils/sessionCompletionPDF';
 import { useToast } from '@/hooks/utils/toast.utils';
 import { useSettings } from '@/hooks/queries/settings.query-hooks';
 
@@ -426,7 +426,7 @@ export default function EnhancedSessionsTable({
  const topic = topicsMap.get(session.topic || '');
  const topicFullPath = topic?.fullPath;
  const schoolName = settings?.account?.institution;
- await generateMeetingFormPDF(session, sessionNum, topicFullPath, schoolName);
+ await generateSessionCompletionPDF(session, undefined, topicFullPath, schoolName);
  toast({
  title: "PDF İndirildi",
  description: "Görüşme bilgileri formu başarıyla indirildi",

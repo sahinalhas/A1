@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e7eb',
     padding: 12,
-    pageBreakInside: 'avoid',
   },
   sectionTitle: {
     fontSize: 11,
@@ -98,10 +97,9 @@ const styles = StyleSheet.create({
     borderLeftColor: '#3b82f6',
   },
   badge: {
-    display: 'inline',
     backgroundColor: '#dbeafe',
     color: '#1e40af',
-    padding: '2 6',
+    padding: 4,
     fontSize: 8,
     borderRadius: 2,
     marginRight: 4,
@@ -292,12 +290,28 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
 
 export async function generateSessionCompletionPDF(
   session: CounselingSession,
-  formData: CompleteSessionFormValues,
+  formData?: Partial<CompleteSessionFormValues>,
   topicFullPath?: string,
   schoolName?: string
 ) {
+  const defaultFormData: CompleteSessionFormValues = {
+    topic: '',
+    exitTime: new Date().toTimeString().slice(0, 5),
+    detailedNotes: '',
+    actionItems: [],
+    followUpNeeded: false,
+    cooperationLevel: 3,
+    emotionalState: 'sakin',
+    physicalState: 'normal',
+    communicationQuality: 'açık',
+    followUpDate: undefined,
+    followUpTime: undefined,
+  };
+  
+  const finalFormData = { ...defaultFormData, ...formData } as CompleteSessionFormValues;
+  
   const blob = await pdf(
-    <SessionCompletionDocument session={session} formData={formData} topicFullPath={topicFullPath} schoolName={schoolName} />
+    <SessionCompletionDocument session={session} formData={finalFormData} topicFullPath={topicFullPath} schoolName={schoolName} />
   ).toBlob();
 
   const studentName = session.student

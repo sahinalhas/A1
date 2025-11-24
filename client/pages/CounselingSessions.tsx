@@ -242,18 +242,18 @@ export default function CounselingSessions() {
  let result;
  if (options.format === 'pdf') {
  if (options.includeSessions && options.includeOutcomes) {
- result = generateComprehensiveReport(filteredSessions, filteredOutcomes);
+ result = await generateComprehensiveReport(filteredSessions, filteredOutcomes);
  } else if (options.includeSessions) {
- result = generateSessionsPDF(filteredSessions, [], { includeOutcomes: false });
+ result = await generateSessionsPDF(filteredSessions, [], { includeOutcomes: false });
  } else if (options.includeOutcomes) {
- result = generateOutcomesPDF(filteredOutcomes);
+ result = await generateOutcomesPDF(filteredOutcomes);
  }
  } else {
  const exportedCount = exportSessionsToExcel(filteredSessions);
  result = { success: true, sessionCount: exportedCount };
  }
 
- if (result?.success) {
+ if (result && result.success) {
  toast({
  title:"Rapor oluşturuldu",
  description: `${options.format.toUpperCase()} raporu başarıyla indirildi.`,
