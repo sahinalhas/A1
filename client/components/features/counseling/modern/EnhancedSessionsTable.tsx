@@ -11,11 +11,13 @@ import {
  DropdownMenuLabel,
  DropdownMenuSeparator,
 } from '@/components/organisms/DropdownMenu';
-import { Download, Eye, Columns, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Download, Eye, Columns, ArrowUpDown, ArrowUp, ArrowDown, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale/tr';
 import type { CounselingSession, CounselingTopic } from '../types';
 import { SESSION_MODE_LABELS, SESSION_LOCATION_LABELS, DISCIPLINE_STATUS_LABELS } from '@shared/constants/common.constants';
+import { generateMeetingFormPDF } from '../utils/meetingFormPDF';
+import { useToast } from '@/hooks/utils/toast.utils';
 
 type SortField = 'date' | 'time' | 'student' | 'type';
 type SortDirection = 'asc' | 'desc';
@@ -39,6 +41,7 @@ export default function EnhancedSessionsTable({
  onExport,
  onSelectSession 
 }: EnhancedSessionsTableProps) {
+ const { toast } = useToast();
  const [sortField, setSortField] = useState<SortField>('date');
  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
  const [columns, setColumns] = useState<Column[]>([
@@ -55,6 +58,7 @@ export default function EnhancedSessionsTable({
  { key: 'location', label: 'Görüşme Yeri', visible: true },
  { key: 'discipline', label: 'Disiplin/Davranış', visible: true },
  { key: 'notes', label: 'Açıklama', visible: false },
+ { key: 'actions', label: 'İşlemler', visible: true },
  ]);
 
  const toggleColumn = (key: string) => {
@@ -279,6 +283,9 @@ export default function EnhancedSessionsTable({
  {columns.find(c => c.key === 'notes')?.visible && (
  <th className="text-left px-4 py-3">Açıklama</th>
  )}
+ {columns.find(c => c.key === 'actions')?.visible && (
+ <th className="text-center px-4 py-3 w-24">İşlemler</th>
+ )}
  </tr>
  </thead>
  <tbody>
@@ -374,7 +381,7 @@ export default function EnhancedSessionsTable({
  {columns.find(c => c.key === 'topic')?.visible && (
  <td className="px-4 py-3 text-sm">
  <span className="truncate block max-w-xs">
- {topicsMap.get(session.topic)?.title || session.topic || 'Konu belirtilmedi'}
+ {topicsMap.get(session.topic || '')?.title || session.topic || 'Konu belirtilmedi'}
  </span>
  </td>
  )}
@@ -398,6 +405,39 @@ export default function EnhancedSessionsTable({
  <p className="text-xs text-muted-foreground truncate">
  {session.detailedNotes || session.sessionDetails || '-'}
  </p>
+ </td>
+ )}
+ {columns.find(c => c.key === 'actions')?.visible && (
+ <td 
+ className="px-4 py-3 text-center" 
+ onClick={(e) => e.stopPropagation()}
+ >
+ <Button
+ variant="ghost"
+ size="sm"
+ className="h-8 w-8 p-0"
+ onClick={async () => {
+ try {
+ const sessionNum = session.sessionType === 'individual' && session.student?.id
+ ? sessionNumbersMap.get(session.student.id)?.get(session.id)
+ : undefined;
+ await generateMeetingFormPDF(session, sessionNum);
+ toast({
+ title: "PDF İndirildi",
+ description: "Görüşme bilgileri formu başarıyla indirildi",
+ });
+ } catch (error) {
+ toast({
+ title: "Hata",
+ description: "PDF oluşturulurken bir hata oluştu",
+ variant: "destructive",
+ });
+ }
+ }}
+ title="PDF İndir"
+ >
+ <FileText className="h-4 w-4 text-muted-foreground hover:text-primary" />
+ </Button>
  </td>
  )}
  </motion.tr>
