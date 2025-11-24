@@ -11,6 +11,7 @@ import { DEFAULT_SURVEY_TEMPLATES_HOLLAND_INVENTORY } from '../../../../shared/d
 import { DEFAULT_SURVEY_TEMPLATES_ACADEMIC_SELF_CONCEPT } from '../../../../shared/data/default-academic-self-concept-survey.js';
 import { DEFAULT_SURVEY_TEMPLATES_SELF_EVALUATION_INVENTORY } from '../../../../shared/data/default-self-evaluation-inventory-survey.js';
 import { DEFAULT_SURVEY_TEMPLATES_CAREER_MATURITY } from '../../../../shared/data/default-career-maturity-survey.js';
+import { DEFAULT_SURVEY_TEMPLATES_MULTIPLE_INTELLIGENCES } from '../../../../shared/data/default-multiple-intelligences-survey.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createSurveysTables(db: Database.Database): void {
@@ -140,7 +141,8 @@ export function seedSurveysDefaultTemplates(db: Database.Database): void {
     ...DEFAULT_SURVEY_TEMPLATES_HOLLAND_INVENTORY,
     ...DEFAULT_SURVEY_TEMPLATES_ACADEMIC_SELF_CONCEPT,
     ...DEFAULT_SURVEY_TEMPLATES_SELF_EVALUATION_INVENTORY,
-    ...DEFAULT_SURVEY_TEMPLATES_CAREER_MATURITY
+    ...DEFAULT_SURVEY_TEMPLATES_CAREER_MATURITY,
+    ...DEFAULT_SURVEY_TEMPLATES_MULTIPLE_INTELLIGENCES
   ];
   
   const seedTransaction = db.transaction(() => {
