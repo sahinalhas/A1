@@ -154,7 +154,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Görüşme Tamamlama Raporu</Text>
+          <Text style={styles.title}>Görüşme Bilgileri Formu</Text>
           <Text style={styles.subtitle}>
             Oluşturma Tarihi: {generatedDate}
           </Text>

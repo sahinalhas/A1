@@ -96,9 +96,11 @@ const styles = StyleSheet.create({
 interface MeetingFormPDFProps {
   session: CounselingSession;
   sessionNumber?: number;
+  topicFullPath?: string;
+  schoolName?: string;
 }
 
-const MeetingFormDocument: React.FC<MeetingFormPDFProps> = ({ session, sessionNumber }) => {
+const MeetingFormDocument: React.FC<MeetingFormPDFProps> = ({ session, sessionNumber, topicFullPath, schoolName }) => {
   const student = session.student;
   const sessionDate = session.sessionDate ? format(new Date(session.sessionDate), 'dd/MM/yyyy', { locale: tr }) : '';
   const currentDate = format(new Date(), 'dd/MM/yyyy', { locale: tr });
@@ -107,10 +109,11 @@ const MeetingFormDocument: React.FC<MeetingFormPDFProps> = ({ session, sessionNu
   const studentName = student ? `${student.name || ''} ${student.surname || ''}`.trim() : '-';
   const studentNumber = '-';
   const tcNo = '-';
-  const gender = '-';
+  const genderMap: { [key: string]: string } = { 'K': 'Kız', 'E': 'Erkek' };
+  const gender = (student as any)?.gender ? genderMap[(student as any).gender] : '-';
   const citizenship = '-';
   const grade = student?.className || student?.class || '-';
-  const school = '-';
+  const school = schoolName || '-';
   const averageScore = '-';
   const absentDays = '-';
   const familyStatus = '-';
@@ -120,7 +123,7 @@ const MeetingFormDocument: React.FC<MeetingFormPDFProps> = ({ session, sessionNu
   // Görüşme bilgileri
   const sessionTime = session.entryTime || '-';
   const sessionLocation = SESSION_LOCATION_LABELS[session.sessionLocation] || session.sessionLocation || '-';
-  const counselingArea = session.topic || '-';
+  const counselingArea = topicFullPath || session.topic || '-';
   const teacherName = session.teacherName || '';
   const parentName = session.parentName || '';
   
@@ -274,10 +277,12 @@ const MeetingFormDocument: React.FC<MeetingFormPDFProps> = ({ session, sessionNu
 
 export async function generateMeetingFormPDF(
   session: CounselingSession,
-  sessionNumber?: number
+  sessionNumber?: number,
+  topicFullPath?: string,
+  schoolName?: string
 ) {
   const blob = await pdf(
-    <MeetingFormDocument session={session} sessionNumber={sessionNumber} />
+    <MeetingFormDocument session={session} sessionNumber={sessionNumber} topicFullPath={topicFullPath} schoolName={schoolName} />
   ).toBlob();
 
   const studentName = session.student 
