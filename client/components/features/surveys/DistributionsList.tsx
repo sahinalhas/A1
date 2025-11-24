@@ -104,27 +104,33 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  const downloadExcelForClass = async (distribution: SurveyDistribution, selectedClass: string | null) => {
  try {
  const { surveyService } = await import('@/services/survey.service');
+ const { apiClient } = await import('@/lib/api/core/client');
+ const { generateExcelTemplate } = await import('@/lib/excel-template-generator');
+ 
  const questions = await queryClient.fetchQuery({
  queryKey: SURVEY_QUERY_KEYS.questions(distribution.templateId),
  queryFn: () => surveyService.getTemplateQuestions(distribution.templateId)
  });
- const { loadStudents } = await import('@/lib/storage');
- const { generateExcelTemplate } = await import('@/lib/excel-template-generator');
  
- const allStudents = loadStudents();
- let students = allStudents;
+ // Fetch students from API directly
+ const allStudents = await apiClient.get('/api/students', { showErrorToast: false });
+ let students = Array.isArray(allStudents) ? allStudents : [];
  
  // If specific class selected, filter by that class
  if (selectedClass) {
- students = allStudents.filter(s => s.class === selectedClass);
- } else if (distribution.targetStudents && distribution.targetStudents.length > 0) {
+ students = students.filter(s => s.class === selectedClass);
+ }
+ // Check if targetStudents has actual student IDs
+ else if (distribution.targetStudents && distribution.targetStudents.length > 0 && distribution.targetStudents[0]) {
  // If specific students are set, use them
- students = allStudents.filter(s => 
+ students = students.filter(s => 
  distribution.targetStudents?.includes(s.id)
  );
- } else if (distribution.targetClasses && distribution.targetClasses.length > 0) {
+ }
+ // Otherwise use classes
+ else if (distribution.targetClasses && distribution.targetClasses.length > 0) {
  // If classes are set, use all students in those classes
- students = allStudents.filter(s => 
+ students = students.filter(s => 
  s.class && distribution.targetClasses.includes(s.class)
  );
  }
