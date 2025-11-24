@@ -4,7 +4,29 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
-## November 24, 2025 - Fixed Survey Excel Import Algorithm & Refactored Excel Template Generation
+## November 24, 2025 - Fixed Survey Excel Import, Refactored Templates, & Auto-Filled Student Data
+
+### Part 3: Auto-Fill Student Data in Excel Based on Selected Classes
+- **Feature Added**: When distributing surveys and selecting classes, the Excel template now automatically includes all student data from those classes
+- **How It Works**:
+  1. User selects classes in distribution dialog
+  2. Clicks "Şablonu Önizle" or "Dağıtımı Oluştur"
+  3. Excel template is generated with student data pre-filled:
+     - Öğrenci No (Student ID)
+     - Ad (First Name)
+     - Soyad (Last Name)
+     - Sınıf (Class)
+     - Cinsiyet (Gender)
+- **Implementation Details**:
+  - Updated `generateAndDownloadExcelTemplate()` function to check both targetStudents and targetClasses
+  - Updated `onSubmit()` function with same logic
+  - Button now enables when either targetStudents or targetClasses are selected
+- **Files Modified**: `client/components/features/surveys/SurveyDistributionDialog.tsx`
+- **Impact**: Users can now:
+  - Select classes instead of individual students
+  - Immediately download Excel with student info pre-filled
+  - No need to manually enter student data
+  - Faster, cleaner workflow
 
 ### Part 1: Excel Import Algorithm Enhancement - Robust Distribution Lookup & Better Error Messages
 - **Problem Identified**: When uploading survey responses via Excel, the system threw "Anket dağıtımı bulunamadı" (Survey distribution not found) error even when distribution existed

@@ -240,9 +240,21 @@ export default function SurveyDistributionDialog({
 
  const generateAndDownloadExcelTemplate = () => {
  const formData = form.getValues();
- const selectedStudentsList = students.filter(s => 
+ 
+ // Get students: either from targetStudents, or from targetClasses
+ let selectedStudentsList = [];
+ 
+ if (formData.targetStudents && formData.targetStudents.length > 0) {
+ // If specific students are selected, use them
+ selectedStudentsList = students.filter(s => 
  formData.targetStudents?.includes(s.id)
  );
+ } else if (formData.targetClasses && formData.targetClasses.length > 0) {
+ // If classes are selected but no specific students, use all students in those classes
+ selectedStudentsList = students.filter(s => 
+ s.class && formData.targetClasses?.includes(s.class)
+ );
+ }
 
  const excelData = generateExcelTemplate({
  survey,
@@ -283,9 +295,20 @@ export default function SurveyDistributionDialog({
  // Generate Excel template if needed
  let excelTemplate = undefined;
  if (data.distributionType ==="MANUAL_EXCEL" || data.distributionType ==="HYBRID") {
- const selectedStudentsList = students.filter(s => 
+ // Get students: either from targetStudents, or from targetClasses
+ let selectedStudentsList = [];
+ 
+ if (data.targetStudents && data.targetStudents.length > 0) {
+ // If specific students are selected, use them
+ selectedStudentsList = students.filter(s => 
  data.targetStudents?.includes(s.id)
  );
+ } else if (data.targetClasses && data.targetClasses.length > 0) {
+ // If classes are selected but no specific students, use all students in those classes
+ selectedStudentsList = students.filter(s => 
+ s.class && data.targetClasses?.includes(s.class)
+ );
+ }
  
  excelTemplate = generateExcelTemplate({
  survey,
@@ -776,7 +799,7 @@ export default function SurveyDistributionDialog({
  type="button"
  variant="outline"
  onClick={generateAndDownloadExcelTemplate}
- disabled={selectedStudents.length === 0}
+ disabled={(form.getValues("targetStudents")?.length || 0) === 0 && (form.getValues("targetClasses")?.length || 0) === 0}
  >
  <Download className="mr-2 h-4 w-4" />
  Şablonu Önizle
