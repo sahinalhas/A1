@@ -2,7 +2,14 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/organisms/Card";
 import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
-import { Plus, Download, Upload, Link2, BarChart, Users, Edit, Trash } from "lucide-react";
+import { Plus, Download, Upload, Link2, BarChart, Users, Edit, Trash, ChevronRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/organisms/Dialog";
 import {
  Table,
  TableBody,
@@ -60,6 +67,8 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  const deleteDistribution = useDeleteDistribution();
  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
  const [selectedDistribution, setSelectedDistribution] = useState<SurveyDistribution | null>(null);
+ const [classSelectDialogOpen, setClassSelectDialogOpen] = useState(false);
+ const [distributionForClassSelect, setDistributionForClassSelect] = useState<SurveyDistribution | null>(null);
 
  const handleExcelUpload = (distribution: SurveyDistribution) => {
  setSelectedDistribution(distribution);
@@ -81,7 +90,18 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  }
  };
 
- const handleDownloadExcel = async (distribution: SurveyDistribution) => {
+ const handleDownloadExcel = (distribution: SurveyDistribution) => {
+ // If multiple classes, show dialog to select class
+ if (distribution.targetClasses && distribution.targetClasses.length > 1) {
+ setDistributionForClassSelect(distribution);
+ setClassSelectDialogOpen(true);
+ } else {
+ // Single class or all students, download directly
+ downloadExcelForClass(distribution, null);
+ }
+ };
+
+ const downloadExcelForClass = async (distribution: SurveyDistribution, selectedClass: string | null) => {
  try {
  const { surveyService } = await import('@/services/survey.service');
  const questions = await queryClient.fetchQuery({
@@ -94,8 +114,10 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  const allStudents = loadStudents();
  let students = allStudents;
  
- // Get students: either from targetStudents, or from targetClasses
- if (distribution.targetStudents && distribution.targetStudents.length > 0) {
+ // If specific class selected, filter by that class
+ if (selectedClass) {
+ students = allStudents.filter(s => s.class === selectedClass);
+ } else if (distribution.targetStudents && distribution.targetStudents.length > 0) {
  // If specific students are set, use them
  students = allStudents.filter(s => 
  distribution.targetStudents?.includes(s.id)
@@ -127,20 +149,22 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  responseFormat: 'single_sheet' as const,
  includeValidation: true
  },
- distributionTitle: distribution.title
+ distributionTitle: selectedClass ? `${distribution.title} - ${selectedClass}` : distribution.title
  });
 
  const link = document.createElement('a');
  link.href = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64Excel}`;
- link.download = `${distribution.title.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
+ link.download = `${distribution.title.replace(/[^a-z0-9]/gi, '_')}_${selectedClass || 'tüm_sınıflar'}_${new Date().toISOString().split('T')[0]}.xlsx`;
  document.body.appendChild(link);
  link.click();
  document.body.removeChild(link);
 
  toast({
  title:"Başarılı",
- description:"Excel şablonu indirildi"
+ description: selectedClass ? `${selectedClass} sınıfı Excel şablonu indirildi` : "Excel şablonu indirildi"
  });
+ 
+ setClassSelectDialogOpen(false);
  } catch (error) {
  console.error('Excel download error:', error);
  toast({
@@ -281,6 +305,39 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  onUploadComplete={handleUploadComplete}
  />
  )}
+
+ {/* Class Selection Dialog for Excel Download */}
+ <Dialog open={classSelectDialogOpen} onOpenChange={setClassSelectDialogOpen}>
+ <DialogContent className="max-w-md">
+ <DialogHeader>
+ <DialogTitle>Sınıf Seçin</DialogTitle>
+ <DialogDescription>
+ Excel şablonunu indirecek sınıfı seçiniz
+ </DialogDescription>
+ </DialogHeader>
+ <div className="grid gap-2">
+ {distributionForClassSelect?.targetClasses?.map((className) => (
+ <Button
+ key={className}
+ variant="outline"
+ className="justify-between"
+ onClick={() => downloadExcelForClass(distributionForClassSelect, className)}
+ >
+ <span>{className}</span>
+ <ChevronRight className="h-4 w-4" />
+ </Button>
+ ))}
+ <Button
+ variant="outline"
+ className="justify-between mt-2"
+ onClick={() => downloadExcelForClass(distributionForClassSelect || distributions[0], null)}
+ >
+ <span className="font-semibold">Tüm Sınıflar</span>
+ <ChevronRight className="h-4 w-4" />
+ </Button>
+ </div>
+ </DialogContent>
+ </Dialog>
  </>
  );
 }
