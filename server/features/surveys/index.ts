@@ -12,12 +12,14 @@ import aiAnalysisRoutes from './routes/ai-analysis.routes.js';
 const router = Router();
 
 router.get("/survey-templates", requireSecureAuth, requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(200, 15 * 60 * 1000), templatesRoutes.getSurveyTemplates);
+router.get("/survey-templates/public/:id", simpleRateLimit(300, 15 * 60 * 1000), templatesRoutes.getSurveyTemplateById);
 router.get("/survey-templates/:id", simpleRateLimit(300, 15 * 60 * 1000), templatesRoutes.getSurveyTemplateById);
 router.post("/survey-templates", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(30, 15 * 60 * 1000), templatesRoutes.createSurveyTemplate);
 router.put("/survey-templates/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(30, 15 * 60 * 1000), templatesRoutes.updateSurveyTemplateHandler);
 router.delete("/survey-templates/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(20, 15 * 60 * 1000), templatesRoutes.deleteSurveyTemplateHandler);
 router.post("/survey-templates/reset", requireSecureAuth, requireRoleSecure(['admin']), simpleRateLimit(10, 15 * 60 * 1000), templatesRoutes.resetSurveyTemplatesToDefaults);
 
+router.get("/survey-questions/public/:templateId", simpleRateLimit(300, 15 * 60 * 1000), questionsRoutes.getQuestionsByTemplateId);
 router.get("/survey-questions/:templateId", simpleRateLimit(300, 15 * 60 * 1000), questionsRoutes.getQuestionsByTemplateId);
 router.post("/survey-questions", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(50, 15 * 60 * 1000), questionsRoutes.createSurveyQuestion);
 router.put("/survey-questions/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(50, 15 * 60 * 1000), questionsRoutes.updateSurveyQuestionHandler);

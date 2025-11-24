@@ -94,21 +94,21 @@ export default function PublicSurvey() {
  // Load survey distribution by public link
  const distributionData = await apiClient.get<SurveyDistribution>(
  SURVEY_ENDPOINTS.DISTRIBUTION_BY_LINK(publicLink!),
- { showErrorToast: false }
+ { showErrorToast: false, skipAuth: true }
  );
  setDistribution(distributionData);
 
  // Load survey template
  const templateData = await apiClient.get<SurveyTemplate>(
  SURVEY_ENDPOINTS.TEMPLATE_BY_ID(distributionData.templateId),
- { showErrorToast: false }
+ { showErrorToast: false, skipAuth: true }
  );
  setTemplate(templateData);
 
  // Load questions
  const questionsData = await apiClient.get<SurveyQuestion[]>(
  SURVEY_ENDPOINTS.QUESTIONS(distributionData.templateId),
- { showErrorToast: false }
+ { showErrorToast: false, skipAuth: true }
  );
  setQuestions(questionsData.sort((a: SurveyQuestion, b: SurveyQuestion) => a.orderIndex - b.orderIndex));
 
