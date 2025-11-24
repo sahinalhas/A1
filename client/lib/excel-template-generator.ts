@@ -57,7 +57,7 @@ function generateSingleSheetTemplate(
  
  let currentRow = 0;
  
- // Header information
+ // Header information - ONLY in instructions mode, NEVER in actual data columns
  if (config.includeInstructions) {
  const headerData = [
  [`ANKET: ${distributionTitle || survey.title}`],
@@ -71,6 +71,7 @@ function generateSingleSheetTemplate(
  ['3. Soruları öğrenci başına tek tek cevaplayın'],
  ['4. Zorunlu sorular (*) işaretiyle belirtilmiştir'],
  ['5. Dosyayı değiştirdikten sonra kaydedin ve sisteme yükleyin'],
+ ['6. Soru seçenekleri ve açıklamaları "Soru Detayları" sayfasında bulunmaktadır'],
  [''],
  ];
  
@@ -80,7 +81,7 @@ function generateSingleSheetTemplate(
  });
  }
  
- // Column headers
+ // Column headers - CLEAN AND SIMPLE
  const headers = [];
  
  if (config.includeStudentInfo) {
@@ -91,21 +92,11 @@ function generateSingleSheetTemplate(
  headers.push(...config.customHeaders);
  }
  
- // Add question headers
+ // Add question headers - ONLY soru number and text, NO options in header
  questions.forEach((question, index) => {
- const questionHeader = `${index + 1}. ${question.questionText}${question.required ? ' *' : ''}`;
+ const required = question.required ? ' *' : '';
+ const questionHeader = `${index + 1}. ${question.questionText}${required}`;
  headers.push(questionHeader);
- 
- // Add note about question type and options
- if (question.questionType === 'MULTIPLE_CHOICE' && question.options) {
- headers.push(`${index + 1}_SEÇENEKLER: [${question.options.join(' | ')}]`);
- } else if (question.questionType === 'LIKERT') {
- headers.push(`${index + 1}_ÖLÇEK: [1=Kesinlikle Katılmıyorum, 2=Katılmıyorum, 3=Kararsızım, 4=Katılıyorum, 5=Kesinlikle Katılıyorum]`);
- } else if (question.questionType === 'RATING') {
- headers.push(`${index + 1}_PUANLAMA: [1-10 arası puan verin]`);
- } else if (question.questionType === 'YES_NO') {
- headers.push(`${index + 1}_CEVAP: [Evet | Hayır]`);
- }
  });
  
  XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: `A${currentRow + 1}` });
@@ -129,14 +120,9 @@ function generateSingleSheetTemplate(
  studentRow.push(...Array(config.customHeaders.length).fill(''));
  }
  
- // Add empty cells for each question
- questions.forEach((question) => {
- studentRow.push(''); // Main answer cell
- 
- // Add helper cell for complex question types
- if (['MULTIPLE_CHOICE', 'LIKERT', 'RATING', 'YES_NO'].includes(question.questionType)) {
- studentRow.push(''); // Helper/validation cell
- }
+ // Add empty cells for each question - NO extra helper columns!
+ questions.forEach(() => {
+ studentRow.push('');
  });
  
  XLSX.utils.sheet_add_aoa(worksheet, [studentRow], { origin: `A${currentRow + 1}` });
@@ -148,12 +134,14 @@ function generateSingleSheetTemplate(
  addDataValidation(worksheet, questions, students.length, config);
  }
  
- // Set column widths
+ // Set column widths - cleaner proportions
  const columnWidths = headers.map((header, index) => {
  if (index < 5 && config.includeStudentInfo) {
- return { wch: 15 }; // Student info columns
+ return { wch: 12 }; // Student info columns - compact
  }
- return { wch: Math.min(Math.max(header.length, 10), 50) }; // Question columns
+ // Question columns - auto-sized but reasonable max
+ const textLength = typeof header === 'string' ? header.length : 20;
+ return { wch: Math.min(Math.max(textLength, 15), 35) };
  });
  
  worksheet['!cols'] = columnWidths;
@@ -169,7 +157,7 @@ function generateMultiSheetTemplate(
  config: ExcelTemplateConfig,
  distributionTitle?: string
 ) {
- // Instructions sheet
+ // Instructions sheet - CLEAN & ORGANIZED
  if (config.includeInstructions) {
  const instructionsSheet = XLSX.utils.aoa_to_sheet([
  [`ANKET: ${distributionTitle || survey.title}`],
@@ -177,82 +165,120 @@ function generateMultiSheetTemplate(
  [`Tahmini Süre: ${survey.estimatedDuration || 0} dakika`],
  [`MEB Uyumlu: ${survey.mebCompliant ? 'Evet' : 'Hayır'}`],
  [''],
- ['DOLDURMA TALİMATLARI:'],
+ ['📋 DOLDURMA TALİMATLARI'],
  [''],
- ['1. GENEL BİLGİLER:'],
- [' - Bu anket Excel şablonu otomatik olarak oluşturulmuştur'],
- [' - Her öğrenci için ayrı bir satır bulunmaktadır'],
- [' - Zorunlu sorular (*) işaretiyle belirtilmiştir'],
+ ['1. SAYFALAR HAKKINDA:'],
+ ['   • "Anket Yanıtları" - Öğrenci cevaplarını girecek olduğunuz ana sayfa'],
+ ['   • "Soru Detayları" - Tüm soruların seçeneklerini ve açıklamalarını içerir'],
  [''],
- ['2. NASIL DOLDURULUR:'],
- [' a) Öğrenci bilgilerini kontrol edin'],
- [' b) Her soru için uygun yanıtı ilgili hücreye yazın'],
- [' c) Çoktan seçmeli sorularda verilen seçeneklerden birini yazın'],
- [' d) Likert ölçeği sorularda 1-5 arası puan verin'],
- [' e) Açık uçlu sorularda serbestçe yazabilirsiniz'],
+ ['2. VERİ GIRMEDEN ÖNCE:'],
+ ['   • Öğrenci bilgilerinin doğru olduğundan emin olun'],
+ ['   • Zorunlu sorular (*) işaretiyle belirtilmiştir'],
+ ['   • Soru seçeneklerini "Soru Detayları" sayfasından kontrol edin'],
  [''],
- ['3. DOSYA YÖNETİMİ:'],
- [' - Dosyayı düzenledikten sonra kaydetmeyi unutmayın'],
- [' - Sisteme yüklemek için orijinal dosya formatını koruyun'],
- [' - Sütun başlıklarını değiştirmeyin'],
+ ['3. NASIL DOLDURULUR:'],
+ ['   • Çoktan seçmeli: Verilen seçeneklerden birini yazın'],
+ ['   • Likert (1-5): 1 ile 5 arasında sayı yazın'],
+ ['   • Puanlama (1-10): 1 ile 10 arasında sayı yazın'],
+ ['   • Evet/Hayır: "Evet" veya "Hayır" yazın'],
+ ['   • Açık uçlu: Serbestçe yazabilirsiniz'],
  [''],
- ['4. TEKNIK DESTEK:'],
- [' - Sorun yaşarsanız rehber öğretmeninize başvurun'],
- [' - Dosya formatı hakkında bilgi için yöneticiye ulaşın'],
+ ['4. KAYDETTIKTEN SONRA:'],
+ ['   • Dosyayı Excel formatında kaydedin'],
+ ['   • Sütun başlıklarını değiştirmeyin'],
+ ['   • Sisteme yükleyin'],
  ]);
  
+ instructionsSheet['!cols'] = [{ wch: 60 }];
  XLSX.utils.book_append_sheet(workbook, instructionsSheet, 'Talimatlar');
  }
  
  // Main response sheet
  generateSingleSheetTemplate(workbook, survey, questions, students, config, distributionTitle);
  
- // Question details sheet
+ // Question details sheet - MORE READABLE
  const questionDetailsSheet = XLSX.utils.aoa_to_sheet([]);
  let row = 0;
  
- XLSX.utils.sheet_add_aoa(questionDetailsSheet, [['SORU DETAYLARI']], { origin: `A${row + 1}` });
+ // Header
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ ['SORU DETAYLARI'],
+ ['']
+ ], { origin: `A${row + 1}` });
  row += 2;
  
  questions.forEach((question, index) => {
- const questionData = [
- [`Soru ${index + 1}:`],
- [question.questionText],
- [`Tür: ${getQuestionTypeLabel(question.questionType)}`],
- [`Zorunlu: ${question.required ? 'Evet' : 'Hayır'}`],
- ];
+ // Soru başlığı
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`S${index + 1}: ${question.questionText}${question.required ? ' ⭐ ZORUNLu' : ''}`]
+ ], { origin: `A${row + 1}` });
+ row++;
  
+ // Soru tipi
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`Tür: ${getQuestionTypeLabel(question.questionType)}`]
+ ], { origin: `A${row + 1}` });
+ row++;
+ 
+ // Seçenekler (if exists)
  if (question.options && question.options.length > 0) {
- questionData.push(['Seçenekler:']);
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ ['Seçenekler:']
+ ], { origin: `A${row + 1}` });
+ row++;
+ 
  question.options.forEach((option, optIndex) => {
- questionData.push([` ${optIndex + 1}. ${option}`]);
- });
- }
- 
- if (question.validation) {
- questionData.push(['Doğrulama Kuralları:']);
- if (question.validation.minLength) {
- questionData.push([` Min. karakter: ${question.validation.minLength}`]);
- }
- if (question.validation.maxLength) {
- questionData.push([` Max. karakter: ${question.validation.maxLength}`]);
- }
- if (question.validation.minValue) {
- questionData.push([` Min. değer: ${question.validation.minValue}`]);
- }
- if (question.validation.maxValue) {
- questionData.push([` Max. değer: ${question.validation.maxValue}`]);
- }
- }
- 
- questionData.push(['']); // Empty row separator
- 
- questionData.forEach((rowData) => {
- XLSX.utils.sheet_add_aoa(questionDetailsSheet, [rowData], { origin: `A${row + 1}` });
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`  ${optIndex + 1}. ${option}`]
+ ], { origin: `A${row + 1}` });
  row++;
  });
+ }
+ 
+ // Doğrulama kuralları
+ if (question.validation) {
+ const hasValidation = Object.values(question.validation).some(v => v);
+ if (hasValidation) {
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ ['Kurallar:']
+ ], { origin: `A${row + 1}` });
+ row++;
+ 
+ if (question.validation.minLength) {
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`  Min. ${question.validation.minLength} karakter`]
+ ], { origin: `A${row + 1}` });
+ row++;
+ }
+ if (question.validation.maxLength) {
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`  Max. ${question.validation.maxLength} karakter`]
+ ], { origin: `A${row + 1}` });
+ row++;
+ }
+ if (question.validation.minValue) {
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`  Min. değer: ${question.validation.minValue}`]
+ ], { origin: `A${row + 1}` });
+ row++;
+ }
+ if (question.validation.maxValue) {
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ [`  Max. değer: ${question.validation.maxValue}`]
+ ], { origin: `A${row + 1}` });
+ row++;
+ }
+ }
+ }
+ 
+ // Separator
+ XLSX.utils.sheet_add_aoa(questionDetailsSheet, [
+ ['']
+ ], { origin: `A${row + 1}` });
+ row++;
  });
  
+ questionDetailsSheet['!cols'] = [{ wch: 60 }];
  XLSX.utils.book_append_sheet(workbook, questionDetailsSheet, 'Soru Detayları');
 }
 
@@ -266,9 +292,16 @@ function addDataValidation(
  const customHeaderCols = config.customHeaders?.length || 0;
  let questionCol = studentInfoCols + customHeaderCols;
  
- questions.forEach((question) => {
- const startRow = config.includeInstructions ? 14 : 2; // Adjust based on header rows
+ // Calculate header row (accounting for instructions)
+ let instructionRows = 0;
+ if (config.includeInstructions) {
+ instructionRows = 12; // 6 lines header + 6 lines instructions + 2 empty
+ }
+ const headerRow = instructionRows + 1; // The actual header row
+ const startRow = headerRow + 1; // Data starts after header
  const endRow = startRow + studentCount - 1;
+ 
+ questions.forEach((question) => {
  const colLetter = XLSX.utils.encode_col(questionCol);
  const range = `${colLetter}${startRow}:${colLetter}${endRow}`;
  
@@ -314,12 +347,8 @@ function addDataValidation(
  });
  }
  
+ // Move to next question column - NO extra helper columns!
  questionCol++;
- 
- // Skip helper columns for complex question types
- if (['MULTIPLE_CHOICE', 'LIKERT', 'RATING', 'YES_NO'].includes(question.questionType)) {
- questionCol++;
- }
  });
 }
 
