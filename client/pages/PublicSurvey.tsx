@@ -148,6 +148,7 @@ export default function PublicSurvey() {
  showSuccessToast: true,
  successMessage:"Anket yanıtınız başarıyla gönderildi",
  showErrorToast: false,
+ skipAuth: true,
  }
  );
 
