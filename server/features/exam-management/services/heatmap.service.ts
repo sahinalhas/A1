@@ -82,7 +82,7 @@ export function calculateHeatmap(studentId: string, examTypeId: string): Heatmap
     student_id: studentId,
     student_name: student.fullName,
     exam_type_id: examTypeId,
-    subjects: heatmapSubjects
+    subjects: heatmapSubjects as any
   };
 }
 

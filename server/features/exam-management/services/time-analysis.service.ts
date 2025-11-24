@@ -55,7 +55,7 @@ export function calculateTimeAnalysis(studentId: string, examTypeId: string): Ti
   else studyFrequency = 'low';
   
   // Calculate performance trends
-  const trends: unknown[] = [];
+  const trends: Array<{ period: string; avg_net: number; exam_count: number; trend: string }> = [];
   const chunkSize = Math.max(3, Math.floor((sessions as any[]).length / 3));
   
   for (let i = 0; i < (sessions as any[]).length; i += chunkSize) {
@@ -105,6 +105,6 @@ export function calculateTimeAnalysis(studentId: string, examTypeId: string): Ti
     consistency_score: Math.round(consistencyScore),
     optimal_study_pattern: `${Math.round(avgInterval)} days between exams`,
     recommended_next_exam_date: recommendedDate.toISOString().split('T')[0],
-    performance_trends: trends
+    performance_trends: trends as any
   };
 }
