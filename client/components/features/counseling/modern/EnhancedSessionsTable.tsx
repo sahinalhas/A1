@@ -18,6 +18,7 @@ import type { CounselingSession, CounselingTopic } from '../types';
 import { SESSION_MODE_LABELS, SESSION_LOCATION_LABELS, DISCIPLINE_STATUS_LABELS } from '@shared/constants/common.constants';
 import { generateMeetingFormPDF } from '../utils/meetingFormPDF';
 import { useToast } from '@/hooks/utils/toast.utils';
+import { useSettings } from '@/hooks/queries/settings.query-hooks';
 
 type SortField = 'date' | 'time' | 'student' | 'type';
 type SortDirection = 'asc' | 'desc';
@@ -42,6 +43,7 @@ export default function EnhancedSessionsTable({
  onSelectSession 
 }: EnhancedSessionsTableProps) {
  const { toast } = useToast();
+ const { data: settings } = useSettings();
  const [sortField, setSortField] = useState<SortField>('date');
  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
  const [columns, setColumns] = useState<Column[]>([
@@ -421,7 +423,10 @@ export default function EnhancedSessionsTable({
  const sessionNum = session.sessionType === 'individual' && session.student?.id
  ? sessionNumbersMap.get(session.student.id)?.get(session.id)
  : undefined;
- await generateMeetingFormPDF(session, sessionNum);
+ const topic = topicsMap.get(session.topic || '');
+ const topicFullPath = topic?.fullPath;
+ const schoolName = settings?.account?.institution;
+ await generateMeetingFormPDF(session, sessionNum, topicFullPath, schoolName);
  toast({
  title: "PDF İndirildi",
  description: "Görüşme bilgileri formu başarıyla indirildi",
