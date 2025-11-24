@@ -12,21 +12,21 @@ function ensureInitialized(): void {
   
   statements = {
     getByStudent: db.prepare(`
-      SELECT a.*, s.fullName as student_name
+      SELECT a.*, COALESCE(CAST((s.name || ' ' || s.surname) AS TEXT), s.name) as student_name
       FROM exam_alerts a
       LEFT JOIN students s ON a.student_id = s.id
       WHERE a.student_id = ?
       ORDER BY a.created_at DESC
     `),
     getUnread: db.prepare(`
-      SELECT a.*, s.fullName as student_name
+      SELECT a.*, COALESCE(CAST((s.name || ' ' || s.surname) AS TEXT), s.name) as student_name
       FROM exam_alerts a
       LEFT JOIN students s ON a.student_id = s.id
       WHERE a.is_read = FALSE
       ORDER BY a.severity DESC, a.created_at DESC
     `),
     getRecent: db.prepare(`
-      SELECT a.*, s.fullName as student_name
+      SELECT a.*, COALESCE(CAST((s.name || ' ' || s.surname) AS TEXT), s.name) as student_name
       FROM exam_alerts a
       LEFT JOIN students s ON a.student_id = s.id
       WHERE a.created_at >= datetime('now', '-7 days')

@@ -5,7 +5,7 @@ export function calculateTimeAnalysis(studentId: string, examTypeId: string): Ti
   const db = getDatabase();
   
   // Get student name
-  const student = db.prepare('SELECT fullName FROM students WHERE id = ?').get(studentId) as any;
+  const student = db.prepare("SELECT COALESCE(CAST((name || ' ' || surname) AS TEXT), name) as fullName FROM students WHERE id = ?").get(studentId) as any;
   
   // Get all exam sessions for this student and exam type
   const sessions = db.prepare(`

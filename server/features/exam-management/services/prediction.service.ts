@@ -6,7 +6,7 @@ export function predictPerformance(studentId: string, examTypeId: string): Predi
   const db = getDatabase();
   
   // Get student info
-  const student = db.prepare('SELECT fullName FROM students WHERE id = ?').get(studentId) as any;
+  const student = db.prepare("SELECT COALESCE(CAST((name || ' ' || surname) AS TEXT), name) as fullName FROM students WHERE id = ?").get(studentId) as any;
   
   // Get recent performance data
   const recentResults = db.prepare(`

@@ -6,7 +6,7 @@ export function calculateHeatmap(studentId: string, examTypeId: string): Heatmap
   const db = getDatabase();
   
   // Get student info
-  const student = db.prepare('SELECT fullName FROM students WHERE id = ?').get(studentId) as any;
+  const student = db.prepare("SELECT COALESCE(CAST((name || ' ' || surname) AS TEXT), name) as fullName FROM students WHERE id = ?").get(studentId) as any;
   
   // Get all subjects for this exam type
   const subjects = db.prepare(`
