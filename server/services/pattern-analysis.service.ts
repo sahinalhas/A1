@@ -170,14 +170,14 @@ export class PatternAnalysisService {
   private async analyzeBehavioralPatterns(studentId: string): Promise<PatternInsight[]> {
     const insights: PatternInsight[] = [];
 
-    let incidents: unknown[] = [];
+    let incidents: Array<{ behaviorCategory: string; behaviorType: string; incidentDate: string; description: string }> = [];
     try {
       incidents = this.db.prepare(`
         SELECT behaviorCategory, behaviorType, incidentDate, description
         FROM standardized_behavior_incidents
         WHERE studentId = ? AND incidentDate >= date('now', '-3 months')
         ORDER BY incidentDate ASC
-      `).all(studentId) as any[];
+      `).all(studentId) as Array<{ behaviorCategory: string; behaviorType: string; incidentDate: string; description: string }>;
     } catch (error) {
       // Table may not exist yet
       incidents = [];
@@ -185,15 +185,29 @@ export class PatternAnalysisService {
 
     if (incidents.length === 0) return insights;
 
-    // Davranış olaylarında artış var mı?
-    const lastMonthCount = incidents.filter(i => 
-      new Date(i.incidentDate) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-    ).length;
-    const previousMonthCount = incidents.filter(i => {
-      const date = new Date(i.incidentDate);
-      return date >= new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) &&
-             date < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    }).length;
+    // ✅ OPTIMIZATION: Single pass for month counting instead of 2 separate filters
+    const now = Date.now();
+    const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
+    const sixtyDaysAgo = now - 60 * 24 * 60 * 60 * 1000;
+    
+    let lastMonthCount = 0;
+    let previousMonthCount = 0;
+    const categoryCount = new Map<string, number>();
+
+    incidents.forEach(i => {
+      const incidentTime = new Date(i.incidentDate).getTime();
+      
+      // Count by month in single pass
+      if (incidentTime >= thirtyDaysAgo) {
+        lastMonthCount++;
+      } else if (incidentTime >= sixtyDaysAgo && incidentTime < thirtyDaysAgo) {
+        previousMonthCount++;
+      }
+      
+      // Count by category
+      const count = categoryCount.get(i.behaviorCategory) || 0;
+      categoryCount.set(i.behaviorCategory, count + 1);
+    });
 
     if (lastMonthCount > previousMonthCount && lastMonthCount >= 3) {
       insights.push({
@@ -211,12 +225,6 @@ export class PatternAnalysisService {
     }
 
     // Tekrarlayan davranış türleri
-    const categoryCount = new Map<string, number>();
-    incidents.forEach(i => {
-      const count = categoryCount.get(i.behaviorCategory) || 0;
-      categoryCount.set(i.behaviorCategory, count + 1);
-    });
-
     categoryCount.forEach((count, category) => {
       if (count >= 3 && category !== 'Olumlu') {
         insights.push({

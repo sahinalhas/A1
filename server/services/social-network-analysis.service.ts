@@ -95,7 +95,7 @@ export class SocialNetworkAnalysisService {
       networkMetrics: metrics,
       relationships,
       peerGroups,
-      socialInsights: insights,
+      socialInsights: insights as Array<{ type: 'strength' | 'concern' | 'opportunity'; title: string; description: string; recommendation: string }>,
       classPositioning
     };
   }
@@ -259,8 +259,8 @@ export class SocialNetworkAnalysisService {
     return groups;
   }
 
-  private async generateSocialInsights(studentId: string, relationships: any, metrics: any) {
-    const insights: unknown[] = [];
+  private async generateSocialInsights(studentId: string, relationships: any, metrics: any): Promise<Array<{ type: 'strength' | 'concern' | 'opportunity'; title: string; description: string; recommendation: string }>> {
+    const insights: Array<{ type: 'strength' | 'concern' | 'opportunity'; title: string; description: string; recommendation: string }> = [];
 
     if (metrics.isolationRisk === 'CRITICAL' || metrics.isolationRisk === 'HIGH') {
       insights.push({
@@ -365,20 +365,30 @@ export class SocialNetworkAnalysisService {
       WHERE s1.class = ? 
       AND pr.relationshipType IN ('FRIEND', 'CLOSE_FRIEND')
       AND pr.relationshipStrength >= 5
-    `).all(className) as any[];
+    `).all(className) as Array<{ studentId: string; peerId: string; studentName: string; peerName: string }>;
 
-    const clusters: unknown[] = [];
+    // ✅ OPTIMIZATION: Build adjacency map for O(1) lookups instead of O(n) searches
+    const adjacencyMap = new Map<string, Set<string>>();
+    relationships.forEach(rel => {
+      if (!adjacencyMap.has(rel.studentId)) {
+        adjacencyMap.set(rel.studentId, new Set());
+      }
+      adjacencyMap.get(rel.studentId)!.add(rel.peerId);
+    });
+
+    const clusters: Array<{ clusterId: string; size: number; members: string[]; cohesion: number }> = [];
     const processed = new Set<string>();
 
     relationships.forEach(rel => {
       if (!processed.has(rel.studentId)) {
-        const cluster = this.findCluster(rel.studentId, relationships, processed);
+        const cluster = this.findClusterOptimized(rel.studentId, adjacencyMap, processed);
         if (cluster.size > 1) {
+          const memberArray = Array.from(cluster);
           clusters.push({
             clusterId: `cluster_${clusters.length + 1}`,
             size: cluster.size,
-            members: Array.from(cluster),
-            cohesion: this.calculateClusterCohesion(Array.from(cluster), relationships)
+            members: memberArray,
+            cohesion: this.calculateClusterCohesionOptimized(memberArray, adjacencyMap)
           });
         }
       }
@@ -387,21 +397,22 @@ export class SocialNetworkAnalysisService {
     return clusters;
   }
 
-  private findCluster(startId: string, relationships: unknown[], processed: Set<string>): Set<string> {
+  private findClusterOptimized(startId: string, adjacencyMap: Map<string, Set<string>>, processed: Set<string>): Set<string> {
     const cluster = new Set<string>([startId]);
     const toProcess = [startId];
     processed.add(startId);
 
     while (toProcess.length > 0) {
       const current = toProcess.pop();
-      // Guard against undefined (though while condition should prevent this)
       if (!current) break;
       
-      relationships.forEach(rel => {
-        if (rel.studentId === current && !processed.has(rel.peerId)) {
-          cluster.add(rel.peerId);
-          toProcess.push(rel.peerId);
-          processed.add(rel.peerId);
+      // ✅ OPTIMIZATION: O(1) lookup using adjacency map instead of O(n) filter
+      const neighbors = adjacencyMap.get(current) || new Set();
+      neighbors.forEach(peerId => {
+        if (!processed.has(peerId)) {
+          cluster.add(peerId);
+          toProcess.push(peerId);
+          processed.add(peerId);
         }
       });
     }
@@ -409,16 +420,25 @@ export class SocialNetworkAnalysisService {
     return cluster;
   }
 
-  private calculateClusterCohesion(members: string[], relationships: unknown[]): number {
+  private calculateClusterCohesionOptimized(members: string[], adjacencyMap: Map<string, Set<string>>): number {
     // Guard against empty or single-member clusters
     if (members.length <= 1) {
       return 0;
     }
     
+    const memberSet = new Set(members);
     const possibleConnections = members.length * (members.length - 1);
-    const actualConnections = relationships.filter(rel =>
-      members.includes(rel.studentId) && members.includes(rel.peerId)
-    ).length;
+    
+    // ✅ OPTIMIZATION: Use adjacency map for O(n) instead of O(n²)
+    let actualConnections = 0;
+    members.forEach(memberId => {
+      const neighbors = adjacencyMap.get(memberId) || new Set();
+      neighbors.forEach(peerId => {
+        if (memberSet.has(peerId)) {
+          actualConnections++;
+        }
+      });
+    });
 
     return possibleConnections > 0 ? actualConnections / possibleConnections : 0;
   }

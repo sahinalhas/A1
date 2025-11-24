@@ -278,14 +278,15 @@ export function detectStudentChanges(
 ): { changed: boolean; changes: string[] } {
   const changes: string[] = [];
   
+  // ✅ FIXED: Only check fields that exist in Student type
   const fieldsToCheck: (keyof Student)[] = [
     'name', 'surname', 'class', 'gender', 'phone', 'email',
-    'address', 'parentName', 'parentContact', 'risk', 'counselor'
+    'address', 'risk'
   ];
   
   fieldsToCheck.forEach(field => {
     if (original[field] !== updated[field]) {
-      changes.push(field);
+      changes.push(field as string);
     }
   });
   
