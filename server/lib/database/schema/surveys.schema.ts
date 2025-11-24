@@ -8,6 +8,7 @@ import { DEFAULT_SURVEY_TEMPLATES_ABSENTEEISM_REASONS } from '../../../../shared
 import { DEFAULT_SURVEY_TEMPLATES_EFFICIENT_STUDY } from '../../../../shared/data/default-efficient-study-survey.js';
 import { DEFAULT_SURVEY_TEMPLATES_CAREER_INTEREST } from '../../../../shared/data/default-career-interest-survey.js';
 import { DEFAULT_SURVEY_TEMPLATES_HOLLAND_INVENTORY } from '../../../../shared/data/default-holland-inventory-survey.js';
+import { DEFAULT_SURVEY_TEMPLATES_ACADEMIC_SELF_CONCEPT } from '../../../../shared/data/default-academic-self-concept-survey.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createSurveysTables(db: Database.Database): void {
@@ -134,7 +135,8 @@ export function seedSurveysDefaultTemplates(db: Database.Database): void {
     ...DEFAULT_SURVEY_TEMPLATES_ABSENTEEISM_REASONS,
     ...DEFAULT_SURVEY_TEMPLATES_EFFICIENT_STUDY,
     ...DEFAULT_SURVEY_TEMPLATES_CAREER_INTEREST,
-    ...DEFAULT_SURVEY_TEMPLATES_HOLLAND_INVENTORY
+    ...DEFAULT_SURVEY_TEMPLATES_HOLLAND_INVENTORY,
+    ...DEFAULT_SURVEY_TEMPLATES_ACADEMIC_SELF_CONCEPT
   ];
   
   const seedTransaction = db.transaction(() => {
