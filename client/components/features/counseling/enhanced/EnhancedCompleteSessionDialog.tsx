@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { 
  Loader2, 
  MessageSquare, 
@@ -44,6 +45,8 @@ import { cn } from "@/lib/utils";
 import { generateSessionCompletionPDF } from "../utils/sessionCompletionPDF";
 import { Download as DownloadIcon } from "lucide-react";
 import { useSettings } from "@/hooks/queries/settings.query-hooks";
+import { apiClient } from "@/lib/api/core/client";
+import type { Student } from "@/lib/types/student.types";
 
 interface EnhancedCompleteSessionDialogProps {
  open: boolean;
@@ -71,6 +74,22 @@ export default function EnhancedCompleteSessionDialog({
  const { data: settings } = useSettings();
 
  const { analyzeSession, analysis, isAnalyzing, clearAnalysis } = useAISessionAnalysis();
+
+ // Fetch full student data for PDF
+ const { data: fullStudentData } = useQuery<Student | null>({
+  queryKey: ['student-full-data', session?.student?.id],
+  queryFn: async () => {
+   if (!session?.student?.id) return null;
+   try {
+    const response = await apiClient.get<Student>(`/api/students/${session.student.id}`, { showErrorToast: false });
+    return response || null;
+   } catch {
+    return null;
+   }
+  },
+  enabled: !!session?.student?.id && open,
+  staleTime: 5 * 60 * 1000, // 5 minutes
+ });
 
  const normalizeTopicValue = (topicValue: string | undefined): string => {
  if (!topicValue) return"";
@@ -124,7 +143,19 @@ export default function EnhancedCompleteSessionDialog({
  const topic = topics.find(t => t.id === formValues.topic);
  const topicFullPath = topic?.fullPath;
  const schoolName = settings?.account?.institution;
- await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName);
+ 
+ // Prepare student data for PDF
+ const studentData = fullStudentData ? {
+  gender: fullStudentData.gender === 'K' ? 'Kız' : fullStudentData.gender === 'E' ? 'Erkek' : undefined,
+  idNumber: fullStudentData.tcIdentityNo,
+  studentNumber: fullStudentData.studentNumber,
+  familyInfo: fullStudentData.livingWith,
+  term: '1. Dönem',
+  healthInfo: fullStudentData.healthNote || 'Sürekli hastalığı yok',
+  specialEducationInfo: fullStudentData.tags?.includes('specialEducation') ? 'Evet' : 'Yok',
+ } : undefined;
+ 
+ await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName, studentData);
  toast({
  title: "PDF İndirildi",
  description: "Görüşme tamamlama raporu başarıyla indirildi",

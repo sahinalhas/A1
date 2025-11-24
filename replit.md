@@ -16,8 +16,9 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
   - Family Info, Term, Health Info, Special Education Info
 - **New Session Information Section (Görüşme Bilgileri)**:
   - Session Date & Time with Location
-  - Guidance Area, Session Mode
-  - Session Type
+  - Guidance Area (Rehberlik Alanı) - displays full topic path
+  - Session Mode (Çalışma Yöntemi)
+  - Session Type (Individual/Group)
   - Teacher Name, Parent Name
   - Discipline/Behavior Status
 - **New Session Details Section (Görüşme Ayrıntıları)**:
@@ -27,9 +28,20 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
   - Two-column layout for compact, professional appearance
   - Better spacing and typography matching official form standards
   - Proper font sizing (10pt main, 8pt details, 7pt notes)
-- **Data Structure**: Added `studentData` parameter to `generateSessionCompletionPDF()` for additional student fields
-- **Files Modified**: `client/components/features/counseling/utils/sessionCompletionPDF.tsx`
-- **Result**: PDFs now include comprehensive student and session information matching official templates
+
+### Data Fetching & Integration
+- **Enhanced EnhancedCompleteSessionDialog Component**:
+  - Added React Query hook to fetch full student data when dialog opens
+  - Maps student data (gender, ID number, student number, health info, etc.)
+  - Converts Turkish gender codes ('K'/'E') to readable format (Kız/Erkek)
+  - Passes populated `studentData` to PDF generation function
+- **Files Modified**: 
+  - `client/components/features/counseling/utils/sessionCompletionPDF.tsx`
+  - `client/components/features/counseling/enhanced/EnhancedCompleteSessionDialog.tsx`
+- **Result**: 
+  - PDF now displays student gender and student number from database
+  - Guidance Area (Rehberlik Alanı) shows complete topic path (fullPath)
+  - All student information is properly populated from API data
 
 ### PDF Download Error Fix (Defter - Counseling Sessions)
 - **Issue**: Clicking "PDF İndir" threw "Invalid '' string child outside <Text>" error
