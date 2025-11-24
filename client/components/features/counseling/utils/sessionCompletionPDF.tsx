@@ -28,115 +28,73 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 35,
+    padding: 30,
     fontFamily: 'Roboto',
-    fontSize: 9,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 25,
+    fontSize: 10,
   },
   title: {
     fontSize: 16,
     fontWeight: 700,
-    color: '#1f2937',
-    marginBottom: 2,
+    textAlign: 'center',
+    marginBottom: 5,
+    textTransform: 'uppercase',
   },
-  subtitle: {
-    fontSize: 8,
-    color: '#6b7280',
+  table: {
+    width: '100%',
+    marginTop: 15,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+    borderBottomStyle: 'solid',
+    minHeight: 25,
+  },
+  tableCell: {
+    flex: 1,
+    padding: 5,
+    borderRightWidth: 1,
+    borderRightColor: '#000',
+    borderRightStyle: 'solid',
+    justifyContent: 'center',
+  },
+  tableCellNoBorder: {
+    flex: 1,
+    padding: 5,
+    justifyContent: 'center',
+  },
+  label: {
+    fontSize: 9,
+    fontWeight: 700,
+  },
+  value: {
+    fontSize: 9,
+    fontWeight: 400,
+    marginTop: 2,
+  },
+  meetingInfo: {
+    marginTop: 20,
+  },
+  meetingRow: {
+    flexDirection: 'row',
     marginBottom: 8,
   },
-  dateText: {
-    fontSize: 8,
-    color: '#9ca3af',
-    textAlign: 'right',
+  meetingLabel: {
+    fontSize: 9,
+    fontWeight: 700,
+    width: 180,
   },
-  section: {
-    marginBottom: 18,
+  meetingValue: {
+    fontSize: 9,
+    fontWeight: 400,
+    flex: 1,
   },
   sectionTitle: {
     fontSize: 11,
     fontWeight: 700,
-    color: '#1f2937',
-    marginBottom: 10,
-    paddingBottom: 6,
-    borderBottomWidth: 1.5,
-    borderBottomColor: '#d1d5db',
-  },
-  twoColumnRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  column: {
-    flex: 1,
-    marginRight: 15,
-    flexDirection: 'row',
-  },
-  lastColumn: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  label: {
-    fontSize: 8,
-    fontWeight: 700,
-    color: '#374151',
-    width: 100,
-  },
-  value: {
-    fontSize: 9,
-    flex: 1,
-    color: '#1f2937',
-  },
-  fullRow: {
-    marginBottom: 8,
-    flexDirection: 'row',
-  },
-  fullRowLabel: {
-    fontSize: 8,
-    fontWeight: 700,
-    color: '#374151',
-    width: 100,
-  },
-  fullRowValue: {
-    fontSize: 9,
-    flex: 1,
-    color: '#1f2937',
-  },
-  notesBox: {
-    backgroundColor: '#f9fafb',
-    borderWidth: 0.5,
-    borderColor: '#e5e7eb',
-    padding: 10,
-    marginTop: 8,
-    minHeight: 50,
-  },
-  notesText: {
-    fontSize: 8.5,
-    lineHeight: 1.5,
-    color: '#374151',
-  },
-  evaluationBox: {
-    backgroundColor: '#fafafa',
-    borderWidth: 0.5,
-    borderColor: '#e5e7eb',
-    padding: 10,
-    marginTop: 8,
-  },
-  evaluationRow: {
-    flexDirection: 'row',
-    marginBottom: 6,
-  },
-  footer: {
     marginTop: 20,
-    paddingTop: 12,
-    borderTopWidth: 0.5,
-    borderTopColor: '#e5e7eb',
-    fontSize: 7,
-    color: '#9ca3af',
-    textAlign: 'center',
+    marginBottom: 10,
+    textDecoration: 'underline',
   },
 });
 
@@ -153,9 +111,8 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
   topicFullPath,
   schoolName,
 }) => {
-  const sessionDate = format(new Date(session.sessionDate), 'dd MMMM yyyy', { locale: tr });
-  const generatedDate = format(new Date(), 'dd MMMM yyyy HH:mm', { locale: tr });
-
+  const sessionDate = format(new Date(session.sessionDate), 'dd/MM/yyyy', { locale: tr });
+  
   const studentName = session.sessionType === 'individual'
     ? `${session.student?.name || ''} ${session.student?.surname || ''}`.trim()
     : session.groupName || 'Grup Görüşmesi';
@@ -185,139 +142,182 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
     'sınırlı': 'Sınırlı',
   };
 
-  const currentDate = format(new Date(), 'dd/MM/yyyy', { locale: tr });
+  // Öğrenci bilgilerini PDF'deki gibi düzenle
+  const studentInfoRows = [
+    [
+      { label: 'Öğrencinin Adı Soyadı:', value: studentName },
+      { label: 'Cinsiyeti:', value: session.student?.gender === 'female' ? 'Kız' : session.student?.gender === 'male' ? 'Erkek' : '' }
+    ],
+    [
+      { label: 'T.C. Kimlik Nu:', value: session.student?.tcIdentityNumber || '' },
+      { label: 'Uyruğu:', value: 'T.C.' }
+    ],
+    [
+      { label: 'Kademe:', value: session.student?.educationLevel || '' },
+      { label: 'Öğrenci Numarası:', value: session.student?.studentNumber || '' }
+    ],
+    [
+      { label: 'Okulu:', value: schoolName || '' },
+      { label: 'Yıl Sonu Başarı:', value: session.student?.yearEndSuccess || '' }
+    ],
+    [
+      { label: 'Sınıfı:', value: session.student?.className || '' },
+      { label: 'Devamsızlık Gün Sayısı:', value: session.student?.absenceDays || '' }
+    ],
+    [
+      { label: 'Aile Bilgisi :', value: session.student?.familyInfo || '' },
+      { label: 'Dönem:', value: session.student?.term || '' }
+    ],
+    [
+      { label: 'Sağlık Bilgisi :', value: session.student?.healthInfo || 'Sürekli hastalığı yok' },
+      { label: 'Özel Eğitim Bilgisi:', value: session.student?.specialEducationInfo || 'Yok' }
+    ]
+  ];
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.title}>Görüşme Bilgileri Formu</Text>
-            <Text style={styles.subtitle}>Rehberlik Hizmetleri</Text>
-          </View>
-          <Text style={styles.dateText}>{currentDate}</Text>
-        </View>
+        {/* Başlık */}
+        <Text style={styles.title}>GÖRÜŞME BİLGİLERİ FORMU</Text>
+        <Text style={[styles.title, { fontSize: 12, fontWeight: 400, textTransform: 'none' }]}>
+          Rehberlik Hizmetleri
+        </Text>
 
-        {/* Öğrenci Bilgileri */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Öğrenci Bilgileri</Text>
-          
-          <View style={styles.twoColumnRow}>
-            <View style={styles.column}>
-              <Text style={styles.label}>Öğrencinin Adı Soyadı:</Text>
-              <Text style={styles.value}>{studentName}</Text>
+        {/* Öğrenci Bilgileri Tablosu */}
+        <View style={styles.table}>
+          {studentInfoRows.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.tableRow}>
+              {row.map((cell, cellIndex) => (
+                <View 
+                  key={cellIndex} 
+                  style={cellIndex === row.length - 1 ? styles.tableCellNoBorder : styles.tableCell}
+                >
+                  <Text style={styles.label}>{cell.label}</Text>
+                  <Text style={styles.value}>{cell.value}</Text>
+                </View>
+              ))}
             </View>
-            <View style={styles.lastColumn}>
-              <Text style={styles.label}>Türü:</Text>
-              <Text style={styles.value}>{session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}</Text>
-            </View>
-          </View>
-
-          {schoolName && (
-            <View style={styles.fullRow}>
-              <Text style={styles.fullRowLabel}>Okul:</Text>
-              <Text style={styles.fullRowValue}>{schoolName}</Text>
-            </View>
-          )}
+          ))}
         </View>
 
         {/* Görüşme Bilgileri */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Görüşme Bilgileri</Text>
-          
-          <View style={styles.twoColumnRow}>
-            <View style={styles.column}>
-              <Text style={styles.label}>Görüşme Tarihi:</Text>
-              <Text style={styles.value}>{sessionDate}</Text>
-            </View>
-            <View style={styles.lastColumn}>
-              <Text style={styles.label}>Görüşme Saati:</Text>
-              <Text style={styles.value}>{session.entryTime} - {formData.exitTime || '-'}</Text>
-            </View>
+        <View style={styles.meetingInfo}>
+          <View style={styles.meetingRow}>
+            <Text style={styles.meetingLabel}>Görüşme Tarihi ve Saati :</Text>
+            <Text style={styles.meetingValue}>
+              {sessionDate} - {session.entryTime}
+            </Text>
+          </View>
+
+          <View style={styles.meetingRow}>
+            <Text style={styles.meetingLabel}>Görüşme Yeri :</Text>
+            <Text style={styles.meetingValue}>Rehberlik Servisi</Text>
           </View>
 
           {topicFullPath && (
-            <View style={styles.fullRow}>
-              <Text style={styles.fullRowLabel}>Rehberlik Alanı:</Text>
-              <Text style={styles.fullRowValue}>{topicFullPath}</Text>
+            <View style={styles.meetingRow}>
+              <Text style={styles.meetingLabel}>Rehberlik Alanı :</Text>
+              <Text style={styles.meetingValue}>{topicFullPath}</Text>
             </View>
           )}
 
-          <View style={styles.twoColumnRow}>
-            <View style={styles.column}>
+          <View style={styles.meetingRow}>
+            <Text style={styles.meetingLabel}>Oturum Sayısı :</Text>
+            <Text style={styles.meetingValue}>0</Text>
+          </View>
+
+          <View style={styles.meetingRow}>
+            <Text style={styles.meetingLabel}>Öğretmen Adı :</Text>
+            <Text style={styles.meetingValue}></Text>
+          </View>
+        </View>
+
+        {/* Görüşme Detayları */}
+        <Text style={styles.sectionTitle}>Görüşme Detayları</Text>
+        
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <View style={styles.tableCell}>
               <Text style={styles.label}>Duygusal Durum:</Text>
               <Text style={styles.value}>{emotionalStateLabels[formData.emotionalState as string] || '-'}</Text>
             </View>
-            <View style={styles.lastColumn}>
+            <View style={styles.tableCell}>
               <Text style={styles.label}>Fiziksel Durum:</Text>
               <Text style={styles.value}>{physicalStateLabels[formData.physicalState as string] || '-'}</Text>
             </View>
-          </View>
-
-          <View style={styles.twoColumnRow}>
-            <View style={styles.column}>
+            <View style={styles.tableCellNoBorder}>
               <Text style={styles.label}>İletişim Kalitesi:</Text>
               <Text style={styles.value}>{communicationLabels[formData.communicationQuality as string] || '-'}</Text>
             </View>
-            <View style={styles.lastColumn}>
+          </View>
+          
+          <View style={styles.tableRow}>
+            <View style={styles.tableCell}>
               <Text style={styles.label}>İşbirliği Düzeyi:</Text>
               <Text style={styles.value}>{formData.cooperationLevel}/5</Text>
+            </View>
+            <View style={styles.tableCellNoBorder}>
+              <Text style={styles.label}>Görüşme Süresi:</Text>
+              <Text style={styles.value}>{session.entryTime} - {formData.exitTime || '-'}</Text>
             </View>
           </View>
         </View>
 
         {/* Görüşme Ayrıntıları */}
         {formData.detailedNotes && (
-          <View style={styles.section}>
+          <>
             <Text style={styles.sectionTitle}>Görüşme Ayrıntıları</Text>
-            <View style={styles.notesBox}>
-              <Text style={styles.notesText}>{formData.detailedNotes}</Text>
+            <View style={[styles.tableRow, { minHeight: 100 }]}>
+              <View style={styles.tableCellNoBorder}>
+                <Text style={styles.value}>{formData.detailedNotes}</Text>
+              </View>
             </View>
-          </View>
+          </>
         )}
 
         {/* Yapılacaklar */}
         {formData.actionItems && formData.actionItems.length > 0 && (
-          <View style={styles.section}>
+          <>
             <Text style={styles.sectionTitle}>Yapılacaklar</Text>
-            {formData.actionItems.map((item, idx) => (
-              <View key={idx} style={styles.fullRow}>
-                <Text style={styles.fullRowLabel}>{idx + 1}. Madde:</Text>
-                <Text style={styles.fullRowValue}>{item.description || '-'}</Text>
-              </View>
-            ))}
-          </View>
+            <View style={styles.table}>
+              {formData.actionItems.map((item, index) => (
+                <View key={index} style={styles.tableRow}>
+                  <View style={styles.tableCellNoBorder}>
+                    <Text style={styles.value}>{index + 1}. {item.description}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          </>
         )}
 
         {/* Takip Planı */}
         {formData.followUpNeeded && (
-          <View style={styles.section}>
+          <>
             <Text style={styles.sectionTitle}>Takip Planı</Text>
-            <View style={styles.twoColumnRow}>
-              <View style={styles.column}>
-                <Text style={styles.label}>Takip Tarihi:</Text>
-                <Text style={styles.value}>
-                  {formData.followUpDate ? format(new Date(formData.followUpDate), 'dd/MM/yyyy', { locale: tr }) : '-'}
-                </Text>
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                <View style={styles.tableCell}>
+                  <Text style={styles.label}>Takip Tarihi:</Text>
+                  <Text style={styles.value}>
+                    {formData.followUpDate ? format(new Date(formData.followUpDate), 'dd/MM/yyyy', { locale: tr }) : '-'}
+                  </Text>
+                </View>
+                <View style={styles.tableCellNoBorder}>
+                  <Text style={styles.label}>Takip Saati:</Text>
+                  <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
+                </View>
               </View>
-              <View style={styles.lastColumn}>
-                <Text style={styles.label}>Takip Saati:</Text>
-                <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
-              </View>
+              {formData.followUpPlan && (
+                <View style={styles.tableRow}>
+                  <View style={styles.tableCellNoBorder}>
+                    <Text style={styles.value}>{formData.followUpPlan}</Text>
+                  </View>
+                </View>
+              )}
             </View>
-            {formData.followUpPlan && (
-              <View style={styles.notesBox}>
-                <Text style={styles.notesText}>{formData.followUpPlan}</Text>
-              </View>
-            )}
-          </View>
+          </>
         )}
-
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text>Rehber360 • Rehberlik Bilgi Yönetim Sistemi • Otomatik Oluşturulmuş</Text>
-        </View>
       </Page>
     </Document>
   );
@@ -354,7 +354,7 @@ export async function generateSessionCompletionPDF(
     : 'Ogrenci';
 
   const dateStr = format(new Date(session.sessionDate || new Date()), 'yyyyMMdd_HHmm');
-  const fileName = `Gorusme_Tamamlama_${studentName}_${dateStr}.pdf`;
+  const fileName = `Gorusme_Bilgileri_Formu_${studentName}_${dateStr}.pdf`;
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
