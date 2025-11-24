@@ -111,11 +111,15 @@ const styles = StyleSheet.create({
 interface SessionCompletionPDFProps {
   session: CounselingSession;
   formData: CompleteSessionFormValues;
+  topicFullPath?: string;
+  schoolName?: string;
 }
 
 const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
   session,
   formData,
+  topicFullPath,
+  schoolName,
 }) => {
   const sessionDate = format(new Date(session.sessionDate), 'dd MMMM yyyy', { locale: tr });
   const generatedDate = format(new Date(), 'dd MMMM yyyy HH:mm', { locale: tr });
@@ -163,6 +167,12 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
         {/* Temel Bilgiler */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Görüşme Özeti</Text>
+          {schoolName && (
+            <View style={styles.row}>
+              <Text style={styles.label}>Okul:</Text>
+              <Text style={styles.value}>{schoolName}</Text>
+            </View>
+          )}
           <View style={styles.row}>
             <Text style={styles.label}>Öğrenci:</Text>
             <Text style={styles.value}>{studentName}</Text>
@@ -183,6 +193,12 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
               {session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}
             </Text>
           </View>
+          {topicFullPath && (
+            <View style={styles.row}>
+              <Text style={styles.label}>Konu:</Text>
+              <Text style={styles.value}>{topicFullPath}</Text>
+            </View>
+          )}
         </View>
 
         {/* Davranış ve Durum Değerlendirmesi */}
@@ -276,10 +292,12 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
 
 export async function generateSessionCompletionPDF(
   session: CounselingSession,
-  formData: CompleteSessionFormValues
+  formData: CompleteSessionFormValues,
+  topicFullPath?: string,
+  schoolName?: string
 ) {
   const blob = await pdf(
-    <SessionCompletionDocument session={session} formData={formData} />
+    <SessionCompletionDocument session={session} formData={formData} topicFullPath={topicFullPath} schoolName={schoolName} />
   ).toBlob();
 
   const studentName = session.student

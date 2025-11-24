@@ -43,6 +43,7 @@ import { useAISessionAnalysis } from "@/hooks/features/counseling/useAISessionAn
 import { cn } from "@/lib/utils";
 import { generateSessionCompletionPDF } from "../utils/sessionCompletionPDF";
 import { Download as DownloadIcon } from "lucide-react";
+import { useSettings } from "@/hooks/queries/settings.query-hooks";
 
 interface EnhancedCompleteSessionDialogProps {
  open: boolean;
@@ -67,6 +68,7 @@ export default function EnhancedCompleteSessionDialog({
  const [actionItemsOpen, setActionItemsOpen] = useState(false);
  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
  const { toast } = useToast();
+ const { data: settings } = useSettings();
 
  const { analyzeSession, analysis, isAnalyzing, clearAnalysis } = useAISessionAnalysis();
 
@@ -119,7 +121,10 @@ export default function EnhancedCompleteSessionDialog({
  try {
  setIsDownloadingPDF(true);
  const formValues = form.getValues();
- await generateSessionCompletionPDF(session, formValues);
+ const topic = topics.find(t => t.id === formValues.topic);
+ const topicFullPath = topic?.fullPath;
+ const schoolName = settings?.account?.institution;
+ await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName);
  toast({
  title: "PDF İndirildi",
  description: "Görüşme tamamlama raporu başarıyla indirildi",
