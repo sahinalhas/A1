@@ -140,6 +140,13 @@ export default function PublicSurvey() {
  submissionType: 'ONLINE',
  submittedAt: new Date().toISOString(),
  };
+ 
+ console.log('📤 Submitting survey response:', {
+   distributionId: responseData.distributionId,
+   hasStudentInfo: !!responseData.studentInfo,
+   responseDataKeys: Object.keys(responseData.responseData || {}).length,
+   submissionType: responseData.submissionType
+ });
 
  await apiClient.post(
  SURVEY_ENDPOINTS.RESPONSES,

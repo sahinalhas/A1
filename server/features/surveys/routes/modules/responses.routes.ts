@@ -26,8 +26,18 @@ export const getSurveyResponses: RequestHandler = (req, res) => {
 export const createSurveyResponse: RequestHandler = (req, res) => {
   try {
     const response = req.body;
+    console.log('🔍 Received response:', { 
+      distributionId: response.distributionId,
+      hasResponseData: !!response.responseData,
+      studentInfo: response.studentInfo,
+      fullBody: JSON.stringify(response).substring(0, 200)
+    });
     
     if (!response.distributionId || !response.responseData) {
+      console.error('❌ Missing required fields:', {
+        distributionId: response.distributionId,
+        responseData: response.responseData
+      });
       return res.status(400).json({ 
         success: false, 
         error: 'Dağıtım ID ve yanıt verisi gereklidir' 
