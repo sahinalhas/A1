@@ -127,12 +127,12 @@ export function getSessionById(id: string): CounselingSession | null {
   return statements!.getSessionById.get(id) as CounselingSession | null;
 }
 
-export function getStudentsBySessionId(sessionId: string): Array<{ id: string; name: string; surname: string; class: string }> {
+export function getStudentsBySessionId(sessionId: string): Array<{ id: string; name: string; surname: string; class: string; studentNumber?: string; gender?: string }> {
   ensureInitialized();
   return statements!.getStudentsBySession.all(sessionId);
 }
 
-export function getStudentBySessionId(sessionId: string): { id: string; name: string; surname: string; class: string } | null {
+export function getStudentBySessionId(sessionId: string): { id: string; name: string; surname: string; class: string; studentNumber?: string; gender?: string } | null {
   ensureInitialized();
   return statements!.getStudentBySession.get(sessionId);
 }

@@ -308,9 +308,9 @@ export default function EnhancedSessionsTable({
                     const schoolName = settings?.account?.institution;
                     
                     const studentData = session.student ? {
-                      gender: undefined,
-                      idNumber: undefined,
-                      studentNumber: session.student.id,
+                      gender: (session.student as any)?.gender || '-',
+                      idNumber: (session.student as any)?.tcIdentityNo,
+                      studentNumber: (session.student as any)?.studentNumber || session.student.id,
                       yearEndSuccess: undefined,
                       absenceDays: undefined,
                       familyInfo: undefined,

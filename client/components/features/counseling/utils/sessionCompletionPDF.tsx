@@ -270,7 +270,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
               <View style={styles.halfColumn}>
                 <View style={styles.row}>
                   <Text style={styles.label}>Öğrenci No:</Text>
-                  <Text style={styles.value}>{studentData?.studentNumber || '-'}</Text>
+                  <Text style={styles.value}>{studentData?.studentNumber ? String(studentData.studentNumber).substring(0, 20) : '-'}</Text>
                 </View>
               </View>
             </View>
