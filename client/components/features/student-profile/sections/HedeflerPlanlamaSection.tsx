@@ -9,7 +9,6 @@ import { Target, Users } from "lucide-react";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
 
 const hedeflerPlanlamaSchema = z.object({
- assessmentDate: z.string(),
  studentExpectations: z.string().optional(),
  familyExpectations: z.string().optional(),
  shortTermGoals: z.string().optional(),
@@ -33,7 +32,6 @@ export default function HedeflerPlanlamaSection({
  const form = useForm<HedeflerPlanlamaFormValues>({
  resolver: zodResolver(hedeflerPlanlamaSchema),
  defaultValues: {
- assessmentDate: new Date().toISOString().slice(0, 10),
  studentExpectations:"",
  familyExpectations:"",
  shortTermGoals:"",
@@ -67,20 +65,6 @@ export default function HedeflerPlanlamaSection({
  <CardContent>
  <Form {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
- <FormField
- control={form.control}
- name="assessmentDate"
- render={({ field }) => (
- <FormItem>
- <FormLabel>Değerlendirme Tarihi</FormLabel>
- <FormControl>
- <input type="date" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" {...field} />
- </FormControl>
- <FormMessage />
- </FormItem>
- )}
- />
-
  <div className="space-y-4">
  <div className="flex items-center gap-2 text-lg font-semibold">
  <Target className="h-5 w-5" />

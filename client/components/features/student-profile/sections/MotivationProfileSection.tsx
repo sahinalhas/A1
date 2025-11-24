@@ -12,7 +12,6 @@ import { Target } from "lucide-react";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
 
 const motivationProfileSchema = z.object({
- assessmentDate: z.string(),
  primaryMotivators: z.array(z.string()),
  careerAspirations: z.array(z.string()),
  academicGoals: z.array(z.string()),
@@ -46,7 +45,6 @@ export default function MotivationProfileSection({
  const form = useForm<MotivationProfileFormValues>({
  resolver: zodResolver(motivationProfileSchema),
  defaultValues: {
- assessmentDate: new Date().toISOString().slice(0, 10),
  primaryMotivators: [],
  careerAspirations: [],
  academicGoals: [],

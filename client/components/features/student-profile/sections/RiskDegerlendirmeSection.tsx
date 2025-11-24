@@ -46,7 +46,6 @@ interface RiskFactors {
 }
 
 const riskAssessmentSchema = z.object({
- assessmentDate: z.string().min(1,"Değerlendirme tarihi gereklidir"),
  academicRiskLevel: z.enum(riskLevels),
  behavioralRiskLevel: z.enum(riskLevels),
  attendanceRiskLevel: z.enum(riskLevels),
@@ -72,7 +71,6 @@ export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpd
  const form = useForm<RiskAssessmentFormValues>({
  resolver: zodResolver(riskAssessmentSchema),
  defaultValues: {
- assessmentDate: new Date().toISOString().slice(0, 10),
  academicRiskLevel:"DÜŞÜK",
  behavioralRiskLevel:"DÜŞÜK",
  attendanceRiskLevel:"DÜŞÜK",
