@@ -28,81 +28,115 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 35,
     fontFamily: 'Roboto',
-    fontSize: 10,
+    fontSize: 9,
   },
   header: {
-    marginBottom: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: '#4f46e5',
-    paddingBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 25,
   },
   title: {
     fontSize: 16,
     fontWeight: 700,
-    color: '#4f46e5',
-    marginBottom: 4,
+    color: '#1f2937',
+    marginBottom: 2,
   },
   subtitle: {
-    fontSize: 9,
-    color: '#666',
+    fontSize: 8,
+    color: '#6b7280',
+    marginBottom: 8,
+  },
+  dateText: {
+    fontSize: 8,
+    color: '#9ca3af',
+    textAlign: 'right',
   },
   section: {
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    padding: 12,
+    marginBottom: 18,
   },
   sectionTitle: {
     fontSize: 11,
     fontWeight: 700,
-    marginBottom: 10,
     color: '#1f2937',
-    borderBottomWidth: 1,
-    borderBottomColor: '#d1d5db',
+    marginBottom: 10,
     paddingBottom: 6,
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#d1d5db',
   },
-  row: {
+  twoColumnRow: {
     flexDirection: 'row',
-    marginBottom: 6,
+    marginBottom: 8,
+  },
+  column: {
+    flex: 1,
+    marginRight: 15,
+    flexDirection: 'row',
+  },
+  lastColumn: {
+    flex: 1,
+    flexDirection: 'row',
   },
   label: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: 700,
-    width: 120,
     color: '#374151',
+    width: 100,
   },
   value: {
     fontSize: 9,
     flex: 1,
     color: '#1f2937',
   },
+  fullRow: {
+    marginBottom: 8,
+    flexDirection: 'row',
+  },
+  fullRowLabel: {
+    fontSize: 8,
+    fontWeight: 700,
+    color: '#374151',
+    width: 100,
+  },
+  fullRowValue: {
+    fontSize: 9,
+    flex: 1,
+    color: '#1f2937',
+  },
   notesBox: {
     backgroundColor: '#f9fafb',
+    borderWidth: 0.5,
+    borderColor: '#e5e7eb',
     padding: 10,
     marginTop: 8,
-    borderRadius: 4,
-    minHeight: 60,
+    minHeight: 50,
   },
   notesText: {
-    fontSize: 9,
+    fontSize: 8.5,
     lineHeight: 1.5,
     color: '#374151',
   },
-  ratingBox: {
-    backgroundColor: '#eff6ff',
-    padding: 8,
-    borderLeftWidth: 3,
-    borderLeftColor: '#3b82f6',
+  evaluationBox: {
+    backgroundColor: '#fafafa',
+    borderWidth: 0.5,
+    borderColor: '#e5e7eb',
+    padding: 10,
+    marginTop: 8,
   },
-  badge: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-    padding: 4,
-    fontSize: 8,
-    borderRadius: 2,
-    marginRight: 4,
+  evaluationRow: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  footer: {
+    marginTop: 20,
+    paddingTop: 12,
+    borderTopWidth: 0.5,
+    borderTopColor: '#e5e7eb',
+    fontSize: 7,
+    color: '#9ca3af',
+    textAlign: 'center',
   },
 });
 
@@ -151,88 +185,92 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
     'sınırlı': 'Sınırlı',
   };
 
+  const currentDate = format(new Date(), 'dd/MM/yyyy', { locale: tr });
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Görüşme Bilgileri Formu</Text>
-          <Text style={styles.subtitle}>
-            Oluşturma Tarihi: {generatedDate}
-          </Text>
+          <View>
+            <Text style={styles.title}>Görüşme Bilgileri Formu</Text>
+            <Text style={styles.subtitle}>Rehberlik Hizmetleri</Text>
+          </View>
+          <Text style={styles.dateText}>{currentDate}</Text>
         </View>
 
-        {/* Temel Bilgiler */}
+        {/* Öğrenci Bilgileri */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Görüşme Özeti</Text>
-          {schoolName && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Okul:</Text>
-              <Text style={styles.value}>{schoolName}</Text>
-            </View>
-          )}
-          <View style={styles.row}>
-            <Text style={styles.label}>Öğrenci:</Text>
-            <Text style={styles.value}>{studentName}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Tarih:</Text>
-            <Text style={styles.value}>{sessionDate}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Saat:</Text>
-            <Text style={styles.value}>
-              {session.entryTime} - {formData.exitTime || '-'}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Türü:</Text>
-            <Text style={styles.value}>
-              {session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}
-            </Text>
-          </View>
-          {topicFullPath && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Konu:</Text>
-              <Text style={styles.value}>{topicFullPath}</Text>
-            </View>
-          )}
-        </View>
-
-        {/* Davranış ve Durum Değerlendirmesi */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Davranış ve Durum Değerlendirmesi</Text>
+          <Text style={styles.sectionTitle}>Öğrenci Bilgileri</Text>
           
-          <View style={styles.ratingBox}>
-            <View style={styles.row}>
+          <View style={styles.twoColumnRow}>
+            <View style={styles.column}>
+              <Text style={styles.label}>Öğrencinin Adı Soyadı:</Text>
+              <Text style={styles.value}>{studentName}</Text>
+            </View>
+            <View style={styles.lastColumn}>
+              <Text style={styles.label}>Türü:</Text>
+              <Text style={styles.value}>{session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}</Text>
+            </View>
+          </View>
+
+          {schoolName && (
+            <View style={styles.fullRow}>
+              <Text style={styles.fullRowLabel}>Okul:</Text>
+              <Text style={styles.fullRowValue}>{schoolName}</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Görüşme Bilgileri */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Görüşme Bilgileri</Text>
+          
+          <View style={styles.twoColumnRow}>
+            <View style={styles.column}>
+              <Text style={styles.label}>Görüşme Tarihi:</Text>
+              <Text style={styles.value}>{sessionDate}</Text>
+            </View>
+            <View style={styles.lastColumn}>
+              <Text style={styles.label}>Görüşme Saati:</Text>
+              <Text style={styles.value}>{session.entryTime} - {formData.exitTime || '-'}</Text>
+            </View>
+          </View>
+
+          {topicFullPath && (
+            <View style={styles.fullRow}>
+              <Text style={styles.fullRowLabel}>Rehberlik Alanı:</Text>
+              <Text style={styles.fullRowValue}>{topicFullPath}</Text>
+            </View>
+          )}
+
+          <View style={styles.twoColumnRow}>
+            <View style={styles.column}>
               <Text style={styles.label}>Duygusal Durum:</Text>
-              <Text style={styles.value}>
-                {emotionalStateLabels[formData.emotionalState as string] || '-'}
-              </Text>
+              <Text style={styles.value}>{emotionalStateLabels[formData.emotionalState as string] || '-'}</Text>
             </View>
-            <View style={styles.row}>
+            <View style={styles.lastColumn}>
               <Text style={styles.label}>Fiziksel Durum:</Text>
-              <Text style={styles.value}>
-                {physicalStateLabels[formData.physicalState as string] || '-'}
-              </Text>
+              <Text style={styles.value}>{physicalStateLabels[formData.physicalState as string] || '-'}</Text>
             </View>
-            <View style={styles.row}>
+          </View>
+
+          <View style={styles.twoColumnRow}>
+            <View style={styles.column}>
               <Text style={styles.label}>İletişim Kalitesi:</Text>
-              <Text style={styles.value}>
-                {communicationLabels[formData.communicationQuality as string] || '-'}
-              </Text>
+              <Text style={styles.value}>{communicationLabels[formData.communicationQuality as string] || '-'}</Text>
             </View>
-            <View style={styles.row}>
+            <View style={styles.lastColumn}>
               <Text style={styles.label}>İşbirliği Düzeyi:</Text>
               <Text style={styles.value}>{formData.cooperationLevel}/5</Text>
             </View>
           </View>
         </View>
 
-        {/* Detaylı Notlar */}
+        {/* Görüşme Ayrıntıları */}
         {formData.detailedNotes && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Görüşme Notları</Text>
+            <Text style={styles.sectionTitle}>Görüşme Ayrıntıları</Text>
             <View style={styles.notesBox}>
               <Text style={styles.notesText}>{formData.detailedNotes}</Text>
             </View>
@@ -242,21 +280,11 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
         {/* Yapılacaklar */}
         {formData.actionItems && formData.actionItems.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Yapılacaklar ({formData.actionItems.length})</Text>
+            <Text style={styles.sectionTitle}>Yapılacaklar</Text>
             {formData.actionItems.map((item, idx) => (
-              <View key={idx} style={{ marginBottom: 8 }}>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Madde {idx + 1}:</Text>
-                  <Text style={styles.value}>{item.description || '-'}</Text>
-                </View>
-                {item.assignedTo && (
-                  <View style={{ marginLeft: 120, marginTop: 2 }}>
-                    <Text style={{ fontSize: 8, color: '#666' }}>
-                      Atanan: {item.assignedTo}
-                      {item.dueDate && ` • Tarih: ${item.dueDate}`}
-                    </Text>
-                  </View>
-                )}
+              <View key={idx} style={styles.fullRow}>
+                <Text style={styles.fullRowLabel}>{idx + 1}. Madde:</Text>
+                <Text style={styles.fullRowValue}>{item.description || '-'}</Text>
               </View>
             ))}
           </View>
@@ -266,15 +294,17 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
         {formData.followUpNeeded && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Takip Planı</Text>
-            <View style={styles.row}>
-              <Text style={styles.label}>Takip Tarihi:</Text>
-              <Text style={styles.value}>
-                {formData.followUpDate ? format(new Date(formData.followUpDate), 'dd MMMM yyyy', { locale: tr }) : '-'}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Takip Saati:</Text>
-              <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
+            <View style={styles.twoColumnRow}>
+              <View style={styles.column}>
+                <Text style={styles.label}>Takip Tarihi:</Text>
+                <Text style={styles.value}>
+                  {formData.followUpDate ? format(new Date(formData.followUpDate), 'dd/MM/yyyy', { locale: tr }) : '-'}
+                </Text>
+              </View>
+              <View style={styles.lastColumn}>
+                <Text style={styles.label}>Takip Saati:</Text>
+                <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
+              </View>
             </View>
             {formData.followUpPlan && (
               <View style={styles.notesBox}>
@@ -283,6 +313,11 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
             )}
           </View>
         )}
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text>Rehber360 • Rehberlik Bilgi Yönetim Sistemi • Otomatik Oluşturulmuş</Text>
+        </View>
       </Page>
     </Document>
   );
