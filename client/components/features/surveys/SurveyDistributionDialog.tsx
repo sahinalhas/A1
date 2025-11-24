@@ -292,21 +292,29 @@ export default function SurveyDistributionDialog({
 
  const onSubmit = async (data: DistributionForm) => {
  try {
+ // Ensure targetStudents is populated from selectedStudents (set by class selection)
+ const finalData = {
+ ...data,
+ targetStudents: data.targetStudents && data.targetStudents.length > 0 
+ ? data.targetStudents 
+ : selectedStudents
+ };
+ 
  // Generate Excel template if needed
  let excelTemplate = undefined;
- if (data.distributionType ==="MANUAL_EXCEL" || data.distributionType ==="HYBRID") {
+ if (finalData.distributionType ==="MANUAL_EXCEL" || finalData.distributionType ==="HYBRID") {
  // Get students: either from targetStudents, or from targetClasses
  let selectedStudentsList = [];
  
- if (data.targetStudents && data.targetStudents.length > 0) {
+ if (finalData.targetStudents && finalData.targetStudents.length > 0) {
  // If specific students are selected, use them
  selectedStudentsList = students.filter(s => 
- data.targetStudents?.includes(s.id)
+ finalData.targetStudents?.includes(s.id)
  );
- } else if (data.targetClasses && data.targetClasses.length > 0) {
+ } else if (finalData.targetClasses && finalData.targetClasses.length > 0) {
  // If classes are selected but no specific students, use all students in those classes
  selectedStudentsList = students.filter(s => 
- s.class && data.targetClasses?.includes(s.class)
+ s.class && finalData.targetClasses?.includes(s.class)
  );
  }
  
@@ -325,9 +333,9 @@ export default function SurveyDistributionDialog({
  }
 
  const distributionData = {
- ...data,
+ ...finalData,
  excelTemplate,
- publicLink: data.distributionType ==="ONLINE_LINK" || data.distributionType ==="HYBRID" 
+ publicLink: finalData.distributionType ==="ONLINE_LINK" || finalData.distributionType ==="HYBRID" 
  ? crypto.randomUUID() 
  : undefined
  };
