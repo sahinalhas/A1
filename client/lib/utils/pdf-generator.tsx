@@ -48,21 +48,19 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 8,
+    padding: 12,
     fontFamily: 'Roboto',
     fontSize: 7,
     backgroundColor: '#ffffff',
   },
   container: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
   },
   header: {
     borderBottomWidth: 2,
     borderBottomColor: '#3b82f6',
-    paddingBottom: 4,
-    marginBottom: 5,
+    paddingBottom: 6,
+    marginBottom: 8,
   },
   title: {
     fontSize: 14,
@@ -72,43 +70,43 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   subtitle: {
-    fontSize: 7,
+    fontSize: 8,
     color: '#64748b',
     textAlign: 'center',
-    marginBottom: 0,
+    marginBottom: 6,
   },
   studentInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#f0f4f8',
-    padding: 4,
-    borderRadius: 2,
-    marginBottom: 4,
+    backgroundColor: '#f8fafc',
+    padding: 6,
+    borderRadius: 3,
+    marginBottom: 6,
     borderWidth: 0.5,
-    borderColor: '#cbd5e1',
+    borderColor: '#e2e8f0',
   },
   studentName: {
-    fontSize: 8,
+    fontSize: 9,
     fontWeight: 700,
     color: '#1e293b',
   },
   dateRange: {
-    fontSize: 7,
+    fontSize: 8,
     color: '#475569',
-    fontWeight: 500,
+    fontWeight: 600,
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 4,
-    gap: 3,
+    marginBottom: 6,
+    gap: 4,
   },
   statBox: {
     flex: 1,
     backgroundColor: '#3b82f6',
-    padding: 3,
-    borderRadius: 2,
+    padding: 4,
+    borderRadius: 3,
     alignItems: 'center',
   },
   statBoxSecondary: {
@@ -118,38 +116,44 @@ const styles = StyleSheet.create({
     backgroundColor: '#06b6d4',
   },
   statValue: {
-    fontSize: 8,
+    fontSize: 9,
     fontWeight: 700,
     color: 'white',
-    marginBottom: 0,
+    marginBottom: 1,
   },
   statLabel: {
     fontSize: 5,
     color: 'white',
-    opacity: 0.95,
+    opacity: 0.9,
     textAlign: 'center',
   },
-  daysGrid: {
-    flexDirection: 'column',
-    gap: 2,
-    marginBottom: 4,
+  twoColumns: {
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 8,
+  },
+  leftColumn: {
+    flex: 1,
+  },
+  rightColumn: {
     flex: 1,
   },
   dayCard: {
     backgroundColor: 'white',
     borderWidth: 0.5,
-    borderColor: '#cbd5e1',
-    borderRadius: 2,
-    padding: 3,
+    borderColor: '#e2e8f0',
+    borderRadius: 3,
+    padding: 4,
+    marginBottom: 4,
   },
   dayHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 2,
-    paddingBottom: 1,
+    paddingBottom: 2,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#f1f5f9',
   },
   dayTitle: {
     fontSize: 7,
@@ -159,24 +163,24 @@ const styles = StyleSheet.create({
   dayDate: {
     fontSize: 6,
     color: '#475569',
-    fontWeight: 500,
+    fontWeight: 600,
   },
   emptyDay: {
     fontSize: 6,
     color: '#94a3b8',
     fontStyle: 'italic',
     textAlign: 'center',
-    padding: 2,
+    padding: 4,
   },
   table: {
     marginTop: 1,
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#e8eef7',
+    backgroundColor: '#f8fafc',
     borderBottomWidth: 0.5,
-    borderBottomColor: '#cbd5e1',
-    paddingVertical: 1,
+    borderBottomColor: '#e2e8f0',
+    paddingVertical: 2,
     paddingHorizontal: 1,
   },
   tableRow: {
@@ -196,60 +200,55 @@ const styles = StyleSheet.create({
     color: '#1e293b',
   },
   colTime: {
-    width: '10%',
-  },
-  colSubject: {
     width: '16%',
   },
+  colSubject: {
+    width: '18%',
+  },
   colTopic: {
-    width: '42%',
+    width: '40%',
   },
   colTotal: {
     width: '8%',
     textAlign: 'center',
   },
   colSolved: {
-    width: '8%',
+    width: '9%',
     textAlign: 'center',
   },
   colCorrect: {
-    width: '8%',
-    textAlign: 'center',
-  },
-  colRemaining: {
-    width: '8%',
+    width: '9%',
     textAlign: 'center',
   },
   footer: {
-    marginTop: 3,
-    paddingTop: 3,
+    marginTop: 6,
+    paddingTop: 4,
     borderTopWidth: 0.5,
-    borderTopColor: '#cbd5e1',
+    borderTopColor: '#e2e8f0',
   },
   notesSection: {
-    marginBottom: 3,
+    marginBottom: 6,
   },
   notesTitle: {
     fontSize: 6,
     fontWeight: 700,
     color: '#1e293b',
-    marginBottom: 1,
+    marginBottom: 2,
   },
   noteLine: {
     borderBottomWidth: 0.5,
-    borderBottomColor: '#cbd5e1',
+    borderBottomColor: '#e2e8f0',
     borderStyle: 'dashed',
-    height: 4,
+    height: 6,
     marginBottom: 1,
   },
   signatureRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 3,
-    gap: 4,
+    marginTop: 4,
   },
   signatureItem: {
-    flex: 1,
+    width: '45%',
   },
   signatureLabel: {
     fontSize: 5,
@@ -265,7 +264,7 @@ const styles = StyleSheet.create({
     fontSize: 5,
     color: '#94a3b8',
     textAlign: 'center',
-    marginTop: 2,
+    marginTop: 4,
   },
 });
 
@@ -353,9 +352,9 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
               <Text style={[styles.tableCellHeader, styles.colTime]}>SAAT</Text>
               <Text style={[styles.tableCellHeader, styles.colSubject]}>DERS</Text>
               <Text style={[styles.tableCellHeader, styles.colTopic]}>KONU</Text>
-              <Text style={[styles.tableCellHeader, styles.colTotal]}>TOPLAM</Text>
-              <Text style={[styles.tableCellHeader, styles.colSolved]}>ÇÖZÜLEN</Text>
-              <Text style={[styles.tableCellHeader, styles.colCorrect]}>DOĞRU</Text>
+              <Text style={[styles.tableCellHeader, styles.colTotal]}>TOP</Text>
+              <Text style={[styles.tableCellHeader, styles.colSolved]}>ÇÖZ</Text>
+              <Text style={[styles.tableCellHeader, styles.colCorrect]}>DOĞ</Text>
             </View>
             {entries.map((entry, idx) => {
               const subject = subjects.find((s) => s.id === entry.subjectId);
@@ -383,6 +382,10 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
       </View>
     );
   };
+
+  // Günleri iki sütuna böl
+  const leftColumnDays = DAYS.slice(0, 4); // Pazartesi - Perşembe
+  const rightColumnDays = DAYS.slice(4);   // Cuma - Pazar
 
   return (
     <Document>
@@ -413,13 +416,20 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
             </View>
           </View>
 
-          <View style={styles.daysGrid}>
-            {DAYS.map(renderDaySection)}
+          {/* İki sütunlu düzen */}
+          <View style={styles.twoColumns}>
+            <View style={styles.leftColumn}>
+              {leftColumnDays.map(renderDaySection)}
+            </View>
+            <View style={styles.rightColumn}>
+              {rightColumnDays.map(renderDaySection)}
+            </View>
           </View>
 
           <View style={styles.footer}>
             <View style={styles.notesSection}>
-              <Text style={styles.notesTitle}>NOTLAR:</Text>
+              <Text style={styles.notesTitle}>HAFTALIK DEĞERLENDİRME VE NOTLAR:</Text>
+              <View style={styles.noteLine} />
               <View style={styles.noteLine} />
               <View style={styles.noteLine} />
             </View>
@@ -430,12 +440,12 @@ const WeeklyPlanDocument: React.FC<WeeklyPlanDocumentProps> = ({
                 <View style={styles.signatureLine} />
               </View>
               <View style={styles.signatureItem}>
-                <Text style={styles.signatureLabel}>Veli İmzası</Text>
+                <Text style={styles.signatureLabel}>Veli / Rehber Öğretmen İmzası</Text>
                 <View style={styles.signatureLine} />
               </View>
             </View>
 
-            <Text style={styles.branding}>Rehber360 • {shortDateRange}</Text>
+            <Text style={styles.branding}>Rehber360 • Akıllı Çalışma Sistemi • {shortDateRange}</Text>
           </View>
         </View>
       </Page>
