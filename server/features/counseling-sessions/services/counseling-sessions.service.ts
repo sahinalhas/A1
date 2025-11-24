@@ -215,7 +215,20 @@ export function getCounselingTopics(): CounselingTopic[] {
 
 export function getStudentSessionStats(studentId: string): unknown {
   const sanitizedStudentId = sanitizeString(studentId);
-  return repository.getStudentSessionHistory(sanitizedStudentId);
+  const rawHistory = repository.getStudentSessionHistory(sanitizedStudentId);
+  
+  const allTopics = getIndividualTopicsFlat();
+  const topicMap = new Map(allTopics.map(t => [t.id, t.title]));
+  
+  return {
+    sessionCount: rawHistory.sessionCount,
+    lastSessionDate: rawHistory.lastSessionDate,
+    topics: rawHistory.topics.map(topicId => topicMap.get(topicId) || topicId),
+    history: rawHistory.history.map(session => ({
+      ...session,
+      topic: topicMap.get(session.topic) || session.topic
+    }))
+  };
 }
 
 export function getFilteredSessionsWithStudents(filters: Partial<SessionFilters>): CounselingSessionWithStudents[] {
