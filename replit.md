@@ -4,17 +4,36 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
-## November 24, 2025 - Bug Fixes: PDF Download & Logging Consistency
+## November 24, 2025 - Enhanced PDF Template & Bug Fixes
+
+### PDF Template Enhancement - Comprehensive Student & Session Information
+- **Expanded PDF Sections**: Completely redesigned PDF template with all student and session information
+- **New Student Information Section (Öğrenci Bilgileri)**:
+  - Name, Gender, ID Number, Nationality
+  - Grade Level, Student Number
+  - School, Year-end Success/GPA
+  - Class, Absence Days
+  - Family Info, Term, Health Info, Special Education Info
+- **New Session Information Section (Görüşme Bilgileri)**:
+  - Session Date & Time with Location
+  - Guidance Area, Session Mode
+  - Session Type
+  - Teacher Name, Parent Name
+  - Discipline/Behavior Status
+- **New Session Details Section (Görüşme Ayrıntıları)**:
+  - Exit Time
+  - Detailed Session Information
+- **Layout Improvements**:
+  - Two-column layout for compact, professional appearance
+  - Better spacing and typography matching official form standards
+  - Proper font sizing (10pt main, 8pt details, 7pt notes)
+- **Data Structure**: Added `studentData` parameter to `generateSessionCompletionPDF()` for additional student fields
+- **Files Modified**: `client/components/features/counseling/utils/sessionCompletionPDF.tsx`
+- **Result**: PDFs now include comprehensive student and session information matching official templates
 
 ### PDF Download Error Fix (Defter - Counseling Sessions)
-- **Issue Found**: Clicking "PDF İndir" button in Defter (Counseling Sessions) tab threw error "Invalid '' string child outside <Text> component"
-- **Root Cause**: React PDF renderer was trying to render empty strings in Text components
-- **Fix Applied**: Added proper fallback values and trim checks for potentially empty fields:
-  - Entry/exit time: Added fallback to '-' if empty
-  - Detailed notes: Added `.trim()` check to prevent rendering empty strings
-  - Action items descriptions: Added `.trim()` check and fallback
-  - Follow-up plan: Added `.trim()` check to prevent rendering
-- **Files Modified**: `client/components/features/counseling/utils/sessionCompletionPDF.tsx`
+- **Issue**: Clicking "PDF İndir" threw "Invalid '' string child outside <Text>" error
+- **Fix**: Added proper fallback values and trim checks for empty fields
 - **Result**: PDF downloads now work without errors
 
 ### Logging Infrastructure Standardization

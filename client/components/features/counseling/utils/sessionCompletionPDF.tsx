@@ -33,68 +33,76 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 15,
     borderBottomWidth: 2,
     borderBottomColor: '#4f46e5',
-    paddingBottom: 10,
+    paddingBottom: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 700,
     color: '#4f46e5',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   subtitle: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#666',
   },
   section: {
-    marginBottom: 15,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: '#e5e7eb',
-    padding: 12,
-    pageBreakInside: 'avoid',
+    padding: 10,
   },
   sectionTitle: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: 700,
-    marginBottom: 10,
+    marginBottom: 8,
     color: '#1f2937',
     borderBottomWidth: 1,
     borderBottomColor: '#d1d5db',
-    paddingBottom: 6,
+    paddingBottom: 4,
   },
   row: {
     flexDirection: 'row',
-    marginBottom: 6,
+    marginBottom: 4,
+    paddingRight: 10,
+  },
+  twoColumnRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  halfColumn: {
+    width: '50%',
+    paddingRight: 5,
   },
   label: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: 700,
-    width: 120,
+    width: 110,
     color: '#374151',
   },
   value: {
-    fontSize: 9,
+    fontSize: 8,
     flex: 1,
     color: '#1f2937',
   },
   notesBox: {
     backgroundColor: '#f9fafb',
-    padding: 10,
-    marginTop: 8,
-    borderRadius: 4,
-    minHeight: 60,
+    padding: 8,
+    marginTop: 6,
+    borderRadius: 2,
+    minHeight: 50,
   },
   notesText: {
-    fontSize: 9,
-    lineHeight: 1.5,
+    fontSize: 8,
+    lineHeight: 1.4,
     color: '#374151',
   },
   ratingBox: {
     backgroundColor: '#eff6ff',
-    padding: 8,
-    borderLeftWidth: 3,
+    padding: 6,
+    borderLeftWidth: 2,
     borderLeftColor: '#3b82f6',
   },
   badge: {
@@ -102,9 +110,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#dbeafe',
     color: '#1e40af',
     padding: '2 6',
-    fontSize: 8,
-    borderRadius: 2,
-    marginRight: 4,
+    fontSize: 7,
+    marginRight: 3,
   },
 });
 
@@ -113,6 +120,17 @@ interface SessionCompletionPDFProps {
   formData: CompleteSessionFormValues;
   topicFullPath?: string;
   schoolName?: string;
+  studentData?: {
+    gender?: string;
+    idNumber?: string;
+    studentNumber?: string;
+    yearEndSuccess?: number;
+    absenceDays?: number;
+    familyInfo?: string;
+    term?: string;
+    healthInfo?: string;
+    specialEducationInfo?: string;
+  };
 }
 
 const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
@@ -120,9 +138,11 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
   formData,
   topicFullPath,
   schoolName,
+  studentData,
 }) => {
   const sessionDate = format(new Date(session.sessionDate), 'dd MMMM yyyy', { locale: tr });
-  const generatedDate = format(new Date(), 'dd MMMM yyyy HH:mm', { locale: tr });
+  const generatedDate = format(new Date(), 'dd.MM.yyyy HH:mm', { locale: tr });
+  const sessionDateTime = format(new Date(session.sessionDate), 'dd/MM/yyyy', { locale: tr });
 
   const studentName = session.sessionType === 'individual'
     ? `${session.student?.name || ''} ${session.student?.surname || ''}`.trim()
@@ -153,6 +173,13 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
     'sınırlı': 'Sınırlı',
   };
 
+  const sessionModeLabels: { [key: string]: string } = {
+    'individual': 'Bireysel',
+    'group': 'Grup',
+    'class': 'Sınıf',
+    'one_on_one': 'Birebir',
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -164,39 +191,171 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
           </Text>
         </View>
 
-        {/* Temel Bilgiler */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Görüşme Özeti</Text>
-          {schoolName && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Okul:</Text>
-              <Text style={styles.value}>{schoolName}</Text>
+        {/* Öğrenci Bilgileri */}
+        {session.sessionType === 'individual' && session.student && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Öğrenci Bilgileri</Text>
+            
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Adı Soyadı:</Text>
+                  <Text style={styles.value}>{studentName || '-'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Cinsiyeti:</Text>
+                  <Text style={styles.value}>{studentData?.gender || '-'}</Text>
+                </View>
+              </View>
             </View>
-          )}
-          <View style={styles.row}>
-            <Text style={styles.label}>Öğrenci:</Text>
-            <Text style={styles.value}>{studentName}</Text>
+
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>T.C. Kimlik No:</Text>
+                  <Text style={styles.value}>{studentData?.idNumber || '-'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Uyruğu:</Text>
+                  <Text style={styles.value}>T.C.</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Kademe:</Text>
+                  <Text style={styles.value}>{session.student?.class || '-'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Öğrenci No:</Text>
+                  <Text style={styles.value}>{studentData?.studentNumber || '-'}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Okulu:</Text>
+                  <Text style={styles.value}>{schoolName || '-'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Yıl Sonu Başarı:</Text>
+                  <Text style={styles.value}>{studentData?.yearEndSuccess || '-'}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Sınıfı:</Text>
+                  <Text style={styles.value}>{session.student?.className || session.student?.class || '-'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Devamsızlık Gün:</Text>
+                  <Text style={styles.value}>{studentData?.absenceDays || '-'}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Aile Bilgisi:</Text>
+                  <Text style={styles.value}>{studentData?.familyInfo || '-'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Dönem:</Text>
+                  <Text style={styles.value}>{studentData?.term || '-'}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.twoColumnRow}>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Sağlık Bilgisi:</Text>
+                  <Text style={styles.value}>{studentData?.healthInfo || 'Sürekli hastalığı yok'}</Text>
+                </View>
+              </View>
+              <View style={styles.halfColumn}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>Özel Eğitim:</Text>
+                  <Text style={styles.value}>{studentData?.specialEducationInfo || 'Yok'}</Text>
+                </View>
+              </View>
+            </View>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Tarih:</Text>
-            <Text style={styles.value}>{sessionDate}</Text>
+        )}
+
+        {/* Görüşme Bilgileri */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Görüşme Bilgileri</Text>
+          
+          <View style={styles.twoColumnRow}>
+            <View style={styles.halfColumn}>
+              <View style={styles.row}>
+                <Text style={styles.label}>Tarih ve Saati:</Text>
+                <Text style={styles.value}>{sessionDateTime} - {session.entryTime || '-'}</Text>
+              </View>
+            </View>
+            <View style={styles.halfColumn}>
+              <View style={styles.row}>
+                <Text style={styles.label}>Görüşme Yeri:</Text>
+                <Text style={styles.value}>{session.sessionLocation || '-'}</Text>
+              </View>
+            </View>
           </View>
+
           <View style={styles.row}>
-            <Text style={styles.label}>Saat:</Text>
-            <Text style={styles.value}>
-              {(session.entryTime || '-')} - {(formData.exitTime || '-')}
-            </Text>
+            <Text style={styles.label}>Rehberlik Alanı:</Text>
+            <Text style={styles.value}>{topicFullPath || session.topic || '-'}</Text>
           </View>
+
           <View style={styles.row}>
-            <Text style={styles.label}>Türü:</Text>
-            <Text style={styles.value}>
-              {session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}
-            </Text>
+            <Text style={styles.label}>Çalışma Yöntemi:</Text>
+            <Text style={styles.value}>{sessionModeLabels[session.sessionMode as string] || session.sessionMode || '-'}</Text>
           </View>
-          {topicFullPath && (
+
+          <View style={styles.row}>
+            <Text style={styles.label}>Görüşme Türü:</Text>
+            <Text style={styles.value}>{session.sessionType === 'individual' ? 'Bireysel' : 'Grup'}</Text>
+          </View>
+
+          <View style={styles.twoColumnRow}>
+            <View style={styles.halfColumn}>
+              <View style={styles.row}>
+                <Text style={styles.label}>Öğretmen Adı:</Text>
+                <Text style={styles.value}>{session.teacherName || '-'}</Text>
+              </View>
+            </View>
+            <View style={styles.halfColumn}>
+              <View style={styles.row}>
+                <Text style={styles.label}>Veli Adı:</Text>
+                <Text style={styles.value}>{session.parentName || '-'}</Text>
+              </View>
+            </View>
+          </View>
+
+          {session.disciplineStatus && (
             <View style={styles.row}>
-              <Text style={styles.label}>Konu:</Text>
-              <Text style={styles.value}>{topicFullPath || '-'}</Text>
+              <Text style={styles.label}>Disiplin/Davranış:</Text>
+              <Text style={styles.value}>{session.disciplineStatus}</Text>
             </View>
           )}
         </View>
@@ -231,6 +390,23 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
           </View>
         </View>
 
+        {/* Çıkış Bilgileri */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Görüşme Ayrıntıları</Text>
+          
+          <View style={styles.row}>
+            <Text style={styles.label}>Çıkış Saati:</Text>
+            <Text style={styles.value}>{(formData.exitTime || '-')}</Text>
+          </View>
+
+          {session.sessionDetails && session.sessionDetails.trim() && (
+            <View style={styles.row}>
+              <Text style={styles.label}>Görüşme Detayları:</Text>
+              <Text style={styles.value}>{session.sessionDetails}</Text>
+            </View>
+          )}
+        </View>
+
         {/* Detaylı Notlar */}
         {formData.detailedNotes && formData.detailedNotes.trim() && (
           <View style={styles.section}>
@@ -246,14 +422,14 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Yapılacaklar ({formData.actionItems.length})</Text>
             {formData.actionItems.map((item, idx) => (
-              <View key={idx} style={{ marginBottom: 8 }}>
+              <View key={idx} style={{ marginBottom: 6 }}>
                 <View style={styles.row}>
                   <Text style={styles.label}>Madde {idx + 1}:</Text>
                   <Text style={styles.value}>{(item.description || '').trim() || '-'}</Text>
                 </View>
                 {item.assignedTo && (item.assignedTo.trim()) && (
-                  <View style={{ marginLeft: 120, marginTop: 2 }}>
-                    <Text style={{ fontSize: 8, color: '#666' }}>
+                  <View style={{ marginLeft: 110, marginTop: 2 }}>
+                    <Text style={{ fontSize: 7, color: '#666' }}>
                       {'Atanan: ' + item.assignedTo}
                       {item.dueDate && item.dueDate.trim() && (` • Tarih: ${item.dueDate}`) || ''}
                     </Text>
@@ -294,10 +470,17 @@ export async function generateSessionCompletionPDF(
   session: CounselingSession,
   formData: CompleteSessionFormValues,
   topicFullPath?: string,
-  schoolName?: string
+  schoolName?: string,
+  studentData?: SessionCompletionPDFProps['studentData']
 ) {
   const blob = await pdf(
-    <SessionCompletionDocument session={session} formData={formData} topicFullPath={topicFullPath} schoolName={schoolName} />
+    <SessionCompletionDocument 
+      session={session} 
+      formData={formData} 
+      topicFullPath={topicFullPath} 
+      schoolName={schoolName}
+      studentData={studentData}
+    />
   ).toBlob();
 
   const studentName = session.student
@@ -305,7 +488,7 @@ export async function generateSessionCompletionPDF(
     : 'Ogrenci';
 
   const dateStr = format(new Date(session.sessionDate || new Date()), 'yyyyMMdd_HHmm');
-  const fileName = `Gorusme_Tamamlama_${studentName}_${dateStr}.pdf`;
+  const fileName = `Gorusme_Bilgileri_${studentName}_${dateStr}.pdf`;
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
