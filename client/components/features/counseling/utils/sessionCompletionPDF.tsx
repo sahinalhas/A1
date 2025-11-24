@@ -120,6 +120,7 @@ interface SessionCompletionPDFProps {
   formData: CompleteSessionFormValues;
   topicFullPath?: string;
   schoolName?: string;
+  topicTitle?: string;
   studentData?: {
     gender?: string;
     idNumber?: string;
@@ -133,11 +134,44 @@ interface SessionCompletionPDFProps {
   };
 }
 
+const toTitleCase = (str: string): string => {
+  if (!str) return '';
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
+const formatGuidanceArea = (fullPath?: string, topicTitle?: string): string => {
+  if (!fullPath && !topicTitle) return '-';
+  
+  let result = '';
+  
+  if (fullPath) {
+    result = fullPath
+      .toLowerCase()
+      .split('>')
+      .map((part, idx) => {
+        const trimmed = part.trim();
+        return toTitleCase(trimmed);
+      })
+      .join(' > ');
+  }
+  
+  if (topicTitle) {
+    const titleCased = toTitleCase(topicTitle);
+    result = result ? `${result} > ${titleCased}` : titleCased;
+  }
+  
+  return result;
+};
+
 const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
   session,
   formData,
   topicFullPath,
   schoolName,
+  topicTitle,
   studentData,
 }) => {
   const sessionDate = format(new Date(session.sessionDate), 'dd MMMM yyyy', { locale: tr });
@@ -324,12 +358,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
 
           <View style={styles.row}>
             <Text style={styles.label}>Rehberlik Alanı:</Text>
-            <Text style={styles.value}>
-              {topicFullPath ? topicFullPath.toLowerCase().split('>').map((part, idx) => {
-                const trimmed = part.trim();
-                return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-              }).join(' > ') : session.topic ? session.topic.toLowerCase().charAt(0).toUpperCase() + session.topic.slice(1) : '-'}
-            </Text>
+            <Text style={styles.value}>{formatGuidanceArea(topicFullPath, topicTitle)}</Text>
           </View>
 
           <View style={styles.row}>
@@ -476,6 +505,7 @@ export async function generateSessionCompletionPDF(
   formData: CompleteSessionFormValues,
   topicFullPath?: string,
   schoolName?: string,
+  topicTitle?: string,
   studentData?: SessionCompletionPDFProps['studentData']
 ) {
   const blob = await pdf(
@@ -484,6 +514,7 @@ export async function generateSessionCompletionPDF(
       formData={formData} 
       topicFullPath={topicFullPath} 
       schoolName={schoolName}
+      topicTitle={topicTitle}
       studentData={studentData}
     />
   ).toBlob();

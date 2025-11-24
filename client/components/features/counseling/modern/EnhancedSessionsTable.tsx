@@ -304,6 +304,7 @@ export default function EnhancedSessionsTable({
                   try {
                     const topic = topicsMap.get(session.topic || '');
                     const topicFullPath = topic?.fullPath;
+                    const topicTitle = topic?.title;
                     const schoolName = settings?.account?.institution;
                     
                     const formData = {
@@ -324,7 +325,7 @@ export default function EnhancedSessionsTable({
                       actionItems: [],
                     } as unknown as CompleteSessionFormValues;
                     
-                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName);
+                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle);
                     toast({
                       title: "PDF İndirildi",
                       description: "Görüşme bilgileri formu başarıyla indirildi",
