@@ -4,7 +4,18 @@ Rehber360 is a comprehensive student guidance and management system (Öğrenci R
 
 # Recent Changes
 
-## November 24, 2025 - Bug Fixes: Logging Consistency Improvements
+## November 24, 2025 - Bug Fixes: PDF Download & Logging Consistency
+
+### PDF Download Error Fix (Defter - Counseling Sessions)
+- **Issue Found**: Clicking "PDF İndir" button in Defter (Counseling Sessions) tab threw error "Invalid '' string child outside <Text> component"
+- **Root Cause**: React PDF renderer was trying to render empty strings in Text components
+- **Fix Applied**: Added proper fallback values and trim checks for potentially empty fields:
+  - Entry/exit time: Added fallback to '-' if empty
+  - Detailed notes: Added `.trim()` check to prevent rendering empty strings
+  - Action items descriptions: Added `.trim()` check and fallback
+  - Follow-up plan: Added `.trim()` check to prevent rendering
+- **Files Modified**: `client/components/features/counseling/utils/sessionCompletionPDF.tsx`
+- **Result**: PDF downloads now work without errors
 
 ### Logging Infrastructure Standardization
 - **Issue Found**: Routes `student-profile-ai.routes.ts` and `ai-text-polish.routes.ts` used direct `console.error()` instead of the centralized logger service

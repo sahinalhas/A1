@@ -184,7 +184,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
           <View style={styles.row}>
             <Text style={styles.label}>Saat:</Text>
             <Text style={styles.value}>
-              {session.entryTime} - {formData.exitTime || '-'}
+              {(session.entryTime || '-')} - {(formData.exitTime || '-')}
             </Text>
           </View>
           <View style={styles.row}>
@@ -196,7 +196,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
           {topicFullPath && (
             <View style={styles.row}>
               <Text style={styles.label}>Konu:</Text>
-              <Text style={styles.value}>{topicFullPath}</Text>
+              <Text style={styles.value}>{topicFullPath || '-'}</Text>
             </View>
           )}
         </View>
@@ -232,7 +232,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
         </View>
 
         {/* Detaylı Notlar */}
-        {formData.detailedNotes && (
+        {formData.detailedNotes && formData.detailedNotes.trim() && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Görüşme Notları</Text>
             <View style={styles.notesBox}>
@@ -249,13 +249,13 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
               <View key={idx} style={{ marginBottom: 8 }}>
                 <View style={styles.row}>
                   <Text style={styles.label}>Madde {idx + 1}:</Text>
-                  <Text style={styles.value}>{item.description || '-'}</Text>
+                  <Text style={styles.value}>{(item.description || '').trim() || '-'}</Text>
                 </View>
-                {item.assignedTo && (
+                {item.assignedTo && (item.assignedTo.trim()) && (
                   <View style={{ marginLeft: 120, marginTop: 2 }}>
                     <Text style={{ fontSize: 8, color: '#666' }}>
-                      Atanan: {item.assignedTo}
-                      {item.dueDate && ` • Tarih: ${item.dueDate}`}
+                      {'Atanan: ' + item.assignedTo}
+                      {item.dueDate && item.dueDate.trim() && (` • Tarih: ${item.dueDate}`) || ''}
                     </Text>
                   </View>
                 )}
@@ -278,7 +278,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
               <Text style={styles.label}>Takip Saati:</Text>
               <Text style={styles.value}>{formData.followUpTime || '-'}</Text>
             </View>
-            {formData.followUpPlan && (
+            {formData.followUpPlan && formData.followUpPlan.trim() && (
               <View style={styles.notesBox}>
                 <Text style={styles.notesText}>{formData.followUpPlan}</Text>
               </View>
