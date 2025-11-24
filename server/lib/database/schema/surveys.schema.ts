@@ -4,6 +4,7 @@ import { DEFAULT_SURVEY_TEMPLATES_LIFE_WINDOW } from '../../../../shared/data/de
 import { DEFAULT_SURVEY_TEMPLATES_EXAM_ANXIETY } from '../../../../shared/data/default-exam-anxiety-survey.js';
 import { DEFAULT_SURVEY_TEMPLATES_FAILURE_REASONS } from '../../../../shared/data/default-failure-reasons-survey.js';
 import { DEFAULT_SURVEY_TEMPLATES_LEARNING_STYLES } from '../../../../shared/data/default-learning-styles-survey.js';
+import { DEFAULT_SURVEY_TEMPLATES_ABSENTEEISM_REASONS } from '../../../../shared/data/default-absenteeism-reasons-survey.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createSurveysTables(db: Database.Database): void {
@@ -126,7 +127,8 @@ export function seedSurveysDefaultTemplates(db: Database.Database): void {
     ...DEFAULT_SURVEY_TEMPLATES_LIFE_WINDOW,
     ...DEFAULT_SURVEY_TEMPLATES_EXAM_ANXIETY,
     ...DEFAULT_SURVEY_TEMPLATES_FAILURE_REASONS,
-    ...DEFAULT_SURVEY_TEMPLATES_LEARNING_STYLES
+    ...DEFAULT_SURVEY_TEMPLATES_LEARNING_STYLES,
+    ...DEFAULT_SURVEY_TEMPLATES_ABSENTEEISM_REASONS
   ];
   
   const seedTransaction = db.transaction(() => {
