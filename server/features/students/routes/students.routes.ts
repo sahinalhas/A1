@@ -85,7 +85,16 @@ export const getStudentAcademics: RequestHandler = (req, res) => {
     const { id } = req.params as StudentIdParam;
     
     const academics = studentsService.getStudentAcademics(id);
-    res.json(academics);
+    // ✅ UYUMSUZLUK FIX: Transform response to match frontend expectations
+    const transformedAcademics = academics.map(record => ({
+      id: record.id?.toString() || `${record.studentId}_${record.year}_${record.semester}`,
+      studentId: record.studentId,
+      term: `${record.year}/${record.semester}`, // Frontend expects combined format
+      gpa: record.gpa,
+      notes: record.notes
+      // Remove 'exams' field - frontend doesn't use it
+    }));
+    res.json(transformedAcademics);
   } catch (error) {
     logger.error('Error fetching student academics', 'StudentsRoutes', error);
     res.status(500).json({ success: false, error: ERROR_MESSAGES.FAILED_TO_FETCH_ACADEMICS });
@@ -97,10 +106,22 @@ export const addStudentAcademic: RequestHandler = (req, res) => {
     const academic = req.body as AcademicRecordInput;
     
     studentsService.createAcademic(academic);
-    res.json({ success: true, message: "Akademik kayıt eklendi" });
+    // ✅ UYUMSUZLUK FIX: Standardize error response format
+    res.status(201).json(
+      createSuccessResponse(
+        { success: true },
+        "Akademik kayıt eklendi"
+      )
+    );
   } catch (error) {
     logger.error('Error adding academic record', 'StudentsRoutes', error);
-    res.status(500).json({ success: false, error: "Akademik kayıt eklenirken hata oluştu" });
+    // ✅ UYUMSUZLUK FIX: Standardize error response format
+    res.status(500).json(
+      createErrorResponse(
+        "Akademik kayıt eklenirken hata oluştu",
+        ApiErrorCode.INTERNAL_ERROR
+      )
+    );
   }
 };
 
