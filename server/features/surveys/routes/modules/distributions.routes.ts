@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { v4 as uuidv4 } from 'uuid';
 import * as surveyService from '../../services/surveys.service.js';
 
 export const getSurveyDistributions: RequestHandler = (req, res) => {
@@ -60,8 +61,18 @@ export const createSurveyDistribution: RequestHandler = (req, res) => {
       });
     }
 
-    surveyService.createDistribution(distribution);
-    res.json({ success: true, message: 'Anket dağıtımı başarıyla oluşturuldu' });
+    // Generate ID if not provided
+    const distributionData = {
+      ...distribution,
+      id: distribution.id || uuidv4()
+    };
+
+    surveyService.createDistribution(distributionData);
+    res.json({ 
+      success: true, 
+      message: 'Anket dağıtımı başarıyla oluşturuldu',
+      distributionId: distributionData.id 
+    });
   } catch (error) {
     console.error('Error creating survey distribution:', error);
     res.status(500).json({ success: false, error: 'Anket dağıtımı oluşturulamadı' });

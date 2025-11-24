@@ -334,6 +334,7 @@ export default function SurveyDistributionDialog({
 
  const distributionData = {
  ...finalData,
+ id: crypto.randomUUID(),
  excelTemplate,
  publicLink: finalData.distributionType ==="ONLINE_LINK" || finalData.distributionType ==="HYBRID" 
  ? crypto.randomUUID() 
