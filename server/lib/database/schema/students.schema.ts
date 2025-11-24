@@ -11,6 +11,7 @@ export function createStudentsTables(db: Database.Database): void {
       birthDate TEXT,
       address TEXT,
       class TEXT,
+      studentNumber TEXT,
       enrollmentDate TEXT NOT NULL,
       status TEXT DEFAULT 'active',
       avatar TEXT,
@@ -24,6 +25,16 @@ export function createStudentsTables(db: Database.Database): void {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+  
+  // Migration: Add studentNumber column if it doesn't exist
+  try {
+    db.exec(`ALTER TABLE students ADD COLUMN studentNumber TEXT;`);
+  } catch (err: any) {
+    // Column already exists, ignore error
+    if (!err.message?.includes('duplicate column')) {
+      console.warn('Warning adding studentNumber column:', err.message);
+    }
+  }
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS student_documents (

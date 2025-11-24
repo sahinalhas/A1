@@ -27,12 +27,12 @@ function ensureInitialized(): void {
     getStudents: db.prepare('SELECT * FROM students ORDER BY name, surname'),
     getStudent: db.prepare('SELECT * FROM students WHERE id = ?'),
     insertStudent: db.prepare(`
-      INSERT INTO students (id, name, surname, email, phone, birthDate, address, class, enrollmentDate, status, avatar, parentContact, notes, gender, risk)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO students (id, name, surname, email, phone, birthDate, address, class, studentNumber, enrollmentDate, status, avatar, parentContact, notes, gender, risk)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `),
     upsertStudent: db.prepare(`
-      INSERT INTO students (id, name, surname, email, phone, birthDate, address, class, enrollmentDate, status, avatar, parentContact, notes, gender, risk)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO students (id, name, surname, email, phone, birthDate, address, class, studentNumber, enrollmentDate, status, avatar, parentContact, notes, gender, risk)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         surname = excluded.surname,
@@ -41,6 +41,7 @@ function ensureInitialized(): void {
         birthDate = excluded.birthDate,
         address = excluded.address,
         class = excluded.class,
+        studentNumber = excluded.studentNumber,
         status = excluded.status,
         avatar = excluded.avatar,
         parentContact = excluded.parentContact,
@@ -50,7 +51,7 @@ function ensureInitialized(): void {
         updated_at = CURRENT_TIMESTAMP
     `),
     updateStudent: db.prepare(`
-      UPDATE students SET name = ?, surname = ?, email = ?, phone = ?, birthDate = ?, address = ?, class = ?, 
+      UPDATE students SET name = ?, surname = ?, email = ?, phone = ?, birthDate = ?, address = ?, class = ?, studentNumber = ?,
                          status = ?, avatar = ?, parentContact = ?, notes = ?, gender = ?, risk = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `),
@@ -126,7 +127,7 @@ export function saveStudents(students: Student[]): void {
           
           statements!.upsertStudent.run(
             student.id, student.name, student.surname, student.email, student.phone,
-            student.birthDate, student.address, student.class,
+            student.birthDate, student.address, student.class, student.studentNumber,
             student.enrollmentDate, student.status, student.avatar,
             student.parentContact, student.notes, student.gender, student.risk
           );
@@ -158,14 +159,14 @@ export function saveStudent(student: Student): void {
     if (existing) {
       statements!.updateStudent.run(
         student.name, student.surname, student.email, student.phone, student.birthDate,
-        student.address, student.class, student.status,
+        student.address, student.class, student.studentNumber, student.status,
         student.avatar, student.parentContact, student.notes, student.gender, student.risk,
         student.id
       );
     } else {
       statements!.insertStudent.run(
         student.id, student.name, student.surname, student.email, student.phone,
-        student.birthDate, student.address, student.class,
+        student.birthDate, student.address, student.class, student.studentNumber,
         student.enrollmentDate, student.status, student.avatar,
         student.parentContact, student.notes, student.gender, student.risk
       );
