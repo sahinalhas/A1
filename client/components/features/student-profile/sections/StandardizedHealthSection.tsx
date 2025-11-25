@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,6 +17,7 @@ import {
  MEDICATION_TYPES
 } from "@shared/constants/student-profile-taxonomy";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const healthProfileSchema = z.object({
  bloodType: z.string().optional(),
@@ -50,6 +52,7 @@ export default function StandardizedHealthSection({
  healthData,
  onUpdate
 }: StandardizedHealthSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<HealthProfileFormValues>({
  resolver: zodResolver(healthProfileSchema),
  defaultValues: {
@@ -72,6 +75,13 @@ export default function StandardizedHealthSection({
  additionalNotes:"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const { isSubmitting, onSubmit } = useStandardizedProfileSection({
  studentId,
@@ -387,9 +397,6 @@ export default function StandardizedHealthSection({
  />
  </div>
 
- <Button type="submit" disabled={isSubmitting} className="w-full h-10">
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  </form>
  </Form>
  </CardContent>

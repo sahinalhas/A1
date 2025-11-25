@@ -91,12 +91,7 @@ export default function DisciplineSection({ student, onUpdate }: DisciplineSecti
  </CardContent>
  </Card>
 
- <div className="flex justify-end">
- <Button type="submit" size="lg" className="min-w-[200px]">
- Kaydet
- </Button>
- </div>
- </form>
+  </form>
  </Form>
  );
 }

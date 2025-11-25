@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 import {
  User,
  Phone,
@@ -99,6 +100,7 @@ interface UnifiedIdentitySectionProps {
 }
 
 export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIdentitySectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<UnifiedIdentityFormValues>({
  resolver: zodResolver(unifiedIdentitySchema),
  defaultValues: {
@@ -193,6 +195,13 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  studentWorkStatus: student.studentWorkStatus ||"",
  });
  }, [student, form]);
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const onSubmit = async (data: UnifiedIdentityFormValues) => {
  try {
@@ -1039,11 +1048,6 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  </CardContent>
  </Card>
 
- <div className="flex justify-end">
- <Button type="submit" size="lg" className="min-w-[200px]">
- Kaydet
- </Button>
- </div>
  </form>
  </Form>
  );

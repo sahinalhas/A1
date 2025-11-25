@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,6 +17,7 @@ import {
 } from "@shared/constants/student-profile-taxonomy";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
 import { Textarea } from "@/components/atoms/Textarea";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const talentsInterestsSchema = z.object({
  assessmentDate: z.string(),
@@ -44,6 +46,7 @@ export default function StandardizedTalentsSection({
  talentsData,
  onUpdate
 }: StandardizedTalentsSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<TalentsInterestsFormValues>({
  resolver: zodResolver(talentsInterestsSchema),
  defaultValues: {
@@ -60,6 +63,13 @@ export default function StandardizedTalentsSection({
  extracurricularActivities:"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const { isSubmitting, onSubmit } = useStandardizedProfileSection({
  studentId,
@@ -338,9 +348,6 @@ export default function StandardizedTalentsSection({
  )}
  />
 
- <Button type="submit" disabled={isSubmitting} className="w-full h-10">
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  </form>
  </Form>
  </CardContent>

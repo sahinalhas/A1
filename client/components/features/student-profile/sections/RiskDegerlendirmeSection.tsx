@@ -342,10 +342,6 @@ export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpd
  )}
  />
  
- <Button type="submit" className="w-full">
- <AlertTriangle className="mr-2 h-4 w-4" />
- Risk Değerlendirmesi Kaydet
- </Button>
  </form>
  </Form>
  

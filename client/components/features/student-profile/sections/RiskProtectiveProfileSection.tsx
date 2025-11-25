@@ -555,9 +555,6 @@ export default function RiskProtectiveProfileSection({
  )}
  />
 
- <Button type="submit" disabled={isSubmitting} className="w-full">
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  </form>
  </Form>
  </CardContent>

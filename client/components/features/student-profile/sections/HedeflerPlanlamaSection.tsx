@@ -235,9 +235,6 @@ export default function HedeflerPlanlamaSection({
  )}
  />
 
- <Button type="submit" disabled={isSubmitting}>
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  </form>
  </Form>
  </CardContent>

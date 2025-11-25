@@ -329,9 +329,6 @@ export default function StandardizedAcademicSection({
  )}
  />
 
- <Button type="submit" disabled={isSubmitting}>
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  </form>
  </Form>
  </CardContent>

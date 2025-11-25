@@ -382,9 +382,6 @@ export default function StandardizedSocialEmotionalSection({
  )}
  />
 
- <Button type="submit" disabled={isSubmitting} className="w-full">
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  </form>
  </Form>
  </CardContent>

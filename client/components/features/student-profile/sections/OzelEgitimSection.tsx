@@ -331,10 +331,6 @@ export default function OzelEgitimSection({ studentId, specialEducation, onUpdat
  )}
  />
  
- <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
- <FileText className="mr-2 h-4 w-4" />
- {form.formState.isSubmitting ?"Kaydediliyor..." : existingRecord ?"BEP Kaydı Güncelle" :"BEP Kaydı Ekle"}
- </Button>
  </form>
  </Form>
  

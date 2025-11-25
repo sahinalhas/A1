@@ -521,9 +521,6 @@ export default function StandardizedBehaviorSection({
  </div>
 
  <div className="flex gap-2">
- <Button type="submit" disabled={isSubmitting} className="flex-1">
- {isSubmitting ?"Kaydediliyor..." :"Kaydet"}
- </Button>
  <Button
  type="button"
  variant="outline"

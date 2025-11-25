@@ -339,10 +339,6 @@ export default function DavranisTakibiSection({ studentId, behaviorIncidents, on
  )}
  />
  
- <Button type="submit" className="w-full">
- <ClipboardList className="mr-2 h-4 w-4" />
- Davranış Kaydı Ekle
- </Button>
  </form>
  </Form>
  
