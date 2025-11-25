@@ -30,3 +30,13 @@ export {
   updateSurveyResponse,
   deleteSurveyResponse
 } from './responses.repository.js';
+
+export {
+  generateCode,
+  createDistributionCode,
+  getCodeByCode,
+  getCodesByDistribution,
+  markCodeAsUsed,
+  deleteCodesByDistribution,
+  type DistributionCode
+} from './distribution-codes.repository.js';

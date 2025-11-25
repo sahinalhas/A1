@@ -30,7 +30,8 @@ import {
  AlertCircle,
  ArrowLeft,
  ArrowRight,
- Send
+ Send,
+ Lock
 } from "lucide-react";
 import { 
  SurveyDistribution, 
@@ -57,6 +58,8 @@ type SurveyResponseForm = z.infer<typeof surveyResponseSchema>;
 
 export default function PublicSurvey() {
  const { publicLink } = useParams<{ publicLink: string }>();
+ const searchParams = new URLSearchParams(window.location.search);
+ const codeFromURL = searchParams.get('code');
  const navigate = useNavigate();
  const { toast } = useToast();
  
@@ -69,6 +72,9 @@ export default function PublicSurvey() {
  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
  const [isSubmitted, setIsSubmitted] = useState(false);
  const [isSubmitting, setIsSubmitting] = useState(false);
+ const [needsSecurityCode, setNeedsSecurityCode] = useState(false);
+ const [verifiedCode, setVerifiedCode] = useState<string | null>(codeFromURL);
+ const [codeVerifying, setCodeVerifying] = useState(false);
 
  const form = useForm<SurveyResponseForm>({
  resolver: zodResolver(surveyResponseSchema),
@@ -98,6 +104,13 @@ export default function PublicSurvey() {
  );
  setDistribution(distributionData);
 
+ // Check if security code is required
+ if (distributionData.requiresSecurityCode && !verifiedCode) {
+   setNeedsSecurityCode(true);
+   setLoading(false);
+   return; // Don't load survey data yet
+ }
+
  // Load survey template
  const templateData = await apiClient.get<SurveyTemplate>(
  SURVEY_ENDPOINTS.TEMPLATE_BY_ID(distributionData.templateId),
@@ -120,6 +133,26 @@ export default function PublicSurvey() {
  console.error('Error loading survey data:', error);
  setError(error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Anket yüklenirken hata oluştu');
  setLoading(false);
+ }
+ };
+
+ const handleVerifyCode = async (code: string) => {
+ try {
+   setCodeVerifying(true);
+   const result = await apiClient.post(
+     SURVEY_ENDPOINTS.VERIFY_CODE,
+     { code },
+     { showErrorToast: false, skipAuth: true }
+   );
+   
+   setVerifiedCode(code);
+   setNeedsSecurityCode(false);
+   // Re-load survey data now that code is verified
+   await loadSurveyData();
+ } catch (error) {
+   throw error instanceof Error ? error : new Error('Kod doğrulanamadı');
+ } finally {
+   setCodeVerifying(false);
  }
  };
 
@@ -529,6 +562,42 @@ export default function PublicSurvey() {
  </Card>
  </div>
  );
+ }
+
+ // Show security code verification if needed
+ if (needsSecurityCode) {
+   return (
+     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50 flex items-center justify-center p-4 md:p-8">
+       <Card className="w-full max-w-md border-border/40">
+         <CardHeader>
+           <CardTitle className="text-xl font-semibold">Güvenlik Kodu Gerekli</CardTitle>
+           <CardDescription>Ankete erişmek için öğretmeninizin verdiği kodu giriniz</CardDescription>
+         </CardHeader>
+         <CardContent className="space-y-4">
+           <div>
+             <Label htmlFor="security-code">Güvenlik Kodu</Label>
+             <Input
+               id="security-code"
+               placeholder="Kodunuzu giriniz"
+               maxLength={6}
+               onChange={(e) => setSecurityCodeInput(e.target.value.toUpperCase())}
+               onKeyPress={(e) => e.key === 'Enter' && handleVerifyCode(securityCodeInput)}
+               disabled={codeVerifying}
+               className="text-center tracking-widest font-mono text-lg mt-1 h-11"
+             />
+           </div>
+           <Button 
+             onClick={() => handleVerifyCode(securityCodeInput)}
+             disabled={codeVerifying || !securityCodeInput.trim()}
+             className="w-full"
+             size="lg"
+           >
+             {codeVerifying ? 'Doğrulanıyor...' : 'Doğrula'}
+           </Button>
+         </CardContent>
+       </Card>
+     </div>
+   );
  }
 
  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;

@@ -101,6 +101,22 @@ export function createSurveysTables(db: Database.Database): void {
       FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE CASCADE
     );
   `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS survey_distribution_codes (
+      id TEXT PRIMARY KEY,
+      distributionId TEXT NOT NULL,
+      studentId TEXT,
+      code TEXT NOT NULL UNIQUE,
+      qrCode TEXT,
+      isUsed BOOLEAN DEFAULT FALSE,
+      usedAt DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (distributionId) REFERENCES survey_distributions (id) ON DELETE CASCADE,
+      FOREIGN KEY (studentId) REFERENCES students (id) ON DELETE SET NULL
+    );
+  `);
 }
 
 export function seedSurveysDefaultTemplates(db: Database.Database): void {

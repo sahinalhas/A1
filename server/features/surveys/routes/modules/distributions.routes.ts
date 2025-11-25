@@ -105,3 +105,72 @@ export const deleteSurveyDistributionHandler: RequestHandler = (req, res) => {
     res.status(500).json({ success: false, error: 'Anket dağıtımı silinemedi' });
   }
 };
+
+export const generateDistributionCodesHandler: RequestHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { studentCount } = req.body;
+    
+    if (!studentCount || studentCount < 1) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Geçerli bir öğrenci sayısı gereklidir' 
+      });
+    }
+
+    const distribution = surveyService.getDistributionById(id);
+    if (!distribution) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Anket dağıtımı bulunamadı' 
+      });
+    }
+
+    const codesService = await import('../../services/modules/distribution-codes.service.js');
+    const codes = await codesService.generateCodesForDistribution(distribution, studentCount);
+    
+    res.json({ 
+      success: true, 
+      message: `${studentCount} güvenlik kodu başarıyla oluşturuldu`,
+      codes: codes.map(c => ({ code: c.code, qrCode: c.qrCode }))
+    });
+  } catch (error) {
+    console.error('Error generating distribution codes:', error);
+    res.status(500).json({ success: false, error: 'Güvenlik kodları oluşturulamadı' });
+  }
+};
+
+export const verifyDistributionCodeHandler: RequestHandler = (req, res) => {
+  try {
+    const { code } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Güvenlik kodu gereklidir' 
+      });
+    }
+
+    const codesService = require('../../services/modules/distribution-codes.service.js');
+    const codeRecord = codesService.verifyCode(code);
+    
+    if (!codeRecord) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Geçersiz güvenlik kodu' 
+      });
+    }
+
+    res.json({ 
+      success: true, 
+      distributionId: codeRecord.distributionId,
+      message: 'Güvenlik kodu doğrulandı'
+    });
+  } catch (error: any) {
+    console.error('Error verifying code:', error);
+    res.status(400).json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Kod doğrulanamadı' 
+    });
+  }
+};

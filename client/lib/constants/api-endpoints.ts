@@ -47,6 +47,8 @@ export const SURVEY_ENDPOINTS = {
  DISTRIBUTIONS: `${API_BASE}/surveys/survey-distributions`,
  DISTRIBUTION_BY_ID: (id: string) => `${API_BASE}/surveys/survey-distributions/${id}`,
  DISTRIBUTION_BY_LINK: (publicLink: string) => `${API_BASE}/surveys/survey-distributions/link/${publicLink}`,
+ GENERATE_CODES: (id: string) => `${API_BASE}/surveys/survey-distributions/${id}/generate-codes`,
+ VERIFY_CODE: `${API_BASE}/surveys/survey-distributions/verify-code`,
  RESPONSES: `${API_BASE}/surveys/survey-responses`,
  RESPONSE_BY_ID: (id: string) => `${API_BASE}/surveys/survey-responses/${id}`,
  RESPONSE_IMPORT: (distributionId: string) => `${API_BASE}/surveys/survey-responses/import/${distributionId}`,

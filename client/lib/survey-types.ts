@@ -11,7 +11,10 @@ export type SurveyQuestionType =
 export type DistributionType = 
  | 'MANUAL_EXCEL' 
  | 'ONLINE_LINK' 
- | 'HYBRID';
+ | 'HYBRID'
+ | 'PUBLIC_LINK'
+ | 'MANUAL_ENTRY'
+ | 'SECURITY_CODE';
 
 export type SubmissionType = 
  | 'ONLINE' 
@@ -87,9 +90,22 @@ export interface SurveyDistribution {
  allowAnonymous: boolean;
  maxResponses?: number;
  status: DistributionStatus;
+ requiresSecurityCode?: boolean;
  createdBy?: string;
  created_at: string;
  updated_at: string;
+}
+
+export interface DistributionCode {
+ id: string;
+ distributionId: string;
+ studentId?: string;
+ code: string;
+ qrCode?: string;
+ isUsed: boolean;
+ usedAt?: string;
+ created_at?: string;
+ updated_at?: string;
 }
 
 export interface StudentInfo {

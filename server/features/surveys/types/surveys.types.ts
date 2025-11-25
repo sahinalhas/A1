@@ -67,7 +67,20 @@ export interface SurveyDistribution {
   distributionType: string;
   allowAnonymous?: boolean;
   excelTemplate?: string;
+  requiresSecurityCode?: boolean;
   createdBy?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface DistributionCode {
+  id: string;
+  distributionId: string;
+  studentId?: string;
+  code: string;
+  qrCode?: string;
+  isUsed: boolean;
+  usedAt?: string;
   created_at?: string;
   updated_at?: string;
 }

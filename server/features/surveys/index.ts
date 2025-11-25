@@ -32,6 +32,8 @@ router.get("/survey-distributions/link/:publicLink", simpleRateLimit(300, 15 * 6
 router.post("/survey-distributions", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(30, 15 * 60 * 1000), distributionsRoutes.createSurveyDistribution);
 router.put("/survey-distributions/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(30, 15 * 60 * 1000), distributionsRoutes.updateSurveyDistributionHandler);
 router.delete("/survey-distributions/:id", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(20, 15 * 60 * 1000), distributionsRoutes.deleteSurveyDistributionHandler);
+router.post("/survey-distributions/:id/generate-codes", requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(10, 15 * 60 * 1000), distributionsRoutes.generateDistributionCodesHandler);
+router.post("/survey-distributions/verify-code", simpleRateLimit(50, 15 * 60 * 1000), distributionsRoutes.verifyDistributionCodeHandler);
 
 router.get("/survey-responses", requireSecureAuth, requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(200, 15 * 60 * 1000), responsesRoutes.getSurveyResponses);
 router.post("/survey-responses", simpleRateLimit(100, 15 * 60 * 1000), responsesRoutes.createSurveyResponse);
