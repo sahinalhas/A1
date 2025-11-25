@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, createContext, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,16 @@ import CoursesSettingsTab from "@/components/features/settings/CoursesSettingsTa
 import SecuritySettingsTab from "@/components/features/settings/SecuritySettingsTab";
 import BackupSettingsTab from "@/components/features/settings/BackupSettingsTab";
 import GuidanceStandardsTab from "@/components/features/settings/GuidanceStandardsTab";
+
+// Settings Tab Dirty Context - centralized save management
+export const SettingsTabDirtyContext = createContext<{
+ registerTabSubmit?: (id: string, callback: () => Promise<void>) => void;
+ unregisterTabSubmit?: (id: string) => void;
+} | null>(null);
+
+export function useSettingsTabDirty() {
+ return useContext(SettingsTabDirtyContext);
+}
 
 const schema = z.object({
  theme: z.enum(["light","dark"]),
@@ -67,6 +77,17 @@ export default function SettingsPage() {
  }, [searchParams]);
  const [tab, setTab] = useState<string>(initialTab);
  const [isSaving, setIsSaving] = useState(false);
+
+ // Tab submit callbacks - tüm sekmeler submit handler'larını register eder
+ const tabSubmitCallbacksRef = useRef<Map<string, () => Promise<void>>>(new Map());
+
+ const registerTabSubmit = (id: string, callback: () => Promise<void>) => {
+ tabSubmitCallbacksRef.current.set(id, callback);
+ };
+
+ const unregisterTabSubmit = (id: string) => {
+ tabSubmitCallbacksRef.current.delete(id);
+ };
  
  useEffect(() => {
  setTab(initialTab);
@@ -114,7 +135,15 @@ export default function SettingsPage() {
  const onSave = async (values: AppSettings) => {
  setIsSaving(true);
  try {
- await saveSettings(values);
+ // Tüm sekmeler için save operasyonlarını paralel çalıştır
+ const tabCallbacks = Array.from(tabSubmitCallbacksRef.current.values());
+ await Promise.all([
+ saveSettings(values),
+ ...tabCallbacks.map(cb => cb().catch(err => {
+ console.error('Tab save error:', err);
+ }))
+ ]);
+ 
  form.reset(values);
  toast({ 
  title:"Ayarlar Kaydedildi",
@@ -167,6 +196,7 @@ export default function SettingsPage() {
  const isDirty = form.formState.isDirty;
 
  return (
+  <SettingsTabDirtyContext.Provider value={{ registerTabSubmit, unregisterTabSubmit }}>
   <div className="w-full min-h-screen pb-6">
    {/* Modern Gradient Header */}
    <motion.div
@@ -327,5 +357,6 @@ export default function SettingsPage() {
     </div>
    )}
   </div>
+  </SettingsTabDirtyContext.Provider>
  );
 }

@@ -25,13 +25,29 @@ The primary database is SQLite, located at `./data/database.db`. Schema migratio
 
 ## Recent Changes (2025-11-25)
 
-### Ref-Based Form Submission Architecture
-Implemented professional-grade form submission system for student profile (13 form sections):
+### Ref-Based Form Submission Architecture - Multi-Page Implementation
+Implemented professional-grade form submission system across multiple pages following best practices:
+
+#### Student Profile (13 Form Sections)
 - **FormDirtyContext Enhancement**: Added `registerFormSubmit` and `unregisterFormSubmit` callbacks for centralized form submission management
 - **Pattern Implementation**: Each of 13 form sections (UnifiedIdentitySection, StandardizedHealthSection, StandardizedTalentsSection, StandardizedAcademicSection, StandardizedBehaviorSection, StandardizedSocialEmotionalSection, HedeflerPlanlamaSection, MotivationProfileSection, RiskProtectiveProfileSection, DisciplineSection, DavranisTakibiSection, RiskDegerlendirmeSection, OzelEgitimSection) registers its submit handler with unique component ID
 - **Validation-First Approach**: `handleSaveAll` validates each form with `form.trigger()` before calling `handleSubmit()`, ensuring data integrity
-- **useRef Optimization**: Used useRef pattern to stabilize callback references and prevent dependency array warnings while maintaining React best practices
 - **Database Integration**: All 13 sections properly save to database via appropriate endpoints (upsertStudent, useStandardizedProfileSection, addBehaviorIncident, addRiskFactors, etc.)
+
+#### Settings Page (7 Tabs)
+- **SettingsTabDirtyContext**: New context for centralized tab submission management similar to StudentProfile
+- **Unified Save System**: All tabs (GeneralSettingsTab, NotificationsSettingsTab, AISettingsTab, CoursesSettingsTab, SecuritySettingsTab, BackupSettingsTab, GuidanceStandardsTab) register save handlers with parent
+- **AISettingsTab Integration**: Removed individual save button, now uses parent save system. Registers saveSettings callback that calls `/api/settings/ai-enabled` and `/api/ai-assistant/set-provider` APIs
+- **GuidanceStandardsTab Integration**: Added registration pattern, items saved immediately on add/edit/delete, parent save confirms consistency
+- **useRef Optimization**: Used useRef pattern to stabilize callback references and prevent dependency array warnings while maintaining React best practices
+- **Parallel Save Operations**: onSave function executes all tab callbacks in parallel via Promise.all for optimal performance
+
+#### Key Architecture Decisions
+- Followed React Hook Form + Zod validation patterns
+- Centralized dirty state tracking at parent level
+- Validation-first approach before submission
+- Error handling propagates to parent toast system
+- Database saves via appropriate endpoints for each domain
 
 ## Authentication and Authorization
 

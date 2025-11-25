@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useSettingsTabDirty } from '@/pages/Settings';
 import { motion } from 'framer-motion';
 import { ChevronRight, ChevronDown, Plus, Edit2, Trash2, Check, X, Download, Upload, RotateCcw, Loader2, BookOpen, Users, User } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
@@ -19,6 +20,9 @@ import type { GuidanceCategory, GuidanceItem, GuidanceStandard } from '../../../
 
 export default function GuidanceStandardsTab() {
  const { toast } = useToast();
+ const settingsContext = useSettingsTabDirty();
+ const componentId = useMemo(() => `guidance-standards-${Date.now()}`, []);
+
  const [activeTab, setActiveTab] = useState<'individual' | 'group'>('individual');
  const [standards, setStandards] = useState<GuidanceStandard | null>(null);
  const [loading, setLoading] = useState(true);
@@ -34,6 +38,25 @@ export default function GuidanceStandardsTab() {
  useEffect(() => {
  loadStandards();
  }, []);
+
+ // Register save handler with parent context
+ // GuidanceStandardsTab items are saved immediately on add/edit/delete
+ // So this just confirms that there are no pending operations
+ useEffect(() => {
+ if (!settingsContext?.registerTabSubmit) return;
+ 
+ settingsContext.registerTabSubmit(componentId, async () => {
+ // Items are already saved as they're added/edited/deleted
+ // Just confirm by reloading standards to ensure consistency
+ await loadStandards();
+ });
+
+ return () => {
+ if (settingsContext?.unregisterTabSubmit) {
+ settingsContext.unregisterTabSubmit(componentId);
+ }
+ };
+ }, [componentId, settingsContext]);
 
  const loadStandards = async () => {
  try {

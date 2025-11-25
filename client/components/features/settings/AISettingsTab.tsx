@@ -3,7 +3,8 @@
  * Zarif, kullanıcı dostu AI yapılandırma arayüzü
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useSettingsTabDirty } from '@/pages/Settings';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/organisms/Card';
 import { Label } from '@/components/atoms/Label';
 import { Input } from '@/components/atoms/Input';
@@ -51,6 +52,10 @@ const SPEED_COLORS = {
 };
 
 export default function AISettingsTab() {
+  const settingsContext = useSettingsTabDirty();
+  const componentId = useMemo(() => `ai-settings-${Date.now()}`, []);
+  const saveSettingsRef = useRef<() => Promise<void>>();
+
   const [aiEnabled, setAiEnabled] = useState(true);
   const [provider, setProvider] = useState<AIProviderType>('gemini');
   const [model, setModel] = useState('gemini-2.5-flash');
@@ -206,7 +211,6 @@ export default function AISettingsTab() {
   };
 
   const saveSettings = async () => {
-    setIsSaving(true);
     try {
       const enabledResponse = await fetch('/api/settings/ai-enabled', {
         method: 'POST',
@@ -241,22 +245,32 @@ export default function AISettingsTab() {
         setSavedOllamaUrl(ollamaUrl);
       }
 
-      toast.success(
-        '✅ Ayarlar Kaydedildi!',
-        {
-          description: aiEnabled 
-            ? `${AI_PROVIDERS[provider].name} - ${AI_PROVIDERS[provider].models.find(m => m.value === model)?.name || model}` 
-            : 'AI özellikleri kapalı'
-        }
-      );
       setConnectionStatus('idle');
     } catch (error) {
       console.error('Save error:', error);
-      toast.error(`Ayarlar kaydedilemedi: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
-    } finally {
-      setIsSaving(false);
+      throw error;
     }
   };
+
+  useEffect(() => {
+    saveSettingsRef.current = saveSettings;
+  }, [aiEnabled, provider, model, ollamaUrl]);
+
+  useEffect(() => {
+    if (!settingsContext?.registerTabSubmit) return;
+    
+    settingsContext.registerTabSubmit(componentId, async () => {
+      if (hasUnsavedChanges && saveSettingsRef.current) {
+        await saveSettingsRef.current();
+      }
+    });
+
+    return () => {
+      if (settingsContext?.unregisterTabSubmit) {
+        settingsContext.unregisterTabSubmit(componentId);
+      }
+    };
+  }, [componentId, settingsContext]);
 
   const ProviderIcon = AI_PROVIDERS[provider].icon;
   const currentModelInfo = AI_PROVIDERS[provider].models.find(m => m.value === model);
@@ -569,26 +583,6 @@ export default function AISettingsTab() {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <Button 
-              onClick={saveSettings}
-              disabled={isSaving || !hasUnsavedChanges}
-              size="lg"
-              className="min-w-[200px] shadow-md"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Kaydediliyor...
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  {hasUnsavedChanges ? 'Değişiklikleri Kaydet' : 'Kayıtlı'}
-                </>
-              )}
-            </Button>
-          </div>
         </>
       )}
 
