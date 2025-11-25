@@ -75,7 +75,9 @@ const EnhancedTextarea = React.forwardRef<HTMLTextAreaElement, EnhancedTextareaP
  };
  
  const handleVoiceError = (error: any) => {
- console.error("Voice error:", error);
+ if (import.meta.env.DEV && error?.code !== 'audio-capture') {
+   console.warn("Voice error:", error);
+ }
  setVoiceStatus('error');
  onVoiceEnd?.();
  setTimeout(() => setVoiceStatus('idle'), 3000);
