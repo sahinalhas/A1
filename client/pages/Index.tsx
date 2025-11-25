@@ -96,11 +96,6 @@ export default function Index() {
   const [students, setStudents] = useState<Student[]>([]);
   const [earlyWarnings, setEarlyWarnings] = useState<EarlyWarning[]>([]);
 
-  // Dummy data for the new dashboard cards (replace with actual data fetching)
-  const todayExams = 5;
-  const participationRate = 85;
-  const avgSuccess = 78;
-  const atRiskCount = 12;
 
 useEffect(() => {
     if (students.length === 0) {
@@ -415,36 +410,36 @@ useEffect(() => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {[
               {
-                title: "Bugünkü Sınavlar",
-                value: todayExams,
-                description: "Aktif sınav oturumu",
-                icon: Users,
+                title: "Açık Müdahale",
+                value: stats.openInterventionCount,
+                description: "Devam eden müdahaleler",
+                icon: Target,
                 gradient: "from-blue-500 to-cyan-600",
-                change: `${todayExams}`,
+                change: stats.openInterventionCount > 0 ? "Aktif" : "Yok",
               },
               {
-                title: "Katılım Oranı",
-                value: `%${participationRate}`,
-                description: "Genel katılım yüzdesi",
-                icon: Calendar,
+                title: "Bu Hafta Görüşme",
+                value: stats.meetingCount,
+                description: "Planlanan seanslar",
+                icon: CalendarDays,
                 gradient: "from-purple-500 to-violet-600",
-                change: participationRate >= 80 ? "Yüksek" : "Orta",
+                change: `${stats.activeCounselingSessionsToday} bugün`,
               },
               {
-                title: "Ortalama Başarı",
-                value: `%${avgSuccess}`,
-                description: "Genel başarı ortalaması",
-                icon: TrendingUp,
+                title: "Toplam Öğrenci",
+                value: stats.studentCount,
+                description: "Kayıtlı öğrenci sayısı",
+                icon: Users2,
                 gradient: "from-emerald-500 to-teal-600",
-                change: "↑ Trend",
+                change: "+12%",
               },
               {
                 title: "Risk Altında",
-                value: atRiskCount,
+                value: riskDistribution.high + riskDistribution.medium,
                 description: "Yakın takip gerektiren",
                 icon: AlertTriangle,
                 gradient: "from-amber-500 to-orange-600",
-                change: atRiskCount > 0 ? "Dikkat" : "İyi",
+                change: riskDistribution.high > 0 ? "Dikkat" : "İyi",
               },
             ].map((card, index) => (
               <motion.div
