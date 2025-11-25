@@ -43,7 +43,9 @@ import {
  Globe,
  Settings,
  CheckSquare,
- Square
+ Square,
+ Lock,
+ QrCode
 } from "lucide-react";
 import {
  SurveyTemplate,
@@ -58,13 +60,15 @@ import { useStudents } from "@/hooks/queries/students.query-hooks";
 const distributionSchema = z.object({
  title: z.string().min(1,"Başlık gereklidir"),
  description: z.string().optional(),
- distributionType: z.enum(["MANUAL_EXCEL","ONLINE_LINK","HYBRID"]),
+ distributionType: z.enum(["MANUAL_EXCEL","ONLINE_LINK","HYBRID","PUBLIC_LINK","MANUAL_ENTRY","SECURITY_CODE"]),
  targetClasses: z.array(z.string()).min(1,"En az bir sınıf seçmelisiniz"),
  targetStudents: z.array(z.string()).optional(),
  startDate: z.string().optional(),
  endDate: z.string().optional(),
  allowAnonymous: z.boolean(),
  maxResponses: z.number().optional(),
+ requiresSecurityCode: z.boolean().optional(),
+ securityCodeCount: z.number().optional(),
  excelConfig: z.object({
  includeStudentInfo: z.boolean(),
  includeInstructions: z.boolean(),
@@ -123,6 +127,8 @@ export default function SurveyDistributionDialog({
  targetClasses: [],
  targetStudents: [],
  allowAnonymous: false,
+ requiresSecurityCode: false,
+ securityCodeCount: undefined,
  excelConfig: {
  includeStudentInfo: true,
  includeInstructions: true,
@@ -144,6 +150,8 @@ export default function SurveyDistributionDialog({
  targetClasses: [],
  targetStudents: [],
  allowAnonymous: false,
+ requiresSecurityCode: false,
+ securityCodeCount: undefined,
  excelConfig: {
  includeStudentInfo: true,
  includeInstructions: true,
@@ -336,9 +344,10 @@ export default function SurveyDistributionDialog({
  ...finalData,
  id: crypto.randomUUID(),
  excelTemplate,
- publicLink: finalData.distributionType ==="ONLINE_LINK" || finalData.distributionType ==="HYBRID" 
+ publicLink: (finalData.distributionType ==="ONLINE_LINK" || finalData.distributionType ==="HYBRID" || finalData.distributionType === "PUBLIC_LINK" || finalData.distributionType === "MANUAL_ENTRY" || finalData.distributionType === "SECURITY_CODE")
  ? crypto.randomUUID() 
- : undefined
+ : undefined,
+ requiresSecurityCode: finalData.distributionType === "SECURITY_CODE"
  };
 
  onDistributionCreated?.(distributionData);
@@ -413,19 +422,37 @@ export default function SurveyDistributionDialog({
  <SelectItem value="MANUAL_EXCEL">
  <div className="flex items-center">
  <FileSpreadsheet className="mr-2 h-4 w-4" />
- Sadece Excel Şablonu
+ Excel Şablonu
  </div>
  </SelectItem>
  <SelectItem value="ONLINE_LINK">
  <div className="flex items-center">
  <Globe className="mr-2 h-4 w-4" />
- Sadece Online Link
+ Online Link
  </div>
  </SelectItem>
  <SelectItem value="HYBRID">
  <div className="flex items-center">
  <Link2 className="mr-2 h-4 w-4" />
  Hibrit (Excel + Online)
+ </div>
+ </SelectItem>
+ <SelectItem value="PUBLIC_LINK">
+ <div className="flex items-center">
+ <Link2 className="mr-2 h-4 w-4" />
+ Herkese Açık Link
+ </div>
+ </SelectItem>
+ <SelectItem value="MANUAL_ENTRY">
+ <div className="flex items-center">
+ <Users className="mr-2 h-4 w-4" />
+ Öğrenci Bilgisi Girişi
+ </div>
+ </SelectItem>
+ <SelectItem value="SECURITY_CODE">
+ <div className="flex items-center">
+ <QrCode className="mr-2 h-4 w-4" />
+ Güvenlik Kodu + QR
  </div>
  </SelectItem>
  </SelectContent>
@@ -818,8 +845,44 @@ export default function SurveyDistributionDialog({
  </Card>
  )}
 
+ {/* Security Code Configuration */}
+ {watchedDistributionType === "SECURITY_CODE" && (
+ <Card>
+ <CardHeader>
+ <CardTitle className="flex items-center gap-2 text-sm">
+ <Lock className="h-4 w-4" />
+ Güvenlik Kodu Ayarları
+ </CardTitle>
+ </CardHeader>
+ <CardContent className="space-y-4">
+ <FormField
+ control={form.control}
+ name="securityCodeCount"
+ render={({ field }) => (
+ <FormItem>
+ <FormLabel className="text-sm">Oluşturulacak Kod Sayısı</FormLabel>
+ <FormControl>
+ <Input 
+ type="number" 
+ min="1" 
+ placeholder="Öğrenci sayısını giriniz"
+ value={field.value || ''}
+ onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : '')}
+ />
+ </FormControl>
+ <FormDescription className="text-xs">
+ Her öğrenci için benzersiz 6-karakterli güvenlik kodu oluşturulacak
+ </FormDescription>
+ <FormMessage />
+ </FormItem>
+ )}
+ />
+ </CardContent>
+ </Card>
+ )}
+
  {/* Online Settings */}
- {(watchedDistributionType ==="ONLINE_LINK" || watchedDistributionType ==="HYBRID") && (
+ {(watchedDistributionType ==="ONLINE_LINK" || watchedDistributionType ==="HYBRID" || watchedDistributionType ==="PUBLIC_LINK" || watchedDistributionType ==="MANUAL_ENTRY" || watchedDistributionType ==="SECURITY_CODE") && (
  <Card>
  <CardHeader>
  <CardTitle className="text-sm">Online Anket Ayarları</CardTitle>
