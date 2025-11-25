@@ -62,6 +62,17 @@ export const createSurveyResponse: RequestHandler = (req, res) => {
 
     const questions = surveyService.getTemplateQuestions(distribution.templateId);
     
+    // Duplicate submission kontrolü
+    if (!distribution.allowAnonymous && response.studentInfo) {
+      const isDuplicate = surveyService.checkDuplicateResponse(response.distributionId, response.studentInfo);
+      if (isDuplicate) {
+        return res.status(409).json({ 
+          success: false, 
+          error: 'Bu anket zaten doldurulmuş. Tekrar dolduralamazsınız.' 
+        });
+      }
+    }
+    
     try {
       surveyService.validateResponseData(distribution, questions, response.responseData, response.studentInfo);
     } catch (error: any) {

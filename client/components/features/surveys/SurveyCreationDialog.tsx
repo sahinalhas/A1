@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm, useFieldArray, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { v4 as uuidv4 } from 'uuid';
 import {
  Dialog,
  DialogContent,
@@ -52,7 +53,7 @@ export default function SurveyCreationDialog({
 
  const onSubmit: SubmitHandler<SurveyTemplateForm> = async (data) => {
  try {
- const templateId = `template_${Date.now()}`;
+ const templateId = uuidv4();
  const templateData = {
  id: templateId,
  title: data.title,

@@ -73,8 +73,10 @@ export default function PublicSurvey() {
  const [isSubmitted, setIsSubmitted] = useState(false);
  const [isSubmitting, setIsSubmitting] = useState(false);
  const [needsSecurityCode, setNeedsSecurityCode] = useState(false);
+ const [securityCodeInput, setSecurityCodeInput] = useState('');
  const [verifiedCode, setVerifiedCode] = useState<string | null>(codeFromURL);
  const [codeVerifying, setCodeVerifying] = useState(false);
+ const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
  const form = useForm<SurveyResponseForm>({
  resolver: zodResolver(surveyResponseSchema),
@@ -103,6 +105,13 @@ export default function PublicSurvey() {
  { showErrorToast: false, skipAuth: true }
  );
  setDistribution(distributionData);
+
+ // Check if anket süresi dolmuşsa
+ if (distributionData.endDate && new Date() > new Date(distributionData.endDate)) {
+   setError('Anket süresi dolmuştur. Artık yanıt veremezsiniz.');
+   setLoading(false);
+   return;
+ }
 
  // Check if security code is required
  if (distributionData.requiresSecurityCode && !verifiedCode) {
@@ -138,6 +147,10 @@ export default function PublicSurvey() {
 
  const handleVerifyCode = async (code: string) => {
  try {
+   if (!code.trim()) {
+     toast({ title: 'Hata', description: 'Lütfen bir kod giriniz', variant: 'destructive' });
+     return;
+   }
    setCodeVerifying(true);
    const result = await apiClient.post(
      SURVEY_ENDPOINTS.VERIFY_CODE,
@@ -146,17 +159,26 @@ export default function PublicSurvey() {
    );
    
    setVerifiedCode(code);
+   setSecurityCodeInput('');
    setNeedsSecurityCode(false);
    // Re-load survey data now that code is verified
    await loadSurveyData();
+   toast({ title: 'Başarılı', description: 'Kod doğrulandı' });
  } catch (error) {
-   throw error instanceof Error ? error : new Error('Kod doğrulanamadı');
+   const errorMsg = error instanceof Error ? error.message : 'Kod doğrulanamadı';
+   toast({ title: 'Hata', description: errorMsg, variant: 'destructive' });
  } finally {
    setCodeVerifying(false);
  }
  };
 
  const handleSubmit = async (data: SurveyResponseForm) => {
+ // Duplicate submission kontrolü
+ if (alreadySubmitted || isSubmitted) {
+   toast({ title: 'Uyarı', description: 'Bu anket zaten doldurulmuş', variant: 'destructive' });
+   return;
+ }
+
  // Validate ALL required questions before submission
  const isFormValid = validateAllRequiredQuestions();
  if (!isFormValid) {
@@ -192,6 +214,7 @@ export default function PublicSurvey() {
  }
  );
 
+ setAlreadySubmitted(true);
  setIsSubmitted(true);
  toast({ 
  title:"Başarılı", 

@@ -61,7 +61,7 @@ const distributionSchema = z.object({
  title: z.string().min(1,"Başlık gereklidir"),
  description: z.string().optional(),
  distributionType: z.enum(["MANUAL_EXCEL","ONLINE_LINK","HYBRID","PUBLIC_LINK","MANUAL_ENTRY","SECURITY_CODE"]),
- targetClasses: z.array(z.string()).min(1,"En az bir sınıf seçmelisiniz"),
+ targetClasses: z.array(z.string()).optional(),
  targetStudents: z.array(z.string()).optional(),
  startDate: z.string().optional(),
  endDate: z.string().optional(),
@@ -75,6 +75,42 @@ const distributionSchema = z.object({
  responseFormat: z.enum(["single_sheet","multi_sheet"]),
  includeValidation: z.boolean(),
  }),
+}).refine((data) => {
+ // Tarih kontrolü: Bitiş tarihi başlangıçtan sonra olmalı
+ if (data.startDate && data.endDate) {
+ return new Date(data.startDate) < new Date(data.endDate);
+ }
+ return true;
+}, {
+ message: "Bitiş tarihi başlangıç tarihinden sonra olmalı",
+ path: ["endDate"],
+}).refine((data) => {
+ // Sınıf seçimi: MANUAL_EXCEL ve HYBRID için zorunlu
+ if (data.distributionType === "MANUAL_EXCEL" || data.distributionType === "HYBRID") {
+ return (data.targetClasses && data.targetClasses.length > 0);
+ }
+ return true;
+}, {
+ message: "Bu dağıtım türü için sınıf seçimi gereklidir",
+ path: ["targetClasses"],
+}).refine((data) => {
+ // Security Code sayısı kontrolü
+ if (data.distributionType === "SECURITY_CODE") {
+ return data.securityCodeCount && data.securityCodeCount >= 1 && data.securityCodeCount <= 1000;
+ }
+ return true;
+}, {
+ message: "Kod sayısı 1 ile 1000 arasında olmalı",
+ path: ["securityCodeCount"],
+}).refine((data) => {
+ // Anonim + Security Code çelişkisi
+ if (data.allowAnonymous && data.requiresSecurityCode) {
+ return false;
+ }
+ return true;
+}, {
+ message: "Anonim anket güvenlik kodu kullanamaz",
+ path: ["allowAnonymous"],
 });
 
 type DistributionForm = z.infer<typeof distributionSchema>;
@@ -163,7 +199,7 @@ export default function SurveyDistributionDialog({
  }
  }, [open, survey.title, form, students]);
 
- const watchedClasses = form.watch("targetClasses");
+ const watchedClasses = form.watch("targetClasses") || [];
  const watchedDistributionType = form.watch("distributionType");
 
  // Get unique class names from students
@@ -172,7 +208,7 @@ export default function SurveyDistributionDialog({
  ).sort();
 
  // Filter students based on selected criteria
- const getFilteredStudents = () => {
+ const getFilteredStudents = (): typeof students => {
  return students.filter(student => {
  // Gender filter
  if (filterOptions.gender !=="all") {
@@ -312,7 +348,7 @@ export default function SurveyDistributionDialog({
  let excelTemplate = undefined;
  if (finalData.distributionType ==="MANUAL_EXCEL" || finalData.distributionType ==="HYBRID") {
  // Get students: either from targetStudents, or from targetClasses
- let selectedStudentsList = [];
+ let selectedStudentsList: typeof students = [];
  
  if (finalData.targetStudents && finalData.targetStudents.length > 0) {
  // If specific students are selected, use them

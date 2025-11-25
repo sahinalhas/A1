@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/organisms/Card";
 import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
-import { Plus, Download, Upload, Link2, BarChart, Users, Edit, Trash, ChevronRight } from "lucide-react";
+import { Plus, Download, Upload, Link2, BarChart, Users, Edit, Trash, ChevronRight, QrCode, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -69,6 +69,7 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  const [selectedDistribution, setSelectedDistribution] = useState<SurveyDistribution | null>(null);
  const [classSelectDialogOpen, setClassSelectDialogOpen] = useState(false);
  const [distributionForClassSelect, setDistributionForClassSelect] = useState<SurveyDistribution | null>(null);
+ const [generatingCodes, setGeneratingCodes] = useState<string | null>(null);
 
  const handleExcelUpload = (distribution: SurveyDistribution) => {
  setSelectedDistribution(distribution);
@@ -131,7 +132,7 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  else if (distribution.targetClasses && distribution.targetClasses.length > 0) {
  // If classes are set, use all students in those classes
  students = students.filter(s => 
- s.class && distribution.targetClasses.includes(s.class)
+ s.class && (distribution.targetClasses as string[]).includes(s.class)
  );
  }
 
@@ -199,6 +200,48 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  await deleteDistribution.mutateAsync(distribution.id);
  };
 
+ const handleGenerateCodes = async (distribution: SurveyDistribution) => {
+ try {
+   setGeneratingCodes(distribution.id);
+   const codeCount = distribution.targetStudents?.length || 50;
+   
+   const { apiClient } = await import('@/lib/api/core/client');
+   const result: any = await apiClient.post(
+     `/api/surveys/survey-distributions/${distribution.id}/generate-codes`,
+     { studentCount: codeCount },
+     { showSuccessToast: false }
+   );
+   
+   if (result?.success) {
+     // Kodları CSV olarak indir
+     const codes: any[] = result.codes || [];
+     const csvContent = codes.map((c: any, i: number) => 
+       `${i + 1},${c.code},${distribution.publicLink}`
+     ).join('\n');
+     
+     const link = document.createElement('a');
+     link.href = `data:text/csv;charset=utf-8,${encodeURIComponent('No,Kod,Link\n' + csvContent)}`;
+     link.download = `${distribution.title}_kodlar_${new Date().toISOString().split('T')[0]}.csv`;
+     link.click();
+     
+     toast({
+       title: 'Başarılı',
+       description: `${codeCount} güvenlik kodu oluşturuldu ve indirildi`
+     });
+   } else {
+     throw new Error((result as any)?.error || 'Kodlar oluşturulamadı');
+   }
+ } catch (error) {
+   toast({
+     title: 'Hata',
+     description: error instanceof Error ? error.message : 'Kodlar oluşturulamadı',
+     variant: 'destructive'
+   });
+ } finally {
+   setGeneratingCodes(null);
+ }
+ };
+
  return (
  <>
  <Card>
@@ -263,6 +306,22 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  </Button>
  </DropdownMenuTrigger>
  <DropdownMenuContent>
+ {distribution.distributionType === 'SECURITY_CODE' && (
+ <>
+ <DropdownMenuItem 
+   onClick={() => handleGenerateCodes(distribution)}
+   disabled={generatingCodes === distribution.id}
+ >
+   {generatingCodes === distribution.id ? (
+     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+   ) : (
+     <QrCode className="mr-2 h-4 w-4" />
+   )}
+   {generatingCodes === distribution.id ? 'Kodlar Oluşturuluyor...' : 'Güvenlik Kodları Oluştur'}
+ </DropdownMenuItem>
+ <DropdownMenuSeparator />
+ </>
+ )}
  <DropdownMenuItem onClick={() => handleDownloadExcel(distribution)}>
  <Download className="mr-2 h-4 w-4" />
  Excel İndir
