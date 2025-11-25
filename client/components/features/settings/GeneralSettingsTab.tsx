@@ -51,7 +51,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  form.watch("theme") ==="light" ?"default" :"outline"
  }
  onClick={() =>
- form.setValue("theme","light", { shouldValidate: true })
+ form.setValue("theme","light", { shouldValidate: true, shouldDirty: true })
  }
  >
  Açık
@@ -62,7 +62,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  form.watch("theme") ==="dark" ?"default" :"outline"
  }
  onClick={() =>
- form.setValue("theme","dark", { shouldValidate: true })
+ form.setValue("theme","dark", { shouldValidate: true, shouldDirty: true })
  }
  >
  Koyu
@@ -75,7 +75,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  value={form.watch("language")}
  onValueChange={(v) =>
  form.setValue("language", v as AppSettings["language"], {
- shouldValidate: true,
+ shouldValidate: true, shouldDirty: true,
  })
  }
  >
@@ -96,7 +96,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  form.setValue(
 "dateFormat",
  v as AppSettings["dateFormat"],
- { shouldValidate: true },
+ { shouldValidate: true, shouldDirty: true },
  )
  }
  >
@@ -117,7 +117,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  form.setValue(
 "timeFormat",
  v as AppSettings["timeFormat"],
- { shouldValidate: true },
+ { shouldValidate: true, shouldDirty: true },
  )
  }
  >
@@ -136,7 +136,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  value={String(form.watch("weekStart"))}
  onValueChange={(v) =>
  form.setValue("weekStart", Number(v) as 1 | 7, {
- shouldValidate: true,
+ shouldValidate: true, shouldDirty: true,
  })
  }
  >
@@ -174,7 +174,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  value={form.watch("account.displayName")}
  onChange={(e) =>
  form.setValue("account.displayName", e.target.value, {
- shouldValidate: true,
+ shouldValidate: true, shouldDirty: true,
  })
  }
  />
@@ -187,7 +187,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  value={form.watch("account.email")}
  onChange={(e) =>
  form.setValue("account.email", e.target.value, {
- shouldValidate: true,
+ shouldValidate: true, shouldDirty: true,
  })
  }
  />
@@ -199,7 +199,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  value={form.watch("account.institution")}
  onChange={(e) =>
  form.setValue("account.institution", e.target.value, {
- shouldValidate: true,
+ shouldValidate: true, shouldDirty: true,
  })
  }
  />
@@ -211,7 +211,7 @@ export default function GeneralSettingsTab({ form }: GeneralSettingsTabProps) {
  value={form.watch("account.signature") ??""}
  onChange={(e) =>
  form.setValue("account.signature", e.target.value, {
- shouldValidate: true,
+ shouldValidate: true, shouldDirty: true,
  })
  }
  />

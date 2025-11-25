@@ -50,7 +50,7 @@ export default function NotificationsSettingsTab({
    checked={form.watch("notifications.email")}
    onCheckedChange={(v) =>
     form.setValue("notifications.email", !!v, {
-     shouldValidate: true,
+     shouldValidate: true, shouldDirty: true,
     })
    }
   />
@@ -66,7 +66,7 @@ export default function NotificationsSettingsTab({
    checked={form.watch("notifications.sms")}
    onCheckedChange={(v) =>
     form.setValue("notifications.sms", !!v, {
-     shouldValidate: true,
+     shouldValidate: true, shouldDirty: true,
     })
    }
   />
@@ -82,7 +82,7 @@ export default function NotificationsSettingsTab({
    checked={form.watch("notifications.push")}
    onCheckedChange={(v) =>
     form.setValue("notifications.push", !!v, {
-     shouldValidate: true,
+     shouldValidate: true, shouldDirty: true,
     })
    }
   />
@@ -104,7 +104,7 @@ export default function NotificationsSettingsTab({
         form.setValue(
          "notifications.digestHour",
          Number(e.target.value),
-         { shouldValidate: true },
+         { shouldValidate: true, shouldDirty: true },
         )
        }
       />
