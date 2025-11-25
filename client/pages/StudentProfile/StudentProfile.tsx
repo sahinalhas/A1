@@ -1,16 +1,14 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { useState, useEffect, createContext, useContext, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/organisms/Card";
 import { Button } from "@/components/atoms/Button";
-import { AlertCircle, Loader2, Save } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { useStudentProfile, useStudentData } from "@/hooks/features/student-profile";
 import { StudentHeader } from "./components/StudentHeader";
 import { StudentProfileTabs } from "./StudentProfileTabs";
 
 interface FormDirtyContextType {
-  isDirty: boolean;
-  setIsDirty: (value: boolean) => void;
   registerFormSubmit: (id: string, submitFn: () => Promise<void>) => void;
   unregisterFormSubmit: (id: string) => void;
 }
@@ -30,8 +28,6 @@ export default function StudentProfile() {
  const [refresh, setRefresh] = useState(0);
  const [scoresData, setScoresData] = useState<any>(null);
  const [loadingScores, setLoadingScores] = useState(false);
- const [isDirty, setIsDirty] = useState(false);
- const [isSaving, setIsSaving] = useState(false);
  const [formSubmits] = useState<Map<string, () => Promise<void>>>(new Map());
  
  const { student, studentId, isLoading, error } = useStudentProfile(id);
@@ -39,36 +35,15 @@ export default function StudentProfile() {
 
  const handleUpdate = () => {
    setRefresh((x) => x + 1);
-   setIsDirty(false);
  };
 
- const registerFormSubmit = (id: string, submitFn: () => Promise<void>) => {
+ const registerFormSubmit = useCallback((id: string, submitFn: () => Promise<void>) => {
    formSubmits.set(id, submitFn);
- };
+ }, [formSubmits]);
 
- const unregisterFormSubmit = (id: string) => {
+ const unregisterFormSubmit = useCallback((id: string) => {
    formSubmits.delete(id);
- };
-
- const handleSaveAll = async () => {
-   setIsSaving(true);
-   try {
-     const submitPromises = Array.from(formSubmits.values()).map(submitFn =>
-       submitFn().catch(error => {
-         console.error('Form submission error:', error);
-       })
-     );
-     
-     await Promise.all(submitPromises);
-     
-     // Başarılı save'den sonra state'i güncelle
-     setIsDirty(false);
-   } catch (error) {
-     console.error('Error saving:', error);
-   } finally {
-     setIsSaving(false);
-   }
- };
+ }, [formSubmits]);
 
  // Fetch standardized scores and profile completeness
  useEffect(() => {
@@ -171,7 +146,7 @@ export default function StudentProfile() {
  }
 
  return (
- <FormDirtyContext.Provider value={{ isDirty, setIsDirty, registerFormSubmit, unregisterFormSubmit }}>
+ <FormDirtyContext.Provider value={{ registerFormSubmit, unregisterFormSubmit }}>
    <motion.div
    initial={{ opacity: 0, y: 20 }}
    animate={{ opacity: 1, y: 0 }}
@@ -200,58 +175,6 @@ export default function StudentProfile() {
    loadingScores={loadingScores}
    />
    </motion.div>
-
-   {isDirty && (
-    <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/95 to-transparent pb-4 pt-8 z-50">
-     <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-      <div className="flex flex-col sm:flex-row items-center justify-between bg-card/95 border-2 border-border/80 rounded-xl p-3 sm:p-4 gap-3 sm:gap-4">
-       <div className="flex items-center gap-3 w-full sm:w-auto">
-        <div className="relative flex-shrink-0">
-         <AlertCircle className="h-5 w-5 text-amber-500" />
-         <span className="absolute -top-1 -right-1 flex h-3 w-3">
-          <span className=" absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-         </span>
-        </div>
-        <div className="flex-1 min-w-0">
-         <p className="font-semibold text-sm sm:text-base">Kaydedilmemiş Değişiklikler</p>
-         <p className="text-xs text-muted-foreground truncate">
-          Yaptığınız değişiklikler henüz kaydedilmedi
-         </p>
-        </div>
-       </div>
-       <div className="flex gap-2 w-full sm:w-auto justify-end">
-        <Button
-         variant="outline"
-         onClick={() => setIsDirty(false)}
-         disabled={isSaving}
-         className="flex-1 sm:flex-none min-w-[100px]"
-        >
-         İptal
-        </Button>
-        <Button
-         onClick={handleSaveAll}
-         disabled={isSaving}
-         className="flex-1 sm:flex-none min-w-[140px] gap-2 bg-gradient-to-r from-primary to-primary/90"
-        >
-         {isSaving ? (
-          <>
-           <span className="h-4 w-4 rounded-full border-2 border-current border-t-transparent" />
-           <span className="hidden sm:inline">Kaydediliyor...</span>
-          </>
-         ) : (
-          <>
-           <Save className="h-4 w-4" />
-           <span className="hidden sm:inline">Değişiklikleri Kaydet</span>
-           <span className="sm:hidden">Kaydet</span>
-          </>
-         )}
-        </Button>
-       </div>
-      </div>
-     </div>
-    </div>
-   )}
    </motion.div>
  </FormDirtyContext.Provider>
  );

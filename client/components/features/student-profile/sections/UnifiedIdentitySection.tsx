@@ -5,12 +5,11 @@
  * NOT: Risk bilgisi manuel değil, otomatik hesaplanıyor
  */
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import type { Student } from "@/lib/types/student.types";
 import { upsertStudent } from "@/lib/api/endpoints/students.api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
 import { Input } from "@/components/atoms/Input";
-import { Button } from "@/components/atoms/Button";
 import {
  Select,
  SelectContent,
@@ -30,8 +29,8 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "sonner";
 import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
+import { useAutoSave } from "@/hooks/useAutoSave";
 import {
  User,
  Phone,
@@ -100,7 +99,7 @@ interface UnifiedIdentitySectionProps {
 }
 
 export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIdentitySectionProps) {
- const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const { registerFormSubmit, unregisterFormSubmit } = useFormDirty();
  const componentId = useMemo(() => crypto.randomUUID(), []);
  const form = useForm<UnifiedIdentityFormValues>({
  resolver: zodResolver(unifiedIdentitySchema),
@@ -150,6 +149,16 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  },
  });
 
+ const onSubmit = useCallback(async (data: UnifiedIdentityFormValues) => {
+ const updatedStudent: Student = {
+ ...student,
+ ...data,
+ numberOfSiblings: typeof data.numberOfSiblings ==="number" ? data.numberOfSiblings : undefined,
+ };
+ await upsertStudent(updatedStudent);
+ onUpdate();
+ }, [student, onUpdate]);
+
  useEffect(() => {
  form.reset({
  name: student.name ||"",
@@ -197,43 +206,21 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  });
  }, [student, form]);
 
+ const { debouncedSave } = useAutoSave({
+ onSave: onSubmit,
+ debounceMs: 2000,
+ });
+
  useEffect(() => {
  const subscription = form.watch(() => {
- setIsDirty(true);
+ debouncedSave();
  });
  return () => subscription.unsubscribe();
- }, [form, setIsDirty]);
-
- useEffect(() => {
- registerFormSubmit(componentId, async () => {
- const isValid = await form.trigger();
- if (isValid) {
- await form.handleSubmit(onSubmit)();
- }
- });
- return () => unregisterFormSubmit(componentId);
- }, [form, componentId, registerFormSubmit, unregisterFormSubmit, onSubmit]);
-
- const onSubmit = async (data: UnifiedIdentityFormValues) => {
- try {
- const updatedStudent: Student = {
- ...student,
- ...data,
- numberOfSiblings: typeof data.numberOfSiblings ==="number" ? data.numberOfSiblings : undefined,
- };
-
- await upsertStudent(updatedStudent);
- toast.success("Öğrenci bilgileri kaydedildi");
- onUpdate();
- } catch (error) {
- toast.error("Kayıt sırasında hata oluştu");
- console.error("Error saving student:", error);
- }
- };
+ }, [form, debouncedSave]);
 
  return (
  <Form {...form}>
- <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+ <div className="space-y-6">
  {/* Temel Kimlik Bilgileri */}
  <Card>
  <CardHeader className="pb-4">
@@ -1059,7 +1046,7 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  </CardContent>
  </Card>
 
- </form>
+ </div>
  </Form>
  );
 }
