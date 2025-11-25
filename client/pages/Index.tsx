@@ -599,7 +599,7 @@ useEffect(() => {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="h-[220px] flex items-center justify-center">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie
                       data={riskChartData}
