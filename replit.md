@@ -47,5 +47,6 @@ The design adopts an "elegant, chic, minimal, compact" aesthetic with a refined 
 ## External APIs and Integrations
 
 -   **Turkish Education System Compliance**: Adheres to MEB standards, tracks Turkish standardized exams (LGS, TYT, AYT, YDT), and includes Turkish localization. Features a hierarchical guidance standards system with an automated markdown-to-database pipeline.
+-   **MEBBİS Integration**: Automated transfer of counseling session data to the official Turkish education system (MEBBİS) using Puppeteer-based browser automation. Features QR code authentication, real-time progress tracking via WebSocket, automatic retry for failed transfers, dynamic Chromium detection for Replit environment, and robust socket lifecycle management for sequential transfers.
 -   **File Processing**: Supports Excel import/export, PDF generation for reports, and image uploads.
 -   **Progressive Web App**: Includes a service worker for offline functionality, an app manifest, and optional push notifications.
