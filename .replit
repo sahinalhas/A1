@@ -4,7 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
-packages = ["unzip", "gcc", "gnumake", "python311"]
+packages = ["unzip", "gcc", "gnumake", "python311", "chromium", "nss", "xorg.libX11", "xorg.libXcomposite", "xorg.libXcursor", "xorg.libXdamage", "xorg.libXext", "xorg.libXi", "xorg.libXtst", "xorg.libxcb", "pango", "cairo", "cups", "dbus", "glib", "gtk3", "libdrm", "mesa", "expat", "alsa-lib", "at-spi2-atk", "at-spi2-core"]
 
 [workflows]
 runButton = "Project"

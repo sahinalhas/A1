@@ -54,6 +54,9 @@ export function createServer() {
   // Cookie parser - required for session management
   app.use(cookieParser());
 
+  // Serve static files from public directory (for MEBBIS QR codes, etc.)
+  app.use(express.static('public'));
+
   // Security headers and session management
   app.use(ensureCsrfSession);
 

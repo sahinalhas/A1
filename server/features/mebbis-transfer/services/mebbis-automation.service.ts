@@ -29,24 +29,28 @@ export class MEBBISAutomationService {
     try {
       logger.info('Initializing MEBBIS automation browser...', 'MEBBISAutomation');
       
+      const chromiumPath = '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium';
+      
       this.browser = await puppeteer.launch({
-        headless: false,
-        devtools: false,
+        headless: true,
+        executablePath: chromiumPath,
         args: [
-          '--start-maximized',
           '--no-sandbox',
           '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage'
-        ],
-        defaultViewport: null
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+          '--disable-software-rasterizer',
+          '--disable-extensions'
+        ]
       });
       
       this.page = await this.browser.newPage();
       await this.page.setViewport({ width: 1920, height: 1080 });
       
+      logger.info('Navigating to MEBBIS...', 'MEBBISAutomation');
       await this.page.goto('https://mebbis.meb.gov.tr/', {
-        waitUntil: 'networkidle2',
-        timeout: 30000
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
       });
       
       logger.info('MEBBIS page loaded successfully', 'MEBBISAutomation');
@@ -66,19 +70,31 @@ export class MEBBISAutomationService {
     try {
       logger.info('Waiting for QR code login...', 'MEBBISAutomation');
       
-      await this.page.waitForSelector('#lnkQrcode', { timeout: 10000 });
+      await this.page.waitForSelector('#lnkQrcode', { timeout: 15000 });
       await this.page.click('#lnkQrcode');
       
-      logger.info('QR code login clicked, waiting for user to scan...', 'MEBBISAutomation');
+      await this.wait(2000);
+      
+      const qrScreenshotPath = 'public/mebbis-qr-code.png';
+      await this.page.screenshot({ 
+        path: qrScreenshotPath,
+        fullPage: false
+      });
+      logger.info(`QR code screenshot saved to ${qrScreenshotPath}`, 'MEBBISAutomation');
+      logger.info('⚠️ QR kodu telefonunuzla okutun: http://localhost:5000/mebbis-qr-code.png', 'MEBBISAutomation');
+      
+      logger.info('Waiting for user to scan QR code (3 minutes timeout)...', 'MEBBISAutomation');
       
       await this.page.waitForNavigation({
-        waitUntil: 'networkidle2',
-        timeout: 120000 // 2 dakika (180 saniye çok uzun)
+        waitUntil: 'domcontentloaded',
+        timeout: 180000
       });
       
       const currentUrl = this.page.url();
-      if (currentUrl.includes('main.aspx')) {
-        logger.info('Login successful!', 'MEBBISAutomation');
+      logger.info(`Navigated to: ${currentUrl}`, 'MEBBISAutomation');
+      
+      if (currentUrl.includes('main.aspx') || currentUrl.includes('Anasayfa')) {
+        logger.info('✅ Login successful!', 'MEBBISAutomation');
       } else {
         throw new Error('Login failed - unexpected URL after navigation');
       }
