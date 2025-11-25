@@ -70,6 +70,7 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  const [classSelectDialogOpen, setClassSelectDialogOpen] = useState(false);
  const [distributionForClassSelect, setDistributionForClassSelect] = useState<SurveyDistribution | null>(null);
  const [generatingCodes, setGeneratingCodes] = useState<string | null>(null);
+ const [generatingQRPDF, setGeneratingQRPDF] = useState<string | null>(null);
 
  const handleExcelUpload = (distribution: SurveyDistribution) => {
  setSelectedDistribution(distribution);
@@ -242,6 +243,48 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  }
  };
 
+ const handleDownloadQRPDF = async (distribution: SurveyDistribution) => {
+   try {
+     setGeneratingQRPDF(distribution.id);
+     
+     const response = await fetch(`/api/surveys/survey-distributions/${distribution.id}/generate-qr-pdf`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       credentials: 'include',
+     });
+     
+     if (!response.ok) {
+       const error = await response.json();
+       throw new Error(error.error || 'PDF oluşturulamadı');
+     }
+     
+     const blob = await response.blob();
+     const url = window.URL.createObjectURL(blob);
+     const link = document.createElement('a');
+     link.href = url;
+     link.download = `QR-Kodlari-${distribution.title}.pdf`;
+     document.body.appendChild(link);
+     link.click();
+     document.body.removeChild(link);
+     window.URL.revokeObjectURL(url);
+     
+     toast({
+       title: 'Başarılı',
+       description: 'QR kodları PDF olarak indirildi'
+     });
+   } catch (error) {
+     toast({
+       title: 'Hata',
+       description: error instanceof Error ? error.message : 'QR PDF oluşturulamadı',
+       variant: 'destructive'
+     });
+   } finally {
+     setGeneratingQRPDF(null);
+   }
+ };
+
  return (
  <>
  <Card>
@@ -306,22 +349,18 @@ export default function DistributionsList({ distributions, onNewDistribution, on
  </Button>
  </DropdownMenuTrigger>
  <DropdownMenuContent>
- {distribution.distributionType === 'SECURITY_CODE' && (
- <>
  <DropdownMenuItem 
-   onClick={() => handleGenerateCodes(distribution)}
-   disabled={generatingCodes === distribution.id}
+   onClick={() => handleDownloadQRPDF(distribution)}
+   disabled={generatingQRPDF === distribution.id}
  >
-   {generatingCodes === distribution.id ? (
+   {generatingQRPDF === distribution.id ? (
      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
    ) : (
      <QrCode className="mr-2 h-4 w-4" />
    )}
-   {generatingCodes === distribution.id ? 'Kodlar Oluşturuluyor...' : 'Güvenlik Kodları Oluştur'}
+   {generatingQRPDF === distribution.id ? 'PDF Oluşturuluyor...' : 'QR Kodları İndir (PDF)'}
  </DropdownMenuItem>
  <DropdownMenuSeparator />
- </>
- )}
  <DropdownMenuItem onClick={() => handleDownloadExcel(distribution)}>
  <Download className="mr-2 h-4 w-4" />
  Excel İndir
