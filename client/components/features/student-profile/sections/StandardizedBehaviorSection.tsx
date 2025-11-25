@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -44,7 +44,8 @@ export default function StandardizedBehaviorSection({
  behaviorData = [],
  onUpdate 
 }: StandardizedBehaviorSectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const [isSubmitting, setIsSubmitting] = useState(false);
  const [showForm, setShowForm] = useState(false);
 
@@ -84,6 +85,8 @@ export default function StandardizedBehaviorSection({
  return () => subscription.unsubscribe();
  }, [form, setIsDirty]);
 
+ const onSubmitRef = useRef<(data: BehaviorIncidentFormValues) => Promise<void>>();
+
  const onSubmit = async (data: BehaviorIncidentFormValues) => {
  setIsSubmitting(true);
  try {
@@ -113,6 +116,20 @@ export default function StandardizedBehaviorSection({
  setIsSubmitting(false);
  }
  };
+
+ useEffect(() => {
+ onSubmitRef.current = onSubmit;
+ }, [onSubmit]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid && onSubmitRef.current) {
+ await form.handleSubmit(onSubmitRef.current)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit]);
 
  const handleDelete = async (incidentId: string) => {
  try {

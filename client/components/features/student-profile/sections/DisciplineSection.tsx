@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { Student } from "@/lib/types/student.types";
 import { upsertStudent } from "@/lib/api/endpoints/students.api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
@@ -25,7 +25,8 @@ interface DisciplineSectionProps {
 }
 
 export default function DisciplineSection({ student, onUpdate }: DisciplineSectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const form = useForm<DisciplineFormValues>({
  resolver: zodResolver(disciplineSchema),
  defaultValues: {
@@ -46,6 +47,8 @@ export default function DisciplineSection({ student, onUpdate }: DisciplineSecti
  return () => subscription.unsubscribe();
  }, [form, setIsDirty]);
 
+ const onSubmitRef = useRef<(data: DisciplineFormValues) => Promise<void>>();
+
  const onSubmit = async (data: DisciplineFormValues) => {
  try {
  const updatedStudent: Student = {
@@ -61,6 +64,20 @@ export default function DisciplineSection({ student, onUpdate }: DisciplineSecti
  console.error("Error saving discipline info:", error);
  }
  };
+
+ useEffect(() => {
+ onSubmitRef.current = onSubmit;
+ }, [onSubmit]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid && onSubmitRef.current) {
+ await form.handleSubmit(onSubmitRef.current)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit]);
 
  return (
  <Form {...form}>

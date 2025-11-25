@@ -5,6 +5,7 @@ Rehber360 is a comprehensive student guidance and management system designed for
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+Coding standard: React Hook Form with Zod validation, ref-based form submission architecture for centralized management
 
 # System Architecture
 
@@ -21,6 +22,16 @@ The backend is built with Express 5.1.0 on Node.js 22, using TypeScript. It leve
 ## Data Storage Solutions
 
 The primary database is SQLite, located at `./data/database.db`. Schema migrations are managed via versioned SQL files. Key data models include `students`, `counseling_sessions`, `survey_templates`, `academic_records`, `risk_assessments`, `interventions`, `exam_sessions`, `guidance_categories`, `guidance_items`, and specific tables for the Coaching System such as `academic_goals`, `multiple_intelligence`, `learning_styles`, `smart_goals`, `coaching_recommendations`, `evaluations_360`, `achievements`, `self_assessments`, `parent_meetings`, `home_visits`, and `family_participation`. The system supports manual and automatic backups.
+
+## Recent Changes (2025-11-25)
+
+### Ref-Based Form Submission Architecture
+Implemented professional-grade form submission system for student profile (13 form sections):
+- **FormDirtyContext Enhancement**: Added `registerFormSubmit` and `unregisterFormSubmit` callbacks for centralized form submission management
+- **Pattern Implementation**: Each of 13 form sections (UnifiedIdentitySection, StandardizedHealthSection, StandardizedTalentsSection, StandardizedAcademicSection, StandardizedBehaviorSection, StandardizedSocialEmotionalSection, HedeflerPlanlamaSection, MotivationProfileSection, RiskProtectiveProfileSection, DisciplineSection, DavranisTakibiSection, RiskDegerlendirmeSection, OzelEgitimSection) registers its submit handler with unique component ID
+- **Validation-First Approach**: `handleSaveAll` validates each form with `form.trigger()` before calling `handleSubmit()`, ensuring data integrity
+- **useRef Optimization**: Used useRef pattern to stabilize callback references and prevent dependency array warnings while maintaining React best practices
+- **Database Integration**: All 13 sections properly save to database via appropriate endpoints (upsertStudent, useStandardizedProfileSection, addBehaviorIncident, addRiskFactors, etc.)
 
 ## Authentication and Authorization
 

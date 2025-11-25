@@ -5,7 +5,7 @@
  * NOT: Risk bilgisi manuel değil, otomatik hesaplanıyor
  */
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { Student } from "@/lib/types/student.types";
 import { upsertStudent } from "@/lib/api/endpoints/students.api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
@@ -100,7 +100,8 @@ interface UnifiedIdentitySectionProps {
 }
 
 export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIdentitySectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const form = useForm<UnifiedIdentityFormValues>({
  resolver: zodResolver(unifiedIdentitySchema),
  defaultValues: {
@@ -202,6 +203,16 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  });
  return () => subscription.unsubscribe();
  }, [form, setIsDirty]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid) {
+ await form.handleSubmit(onSubmit)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit, onSubmit]);
 
  const onSubmit = async (data: UnifiedIdentityFormValues) => {
  try {

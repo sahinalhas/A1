@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -71,7 +71,8 @@ interface RiskDegerlendirmeSectionProps {
 }
 
 export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpdate }: RiskDegerlendirmeSectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const form = useForm<RiskAssessmentFormValues>({
  resolver: zodResolver(riskAssessmentSchema),
  defaultValues: {
@@ -97,6 +98,8 @@ export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpd
  return () => subscription.unsubscribe();
  }, [form, setIsDirty]);
 
+ const onSubmitRef = useRef<(data: RiskAssessmentFormValues) => Promise<void>>();
+
  const onSubmit = async (data: RiskAssessmentFormValues) => {
  const riskData: RiskFactors = {
  id: crypto.randomUUID(),
@@ -120,6 +123,20 @@ export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpd
  form.reset();
  onUpdate();
  };
+
+ useEffect(() => {
+ onSubmitRef.current = onSubmit;
+ }, [onSubmit]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid && onSubmitRef.current) {
+ await form.handleSubmit(onSubmitRef.current)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit]);
 
  const getRiskBadgeVariant = (level: string) => {
  return level === 'YÜKSEK' || level === 'ÇOK_YÜKSEK' ? 'destructive' : 'secondary';

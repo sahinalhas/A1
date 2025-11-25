@@ -11,6 +11,8 @@ import { StudentProfileTabs } from "./StudentProfileTabs";
 interface FormDirtyContextType {
   isDirty: boolean;
   setIsDirty: (value: boolean) => void;
+  registerFormSubmit: (id: string, submitFn: () => Promise<void>) => void;
+  unregisterFormSubmit: (id: string) => void;
 }
 
 const FormDirtyContext = createContext<FormDirtyContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export default function StudentProfile() {
  const [loadingScores, setLoadingScores] = useState(false);
  const [isDirty, setIsDirty] = useState(false);
  const [isSaving, setIsSaving] = useState(false);
+ const [formSubmits] = useState<Map<string, () => Promise<void>>>(new Map());
  
  const { student, studentId, isLoading, error } = useStudentProfile(id);
  const { data } = useStudentData(studentId, refresh);
@@ -39,24 +42,30 @@ export default function StudentProfile() {
    setIsDirty(false);
  };
 
+ const registerFormSubmit = (id: string, submitFn: () => Promise<void>) => {
+   formSubmits.set(id, submitFn);
+ };
+
+ const unregisterFormSubmit = (id: string) => {
+   formSubmits.delete(id);
+ };
+
  const handleSaveAll = async () => {
    setIsSaving(true);
    try {
-     // Tüm formlar otomatik olarak onSubmit tetikleyecek
-     const forms = document.querySelectorAll('form');
-     for (const form of forms) {
-       const submitButton = form.querySelector('button[type="submit"]');
-       if (submitButton instanceof HTMLButtonElement) {
-         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-       }
-     }
-     // İşlemin tamamlanması için biraz bekleme
-     setTimeout(() => {
-       setIsDirty(false);
-       setIsSaving(false);
-     }, 1000);
+     const submitPromises = Array.from(formSubmits.values()).map(submitFn =>
+       submitFn().catch(error => {
+         console.error('Form submission error:', error);
+       })
+     );
+     
+     await Promise.all(submitPromises);
+     
+     // Başarılı save'den sonra state'i güncelle
+     setIsDirty(false);
    } catch (error) {
      console.error('Error saving:', error);
+   } finally {
      setIsSaving(false);
    }
  };
@@ -162,7 +171,7 @@ export default function StudentProfile() {
  }
 
  return (
- <FormDirtyContext.Provider value={{ isDirty, setIsDirty }}>
+ <FormDirtyContext.Provider value={{ isDirty, setIsDirty, registerFormSubmit, unregisterFormSubmit }}>
    <motion.div
    initial={{ opacity: 0, y: 20 }}
    animate={{ opacity: 1, y: 0 }}

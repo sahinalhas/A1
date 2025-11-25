@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { SpecialEducation } from "@/lib/storage";
 import { addSpecialEducation, updateSpecialEducation, getSpecialEducationByStudent } from "@/lib/api/endpoints/special-education.api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
@@ -53,7 +53,8 @@ interface OzelEgitimSectionProps {
 }
 
 export default function OzelEgitimSection({ studentId, specialEducation, onUpdate }: OzelEgitimSectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const [records, setRecords] = useState<SpecialEducation[]>(specialEducation || []);
  const [isLoading, setIsLoading] = useState(false);
  const existingRecord = records && records.length > 0 ? records[0] : null;
@@ -99,6 +100,8 @@ export default function OzelEgitimSection({ studentId, specialEducation, onUpdat
  return () => subscription.unsubscribe();
  }, [form, setIsDirty]);
 
+ const onSubmitRef = useRef<(data: SpecialEducationFormValues) => Promise<void>>();
+
  // Form verilerini records değiştiğinde güncelle
  useEffect(() => {
  const record = records && records.length > 0 ? records[0] : null;
@@ -141,6 +144,20 @@ export default function OzelEgitimSection({ studentId, specialEducation, onUpdat
  console.error("Error saving special education:", error);
  }
  };
+
+ useEffect(() => {
+ onSubmitRef.current = onSubmit;
+ }, [onSubmit]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid && onSubmitRef.current) {
+ await form.handleSubmit(onSubmitRef.current)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit]);
 
  if (isLoading) {
  return (

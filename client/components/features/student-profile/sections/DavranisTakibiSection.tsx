@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -56,7 +56,8 @@ interface DavranisTakibiSectionProps {
 }
 
 export default function DavranisTakibiSection({ studentId, behaviorIncidents, onUpdate }: DavranisTakibiSectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const form = useForm<BehaviorIncidentFormValues>({
  resolver: zodResolver(behaviorIncidentSchema),
  defaultValues: {
@@ -82,6 +83,8 @@ export default function DavranisTakibiSection({ studentId, behaviorIncidents, on
  });
  return () => subscription.unsubscribe();
  }, [form, setIsDirty]);
+
+ const onSubmitRef = useRef<(data: BehaviorIncidentFormValues) => Promise<void>>();
 
  const onSubmit = async (data: BehaviorIncidentFormValues) => {
  const behaviorData: BehaviorIncident = {
@@ -110,6 +113,20 @@ export default function DavranisTakibiSection({ studentId, behaviorIncidents, on
  form.reset();
  onUpdate();
  };
+
+ useEffect(() => {
+ onSubmitRef.current = onSubmit;
+ }, [onSubmit]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid && onSubmitRef.current) {
+ await form.handleSubmit(onSubmitRef.current)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit]);
 
  return (
  <Card>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -46,7 +46,8 @@ export default function StandardizedTalentsSection({
  talentsData,
  onUpdate
 }: StandardizedTalentsSectionProps) {
- const { setIsDirty } = useFormDirty();
+ const { setIsDirty, registerFormSubmit, unregisterFormSubmit } = useFormDirty();
+ const componentId = useMemo(() => crypto.randomUUID(), []);
  const form = useForm<TalentsInterestsFormValues>({
  resolver: zodResolver(talentsInterestsSchema),
  defaultValues: {
@@ -79,6 +80,21 @@ export default function StandardizedTalentsSection({
  defaultValues: form.getValues(),
  onUpdate,
  });
+ 
+ const onSubmitRef = useRef(onSubmit);
+ useEffect(() => {
+ onSubmitRef.current = onSubmit;
+ }, [onSubmit]);
+
+ useEffect(() => {
+ registerFormSubmit(componentId, async () => {
+ const isValid = await form.trigger();
+ if (isValid) {
+ await form.handleSubmit(onSubmitRef.current)();
+ }
+ });
+ return () => unregisterFormSubmit(componentId);
+ }, [form, componentId, registerFormSubmit, unregisterFormSubmit]);
 
  return (
  <Card className="border-none">
