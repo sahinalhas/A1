@@ -8,13 +8,12 @@ export type SurveyQuestionType =
  | 'RATING' 
  | 'DROPDOWN';
 
-export type DistributionType = 
- | 'MANUAL_EXCEL' 
- | 'ONLINE_LINK' 
- | 'HYBRID'
- | 'PUBLIC_LINK'
- | 'MANUAL_ENTRY'
+export type ParticipationType = 
+ | 'PUBLIC' 
+ | 'STUDENT_INFO' 
  | 'SECURITY_CODE';
+
+export type DistributionType = ParticipationType;
 
 export type SubmissionType = 
  | 'ONLINE' 
@@ -82,15 +81,13 @@ export interface SurveyDistribution {
  description?: string;
  targetClasses?: string[]; // ['9/A', '10/B']
  targetStudents?: string[]; // student IDs
- distributionType: DistributionType;
+ participationType: ParticipationType;
  excelTemplate?: string; // Base64 encoded Excel file
  publicLink?: string; // UUID for public access
  startDate?: string;
  endDate?: string;
- allowAnonymous: boolean;
  maxResponses?: number;
  status: DistributionStatus;
- requiresSecurityCode?: boolean;
  createdBy?: string;
  created_at: string;
  updated_at: string;

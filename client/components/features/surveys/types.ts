@@ -38,3 +38,15 @@ export const targetAudienceLabels: Record<string, string> = {
  ALUMNI:"Mezun Anketleri",
  EXTERNAL_STAKEHOLDER:"Kurum Dışı Paydaş Anketleri"
 };
+
+export const participationTypeLabels: Record<string, string> = {
+ PUBLIC: "Herkese Açık (Anonim)",
+ STUDENT_INFO: "Öğrenci Bilgileri Zorunlu",
+ SECURITY_CODE: "Güvenlik Kodu (QR) ile Erişim"
+};
+
+export const participationTypeDescriptions: Record<string, string> = {
+ PUBLIC: "Kişisel bilgi girilmeden anonim yanıt alınır",
+ STUDENT_INFO: "Öğrenci adı, soyadı, sınıf, cinsiyet, numara zorunlu",
+ SECURITY_CODE: "QR kod ile öğrenci eşleştirmesi - PDF olarak yazdırılabilir"
+};

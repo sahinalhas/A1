@@ -60,15 +60,12 @@ import { useStudents } from "@/hooks/queries/students.query-hooks";
 const distributionSchema = z.object({
  title: z.string().min(1,"Başlık gereklidir"),
  description: z.string().optional(),
- distributionType: z.enum(["MANUAL_EXCEL","ONLINE_LINK","HYBRID","PUBLIC_LINK","MANUAL_ENTRY","SECURITY_CODE"]),
+ participationType: z.enum(["PUBLIC","STUDENT_INFO","SECURITY_CODE"]),
  targetClasses: z.array(z.string()).optional(),
  targetStudents: z.array(z.string()).optional(),
  startDate: z.string().optional(),
  endDate: z.string().optional(),
- allowAnonymous: z.boolean(),
  maxResponses: z.number().optional(),
- requiresSecurityCode: z.boolean().optional(),
- securityCodeCount: z.number().optional(),
  excelConfig: z.object({
  includeStudentInfo: z.boolean(),
  includeInstructions: z.boolean(),
@@ -84,33 +81,6 @@ const distributionSchema = z.object({
 }, {
  message: "Bitiş tarihi başlangıç tarihinden sonra olmalı",
  path: ["endDate"],
-}).refine((data) => {
- // Sınıf seçimi: MANUAL_EXCEL ve HYBRID için zorunlu
- if (data.distributionType === "MANUAL_EXCEL" || data.distributionType === "HYBRID") {
- return (data.targetClasses && data.targetClasses.length > 0);
- }
- return true;
-}, {
- message: "Bu dağıtım türü için sınıf seçimi gereklidir",
- path: ["targetClasses"],
-}).refine((data) => {
- // Security Code sayısı kontrolü
- if (data.distributionType === "SECURITY_CODE") {
- return data.securityCodeCount && data.securityCodeCount >= 1 && data.securityCodeCount <= 1000;
- }
- return true;
-}, {
- message: "Kod sayısı 1 ile 1000 arasında olmalı",
- path: ["securityCodeCount"],
-}).refine((data) => {
- // Anonim + Security Code çelişkisi
- if (data.allowAnonymous && data.requiresSecurityCode) {
- return false;
- }
- return true;
-}, {
- message: "Anonim anket güvenlik kodu kullanamaz",
- path: ["allowAnonymous"],
 });
 
 type DistributionForm = z.infer<typeof distributionSchema>;
@@ -159,12 +129,9 @@ export default function SurveyDistributionDialog({
  defaultValues: {
  title: `${survey.title} - Dağıtım`,
  description:"",
- distributionType:"HYBRID",
+ participationType:"PUBLIC",
  targetClasses: [],
  targetStudents: [],
- allowAnonymous: false,
- requiresSecurityCode: false,
- securityCodeCount: undefined,
  excelConfig: {
  includeStudentInfo: true,
  includeInstructions: true,
@@ -182,12 +149,9 @@ export default function SurveyDistributionDialog({
  form.reset({
  title: `${survey.title} - Dağıtım`,
  description:"",
- distributionType:"HYBRID",
+ participationType:"PUBLIC",
  targetClasses: [],
  targetStudents: [],
- allowAnonymous: false,
- requiresSecurityCode: false,
- securityCodeCount: undefined,
  excelConfig: {
  includeStudentInfo: true,
  includeInstructions: true,
@@ -200,7 +164,7 @@ export default function SurveyDistributionDialog({
  }, [open, survey.title, form, students]);
 
  const watchedClasses = form.watch("targetClasses") || [];
- const watchedDistributionType = form.watch("distributionType");
+ const watchedParticipationType = form.watch("participationType") as 'PUBLIC' | 'STUDENT_INFO' | 'SECURITY_CODE';
 
  // Get unique class names from students
  const availableClasses = Array.from(
@@ -344,11 +308,9 @@ export default function SurveyDistributionDialog({
  : selectedStudents
  };
  
- // Generate Excel template if needed
- let excelTemplate = undefined;
- if (finalData.distributionType ==="MANUAL_EXCEL" || finalData.distributionType ==="HYBRID") {
- // Get students: either from targetStudents, or from targetClasses
- let selectedStudentsList: typeof students = [];
+ // Generate Excel template for students
+ let excelTemplate: string | undefined = undefined;
+ let selectedStudentsList: (typeof students) = [];
  
  if (finalData.targetStudents && finalData.targetStudents.length > 0) {
  // If specific students are selected, use them
@@ -356,7 +318,7 @@ export default function SurveyDistributionDialog({
  finalData.targetStudents?.includes(s.id)
  );
  } else if (finalData.targetClasses && finalData.targetClasses.length > 0) {
- // If classes are selected but no specific students, use all students in those classes
+ // If classes are selected, use all students in those classes
  selectedStudentsList = students.filter(s => 
  s.class && finalData.targetClasses?.includes(s.class)
  );
@@ -374,16 +336,12 @@ export default function SurveyDistributionDialog({
  },
  distributionTitle: data.title
  });
- }
 
  const distributionData = {
  ...finalData,
  id: crypto.randomUUID(),
  excelTemplate,
- publicLink: (finalData.distributionType ==="ONLINE_LINK" || finalData.distributionType ==="HYBRID" || finalData.distributionType === "PUBLIC_LINK" || finalData.distributionType === "MANUAL_ENTRY" || finalData.distributionType === "SECURITY_CODE")
- ? crypto.randomUUID() 
- : undefined,
- requiresSecurityCode: finalData.distributionType === "SECURITY_CODE"
+ publicLink: crypto.randomUUID()
  };
 
  onDistributionCreated?.(distributionData);
@@ -444,55 +402,31 @@ export default function SurveyDistributionDialog({
 
  <FormField
  control={form.control}
- name="distributionType"
+ name="participationType"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Dağıtım Türü</FormLabel>
- <Select onValueChange={field.onChange} defaultValue={field.value}>
- <FormControl>
- <SelectTrigger>
- <SelectValue placeholder="Dağıtım türünü seçin" />
- </SelectTrigger>
- </FormControl>
- <SelectContent>
- <SelectItem value="MANUAL_EXCEL">
- <div className="flex items-center">
- <FileSpreadsheet className="mr-2 h-4 w-4" />
- Excel Şablonu
+ <FormLabel>Katılımcı Bilgi Toplama Türü</FormLabel>
+ <div className="space-y-3">
+   {(['PUBLIC', 'STUDENT_INFO', 'SECURITY_CODE'] as const).map((type) => (
+     <div key={type} className="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+       onClick={() => field.onChange(type)}>
+       <input type="radio" name="participationType" value={type} checked={field.value === type}
+         onChange={() => field.onChange(type)} className="mt-1" />
+       <div>
+         <div className="font-medium">
+           {type === 'PUBLIC' && '🌐 Herkese Açık (Anonim)'}
+           {type === 'STUDENT_INFO' && '👤 Öğrenci Bilgileri Zorunlu'}
+           {type === 'SECURITY_CODE' && '🔐 Güvenlik Kodu (QR) ile Erişim'}
+         </div>
+         <div className="text-sm text-gray-500">
+           {type === 'PUBLIC' && 'Kişisel bilgi girilmeden anonim yanıt alınır'}
+           {type === 'STUDENT_INFO' && 'Ad, Soyad, Sınıf, Cinsiyet, Numara zorunlu'}
+           {type === 'SECURITY_CODE' && 'QR kod ile öğrenci eşleştirmesi - PDF olarak yazdırılabilir'}
+         </div>
+       </div>
+     </div>
+   ))}
  </div>
- </SelectItem>
- <SelectItem value="ONLINE_LINK">
- <div className="flex items-center">
- <Globe className="mr-2 h-4 w-4" />
- Online Link
- </div>
- </SelectItem>
- <SelectItem value="HYBRID">
- <div className="flex items-center">
- <Link2 className="mr-2 h-4 w-4" />
- Hibrit (Excel + Online)
- </div>
- </SelectItem>
- <SelectItem value="PUBLIC_LINK">
- <div className="flex items-center">
- <Link2 className="mr-2 h-4 w-4" />
- Herkese Açık Link
- </div>
- </SelectItem>
- <SelectItem value="MANUAL_ENTRY">
- <div className="flex items-center">
- <Users className="mr-2 h-4 w-4" />
- Öğrenci Bilgisi Girişi
- </div>
- </SelectItem>
- <SelectItem value="SECURITY_CODE">
- <div className="flex items-center">
- <QrCode className="mr-2 h-4 w-4" />
- Güvenlik Kodu + QR
- </div>
- </SelectItem>
- </SelectContent>
- </Select>
  <FormMessage />
  </FormItem>
  )}
@@ -774,7 +708,7 @@ export default function SurveyDistributionDialog({
 
  <TabsContent value="config" className="space-y-4">
  {/* Excel Configuration */}
- {(watchedDistributionType ==="MANUAL_EXCEL" || watchedDistributionType ==="HYBRID") && (
+ {(watchedParticipationType === 'STUDENT_INFO' || watchedParticipationType === 'SECURITY_CODE') && (
  <Card>
  <CardHeader>
  <CardTitle className="text-sm">Excel Şablonu Ayarları</CardTitle>
@@ -881,71 +815,13 @@ export default function SurveyDistributionDialog({
  </Card>
  )}
 
- {/* Security Code Configuration */}
- {watchedDistributionType === "SECURITY_CODE" && (
+ {/* Online Settings - Her participation type için */}
  <Card>
  <CardHeader>
- <CardTitle className="flex items-center gap-2 text-sm">
- <Lock className="h-4 w-4" />
- Güvenlik Kodu Ayarları
- </CardTitle>
- </CardHeader>
- <CardContent className="space-y-4">
- <FormField
- control={form.control}
- name="securityCodeCount"
- render={({ field }) => (
- <FormItem>
- <FormLabel className="text-sm">Oluşturulacak Kod Sayısı</FormLabel>
- <FormControl>
- <Input 
- type="number" 
- min="1" 
- placeholder="Öğrenci sayısını giriniz"
- value={field.value || ''}
- onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : '')}
- />
- </FormControl>
- <FormDescription className="text-xs">
- Her öğrenci için benzersiz 6-karakterli güvenlik kodu oluşturulacak
- </FormDescription>
- <FormMessage />
- </FormItem>
- )}
- />
- </CardContent>
- </Card>
- )}
-
- {/* Online Settings */}
- {(watchedDistributionType ==="ONLINE_LINK" || watchedDistributionType ==="HYBRID" || watchedDistributionType ==="PUBLIC_LINK" || watchedDistributionType ==="MANUAL_ENTRY" || watchedDistributionType ==="SECURITY_CODE") && (
- <Card>
- <CardHeader>
- <CardTitle className="text-sm">Online Anket Ayarları</CardTitle>
+ <CardTitle className="text-sm">Anket Ayarları</CardTitle>
  </CardHeader>
  <CardContent className="space-y-4">
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- <FormField
- control={form.control}
- name="allowAnonymous"
- render={({ field }) => (
- <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
- <div className="space-y-0.5">
- <FormLabel className="text-sm">Anonim Yanıt</FormLabel>
- <FormDescription className="text-xs">
- İsimsiz yanıt vermeye izin ver
- </FormDescription>
- </div>
- <FormControl>
- <Switch
- checked={field.value}
- onCheckedChange={field.onChange}
- />
- </FormControl>
- </FormItem>
- )}
- />
-
  <FormField
  control={form.control}
  name="maxResponses"
@@ -966,7 +842,6 @@ export default function SurveyDistributionDialog({
  </div>
  </CardContent>
  </Card>
- )}
 
  <div className="flex justify-between">
  <Button 

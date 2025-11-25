@@ -64,10 +64,8 @@ export interface SurveyDistribution {
   startDate?: string;
   endDate?: string;
   publicLink?: string;
-  distributionType: string;
-  allowAnonymous?: boolean;
+  participationType: 'PUBLIC' | 'STUDENT_INFO' | 'SECURITY_CODE';
   excelTemplate?: string;
-  requiresSecurityCode?: boolean;
   createdBy?: string;
   created_at?: string;
   updated_at?: string;

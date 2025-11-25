@@ -54,10 +54,10 @@ export const createSurveyDistribution: RequestHandler = (req, res) => {
   try {
     const distribution = req.body;
     
-    if (!distribution.templateId || !distribution.title || !distribution.distributionType) {
+    if (!distribution.templateId || !distribution.title || !distribution.participationType) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Şablon ID, başlık ve dağıtım türü gereklidir' 
+        error: 'Şablon ID, başlık ve katılımcı bilgi toplama türü gereklidir' 
       });
     }
 

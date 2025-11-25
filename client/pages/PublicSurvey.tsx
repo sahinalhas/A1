@@ -114,7 +114,7 @@ export default function PublicSurvey() {
  }
 
  // Check if security code is required
- if (distributionData.requiresSecurityCode && !verifiedCode) {
+ if (distributionData.participationType === 'SECURITY_CODE' && !verifiedCode) {
    setNeedsSecurityCode(true);
    setLoading(false);
    return; // Don't load survey data yet
@@ -241,7 +241,7 @@ export default function PublicSurvey() {
  const formValues = form.getValues();
  
  // Validate student info if on first question and not anonymous
- if (currentQuestionIndex === 0 && !distribution?.allowAnonymous) {
+ if (currentQuestionIndex === 0 && distribution?.participationType !== 'PUBLIC') {
  const studentInfo = formValues.studentInfo;
  if (!studentInfo?.name || !studentInfo?.class || !studentInfo?.number) {
  setValidationError('Öğrenci bilgileri zorunludur. Lütfen ad soyad, sınıf ve öğrenci numaranızı giriniz.');
@@ -267,7 +267,7 @@ export default function PublicSurvey() {
  const formValues = form.getValues();
  
  // Validate student info if not anonymous
- if (!distribution?.allowAnonymous) {
+ if (distribution?.participationType !== 'PUBLIC') {
  const studentInfo = formValues.studentInfo;
  if (!studentInfo?.name || !studentInfo?.class || !studentInfo?.number) {
  setValidationError('Öğrenci bilgileri eksik. Lütfen tüm alanları doldurun.');
@@ -675,7 +675,7 @@ export default function PublicSurvey() {
  <Form {...form}>
  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
  {/* Student Info (if not anonymous) */}
- {currentQuestionIndex === 0 && !distribution.allowAnonymous && (
+ {currentQuestionIndex === 0 && distribution?.participationType !== 'PUBLIC' && (
  <Card className="border-border/40">
  <CardHeader className="pb-4">
  <CardTitle className="text-xl font-semibold">Öğrenci Bilgileri</CardTitle>
