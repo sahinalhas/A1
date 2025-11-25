@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { addRiskFactors } from "@/lib/storage";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
 import { Input } from "@/components/atoms/Input";
 import { EnhancedTextarea } from "@/components/molecules/EnhancedTextarea";
@@ -69,6 +71,7 @@ interface RiskDegerlendirmeSectionProps {
 }
 
 export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpdate }: RiskDegerlendirmeSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<RiskAssessmentFormValues>({
  resolver: zodResolver(riskAssessmentSchema),
  defaultValues: {
@@ -86,6 +89,13 @@ export default function RiskDegerlendirmeSection({ studentId, riskFactors, onUpd
  nextAssessmentDate:"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const onSubmit = async (data: RiskAssessmentFormValues) => {
  const riskData: RiskFactors = {

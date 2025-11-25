@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { BehaviorIncident, addBehaviorIncident } from "@/lib/storage";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/organisms/Card";
 import { Input } from "@/components/atoms/Input";
 import { EnhancedTextarea } from "@/components/molecules/EnhancedTextarea";
@@ -54,6 +56,7 @@ interface DavranisTakibiSectionProps {
 }
 
 export default function DavranisTakibiSection({ studentId, behaviorIncidents, onUpdate }: DavranisTakibiSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<BehaviorIncidentFormValues>({
  resolver: zodResolver(behaviorIncidentSchema),
  defaultValues: {
@@ -72,6 +75,13 @@ export default function DavranisTakibiSection({ studentId, behaviorIncidents, on
  notes:"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const onSubmit = async (data: BehaviorIncidentFormValues) => {
  const behaviorData: BehaviorIncident = {

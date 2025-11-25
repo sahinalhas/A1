@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const specialEducationSchema = z.object({
  hasIEP: z.boolean(),
@@ -52,6 +53,7 @@ interface OzelEgitimSectionProps {
 }
 
 export default function OzelEgitimSection({ studentId, specialEducation, onUpdate }: OzelEgitimSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const [records, setRecords] = useState<SpecialEducation[]>(specialEducation || []);
  const [isLoading, setIsLoading] = useState(false);
  const existingRecord = records && records.length > 0 ? records[0] : null;
@@ -89,6 +91,13 @@ export default function OzelEgitimSection({ studentId, specialEducation, onUpdat
  notes: existingRecord?.notes ||"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  // Form verilerini records değiştiğinde güncelle
  useEffect(() => {

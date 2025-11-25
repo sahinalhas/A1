@@ -13,6 +13,7 @@ import { MultiSelect } from "@/components/molecules/MultiSelect";
 import { toast } from "sonner";
 import { AlertTriangle, Plus, Trash2 } from "lucide-react";
 import { BEHAVIOR_CATEGORIES } from "@shared/constants/student-profile-taxonomy";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const behaviorIncidentSchema = z.object({
  incidentDate: z.string(),
@@ -43,6 +44,7 @@ export default function StandardizedBehaviorSection({
  behaviorData = [],
  onUpdate 
 }: StandardizedBehaviorSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const [isSubmitting, setIsSubmitting] = useState(false);
  const [showForm, setShowForm] = useState(false);
 
@@ -74,6 +76,13 @@ export default function StandardizedBehaviorSection({
  followUpNotes:"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const onSubmit = async (data: BehaviorIncidentFormValues) => {
  setIsSubmitting(true);

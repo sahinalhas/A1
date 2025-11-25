@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,6 +13,7 @@ import { MultiSelect } from "@/components/molecules/MultiSelect";
 import { Heart } from "lucide-react";
 import { SOCIAL_SKILLS } from "@shared/constants/student-profile-taxonomy";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const socialEmotionalSchema = z.object({
  assessmentDate: z.string(),
@@ -47,6 +49,7 @@ export default function StandardizedSocialEmotionalSection({
  socialEmotionalData,
  onUpdate 
 }: StandardizedSocialEmotionalSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const formDefaultValues = {
  assessmentDate: new Date().toISOString().slice(0, 10),
  strongSocialSkills: [],
@@ -72,6 +75,13 @@ export default function StandardizedSocialEmotionalSection({
  resolver: zodResolver(socialEmotionalSchema),
  defaultValues: formDefaultValues,
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const { isSubmitting, onSubmit } = useStandardizedProfileSection({
  studentId,

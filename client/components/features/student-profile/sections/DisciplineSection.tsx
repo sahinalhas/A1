@@ -11,6 +11,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { AlertTriangle } from "lucide-react";
 import { EnhancedTextarea } from "@/components/molecules/EnhancedTextarea";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const disciplineSchema = z.object({
  disiplinCezalari: z.string().optional(),
@@ -24,6 +25,7 @@ interface DisciplineSectionProps {
 }
 
 export default function DisciplineSection({ student, onUpdate }: DisciplineSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<DisciplineFormValues>({
  resolver: zodResolver(disciplineSchema),
  defaultValues: {
@@ -36,6 +38,13 @@ export default function DisciplineSection({ student, onUpdate }: DisciplineSecti
  disiplinCezalari: (student as any).disiplinCezalari ||"",
  });
  }, [student, form]);
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const onSubmit = async (data: DisciplineFormValues) => {
  try {

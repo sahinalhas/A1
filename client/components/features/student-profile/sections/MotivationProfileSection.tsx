@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,6 +11,7 @@ import { EnhancedTextarea as Textarea } from "@/components/molecules/EnhancedTex
 import { MultiSelect } from "@/components/molecules/MultiSelect";
 import { Target } from "lucide-react";
 import { useStandardizedProfileSection } from "@/hooks/state/standardized-profile-section.state";
+import { useFormDirty } from "@/pages/StudentProfile/StudentProfile";
 
 const motivationProfileSchema = z.object({
  assessmentDate: z.string(),
@@ -43,6 +45,7 @@ export default function MotivationProfileSection({
  motivationData,
  onUpdate 
 }: MotivationProfileSectionProps) {
+ const { setIsDirty } = useFormDirty();
  const form = useForm<MotivationProfileFormValues>({
  resolver: zodResolver(motivationProfileSchema),
  defaultValues: {
@@ -64,6 +67,13 @@ export default function MotivationProfileSection({
  familyExpectations:"",
  },
  });
+
+ useEffect(() => {
+ const subscription = form.watch(() => {
+ setIsDirty(true);
+ });
+ return () => subscription.unsubscribe();
+ }, [form, setIsDirty]);
 
  const { isSubmitting, onSubmit } = useStandardizedProfileSection({
  studentId,
