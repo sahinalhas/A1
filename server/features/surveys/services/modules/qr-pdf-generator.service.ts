@@ -21,6 +21,16 @@ export async function generateQRCodesForDistribution(
   distribution: SurveyDistribution
 ): Promise<QRCodesByClass[]> {
   try {
+    // Only generate QR codes for SECURITY_CODE participation type
+    if (distribution.participationType !== 'SECURITY_CODE') {
+      throw new Error('QR kodları sadece güvenlik kodlu dağıtımlar için oluşturulabilir');
+    }
+    
+    // Validate publicLink exists
+    if (!distribution.publicLink) {
+      throw new Error('Dağıtım linki bulunamadı');
+    }
+    
     const db = getDatabase();
     
     // Parse target students and classes
@@ -74,8 +84,8 @@ export async function generateQRCodesForDistribution(
         margin: 1,
       });
       
-      // Save to database
-      distributionCodesRepo.createDistributionCode(
+      // Save to database with both code and QR image
+      const savedCode = distributionCodesRepo.createDistributionCode(
         distribution.id,
         student.id,
         qrCode
@@ -86,8 +96,8 @@ export async function generateQRCodesForDistribution(
         name: student.name,
         surname: student.surname,
         class: student.class || 'Sınıfsız',
-        code,
-        qrCode,
+        code: savedCode.code,
+        qrCode: savedCode.qrCode || qrCode,
       });
     }
     
