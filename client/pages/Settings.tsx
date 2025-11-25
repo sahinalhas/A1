@@ -144,7 +144,10 @@ export default function SettingsPage() {
  }))
  ]);
  
- form.reset(values);
+ // Update init state and reset form with saved values
+ setInit(values);
+ form.reset(values, { keepValues: true });
+ 
  toast({ 
  title:"Ayarlar Kaydedildi",
  description:"Değişiklikleriniz başarıyla kaydedildi."

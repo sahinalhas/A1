@@ -16,8 +16,12 @@ export async function loadSettings(): Promise<AppSettings> {
  if (!response.ok) {
  throw new Error('Failed to fetch settings');
  }
- const parsed = await response.json() as Partial<AppSettings>;
- return mergeWithDefaults(parsed);
+ const data = await response.json();
+ // API döndüğü data'nın data.data veya data'nın kendisi olabileceğini kontrol et
+ const settings = (data.data || data) as Partial<AppSettings>;
+ const merged = mergeWithDefaults(settings);
+ console.debug('[Settings] Loaded and merged:', merged);
+ return merged;
  } catch (error) {
  const errorMessage = error instanceof Error ? error.message : String(error);
  console.error('Error loading settings:', errorMessage);
@@ -28,6 +32,7 @@ export async function loadSettings(): Promise<AppSettings> {
 
 export async function saveSettings(v: AppSettings): Promise<void> {
  try {
+ console.debug('[Settings] Saving settings:', v);
  const response = await fetch('/api/settings', {
  method: 'PUT',
  headers: { 'Content-Type': 'application/json' },
@@ -35,10 +40,13 @@ export async function saveSettings(v: AppSettings): Promise<void> {
  });
  
  if (!response.ok) {
+ const error = await response.text();
+ console.error('[Settings] Save error response:', error);
  throw new Error('Failed to save settings');
  }
  
- toast.success('Ayarlar kaydedildi');
+ const result = await response.json();
+ console.debug('[Settings] Save result:', result);
  } catch (error) {
  console.error('Error saving settings:', error);
  toast.error('Ayarlar kaydedilemedi');
