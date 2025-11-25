@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import * as surveyService from '../../services/surveys.service.js';
+import * as qrPdfGenerator from '../../services/modules/qr-pdf-generator.service.js';
+import puppeteer from 'puppeteer';
 
 export const getSurveyDistributions: RequestHandler = (req, res) => {
   try {
@@ -171,6 +173,70 @@ export const verifyDistributionCodeHandler: RequestHandler = (req, res) => {
     res.status(400).json({ 
       success: false, 
       error: error instanceof Error ? error.message : 'Kod doğrulanamadı' 
+    });
+  }
+};
+
+export const generateQRPDFHandler: RequestHandler = async (req, res) => {
+  let browser;
+  try {
+    const { id } = req.params;
+    
+    const distribution = surveyService.getDistributionById(id);
+    if (!distribution) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Anket dağıtımı bulunamadı' 
+      });
+    }
+
+    // Generate QR codes grouped by class
+    const qrCodesByClass = await qrPdfGenerator.generateQRCodesForDistribution(distribution);
+    
+    if (qrCodesByClass.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Hedef öğrenci bulunamadı'
+      });
+    }
+
+    // Generate HTML for PDF
+    const html = qrPdfGenerator.generateQRPDF(qrCodesByClass);
+
+    // Launch puppeteer and generate PDF
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    
+    const pdf = await page.pdf({
+      format: 'A4',
+      margin: {
+        top: '10mm',
+        right: '10mm',
+        bottom: '10mm',
+        left: '10mm'
+      },
+      printBackground: true
+    });
+
+    await browser.close();
+
+    // Send PDF
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="QR-Kodlari-${distribution.title}.pdf"`);
+    res.send(pdf);
+  } catch (error) {
+    console.error('Error generating QR PDF:', error);
+    if (browser) {
+      await browser.close().catch(console.error);
+    }
+    res.status(500).json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'QR PDF oluşturulamadı' 
     });
   }
 };
