@@ -69,30 +69,49 @@ export class MEBBISTransferManager {
     const transferState = this.activeTransfers.get(transferId);
     if (!transferState) return;
 
+    const startTime = Date.now();
     try {
       transferState.status = 'running';
       this.emitProgress(transferId);
 
-      logger.info(`Starting transfer ${transferId} for ${sessions.length} sessions`, 'MEBBISTransferManager');
+      logger.info(
+        `Starting transfer ${transferId} for ${sessions.length} sessions`,
+        'MEBBISTransferManager',
+        { transferId, sessionCount: sessions.length }
+      );
 
+      logger.info('Initializing browser...', 'MEBBISTransferManager');
       await this.automation.initialize();
       
       this.emitStatus(transferId, 'waiting_qr', 'QR kod girişi bekleniyor...');
+      logger.info('Waiting for QR code login...', 'MEBBISTransferManager');
       await this.automation.waitForLogin();
       
       this.emitStatus(transferId, 'running', 'Veri giriş sayfasına yönlendiriliyor...');
+      logger.info('Navigating to data entry page...', 'MEBBISTransferManager');
       await this.automation.navigateToDataEntry();
 
+      logger.info(`Starting to process ${sessions.length} sessions...`, 'MEBBISTransferManager');
+      
       for (let i = 0; i < sessions.length; i++) {
         if (transferState.cancelled) {
-          logger.info(`Transfer ${transferId} cancelled by user`, 'MEBBISTransferManager');
+          logger.info(
+            `Transfer ${transferId} cancelled by user at session ${i + 1}/${sessions.length}`,
+            'MEBBISTransferManager'
+          );
           break;
         }
 
         const session = sessions[i];
         transferState.progress.current = i + 1;
+        const sessionStartTime = Date.now();
 
         try {
+          logger.info(
+            `[${i + 1}/${sessions.length}] Processing session ${session.id} for student ${session.studentNo}`,
+            'MEBBISTransferManager'
+          );
+          
           const mebbisData = this.mapper.mapSessionToMEBBIS(session);
           
           this.emitSessionStart(transferId, {
@@ -102,10 +121,16 @@ export class MEBBISTransferManager {
           });
 
           const result = await this.automation.fillSessionData(mebbisData);
+          const sessionDuration = Date.now() - sessionStartTime;
 
           if (result.success) {
             await this.markAsTransferred(session.id);
             transferState.progress.completed++;
+            
+            logger.info(
+              `[${i + 1}/${sessions.length}] Session ${session.id} completed successfully in ${sessionDuration}ms`,
+              'MEBBISTransferManager'
+            );
             
             this.emitSessionCompleted(transferId, {
               sessionId: session.id,
@@ -115,6 +140,11 @@ export class MEBBISTransferManager {
           } else {
             transferState.progress.failed++;
             await this.logError(session.id, result.error || 'Bilinmeyen hata');
+            
+            logger.warn(
+              `[${i + 1}/${sessions.length}] Session ${session.id} failed: ${result.error}`,
+              'MEBBISTransferManager'
+            );
             
             const error: MEBBISTransferError = {
               sessionId: session.id,
@@ -128,7 +158,13 @@ export class MEBBISTransferManager {
           }
         } catch (error) {
           const err = error as Error;
-          logger.error(`Session ${session.id} transfer failed`, 'MEBBISTransferManager', error);
+          const sessionDuration = Date.now() - sessionStartTime;
+          
+          logger.error(
+            `[${i + 1}/${sessions.length}] Session ${session.id} transfer failed after ${sessionDuration}ms`,
+            'MEBBISTransferManager',
+            error
+          );
           
           transferState.progress.failed++;
           await this.logError(session.id, err.message);
@@ -148,20 +184,26 @@ export class MEBBISTransferManager {
       }
 
       transferState.status = transferState.cancelled ? 'cancelled' : 'completed';
+      const totalDuration = Date.now() - startTime;
+      const avgTimePerSession = sessions.length > 0 ? totalDuration / sessions.length : 0;
       
-      this.emitTransferCompleted(transferId, {
+      const summary = {
         total: transferState.progress.total,
         successful: transferState.progress.completed,
         failed: transferState.progress.failed,
         errors: transferState.errors,
-        duration: Date.now() - transferState.startTime
-      });
+        duration: totalDuration
+      };
+      
+      this.emitTransferCompleted(transferId, summary);
 
       await this.automation.close();
       
       logger.info(
-        `Transfer ${transferId} completed: ${transferState.progress.completed} successful, ${transferState.progress.failed} failed`,
-        'MEBBISTransferManager'
+        `Transfer ${transferId} completed: ${transferState.progress.completed} successful, ${transferState.progress.failed} failed, ` +
+        `total duration: ${(totalDuration / 1000).toFixed(2)}s, avg per session: ${(avgTimePerSession / 1000).toFixed(2)}s`,
+        'MEBBISTransferManager',
+        summary
       );
     } catch (error) {
       const err = error as Error;

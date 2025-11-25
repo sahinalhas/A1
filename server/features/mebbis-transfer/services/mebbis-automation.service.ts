@@ -6,9 +6,38 @@ export class MEBBISAutomationService {
   private browser: Browser | null = null;
   private page: Page | null = null;
   private isInitialized = false;
+  private readonly MAX_RETRIES = 3;
+  private readonly RETRY_DELAY = 2000;
 
   private async wait(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private async retry<T>(
+    fn: () => Promise<T>,
+    retries: number = this.MAX_RETRIES,
+    delay: number = this.RETRY_DELAY,
+    context: string = 'operation'
+  ): Promise<T> {
+    let lastError: Error | null = null;
+    
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        return await fn();
+      } catch (error) {
+        lastError = error as Error;
+        
+        if (attempt < retries) {
+          logger.warn(
+            `${context} failed (attempt ${attempt}/${retries}): ${lastError.message}. Retrying in ${delay}ms...`,
+            'MEBBISAutomation'
+          );
+          await this.wait(delay);
+        }
+      }
+    }
+    
+    throw new Error(`${context} failed after ${retries} attempts: ${lastError?.message}`);
   }
 
   private async clickByXPath(xpath: string, timeout = 10000): Promise<void> {
@@ -25,27 +54,82 @@ export class MEBBISAutomationService {
     await locator.wait();
   }
 
+  private async findChromiumPath(): Promise<string | undefined> {
+    const { execSync } = await import('child_process');
+    const fs = await import('fs');
+    
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      logger.info(`Using Chromium from env: ${process.env.PUPPETEER_EXECUTABLE_PATH}`, 'MEBBISAutomation');
+      return process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+    
+    try {
+      const chromiumPath = execSync('which chromium || which chromium-browser || which google-chrome', {
+        encoding: 'utf-8'
+      }).trim();
+      
+      if (chromiumPath && fs.existsSync(chromiumPath)) {
+        logger.info(`Found Chromium at: ${chromiumPath}`, 'MEBBISAutomation');
+        return chromiumPath;
+      }
+    } catch (e) {
+      logger.warn('Could not find Chromium in PATH', 'MEBBISAutomation');
+    }
+    
+    try {
+      const nixStorePattern = '/nix/store/*chromium*/bin/chromium';
+      const chromiumPath = execSync(`ls -d ${nixStorePattern} 2>/dev/null | head -1`, {
+        encoding: 'utf-8'
+      }).trim();
+      
+      if (chromiumPath && fs.existsSync(chromiumPath)) {
+        logger.info(`Found Chromium in Nix store: ${chromiumPath}`, 'MEBBISAutomation');
+        return chromiumPath;
+      }
+    } catch (e) {
+      logger.warn('Could not find Chromium in Nix store', 'MEBBISAutomation');
+    }
+    
+    logger.info('Using Puppeteer bundled Chromium', 'MEBBISAutomation');
+    return undefined;
+  }
+
   async initialize(): Promise<void> {
     try {
       logger.info('Initializing MEBBIS automation browser...', 'MEBBISAutomation');
       
-      const chromiumPath = '/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium';
+      const chromiumPath = await this.findChromiumPath();
       
-      this.browser = await puppeteer.launch({
+      const launchOptions: any = {
         headless: true,
-        executablePath: chromiumPath,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
           '--disable-gpu',
           '--disable-software-rasterizer',
-          '--disable-extensions'
+          '--disable-extensions',
+          '--disable-web-security',
+          '--disable-features=IsolateOrigins,site-per-process'
         ]
-      });
+      };
+      
+      if (chromiumPath) {
+        launchOptions.executablePath = chromiumPath;
+      }
+      
+      this.browser = await puppeteer.launch(launchOptions);
       
       this.page = await this.browser.newPage();
+      
+      await this.page.setDefaultTimeout(30000);
+      await this.page.setDefaultNavigationTimeout(60000);
+      
       await this.page.setViewport({ width: 1920, height: 1080 });
+      
+      await this.page.setUserAgent(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      );
       
       logger.info('Navigating to MEBBIS...', 'MEBBISAutomation');
       await this.page.goto('https://mebbis.meb.gov.tr/', {
@@ -58,6 +142,7 @@ export class MEBBISAutomationService {
     } catch (error) {
       const err = error as Error;
       logger.error('Failed to initialize MEBBIS browser', 'MEBBISAutomation', error);
+      await this.close();
       throw new Error(`MEBBIS browser başlatılamadı: ${err.message}`);
     }
   }
@@ -140,34 +225,51 @@ export class MEBBISAutomationService {
     try {
       logger.info(`Processing session for student ${data.studentNo}`, 'MEBBISAutomation');
       
-      await this.page.waitForSelector('#txtOgrenciArama', { timeout: 5000 });
-      await this.page.click('#txtOgrenciArama', { clickCount: 3 });
-      await this.page.type('#txtOgrenciArama', data.studentNo, { delay: 50 });
-      
-      await this.page.click('#btnOgrenciAra');
-      await this.wait(1000);
-      
-      try {
-        await this.waitForXPath("//img[@title='Aç']", 3000);
-        await this.clickByXPath("//img[@title='Aç']", 3000);
+      const studentFound = await this.retry(async () => {
+        await this.page!.waitForSelector('#txtOgrenciArama', { timeout: 5000 });
+        await this.page!.click('#txtOgrenciArama', { clickCount: 3 });
+        await this.page!.keyboard.press('Backspace');
+        await this.wait(200);
+        await this.page!.type('#txtOgrenciArama', data.studentNo, { delay: 50 });
+        
+        await this.page!.click('#btnOgrenciAra');
         await this.wait(1500);
-      } catch (e) {
+        
+        try {
+          await this.waitForXPath("//img[@title='Aç']", 4000);
+          await this.clickByXPath("//img[@title='Aç']", 3000);
+          await this.wait(1500);
+          return true;
+        } catch (e) {
+          const errorMsg = `Öğrenci ${data.studentNo} bulunamadı, tekrar deneniyor...`;
+          logger.debug(errorMsg, 'MEBBISAutomation');
+          throw new Error(errorMsg);
+        }
+      }, 2, 2000, `Student ${data.studentNo} search and open`).catch(() => false);
+
+      if (!studentFound) {
         const errorMsg = `Öğrenci ${data.studentNo} bulunamadı veya açılamadı`;
         logger.warn(errorMsg, 'MEBBISAutomation');
         return { success: false, error: errorMsg };
       }
       
-      await this.page.waitForSelector('#drp_hizmet_alani', { timeout: 5000 });
-      await this.page.select('#drp_hizmet_alani', data.hizmetAlani);
-      await this.wait(1000);
+      await this.retry(async () => {
+        await this.page!.waitForSelector('#drp_hizmet_alani', { timeout: 5000 });
+        await this.page!.select('#drp_hizmet_alani', data.hizmetAlani);
+        await this.wait(1000);
+      }, 2, 1000, 'Service area selection');
       
-      await this.page.waitForSelector('#drp_bir', { timeout: 5000 });
-      await this.page.select('#drp_bir', data.birinci);
-      await this.wait(1000);
+      await this.retry(async () => {
+        await this.page!.waitForSelector('#drp_bir', { timeout: 5000 });
+        await this.page!.select('#drp_bir', data.birinci);
+        await this.wait(1000);
+      }, 2, 1000, 'Primary category selection');
       
-      await this.page.waitForSelector('#drp_iki', { timeout: 5000 });
-      await this.page.select('#drp_iki', data.ikinci);
-      await this.wait(1000);
+      await this.retry(async () => {
+        await this.page!.waitForSelector('#drp_iki', { timeout: 5000 });
+        await this.page!.select('#drp_iki', data.ikinci);
+        await this.wait(1000);
+      }, 2, 1000, 'Secondary category selection');
       
       if (data.ucuncu) {
         try {
@@ -175,6 +277,7 @@ export class MEBBISAutomationService {
           await this.page.select('#drp_uc', data.ucuncu);
           await this.wait(800);
         } catch (e) {
+          logger.debug('Third category not available or not required', 'MEBBISAutomation');
         }
       }
       
@@ -193,14 +296,18 @@ export class MEBBISAutomationService {
         if (input) input.value = time;
       }, data.gorusmeBitisSaati);
       
-      await this.page.waitForSelector('#cmbCalismaYeri', { timeout: 5000 });
-      await this.page.select('#cmbCalismaYeri', data.calismaYeri);
-      await this.wait(800);
+      await this.retry(async () => {
+        await this.page!.waitForSelector('#cmbCalismaYeri', { timeout: 5000 });
+        await this.page!.select('#cmbCalismaYeri', data.calismaYeri);
+        await this.wait(800);
+      }, 2, 1000, 'Workplace selection');
       
-      await this.page.waitForSelector('#txtOturumSayisi', { timeout: 5000 });
-      await this.page.click('#txtOturumSayisi', { clickCount: 3 });
-      await this.page.type('#txtOturumSayisi', String(data.oturumSayisi), { delay: 50 });
-      await this.wait(800);
+      await this.retry(async () => {
+        await this.page!.waitForSelector('#txtOturumSayisi', { timeout: 5000 });
+        await this.page!.click('#txtOturumSayisi', { clickCount: 3 });
+        await this.page!.type('#txtOturumSayisi', String(data.oturumSayisi), { delay: 50 });
+        await this.wait(800);
+      }, 2, 1000, 'Session count entry');
       
       await this.page.click('#ramToolBar1_imgButtonKaydet');
       await this.wait(1500);
@@ -229,17 +336,37 @@ export class MEBBISAutomationService {
   }
 
   async close(): Promise<void> {
-    if (this.browser) {
-      try {
-        logger.info('Closing MEBBIS browser...', 'MEBBISAutomation');
-        await this.browser.close();
-        this.browser = null;
+    try {
+      logger.info('Closing MEBBIS browser...', 'MEBBISAutomation');
+      
+      if (this.page) {
+        try {
+          await this.page.close();
+        } catch (error) {
+          logger.warn('Error closing page', 'MEBBISAutomation', error);
+        }
         this.page = null;
-        this.isInitialized = false;
-        logger.info('Browser closed successfully', 'MEBBISAutomation');
-      } catch (error) {
-        logger.error('Error closing browser', 'MEBBISAutomation', error);
       }
+      
+      if (this.browser) {
+        try {
+          const pages = await this.browser.pages();
+          await Promise.all(pages.map(page => page.close().catch(() => {})));
+          
+          await this.browser.close();
+        } catch (error) {
+          logger.warn('Error closing browser', 'MEBBISAutomation', error);
+        }
+        this.browser = null;
+      }
+      
+      this.isInitialized = false;
+      logger.info('Browser closed successfully', 'MEBBISAutomation');
+    } catch (error) {
+      logger.error('Error during browser cleanup', 'MEBBISAutomation', error);
+      this.browser = null;
+      this.page = null;
+      this.isInitialized = false;
     }
   }
 

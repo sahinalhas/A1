@@ -53,7 +53,7 @@ export class MEBBISDataMapper {
       const gorusmeSaati = this.formatTime(session.entryTime);
       const gorusmeBitisSaati = this.formatTime(session.exitTime || this.calculateEndTime(session.entryTime));
 
-      return {
+      const mappedData = {
         studentNo: session.studentNo,
         hizmetAlani,
         birinci,
@@ -65,9 +65,26 @@ export class MEBBISDataMapper {
         oturumSayisi: 1,
         calismaYeri: 'Rehberlik Servisi'
       };
+
+      logger.debug(
+        `Mapped session ${session.id} for student ${session.studentNo}`,
+        'MEBBISDataMapper',
+        {
+          sessionId: session.id,
+          studentNo: session.studentNo,
+          topic: session.topic,
+          mappedArea: hizmetAlani
+        }
+      );
+
+      return mappedData;
     } catch (error) {
       const err = error as Error;
-      logger.error(`Error mapping session ${session.id} to MEBBIS format`, 'MEBBISDataMapper', error);
+      logger.error(
+        `Error mapping session ${session.id} to MEBBIS format`,
+        'MEBBISDataMapper',
+        { sessionId: session.id, studentNo: session.studentNo, error: err.message }
+      );
       throw new Error(`Veri dönüşümü başarısız: ${err.message}`);
     }
   }

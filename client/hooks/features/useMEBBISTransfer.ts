@@ -10,6 +10,143 @@ import { toast } from 'sonner';
 
 const SOCKET_URL = window.location.origin;
 
+interface SocketManager {
+ socket: Socket;
+ subscribe: (transferId: string) => void;
+ teardown: () => void;
+}
+
+function createTransferSocket(
+ setTransferState: React.Dispatch<React.SetStateAction<MEBBISTransferState>>,
+ onTeardown: () => void
+): SocketManager {
+ const socket = io(SOCKET_URL, {
+ path: '/socket.io',
+ transports: ['websocket', 'polling'],
+ reconnection: true,
+ reconnectionAttempts: 5,
+ reconnectionDelay: 1000,
+ reconnectionDelayMax: 5000,
+ timeout: 20000,
+ autoConnect: false
+ });
+
+ let currentTransferId: string | null = null;
+ let isFirstConnect = true;
+
+ const handleConnect = () => {
+ console.log('[Socket] Connected');
+ if (currentTransferId) {
+ console.log('[Socket] Subscribing to transfer:', currentTransferId);
+ socket.emit('mebbis:subscribe', currentTransferId);
+ }
+ if (!isFirstConnect) {
+ toast.success('Bağlantı yeniden kuruldu');
+ }
+ isFirstConnect = false;
+ };
+
+ const handleDisconnect = (reason: string) => {
+ console.log('[Socket] Disconnected:', reason);
+ };
+
+ const handleReconnectAttempt = (attemptNumber: number) => {
+ console.log(`[Socket] Reconnection attempt ${attemptNumber}`);
+ toast.warning(`Bağlantı koptu. Yeniden bağlanılıyor... (${attemptNumber}/5)`);
+ };
+
+ const handleReconnectFailed = () => {
+ console.error('[Socket] All reconnection attempts failed');
+ toast.error('Bağlantı kurulamadı. Lütfen sayfayı yenileyin.');
+ setTransferState(prev => ({ ...prev, status: 'error' }));
+ };
+
+ const handleConnectError = (error: Error) => {
+ console.error('[Socket] Connection error:', error);
+ };
+
+ const handleProgress = (progress: any) => {
+ setTransferState(prev => ({ ...prev, progress }));
+ };
+
+ const handleStatus = ({ status, message }: any) => {
+ setTransferState(prev => ({ ...prev, status }));
+ if (message) {
+ toast.info(message);
+ }
+ };
+
+ const handleSessionStart = (session: any) => {
+ setTransferState(prev => ({ ...prev, currentSession: session }));
+ };
+
+ const handleSessionCompleted = (event: SessionCompletedEvent) => {
+ if (event.success) {
+ toast.success(`Öğrenci ${event.studentNo} başarıyla aktarıldı`);
+ }
+ };
+
+ const handleSessionFailed = (error: MEBBISTransferError) => {
+ setTransferState(prev => ({ ...prev, errors: [...prev.errors, error] }));
+ toast.error(`Öğrenci ${error.studentNo} aktarılamadı: ${error.error}`);
+ };
+
+ const handleTransferCompleted = (summary: any) => {
+ setTransferState(prev => ({ ...prev, status: 'completed' }));
+ toast.success(`Aktarım tamamlandı! ${summary.successful} başarılı, ${summary.failed} başarısız`);
+ onTeardown();
+ };
+
+ const handleTransferError = ({ error }: any) => {
+ setTransferState(prev => ({ ...prev, status: 'error' }));
+ toast.error(`Aktarım hatası: ${error}`);
+ onTeardown();
+ };
+
+ socket.on('connect', handleConnect);
+ socket.on('disconnect', handleDisconnect);
+ socket.on('reconnect_attempt', handleReconnectAttempt);
+ socket.on('reconnect_failed', handleReconnectFailed);
+ socket.on('connect_error', handleConnectError);
+ socket.on('mebbis:progress', handleProgress);
+ socket.on('mebbis:status', handleStatus);
+ socket.on('mebbis:session-start', handleSessionStart);
+ socket.on('mebbis:session-completed', handleSessionCompleted);
+ socket.on('mebbis:session-failed', handleSessionFailed);
+ socket.on('mebbis:transfer-completed', handleTransferCompleted);
+ socket.on('mebbis:transfer-error', handleTransferError);
+
+ return {
+ socket,
+ subscribe: (transferId: string) => {
+ currentTransferId = transferId;
+ if (socket.connected) {
+ socket.emit('mebbis:subscribe', transferId);
+ }
+ socket.connect();
+ },
+ teardown: () => {
+ console.log('[Socket] Tearing down');
+ currentTransferId = null;
+ isFirstConnect = true;
+ socket.off('connect', handleConnect);
+ socket.off('disconnect', handleDisconnect);
+ socket.off('reconnect_attempt', handleReconnectAttempt);
+ socket.off('reconnect_failed', handleReconnectFailed);
+ socket.off('connect_error', handleConnectError);
+ socket.off('mebbis:progress', handleProgress);
+ socket.off('mebbis:status', handleStatus);
+ socket.off('mebbis:session-start', handleSessionStart);
+ socket.off('mebbis:session-completed', handleSessionCompleted);
+ socket.off('mebbis:session-failed', handleSessionFailed);
+ socket.off('mebbis:transfer-completed', handleTransferCompleted);
+ socket.off('mebbis:transfer-error', handleTransferError);
+ socket.disconnect();
+ socket.close();
+ }
+ };
+}
+
 export function useMEBBISTransfer() {
  const [transferState, setTransferState] = useState<MEBBISTransferState>({
  transferId: null,
@@ -18,18 +155,35 @@ export function useMEBBISTransfer() {
  errors: []
  });
 
- const socketRef = useRef<Socket | null>(null);
+ const socketManagerRef = useRef<SocketManager | null>(null);
+
+ const teardown = useCallback(() => {
+ if (socketManagerRef.current) {
+ socketManagerRef.current.teardown();
+ socketManagerRef.current = null;
+ }
+ }, []);
+
+ const ensureSocketManager = useCallback(() => {
+ if (!socketManagerRef.current) {
+ socketManagerRef.current = createTransferSocket(setTransferState, teardown);
+ }
+ return socketManagerRef.current;
+ }, [teardown]);
 
  useEffect(() => {
+ ensureSocketManager();
+ 
  return () => {
- if (socketRef.current) {
- socketRef.current.disconnect();
- }
+ teardown();
+ socketManagerRef.current = null;
  };
- }, []);
+ }, [ensureSocketManager, teardown]);
 
  const startTransfer = useCallback(async (request: StartTransferRequest) => {
  try {
+ const manager = ensureSocketManager();
+
  setTransferState(prev => ({ ...prev, status: 'connecting' }));
 
  const response = await fetch('/api/mebbis/start-transfer', {
@@ -55,62 +209,7 @@ export function useMEBBISTransfer() {
  currentSession: undefined
  });
 
- const socket = io(SOCKET_URL, {
- path: '/socket.io',
- transports: ['websocket', 'polling']
- });
-
- socketRef.current = socket;
-
- socket.on('connect', () => {
- socket.emit('mebbis:subscribe', transferId);
- });
-
- socket.on('mebbis:progress', (progress) => {
- setTransferState(prev => ({ ...prev, progress }));
- });
-
- socket.on('mebbis:status', ({ status, message }) => {
- setTransferState(prev => ({ ...prev, status }));
- if (message) {
- toast.info(message);
- }
- });
-
- socket.on('mebbis:session-start', (session) => {
- setTransferState(prev => ({
- ...prev,
- currentSession: session
- }));
- });
-
- socket.on('mebbis:session-completed', (event: SessionCompletedEvent) => {
- if (event.success) {
- toast.success(`Öğrenci ${event.studentNo} başarıyla aktarıldı`);
- }
- });
-
- socket.on('mebbis:session-failed', (error: MEBBISTransferError) => {
- setTransferState(prev => ({
- ...prev,
- errors: [...prev.errors, error]
- }));
- toast.error(`Öğrenci ${error.studentNo} aktarılamadı: ${error.error}`);
- });
-
- socket.on('mebbis:transfer-completed', (summary) => {
- setTransferState(prev => ({ ...prev, status: 'completed' }));
- toast.success(
- `Aktarım tamamlandı! ${summary.successful} başarılı, ${summary.failed} başarısız`
- );
- socket.disconnect();
- });
-
- socket.on('mebbis:transfer-error', ({ error }) => {
- setTransferState(prev => ({ ...prev, status: 'error' }));
- toast.error(`Aktarım hatası: ${error}`);
- socket.disconnect();
- });
+ manager.subscribe(transferId);
 
  return { success: true, transferId };
  } catch (error) {
@@ -119,7 +218,7 @@ export function useMEBBISTransfer() {
  toast.error(err.message);
  return { success: false, error: err.message };
  }
- }, []);
+ }, [ensureSocketManager]);
 
  const cancelTransfer = useCallback(async () => {
  if (!transferState.transferId) return;
@@ -132,29 +231,24 @@ export function useMEBBISTransfer() {
  credentials: 'include'
  });
 
- if (socketRef.current) {
- socketRef.current.disconnect();
- }
-
+ teardown();
  setTransferState(prev => ({ ...prev, status: 'cancelled' }));
  toast.info('Aktarım iptal edildi');
  } catch (error) {
  const err = error as Error;
  toast.error(`İptal hatası: ${err.message}`);
  }
- }, [transferState.transferId]);
+ }, [transferState.transferId, teardown]);
 
  const resetTransfer = useCallback(() => {
- if (socketRef.current) {
- socketRef.current.disconnect();
- }
+ teardown();
  setTransferState({
  transferId: null,
  status: 'idle',
  progress: { total: 0, completed: 0, failed: 0, current: 0 },
  errors: []
  });
- }, []);
+ }, [teardown]);
 
  return {
  transferState,
