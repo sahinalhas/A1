@@ -207,7 +207,12 @@ export default function UnifiedIdentitySection({ student, onUpdate }: UnifiedIde
  }, [student, form]);
 
  const { debouncedSave } = useAutoSave({
- onSave: onSubmit,
+ onSave: async () => {
+ const isValid = await form.trigger();
+ if (isValid) {
+ await form.handleSubmit(onSubmit)();
+ }
+ },
  debounceMs: 2000,
  });
 
