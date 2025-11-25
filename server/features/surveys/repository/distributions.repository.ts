@@ -25,13 +25,13 @@ function ensureInitialized(): void {
     getSurveyDistributionByLink: db.prepare('SELECT * FROM survey_distributions WHERE publicLink = ?'),
     insertSurveyDistribution: db.prepare(`
       INSERT INTO survey_distributions (id, templateId, title, description, targetClasses, targetStudents, 
-                                       distributionType, excelTemplate, publicLink, startDate, endDate, 
-                                       allowAnonymous, maxResponses, status, createdBy)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                       participationType, excelTemplate, publicLink, startDate, endDate, 
+                                       maxResponses, status, createdBy)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `),
     updateSurveyDistribution: db.prepare(`
       UPDATE survey_distributions SET title = ?, description = ?, targetClasses = ?, targetStudents = ?,
-                                     distributionType = ?, startDate = ?, endDate = ?, allowAnonymous = ?,
+                                     participationType = ?, startDate = ?, endDate = ?,
                                      maxResponses = ?, status = ?
       WHERE id = ?
     `),
@@ -105,12 +105,11 @@ export function saveSurveyDistribution(distribution: Partial<SurveyDistribution>
       distribution.description || null,
       distribution.targetClasses ? JSON.stringify(distribution.targetClasses) : null,
       distribution.targetStudents ? JSON.stringify(distribution.targetStudents) : null,
-      distribution.distributionType,
+      distribution.participationType || 'PUBLIC',
       distribution.excelTemplate || null,
       distribution.publicLink || null,
       distribution.startDate || null,
       distribution.endDate || null,
-      (distribution.allowAnonymous || false) ? 1 : 0,
       distribution.maxResponses || null,
       distribution.status || 'DRAFT',
       distribution.createdBy || null
@@ -140,10 +139,9 @@ export function updateSurveyDistribution(id: string, distribution: Partial<Surve
       mergedDistribution.description || null,
       mergedDistribution.targetClasses ? JSON.stringify(mergedDistribution.targetClasses) : null,
       mergedDistribution.targetStudents ? JSON.stringify(mergedDistribution.targetStudents) : null,
-      mergedDistribution.distributionType,
+      mergedDistribution.participationType || 'PUBLIC',
       mergedDistribution.startDate || null,
       mergedDistribution.endDate || null,
-      mergedDistribution.allowAnonymous ? 1 : 0,
       mergedDistribution.maxResponses || null,
       mergedDistribution.status || 'DRAFT',
       id
