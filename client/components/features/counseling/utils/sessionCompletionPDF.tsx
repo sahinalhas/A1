@@ -121,6 +121,7 @@ interface SessionCompletionPDFProps {
   topicFullPath?: string;
   schoolName?: string;
   topicTitle?: string;
+  counselorName?: string;
   studentData?: {
     gender?: string;
     idNumber?: string;
@@ -172,6 +173,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
   topicFullPath,
   schoolName,
   topicTitle,
+  counselorName,
   studentData,
 }) => {
   const sessionDate = format(new Date(session.sessionDate), 'dd MMMM yyyy', { locale: tr });
@@ -375,7 +377,7 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
             <View style={styles.halfColumn}>
               <View style={styles.row}>
                 <Text style={styles.label}>Öğretmen Adı:</Text>
-                <Text style={styles.value}>{session.teacherName || '-'}</Text>
+                <Text style={styles.value}>{counselorName || session.teacherName || '-'}</Text>
               </View>
             </View>
             <View style={styles.halfColumn}>
@@ -470,7 +472,8 @@ export async function generateSessionCompletionPDF(
   topicFullPath?: string,
   schoolName?: string,
   topicTitle?: string,
-  studentData?: SessionCompletionPDFProps['studentData']
+  studentData?: SessionCompletionPDFProps['studentData'],
+  counselorName?: string
 ) {
   const blob = await pdf(
     <SessionCompletionDocument 
@@ -479,6 +482,7 @@ export async function generateSessionCompletionPDF(
       topicFullPath={topicFullPath} 
       schoolName={schoolName}
       topicTitle={topicTitle}
+      counselorName={counselorName}
       studentData={studentData}
     />
   ).toBlob();

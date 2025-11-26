@@ -47,6 +47,7 @@ import { Download as DownloadIcon } from "lucide-react";
 import { useSettings } from "@/hooks/queries/settings.query-hooks";
 import { apiClient } from "@/lib/api/core/client";
 import type { Student } from "@/lib/types/student.types";
+import { useAuth } from "@/lib/auth-context";
 
 interface EnhancedCompleteSessionDialogProps {
  open: boolean;
@@ -72,6 +73,7 @@ export default function EnhancedCompleteSessionDialog({
  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
  const { toast } = useToast();
  const { data: settings } = useSettings();
+ const { user } = useAuth();
 
  const { analyzeSession, analysis, isAnalyzing, clearAnalysis } = useAISessionAnalysis();
 
@@ -155,7 +157,7 @@ export default function EnhancedCompleteSessionDialog({
   specialEducationInfo: fullStudentData.tags?.includes('specialEducation') ? 'Evet' : 'Yok',
  } : undefined;
  
- await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName, studentData);
+ await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName, undefined, studentData, user?.name);
  toast({
  title: "PDF İndirildi",
  description: "Görüşme tamamlama raporu başarıyla indirildi",

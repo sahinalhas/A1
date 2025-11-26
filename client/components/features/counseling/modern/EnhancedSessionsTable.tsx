@@ -19,6 +19,7 @@ import { SESSION_MODE_LABELS, SESSION_LOCATION_LABELS, DISCIPLINE_STATUS_LABELS 
 import { generateSessionCompletionPDF } from '../utils/sessionCompletionPDF';
 import { useToast } from '@/hooks/utils/toast.utils';
 import { useSettings } from '@/hooks/queries/settings.query-hooks';
+import { useAuth } from '@/lib/auth-context';
 
 type SortField = 'date' | 'time' | 'student' | 'type';
 type SortDirection = 'asc' | 'desc';
@@ -44,6 +45,7 @@ export default function EnhancedSessionsTable({
 }: EnhancedSessionsTableProps) {
   const { toast } = useToast();
   const { data: settings } = useSettings();
+  const { user } = useAuth();
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [columns, setColumns] = useState<Column[]>([
@@ -337,7 +339,7 @@ export default function EnhancedSessionsTable({
                       actionItems: [],
                     } as unknown as CompleteSessionFormValues;
                     
-                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle, studentData);
+                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle, studentData, user?.name);
                     toast({
                       title: "PDF İndirildi",
                       description: "Görüşme bilgileri formu başarıyla indirildi",
