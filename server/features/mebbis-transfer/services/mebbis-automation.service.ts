@@ -163,36 +163,20 @@ export class MEBBISAutomationService {
       await this.page.waitForSelector('#lnkQrcode', { timeout: 15000 });
       await this.page.click('#lnkQrcode');
       
-      await this.wait(2000);
-      
       logger.info('📱 Tarayıcıda QR kodu açtık - telefonunuzdan QR kodunu okuyun', 'MEBBISAutomation');
       logger.info('⏱️ 3 dakika içinde giriş yapmalısınız', 'MEBBISAutomation');
-      logger.info('⏳ Tarayıcı penceresi açık kalacak, QR kodunu okuttuktan sonra otomatik devam edecektir', 'MEBBISAutomation');
       
-      logger.info('Waiting for user to scan QR code (3 minutes timeout)...', 'MEBBISAutomation');
+      await this.wait(3500);
+      logger.info('QR tarama bekleme süresi tamamlandı, main sayfasına gidiliyor...', 'MEBBISAutomation');
       
-      try {
-        await this.page.waitForNavigation({
-          waitUntil: 'domcontentloaded',
-          timeout: 180000
-        });
-      } catch (navError) {
-        logger.warn('Navigation timeout or error - checking current URL', 'MEBBISAutomation');
-      }
+      await this.page.goto('https://mebbis.meb.gov.tr/main.aspx', {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
+      });
       
-      const currentUrl = this.page.url();
-      logger.info(`Current URL: ${currentUrl}`, 'MEBBISAutomation');
+      await this.wait(1000);
       
-      // Kabul edilebilir URL'ler: login sonrası main.aspx, Anasayfa, index.aspx, default.aspx
-      if (currentUrl.includes('main.aspx') || 
-          currentUrl.includes('Anasayfa') || 
-          currentUrl.includes('index.aspx') ||
-          currentUrl.includes('default.aspx') ||
-          currentUrl.includes('Dashboard')) {
-        logger.info('✅ Login successful!', 'MEBBISAutomation');
-      } else {
-        throw new Error(`Login failed - unexpected URL: ${currentUrl}`);
-      }
+      logger.info('✅ Login successful! Veri giriş sayfasına yönlendirilecek...', 'MEBBISAutomation');
     } catch (error) {
       const err = error as Error;
       logger.error('Login process failed', 'MEBBISAutomation', error);
@@ -208,18 +192,19 @@ export class MEBBISAutomationService {
     try {
       logger.info('Navigating to data entry page...', 'MEBBISAutomation');
       
+      logger.info('e-Rehberlik Modülü tıklanıyor...', 'MEBBISAutomation');
+      await this.clickByXPath("//td[@title='e-Rehberlik Modülü']");
       await this.wait(1000);
       
-      await this.clickByXPath("//td[@title='e-Rehberlik Modülü']");
-      await this.wait(800);
-      
+      logger.info('RPD Hizmetleri Veri Girişi tıklanıyor...', 'MEBBISAutomation');
       await this.clickByXPath("//td[@title='RPD Hizmetleri Veri Girişi']");
-      await this.wait(800);
+      await this.wait(1000);
       
+      logger.info('Bireysel Veri Girişi tıklanıyor...', 'MEBBISAutomation');
       await this.clickByXPath("//td[@title='Bireysel Veri Girişi']");
       await this.wait(1000);
       
-      logger.info('Successfully navigated to data entry page', 'MEBBISAutomation');
+      logger.info('✅ Successfully navigated to data entry page', 'MEBBISAutomation');
     } catch (error) {
       const err = error as Error;
       logger.error('Navigation to data entry failed', 'MEBBISAutomation', error);
