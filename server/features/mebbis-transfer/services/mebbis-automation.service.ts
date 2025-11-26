@@ -199,7 +199,22 @@ export class MEBBISAutomationService {
            currentUrl.includes('Anasayfa') ||
            currentUrl.includes('default.aspx'))) {
         logger.info('✅ Login successful!', 'MEBBISAutomation');
-        await this.wait(1500); // Sayfanın tam yüklenmesini bekle
+        await this.wait(3000); // Sayfanın tam yüklenmesini bekle
+        
+        // Eğer index.aspx sayfasındaysak, main.aspx'e git
+        if (currentUrl.includes('index.aspx')) {
+          logger.info('Navigating from index.aspx to main.aspx...', 'MEBBISAutomation');
+          try {
+            await this.page.goto('https://mebbis.meb.gov.tr/main.aspx', {
+              waitUntil: 'domcontentloaded',
+              timeout: 30000
+            });
+            logger.info('Successfully navigated to main.aspx', 'MEBBISAutomation');
+            await this.wait(2000);
+          } catch (navError) {
+            logger.warn('Could not navigate to main.aspx, continuing with current page', 'MEBBISAutomation');
+          }
+        }
       } else {
         logger.error(`Unexpected URL after login: ${currentUrl}`, 'MEBBISAutomation');
         throw new Error(`Login sonrası beklenmeyen sayfa: ${currentUrl}`);
@@ -219,16 +234,33 @@ export class MEBBISAutomationService {
     try {
       logger.info('Navigating to data entry page...', 'MEBBISAutomation');
       
-      await this.wait(1000);
+      // Sayfanın tam yüklenmesini bekle
+      await this.wait(2000);
+      
+      // Elementin görünür olmasını bekle
+      logger.info('Waiting for e-Rehberlik Modülü to be visible...', 'MEBBISAutomation');
+      try {
+        await this.page.waitForFunction(
+          () => {
+            const element = Array.from(document.querySelectorAll('td')).find(
+              td => td.getAttribute('title') === 'e-Rehberlik Modülü'
+            );
+            return element && (element as HTMLElement).offsetParent !== null;
+          },
+          { timeout: 10000 }
+        );
+      } catch (e) {
+        logger.warn('Element wait timed out, attempting direct click...', 'MEBBISAutomation');
+      }
       
       logger.info('Step 1: Clicking e-Rehberlik Modülü...', 'MEBBISAutomation');
       await this.retry(
         () => this.clickByXPath("//td[@title='e-Rehberlik Modülü']"),
-        2,
-        1000,
+        3,
+        2000,
         'e-Rehberlik Modülü click'
       );
-      await this.wait(1200);
+      await this.wait(1500);
       
       logger.info('Step 2: Clicking RPD Hizmetleri Veri Girişi...', 'MEBBISAutomation');
       await this.retry(
