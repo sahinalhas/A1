@@ -166,10 +166,14 @@ export class MEBBISAutomationService {
       logger.info('📱 Tarayıcıda QR kodu açtık - telefonunuzdan QR kodunu okuyun', 'MEBBISAutomation');
       logger.info('⏱️ 3 dakika içinde giriş yapmalısınız', 'MEBBISAutomation');
       
-      await this.page.goto('https://mebbis.meb.gov.tr/main.aspx', {
-        waitUntil: 'domcontentloaded',
-        timeout: 180000
-      });
+      try {
+        await this.page.waitForNavigation({
+          waitUntil: 'domcontentloaded',
+          timeout: 180000
+        });
+      } catch (navError) {
+        logger.warn('Navigation timeout - QR okutmadıysanız lütfen okutun', 'MEBBISAutomation');
+      }
       
       logger.info('✅ Login successful! Veri giriş sayfasına yönlendirilecek...', 'MEBBISAutomation');
     } catch (error) {
