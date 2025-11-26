@@ -100,20 +100,23 @@ export class MEBBISAutomationService {
       
       const chromiumPath = await this.findChromiumPath();
       
-      const isHeadless = process.env.NODE_ENV === 'production' || process.env.MEBBIS_HEADLESS !== 'false';
+      const isHeadless = process.env.NODE_ENV === 'production';
+      
+      logger.info(`Browser mode: ${isHeadless ? 'Headless' : 'Visible'}`, 'MEBBISAutomation');
       
       const launchOptions: any = {
         headless: isHeadless,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
+          isHeadless ? '' : '--start-maximized',
           '--disable-dev-shm-usage',
           '--disable-gpu',
           '--disable-software-rasterizer',
           '--disable-extensions',
           '--disable-web-security',
           '--disable-features=IsolateOrigins,site-per-process'
-        ]
+        ].filter(Boolean)
       };
       
       if (chromiumPath) {
