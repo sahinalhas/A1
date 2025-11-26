@@ -394,52 +394,16 @@ const SessionCompletionDocument: React.FC<SessionCompletionPDFProps> = ({
           )}
         </View>
 
-        {/* Davranış ve Durum Değerlendirmesi */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Davranış ve Durum Değerlendirmesi</Text>
-          
-          <View style={styles.ratingBox}>
+        {/* Görüşme Detayları - sadece varsa göster */}
+        {session.sessionDetails && session.sessionDetails.trim() && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Görüşme Detayları</Text>
             <View style={styles.row}>
-              <Text style={styles.label}>Duygusal Durum:</Text>
-              <Text style={styles.value}>
-                {emotionalStateLabels[formData.emotionalState as string] || '-'}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Fiziksel Durum:</Text>
-              <Text style={styles.value}>
-                {physicalStateLabels[formData.physicalState as string] || '-'}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>İletişim Kalitesi:</Text>
-              <Text style={styles.value}>
-                {communicationLabels[formData.communicationQuality as string] || '-'}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>İşbirliği Düzeyi:</Text>
-              <Text style={styles.value}>{formData.cooperationLevel}/5</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Çıkış Bilgileri */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Görüşme Ayrıntıları</Text>
-          
-          <View style={styles.row}>
-            <Text style={styles.label}>Çıkış Saati:</Text>
-            <Text style={styles.value}>{(formData.exitTime || '-')}</Text>
-          </View>
-
-          {session.sessionDetails && session.sessionDetails.trim() && (
-            <View style={styles.row}>
-              <Text style={styles.label}>Görüşme Detayları:</Text>
+              <Text style={styles.label}>Detaylar:</Text>
               <Text style={styles.value}>{session.sessionDetails}</Text>
             </View>
-          )}
-        </View>
+          </View>
+        )}
 
         {/* Detaylı Notlar */}
         {formData.detailedNotes && formData.detailedNotes.trim() && (
