@@ -157,7 +157,8 @@ export default function EnhancedCompleteSessionDialog({
   specialEducationInfo: fullStudentData.tags?.includes('specialEducation') ? 'Evet' : 'Yok',
  } : undefined;
  
- await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName, undefined, studentData, user?.name);
+ const counselorName = settings?.account?.displayName || user?.name;
+ await generateSessionCompletionPDF(session, formValues, topicFullPath, schoolName, undefined, studentData, counselorName);
  toast({
  title: "PDF İndirildi",
  description: "Görüşme tamamlama raporu başarıyla indirildi",

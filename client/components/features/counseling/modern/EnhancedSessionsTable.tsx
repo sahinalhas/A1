@@ -339,7 +339,8 @@ export default function EnhancedSessionsTable({
                       actionItems: [],
                     } as unknown as CompleteSessionFormValues;
                     
-                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle, studentData, user?.name);
+                    const counselorName = settings?.account?.displayName || user?.name;
+                    await generateSessionCompletionPDF(session, formData, topicFullPath, schoolName, topicTitle, studentData, counselorName);
                     toast({
                       title: "PDF İndirildi",
                       description: "Görüşme bilgileri formu başarıyla indirildi",
