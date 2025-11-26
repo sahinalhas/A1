@@ -211,29 +211,6 @@ export class MEBBISAutomationService {
     }
   }
 
-  private async clickElementWithFallback(xpaths: string[], clickName: string): Promise<boolean> {
-    if (!this.page) throw new Error('Page not initialized');
-
-    for (let i = 0; i < xpaths.length; i++) {
-      try {
-        const xpath = xpaths[i];
-        logger.debug(`Trying click ${i + 1}/${xpaths.length} for ${clickName}: ${xpath}`, 'MEBBISAutomation');
-        
-        const locator = this.page.locator(`::-p-xpath(${xpath})`);
-        await locator.setTimeout(8000);
-        await locator.click();
-        
-        logger.info(`✅ Successfully clicked ${clickName} with XPath ${i + 1}`, 'MEBBISAutomation');
-        return true;
-      } catch (e) {
-        const err = e as Error;
-        logger.debug(`XPath attempt ${i + 1} failed: ${err.message}`, 'MEBBISAutomation');
-      }
-    }
-    
-    return false;
-  }
-
   async navigateToDataEntry(): Promise<void> {
     if (!this.page) {
       throw new Error('Browser not initialized');
@@ -241,114 +218,35 @@ export class MEBBISAutomationService {
 
     try {
       logger.info('Navigating to data entry page...', 'MEBBISAutomation');
-      await this.wait(2000);
       
-      // Step 1: Click e-Rehberlik Modülü with XPath and JavaScript fallback
+      await this.wait(1000);
+      
       logger.info('Step 1: Clicking e-Rehberlik Modülü...', 'MEBBISAutomation');
-      let success = false;
+      await this.retry(
+        () => this.clickByXPath("//td[@title='e-Rehberlik Modülü']"),
+        2,
+        1000,
+        'e-Rehberlik Modülü click'
+      );
+      await this.wait(1200);
       
-      try {
-        // Try XPath first
-        const xpath1 = "//td[@title='e-Rehberlik Modülü']";
-        const locator1 = this.page.locator(`::-p-xpath(${xpath1})`);
-        await locator1.setTimeout(8000);
-        await locator1.click();
-        logger.info('✅ Clicked e-Rehberlik Modülü via XPath', 'MEBBISAutomation');
-        success = true;
-      } catch (e) {
-        logger.debug('XPath failed, trying JavaScript navigation', 'MEBBISAutomation');
-        try {
-          // Try JavaScript click - find by text
-          await this.page.evaluate(() => {
-            const tds = Array.from(document.querySelectorAll('td'));
-            const target = tds.find(td => td.getAttribute('title')?.includes('e-Rehberlik'));
-            if (target) {
-              (target as HTMLElement).click();
-            } else {
-              throw new Error('Element not found');
-            }
-          });
-          logger.info('✅ Clicked e-Rehberlik Modülü via JavaScript', 'MEBBISAutomation');
-          success = true;
-        } catch (jsError) {
-          logger.error('Both XPath and JavaScript failed for e-Rehberlik', 'MEBBISAutomation', jsError);
-        }
-      }
-      
-      if (!success) {
-        throw new Error('e-Rehberlik Modülü tıklanamadı');
-      }
-      await this.wait(1800);
-      
-      // Step 2: Click RPD Hizmetleri Veri Girişi
       logger.info('Step 2: Clicking RPD Hizmetleri Veri Girişi...', 'MEBBISAutomation');
-      success = false;
+      await this.retry(
+        () => this.clickByXPath("//td[@title='RPD Hizmetleri Veri Girişi']"),
+        2,
+        1000,
+        'RPD Hizmetleri Veri Girişi click'
+      );
+      await this.wait(1200);
       
-      try {
-        const xpath2 = "//td[@title='RPD Hizmetleri Veri Girişi']";
-        const locator2 = this.page.locator(`::-p-xpath(${xpath2})`);
-        await locator2.setTimeout(8000);
-        await locator2.click();
-        logger.info('✅ Clicked RPD Hizmetleri Veri Girişi via XPath', 'MEBBISAutomation');
-        success = true;
-      } catch (e) {
-        logger.debug('XPath failed, trying JavaScript for RPD', 'MEBBISAutomation');
-        try {
-          await this.page.evaluate(() => {
-            const tds = Array.from(document.querySelectorAll('td'));
-            const target = tds.find(td => td.getAttribute('title')?.includes('RPD'));
-            if (target) {
-              (target as HTMLElement).click();
-            } else {
-              throw new Error('Element not found');
-            }
-          });
-          logger.info('✅ Clicked RPD Hizmetleri Veri Girişi via JavaScript', 'MEBBISAutomation');
-          success = true;
-        } catch (jsError) {
-          logger.error('Both methods failed for RPD', 'MEBBISAutomation', jsError);
-        }
-      }
-      
-      if (!success) {
-        throw new Error('RPD Hizmetleri Veri Girişi tıklanamadı');
-      }
-      await this.wait(1800);
-      
-      // Step 3: Click Bireysel Veri Girişi
       logger.info('Step 3: Clicking Bireysel Veri Girişi...', 'MEBBISAutomation');
-      success = false;
-      
-      try {
-        const xpath3 = "//td[@title='Bireysel Veri Girişi']";
-        const locator3 = this.page.locator(`::-p-xpath(${xpath3})`);
-        await locator3.setTimeout(8000);
-        await locator3.click();
-        logger.info('✅ Clicked Bireysel Veri Girişi via XPath', 'MEBBISAutomation');
-        success = true;
-      } catch (e) {
-        logger.debug('XPath failed, trying JavaScript for Bireysel', 'MEBBISAutomation');
-        try {
-          await this.page.evaluate(() => {
-            const tds = Array.from(document.querySelectorAll('td'));
-            const target = tds.find(td => td.getAttribute('title')?.includes('Bireysel'));
-            if (target) {
-              (target as HTMLElement).click();
-            } else {
-              throw new Error('Element not found');
-            }
-          });
-          logger.info('✅ Clicked Bireysel Veri Girişi via JavaScript', 'MEBBISAutomation');
-          success = true;
-        } catch (jsError) {
-          logger.error('Both methods failed for Bireysel', 'MEBBISAutomation', jsError);
-        }
-      }
-      
-      if (!success) {
-        throw new Error('Bireysel Veri Girişi tıklanamadı');
-      }
-      await this.wait(2000);
+      await this.retry(
+        () => this.clickByXPath("//td[@title='Bireysel Veri Girişi']"),
+        2,
+        1000,
+        'Bireysel Veri Girişi click'
+      );
+      await this.wait(1500);
       
       logger.info('✅ Successfully navigated to data entry page', 'MEBBISAutomation');
     } catch (error) {
