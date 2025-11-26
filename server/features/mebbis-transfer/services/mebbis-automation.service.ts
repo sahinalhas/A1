@@ -40,18 +40,32 @@ export class MEBBISAutomationService {
     throw new Error(`${context} failed after ${retries} attempts: ${lastError?.message}`);
   }
 
-  private async clickByXPath(xpath: string, timeout = 10000): Promise<void> {
+  private async clickByXPath(xpath: string, timeout = 15000): Promise<void> {
     if (!this.page) throw new Error('Page not initialized');
-    const locator = this.page.locator(`::-p-xpath(${xpath})`);
-    await locator.setTimeout(timeout);
-    await locator.click();
+    try {
+      const locator = this.page.locator(`::-p-xpath(${xpath})`);
+      await locator.setTimeout(timeout);
+      await locator.click();
+      logger.debug(`Successfully clicked element: ${xpath}`, 'MEBBISAutomation');
+    } catch (error) {
+      const err = error as Error;
+      logger.error(`Failed to click XPath: ${xpath}`, 'MEBBISAutomation', error);
+      throw new Error(`XPath click başarısız (${xpath}): ${err.message}`);
+    }
   }
 
-  private async waitForXPath(xpath: string, timeout = 10000): Promise<void> {
+  private async waitForXPath(xpath: string, timeout = 15000): Promise<void> {
     if (!this.page) throw new Error('Page not initialized');
-    const locator = this.page.locator(`::-p-xpath(${xpath})`);
-    await locator.setTimeout(timeout);
-    await locator.wait();
+    try {
+      const locator = this.page.locator(`::-p-xpath(${xpath})`);
+      await locator.setTimeout(timeout);
+      await locator.wait();
+      logger.debug(`Element appeared: ${xpath}`, 'MEBBISAutomation');
+    } catch (error) {
+      const err = error as Error;
+      logger.error(`Failed to wait for XPath: ${xpath}`, 'MEBBISAutomation', error);
+      throw new Error(`XPath bekleme başarısız (${xpath}): ${err.message}`);
+    }
   }
 
   private async findChromiumPath(): Promise<string | undefined> {
@@ -100,9 +114,9 @@ export class MEBBISAutomationService {
       
       const chromiumPath = await this.findChromiumPath();
       
-      const isHeadless = process.env.NODE_ENV === 'production';
+      const isHeadless = false;
       
-      logger.info(`Browser mode: ${isHeadless ? 'Headless' : 'Visible'}`, 'MEBBISAutomation');
+      logger.info(`Browser mode: ${isHeadless ? 'Headless' : 'Visible'} (headless=${isHeadless})`, 'MEBBISAutomation');
       
       const launchOptions: any = {
         headless: isHeadless,
@@ -200,16 +214,34 @@ export class MEBBISAutomationService {
       
       await this.wait(1000);
       
-      await this.clickByXPath("//td[@title='e-Rehberlik Modülü']");
-      await this.wait(800);
+      logger.info('Step 1: Clicking e-Rehberlik Modülü...', 'MEBBISAutomation');
+      await this.retry(
+        () => this.clickByXPath("//td[@title='e-Rehberlik Modülü']"),
+        2,
+        1000,
+        'e-Rehberlik Modülü click'
+      );
+      await this.wait(1200);
       
-      await this.clickByXPath("//td[@title='RPD Hizmetleri Veri Girişi']");
-      await this.wait(800);
+      logger.info('Step 2: Clicking RPD Hizmetleri Veri Girişi...', 'MEBBISAutomation');
+      await this.retry(
+        () => this.clickByXPath("//td[@title='RPD Hizmetleri Veri Girişi']"),
+        2,
+        1000,
+        'RPD Hizmetleri Veri Girişi click'
+      );
+      await this.wait(1200);
       
-      await this.clickByXPath("//td[@title='Bireysel Veri Girişi']");
-      await this.wait(1000);
+      logger.info('Step 3: Clicking Bireysel Veri Girişi...', 'MEBBISAutomation');
+      await this.retry(
+        () => this.clickByXPath("//td[@title='Bireysel Veri Girişi']"),
+        2,
+        1000,
+        'Bireysel Veri Girişi click'
+      );
+      await this.wait(1500);
       
-      logger.info('Successfully navigated to data entry page', 'MEBBISAutomation');
+      logger.info('✅ Successfully navigated to data entry page', 'MEBBISAutomation');
     } catch (error) {
       const err = error as Error;
       logger.error('Navigation to data entry failed', 'MEBBISAutomation', error);
