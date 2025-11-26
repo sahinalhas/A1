@@ -100,8 +100,10 @@ export class MEBBISAutomationService {
       
       const chromiumPath = await this.findChromiumPath();
       
+      const isHeadless = process.env.NODE_ENV === 'production' || process.env.MEBBIS_HEADLESS !== 'false';
+      
       const launchOptions: any = {
-        headless: true,
+        headless: isHeadless,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
@@ -160,13 +162,8 @@ export class MEBBISAutomationService {
       
       await this.wait(2000);
       
-      const qrScreenshotPath = 'public/mebbis-qr-code.png';
-      await this.page.screenshot({ 
-        path: qrScreenshotPath,
-        fullPage: false
-      });
-      logger.info(`QR code screenshot saved to ${qrScreenshotPath}`, 'MEBBISAutomation');
-      logger.info('⚠️ QR kodu telefonunuzla okutun: http://localhost:5000/mebbis-qr-code.png', 'MEBBISAutomation');
+      logger.info('📱 Tarayıcıda QR kodu açtık - telefonunuzdan QR kodunu okuyun', 'MEBBISAutomation');
+      logger.info('⏱️ 3 dakika içinde giriş yapmalısınız', 'MEBBISAutomation');
       
       logger.info('Waiting for user to scan QR code (3 minutes timeout)...', 'MEBBISAutomation');
       

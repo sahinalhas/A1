@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { mebbisTransferManager } from '../services/mebbis-transfer-manager.service.js';
 import type { StartTransferRequest } from '@shared/types/mebbis-transfer.types';
 import { logger } from '../../../utils/logger.js';
+import { readFileSync, existsSync } from 'fs';
 
 const router = Router();
 
@@ -98,6 +99,31 @@ router.get('/status/:transferId', async (req, res) => {
   } catch (error) {
     const err = error as Error;
     logger.error('Failed to get MEBBIS transfer status', 'MEBBISRoutes', error);
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+router.get('/qr-code', async (req, res) => {
+  try {
+    const qrPath = './data/mebbis-qr-code.png';
+    
+    if (!existsSync(qrPath)) {
+      return res.status(404).json({
+        success: false,
+        error: 'QR code bulunamadı'
+      });
+    }
+    
+    const imageBuffer = readFileSync(qrPath);
+    res.set('Content-Type', 'image/png');
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.send(imageBuffer);
+  } catch (error) {
+    const err = error as Error;
+    logger.error('Failed to get QR code', 'MEBBISRoutes', error);
     res.status(500).json({
       success: false,
       error: err.message
