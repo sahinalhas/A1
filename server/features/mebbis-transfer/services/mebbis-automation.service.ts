@@ -166,15 +166,10 @@ export class MEBBISAutomationService {
       logger.info('📱 Tarayıcıda QR kodu açtık - telefonunuzdan QR kodunu okuyun', 'MEBBISAutomation');
       logger.info('⏱️ 3 dakika içinde giriş yapmalısınız', 'MEBBISAutomation');
       
-      await this.wait(3500);
-      logger.info('QR tarama bekleme süresi tamamlandı, main sayfasına gidiliyor...', 'MEBBISAutomation');
-      
       await this.page.goto('https://mebbis.meb.gov.tr/main.aspx', {
         waitUntil: 'domcontentloaded',
-        timeout: 60000
+        timeout: 180000
       });
-      
-      await this.wait(1000);
       
       logger.info('✅ Login successful! Veri giriş sayfasına yönlendirilecek...', 'MEBBISAutomation');
     } catch (error) {
@@ -193,16 +188,16 @@ export class MEBBISAutomationService {
       logger.info('Navigating to data entry page...', 'MEBBISAutomation');
       
       logger.info('e-Rehberlik Modülü tıklanıyor...', 'MEBBISAutomation');
+      await this.waitForXPath("//td[@title='e-Rehberlik Modülü']", 10000);
       await this.clickByXPath("//td[@title='e-Rehberlik Modülü']");
-      await this.wait(1000);
       
       logger.info('RPD Hizmetleri Veri Girişi tıklanıyor...', 'MEBBISAutomation');
+      await this.waitForXPath("//td[@title='RPD Hizmetleri Veri Girişi']", 10000);
       await this.clickByXPath("//td[@title='RPD Hizmetleri Veri Girişi']");
-      await this.wait(1000);
       
       logger.info('Bireysel Veri Girişi tıklanıyor...', 'MEBBISAutomation');
+      await this.waitForXPath("//td[@title='Bireysel Veri Girişi']", 10000);
       await this.clickByXPath("//td[@title='Bireysel Veri Girişi']");
-      await this.wait(1000);
       
       logger.info('✅ Successfully navigated to data entry page', 'MEBBISAutomation');
     } catch (error) {
