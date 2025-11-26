@@ -214,7 +214,7 @@ export default function SessionAnalytics() {
  const labels: Record<string, string> = {
  count: 'Toplam',
  completed: 'Tamamlanan',
- 'Aktif',
+ active: 'Aktif',
  };
  return [value, labels[name] || name];
  }}
@@ -224,7 +224,7 @@ export default function SessionAnalytics() {
  const labels: Record<string, string> = {
  count: 'Toplam',
  completed: 'Tamamlanan',
- 'Aktif',
+ active: 'Aktif',
  };
  return labels[value] || value;
  }}

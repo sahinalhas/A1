@@ -179,7 +179,7 @@ export function ProgressiveAnalysisView({
  }
  className={
  analysis.academic.recentTrend === 'IMPROVING'
- ? 'bg-green-100 text-green-800 
+ ? 'bg-green-100 text-green-800'
  : ''
  }
  >
@@ -269,7 +269,7 @@ export function ProgressiveAnalysisView({
  }
  className={
  analysis.behavior.overallTrend === 'IMPROVING'
- ? 'bg-green-100 text-green-800 
+ ? 'bg-green-100 text-green-800'
  : ''
  }
  >

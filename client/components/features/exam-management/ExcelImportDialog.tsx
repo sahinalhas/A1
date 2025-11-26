@@ -154,8 +154,8 @@ export function ExcelImportDialog({
  onDrop={handleDrop}
  className={`
  border-2 border-dashed rounded-xl p-8 text-center 
- ${isDragging ? 'border-primary bg-primary/5 : 'border-border'}
- ${isUploading ? 'opacity-50 pointer-events-none' : 'cursor-pointer 
+ ${isDragging ? 'border-primary bg-primary/5' : 'border-border'}
+ ${isUploading ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}
  `}
  >
  <input
