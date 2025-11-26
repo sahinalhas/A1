@@ -124,7 +124,7 @@ export function MEBBISTransferDialog({
                       }}
                     />
                     <p className="text-center text-xs text-gray-500 mt-2">
-                      QR kod görünmüyorsa: <a href="/mebbis-qr-code.png" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Yeni sekmede aç</a>
+                      QR kod görünmüyorsa: <a href="https://mebbis.meb.gov.tr/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">MEBBIS sayfasını aç</a>
                     </p>
                   </div>
                   <p className="text-blue-600 text-xs">⏱️ 3 dakika içinde giriş yapmalısınız</p>
