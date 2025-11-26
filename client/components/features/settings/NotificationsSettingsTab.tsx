@@ -14,9 +14,9 @@ import { Input } from "@/components/atoms/Input";
 import { Label } from "@/components/atoms/Label";
 import { Switch } from "@/components/atoms/Switch";
 import { Separator } from "@/components/atoms/Separator";
+import { Badge } from "@/components/atoms/Badge";
 import { Bell, Mail, Smartphone, MessageSquare, Clock, Save, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
-import { Badge } from "@/components/atoms/Badge";
 
 export default function NotificationsSettingsTab() {
  const settingsContext = useSettingsTabDirty();

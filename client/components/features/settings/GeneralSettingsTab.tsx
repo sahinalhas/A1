@@ -18,7 +18,7 @@ import {
  SelectItem,
  SelectTrigger,
  SelectValue,
-} from "@/components/organisms/Select";
+} from "@/components/atoms/Select";
 import { EnhancedTextarea as Textarea } from "@/components/molecules/EnhancedTextarea";
 import { Palette, User, Calendar, Clock, Globe, Save, Loader2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
