@@ -167,21 +167,31 @@ export class MEBBISAutomationService {
       
       logger.info('📱 Tarayıcıda QR kodu açtık - telefonunuzdan QR kodunu okuyun', 'MEBBISAutomation');
       logger.info('⏱️ 3 dakika içinde giriş yapmalısınız', 'MEBBISAutomation');
+      logger.info('⏳ Tarayıcı penceresi açık kalacak, QR kodunu okuttuktan sonra otomatik devam edecektir', 'MEBBISAutomation');
       
       logger.info('Waiting for user to scan QR code (3 minutes timeout)...', 'MEBBISAutomation');
       
-      await this.page.waitForNavigation({
-        waitUntil: 'domcontentloaded',
-        timeout: 180000
-      });
+      try {
+        await this.page.waitForNavigation({
+          waitUntil: 'domcontentloaded',
+          timeout: 180000
+        });
+      } catch (navError) {
+        logger.warn('Navigation timeout or error - checking current URL', 'MEBBISAutomation');
+      }
       
       const currentUrl = this.page.url();
-      logger.info(`Navigated to: ${currentUrl}`, 'MEBBISAutomation');
+      logger.info(`Current URL: ${currentUrl}`, 'MEBBISAutomation');
       
-      if (currentUrl.includes('main.aspx') || currentUrl.includes('Anasayfa')) {
+      // Kabul edilebilir URL'ler: login sonrası main.aspx, Anasayfa, index.aspx, default.aspx
+      if (currentUrl.includes('main.aspx') || 
+          currentUrl.includes('Anasayfa') || 
+          currentUrl.includes('index.aspx') ||
+          currentUrl.includes('default.aspx') ||
+          currentUrl.includes('Dashboard')) {
         logger.info('✅ Login successful!', 'MEBBISAutomation');
       } else {
-        throw new Error('Login failed - unexpected URL after navigation');
+        throw new Error(`Login failed - unexpected URL: ${currentUrl}`);
       }
     } catch (error) {
       const err = error as Error;
