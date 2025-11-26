@@ -314,6 +314,36 @@ export default function AISettingsTab() {
             onCheckedChange={setAiEnabled}
             className="data-[state=checked]:bg-green-500"
           />
+          {hasUnsavedChanges && (
+            <Button
+              onClick={async () => {
+                setIsSaving(true);
+                try {
+                  await saveSettings();
+                  toast.success('AI ayarları kaydedildi');
+                } catch (error) {
+                  toast.error('Ayarlar kaydedilemedi');
+                } finally {
+                  setIsSaving(false);
+                }
+              }}
+              disabled={isSaving}
+              className="bg-green-600 hover:bg-green-700"
+              size="sm"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                  Kaydediliyor
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                  Kaydet
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
 
