@@ -192,10 +192,17 @@ export class MEBBISAutomationService {
       const currentUrl = this.page.url();
       logger.info(`Navigated to: ${currentUrl}`, 'MEBBISAutomation');
       
-      if (currentUrl.includes('main.aspx') || currentUrl.includes('Anasayfa')) {
+      // MEBBIS başarılı giriş göstergeleri
+      if (currentUrl.includes('mebbis.meb.gov.tr') && 
+          (currentUrl.includes('main.aspx') || 
+           currentUrl.includes('index.aspx') || 
+           currentUrl.includes('Anasayfa') ||
+           currentUrl.includes('default.aspx'))) {
         logger.info('✅ Login successful!', 'MEBBISAutomation');
+        await this.wait(1500); // Sayfanın tam yüklenmesini bekle
       } else {
-        throw new Error('Login failed - unexpected URL after navigation');
+        logger.error(`Unexpected URL after login: ${currentUrl}`, 'MEBBISAutomation');
+        throw new Error(`Login sonrası beklenmeyen sayfa: ${currentUrl}`);
       }
     } catch (error) {
       const err = error as Error;
