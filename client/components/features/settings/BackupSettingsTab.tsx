@@ -58,7 +58,7 @@ interface BackupMetadata {
 }
 
 interface BackupSettingsTabProps {
- form: UseFormReturn<AppSettings>;
+ form?: UseFormReturn<AppSettings>;
 }
 
 export default function BackupSettingsTab({ form }: BackupSettingsTabProps) {
