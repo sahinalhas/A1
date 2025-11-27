@@ -67,7 +67,6 @@ interface GuidanceTipBalloonProps {
   autoShow?: boolean;
   showInterval?: number;
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
-  onTriggerSet?: (trigger: () => void) => void;
   onDismiss?: () => void;
 }
 
@@ -75,7 +74,6 @@ export default function GuidanceTipBalloon({
   autoShow = true, 
   showInterval = 30 * 60 * 1000,
   position = 'bottom-right',
-  onTriggerSet,
   onDismiss
 }: GuidanceTipBalloonProps) {
   const [tip, setTip] = useState<GuidanceTip | null>(null);
@@ -222,12 +220,6 @@ export default function GuidanceTipBalloon({
   };
 
   useEffect(() => {
-    if (onTriggerSet) {
-      onTriggerSet(fetchNextTip);
-    }
-  }, [fetchNextTip, onTriggerSet]);
-
-  useEffect(() => {
     if (!autoShow) return;
 
     const timer = setTimeout(() => {
@@ -243,6 +235,11 @@ export default function GuidanceTipBalloon({
       clearInterval(interval);
     };
   }, [autoShow, showInterval, fetchNextTip]);
+
+  useEffect(() => {
+    if (autoShow) return;
+    fetchNextTip();
+  }, [autoShow, fetchNextTip]);
 
   const positionClasses = {
     'bottom-right': 'bottom-20 right-6',

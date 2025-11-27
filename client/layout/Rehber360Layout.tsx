@@ -61,12 +61,6 @@ import { cn } from "@/lib/utils";
 import { prefetchRoute } from "@/hooks/usePrefetchRoutes";
 import GuidanceTipBalloon from "@/components/features/guidance-tips/GuidanceTipBalloon";
 
-let triggerGuidanceTip: (() => void) | null = null;
-
-export const setGuidanceTipTrigger = (fn: () => void) => {
-  triggerGuidanceTip = fn;
-};
-
 // 2025 Ultra Minimalist Logo
 function AppLogo({ collapsed }: { collapsed?: boolean }) {
  return (
@@ -678,7 +672,6 @@ export default function Rehber360Layout() {
    <GuidanceTipBalloon 
      autoShow={false}
      position="top-right"
-     onTriggerSet={setGuidanceTipTrigger}
      onDismiss={() => setShowTipNotification(false)}
    />
  )}
