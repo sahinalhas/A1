@@ -476,7 +476,9 @@ export default function GuidanceTipBalloon({
                         <Button
                           variant="ghost"
                           size="sm"
+                          disabled={isLoading}
                           onClick={async () => {
+                            if (isLoading) return;
                             if (tip) {
                               try {
                                 await fetch(`/api/guidance-tips/dismiss/${tip.id}`, { method: 'POST' });
@@ -490,8 +492,8 @@ export default function GuidanceTipBalloon({
                           }}
                           className="text-xs gap-1"
                         >
-                          <RefreshCw className="h-3 w-3" />
-                          Sonraki
+                          <RefreshCw className={cn("h-3 w-3", isLoading && "animate-spin")} />
+                          {isLoading ? 'Yükleniyor...' : 'Sonraki'}
                         </Button>
                       </div>
                     </div>
