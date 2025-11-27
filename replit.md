@@ -25,8 +25,21 @@ The primary database is SQLite, located at `./data/database.db`. Schema migratio
 
 ## Recent Changes (2025-11-27)
 
-### Guidance Tips Feature - AI-Powered Professional Development
-Implemented periodic informational balloon notifications for guidance counselors:
+### Guidance Tips Feature - Batch-Based System with Local Queue
+Enhanced the Guidance Counselor Information Assistant with efficient batch-based tip fetching:
+
+- **Batch Generation**: AI generates 15 tips at once via single API call (instead of one-by-one), drastically reducing API costs
+- **Local Queue System**: Tips stored in localStorage with queue management, ensuring instant display without network delay
+- **Auto-Refresh**: When remaining tips drop to 3 or below, new batch is automatically fetched in background
+- **Progress Tracking**: Progress bar and badge show viewed/remaining tip counts in the balloon component
+- **Header Badge**: Lightbulb icon in header displays remaining tips count with animated badge
+- **User Isolation**: Each user has their own tip queue via session-based tracking
+- **Custom Event System**: `tipQueueUpdated` event ensures immediate UI sync across components
+- **Batch Endpoint**: `/api/guidance-tips/batch` returns unseen tips or generates new batch when needed
+- **Files**: `server/features/guidance-tips/services/guidance-tips-ai.service.ts`, `client/hooks/useGuidanceTipQueue.ts`
+
+### Guidance Tips Feature - AI-Powered Professional Development (Previous)
+Periodic informational balloon notifications for guidance counselors:
 
 - **Database Schema**: `guidance_tips` and `guidance_tips_user_views` tables for tip storage and view tracking
 - **Pure AI Generation**: Tips are generated entirely by AI acting as an experienced educator - NO static data or program content used
