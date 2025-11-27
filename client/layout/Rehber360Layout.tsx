@@ -45,6 +45,7 @@ import {
  X,
  PanelLeftClose,
  PanelLeftOpen,
+ Lightbulb,
 } from "lucide-react";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { loadSettings, updateSettings, SETTINGS_KEY, AppSettings } from "@/lib/app-settings";
@@ -58,7 +59,13 @@ import AIStatusIndicator from "@/components/features/common/AIStatusIndicator";
 import { useIsMobile } from "@/hooks/utils/mobile.utils";
 import { cn } from "@/lib/utils";
 import { prefetchRoute } from "@/hooks/usePrefetchRoutes";
-import { GuidanceTipBalloon } from "@/components/features/guidance-tips";
+import GuidanceTipBalloon from "@/components/features/guidance-tips/GuidanceTipBalloon";
+
+let triggerGuidanceTip: (() => void) | null = null;
+
+export const setGuidanceTipTrigger = (fn: () => void) => {
+  triggerGuidanceTip = fn;
+};
 
 // 2025 Ultra Minimalist Logo
 function AppLogo({ collapsed }: { collapsed?: boolean }) {
@@ -607,6 +614,16 @@ export default function Rehber360Layout() {
  {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
  </Button>
 
+ <Button
+ variant="ghost"
+ size="icon"
+ className="h-7 w-7"
+ onClick={() => triggerGuidanceTip?.()}
+ title="Rehberlik İpuçlarını Göster"
+ >
+ <Lightbulb className="h-3.5 w-3.5" />
+ </Button>
+
  <DropdownMenu>
  <DropdownMenuTrigger asChild>
  <Button variant="ghost" size="icon" className="rounded-full h-7 w-7">
@@ -660,6 +677,7 @@ export default function Rehber360Layout() {
    autoShow={true}
    showInterval={30 * 60 * 1000}
    position="bottom-right"
+   onTriggerSet={setGuidanceTipTrigger}
  />
  </div>
  );

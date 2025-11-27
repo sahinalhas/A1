@@ -67,12 +67,14 @@ interface GuidanceTipBalloonProps {
   autoShow?: boolean;
   showInterval?: number;
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  onTriggerSet?: (trigger: () => void) => void;
 }
 
 export default function GuidanceTipBalloon({ 
   autoShow = true, 
   showInterval = 30 * 60 * 1000,
-  position = 'bottom-right' 
+  position = 'bottom-right',
+  onTriggerSet
 }: GuidanceTipBalloonProps) {
   const [tip, setTip] = useState<GuidanceTip | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -215,6 +217,12 @@ export default function GuidanceTipBalloon({
     const enabledCount = groupCategories.filter(c => enabledCategories.includes(c.value)).length;
     return enabledCount > 0 && enabledCount < groupCategories.length;
   };
+
+  useEffect(() => {
+    if (onTriggerSet) {
+      onTriggerSet(fetchNextTip);
+    }
+  }, [fetchNextTip, onTriggerSet]);
 
   useEffect(() => {
     if (!autoShow) return;
