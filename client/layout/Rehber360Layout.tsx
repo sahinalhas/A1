@@ -145,6 +145,7 @@ export default function Rehber360Layout() {
  const [searchQuery, setSearchQuery] = useState("");
  const [sidebarOpen, setSidebarOpen] = useState(true);
  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+ const [showTipNotification, setShowTipNotification] = useState(false);
  const isMobile = useIsMobile();
  const crumbs = useBreadcrumbs();
  const navigate = useNavigate();
@@ -618,7 +619,7 @@ export default function Rehber360Layout() {
  variant="ghost"
  size="icon"
  className="h-7 w-7"
- onClick={() => triggerGuidanceTip?.()}
+ onClick={() => setShowTipNotification(true)}
  title="Rehberlik İpuçlarını Göster"
  >
  <Lightbulb className="h-3.5 w-3.5" />
@@ -673,12 +674,14 @@ export default function Rehber360Layout() {
  </main>
  </div>
  
- <GuidanceTipBalloon 
-   autoShow={true}
-   showInterval={30 * 60 * 1000}
-   position="bottom-right"
-   onTriggerSet={setGuidanceTipTrigger}
- />
+ {showTipNotification && (
+   <GuidanceTipBalloon 
+     autoShow={false}
+     position="top-right"
+     onTriggerSet={setGuidanceTipTrigger}
+     onDismiss={() => setShowTipNotification(false)}
+   />
+ )}
  </div>
  );
 }

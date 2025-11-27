@@ -68,13 +68,15 @@ interface GuidanceTipBalloonProps {
   showInterval?: number;
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   onTriggerSet?: (trigger: () => void) => void;
+  onDismiss?: () => void;
 }
 
 export default function GuidanceTipBalloon({ 
   autoShow = true, 
   showInterval = 30 * 60 * 1000,
   position = 'bottom-right',
-  onTriggerSet
+  onTriggerSet,
+  onDismiss
 }: GuidanceTipBalloonProps) {
   const [tip, setTip] = useState<GuidanceTip | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -141,7 +143,8 @@ export default function GuidanceTipBalloon({
     setIsVisible(false);
     setTip(null);
     setShowSettings(false);
-  }, [tip]);
+    onDismiss?.();
+  }, [tip, onDismiss]);
 
   const rateTip = useCallback(async (value: number) => {
     if (!tip) return;
