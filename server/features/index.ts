@@ -43,6 +43,7 @@ import aiSuggestionsRouter from './ai-suggestions/index.js';
 import examManagementRouter from './exam-management/index.js';
 import { guidanceStandardsRoutes } from './guidance-standards/index.js';
 import mebbisTransferRouter from './mebbis-transfer/index.js';
+import guidanceTipsRouter from './guidance-tips/index.js';
 
 /**
  * Feature Registry
@@ -208,5 +209,8 @@ featureRegistry.use('/ai', aiStatusRouter);
 
 // =================== MEBBIS INTEGRATION ===================
 featureRegistry.use('/mebbis', mebbisTransferRouter);
+
+// =================== GUIDANCE TIPS (AI-Powered) ===================
+featureRegistry.use('/guidance-tips', guidanceTipsRouter);
 
 export default featureRegistry;

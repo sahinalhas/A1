@@ -163,7 +163,9 @@ function expressPlugin(): Plugin {
               import('./server/features/counseling-sessions/services/auto-complete-scheduler.service.js')
                 .then(({ startAutoCompleteScheduler }) => startAutoCompleteScheduler()),
               import('./server/services/daily-action-plan-scheduler.service.js')
-                .then(({ startDailyActionPlanScheduler }) => startDailyActionPlanScheduler())
+                .then(({ startDailyActionPlanScheduler }) => startDailyActionPlanScheduler()),
+              import('./server/features/guidance-tips/index.js')
+                .then(({ startGuidanceTipsScheduler }) => startGuidanceTipsScheduler())
             ]).catch((error) => {
               import('./server/utils/logger.js').then(({ logger }) => {
                 logger.error('Failed to start schedulers', 'VitePlugin', error);
@@ -205,17 +207,20 @@ function expressPlugin(): Plugin {
             { stopAnalyticsScheduler },
             { stopAutoCompleteScheduler },
             { stopDailyActionPlanScheduler },
+            { stopGuidanceTipsScheduler },
             { closeDatabase }
           ] = await Promise.all([
             import('./server/features/analytics/services/analytics-scheduler.service.js'),
             import('./server/features/counseling-sessions/services/auto-complete-scheduler.service.js'),
             import('./server/services/daily-action-plan-scheduler.service.js'),
+            import('./server/features/guidance-tips/index.js'),
             import('./server/lib/database/connection.js')
           ]);
           
           stopAnalyticsScheduler();
           stopAutoCompleteScheduler();
           stopDailyActionPlanScheduler();
+          stopGuidanceTipsScheduler();
           closeDatabase();
           logger.info?.('✅ Resources cleaned up successfully', 'VitePlugin');
         } catch (error) {

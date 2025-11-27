@@ -58,6 +58,7 @@ import AIStatusIndicator from "@/components/features/common/AIStatusIndicator";
 import { useIsMobile } from "@/hooks/utils/mobile.utils";
 import { cn } from "@/lib/utils";
 import { prefetchRoute } from "@/hooks/usePrefetchRoutes";
+import { GuidanceTipBalloon } from "@/components/features/guidance-tips";
 
 // 2025 Ultra Minimalist Logo
 function AppLogo({ collapsed }: { collapsed?: boolean }) {
@@ -654,6 +655,12 @@ export default function Rehber360Layout() {
  </div>
  </main>
  </div>
+ 
+ <GuidanceTipBalloon 
+   autoShow={true}
+   showInterval={30 * 60 * 1000}
+   position="bottom-right"
+ />
  </div>
  );
 }
