@@ -27,7 +27,7 @@ const upload = multer({
 
 const router = Router();
 
-router.post('/create', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), backupRateLimiter, async (req, res) => {
+router.post('/create', requireSecureAuth, requireRoleSecure(['counselor']), backupRateLimiter, async (req, res) => {
   try {
     const authReq = req as AuthenticatedRequest;
     const { type = 'manual', options = {} } = req.body;
@@ -64,7 +64,7 @@ router.get('/list', requireSecureAuth, async (req, res) => {
   }
 });
 
-router.get('/download/:backupId', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), async (req, res) => {
+router.get('/download/:backupId', requireSecureAuth, requireRoleSecure(['counselor']), async (req, res) => {
   try {
     const authReq = req as AuthenticatedRequest;
     const { backupId } = req.params;
@@ -93,7 +93,7 @@ router.get('/download/:backupId', requireSecureAuth, requireRoleSecure(['admin',
   }
 });
 
-router.post('/restore/:backupId', requireSecureAuth, requireRoleSecure(['admin']), backupRateLimiter, async (req, res) => {
+router.post('/restore/:backupId', requireSecureAuth, requireRoleSecure(['counselor']), backupRateLimiter, async (req, res) => {
   try {
     const authReq = req as AuthenticatedRequest;
     const { backupId } = req.params;
@@ -119,7 +119,7 @@ router.post('/restore/:backupId', requireSecureAuth, requireRoleSecure(['admin']
   }
 });
 
-router.post('/upload-restore', requireSecureAuth, requireRoleSecure(['admin']), backupRateLimiter, upload.single('backup'), async (req, res) => {
+router.post('/upload-restore', requireSecureAuth, requireRoleSecure(['counselor']), backupRateLimiter, upload.single('backup'), async (req, res) => {
   const authReq = req as AuthenticatedRequest;
   
   try {
@@ -174,7 +174,7 @@ router.post('/upload-restore', requireSecureAuth, requireRoleSecure(['admin']), 
   }
 });
 
-router.delete('/:backupId', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), backupRateLimiter, async (req, res) => {
+router.delete('/:backupId', requireSecureAuth, requireRoleSecure(['counselor']), backupRateLimiter, async (req, res) => {
   try {
     const authReq = req as AuthenticatedRequest;
     const { backupId } = req.params;
@@ -200,7 +200,7 @@ router.delete('/:backupId', requireSecureAuth, requireRoleSecure(['admin', 'coun
   }
 });
 
-router.get('/audit-logs', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), async (req, res) => {
+router.get('/audit-logs', requireSecureAuth, requireRoleSecure(['counselor']), async (req, res) => {
   try {
     const { userId, action, resource, startDate, endDate, limit } = req.query;
     
@@ -220,7 +220,7 @@ router.get('/audit-logs', requireSecureAuth, requireRoleSecure(['admin', 'counse
   }
 });
 
-router.get('/audit-report/:userId', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), async (req, res) => {
+router.get('/audit-report/:userId', requireSecureAuth, requireRoleSecure(['counselor']), async (req, res) => {
   try {
     const { userId } = req.params;
     const { days = 30 } = req.query;
@@ -233,7 +233,7 @@ router.get('/audit-report/:userId', requireSecureAuth, requireRoleSecure(['admin
   }
 });
 
-router.post('/encrypt', requireSecureAuth, requireRoleSecure(['admin']), async (req, res) => {
+router.post('/encrypt', requireSecureAuth, requireRoleSecure(['counselor']), async (req, res) => {
   try {
     const { data, fields } = req.body;
     
@@ -249,7 +249,7 @@ router.post('/encrypt', requireSecureAuth, requireRoleSecure(['admin']), async (
   }
 });
 
-router.post('/decrypt', requireSecureAuth, requireRoleSecure(['admin']), async (req, res) => {
+router.post('/decrypt', requireSecureAuth, requireRoleSecure(['counselor']), async (req, res) => {
   try {
     const { data, fields } = req.body;
     
@@ -265,7 +265,7 @@ router.post('/decrypt', requireSecureAuth, requireRoleSecure(['admin']), async (
   }
 });
 
-router.post('/anonymize', requireSecureAuth, requireRoleSecure(['admin']), async (req, res) => {
+router.post('/anonymize', requireSecureAuth, requireRoleSecure(['counselor']), async (req, res) => {
   try {
     const { email, phone } = req.body;
     

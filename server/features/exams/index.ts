@@ -11,8 +11,8 @@ router.get('/:studentId', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getE
 router.get('/:studentId/type/:examType', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getExamResultsByType);
 router.get('/:studentId/latest', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getLatestExamResult);
 router.get('/:studentId/progress/:examType', simpleRateLimit(200, 15 * 60 * 1000), examsRoutes.getExamProgressAnalysis);
-router.post('/', requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), examsRoutes.createExamResult);
-router.put('/:id', requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), examsRoutes.updateExamResult);
-router.delete('/:id', requireRoleSecure(['admin', 'counselor']), simpleRateLimit(20, 15 * 60 * 1000), examsRoutes.deleteExamResult);
+router.post('/', requireRoleSecure(['counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), examsRoutes.createExamResult);
+router.put('/:id', requireRoleSecure(['counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), examsRoutes.updateExamResult);
+router.delete('/:id', requireRoleSecure(['counselor']), simpleRateLimit(20, 15 * 60 * 1000), examsRoutes.deleteExamResult);
 
 export default router;

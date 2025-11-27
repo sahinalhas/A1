@@ -7,8 +7,8 @@ const router = Router();
 
 router.use(requireSecureAuth);
 
-router.get("/", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(200, 15 * 60 * 1000), attendanceRoutes.getAllAttendance);
+router.get("/", requireRoleSecure(['counselor', 'teacher']), simpleRateLimit(200, 15 * 60 * 1000), attendanceRoutes.getAllAttendance);
 router.get("/:studentId", simpleRateLimit(200, 15 * 60 * 1000), attendanceRoutes.getAttendanceByStudent);
-router.post("/", requireRoleSecure(['admin', 'counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), attendanceRoutes.saveAttendance);
+router.post("/", requireRoleSecure(['counselor', 'teacher']), simpleRateLimit(50, 15 * 60 * 1000), attendanceRoutes.saveAttendance);
 
 export default router;

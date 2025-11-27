@@ -8,7 +8,7 @@ export function createUsersTable(db: Database.Database): void {
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       passwordHash TEXT NOT NULL,
-      role TEXT NOT NULL CHECK(role IN ('admin', 'counselor', 'teacher', 'observer')),
+      role TEXT NOT NULL CHECK(role IN ('counselor', 'teacher', 'observer')),
       institution TEXT NOT NULL,
       isActive BOOLEAN DEFAULT TRUE,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -22,22 +22,22 @@ export function createUsersTable(db: Database.Database): void {
 }
 
 export function seedAdminUser(db: Database.Database): void {
-  const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get('admin@okul.edu.tr');
+  const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get('rehber@okul.edu.tr');
   
   if (!existingUser) {
-    const passwordHash = bcrypt.hashSync('admin123', 10);
+    const passwordHash = bcrypt.hashSync('rehber123', 10);
     db.prepare(`
       INSERT INTO users (id, name, email, passwordHash, role, institution, isActive)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(
-      'admin-user-id-12345',
-      'Admin Kullanıcı',
-      'admin@okul.edu.tr',
+      'rehber-user-id-12345',
+      'Rehber Öğretmen',
+      'rehber@okul.edu.tr',
       passwordHash,
-      'admin',
-      'Okul Yönetimi',
+      'counselor',
+      'Okul Rehberlik Servisi',
       1
     );
-    console.log('✅ Admin kullanıcı oluşturuldu: admin@okul.edu.tr / admin123');
+    console.log('✅ Rehber öğretmen kullanıcısı oluşturuldu: rehber@okul.edu.tr / rehber123');
   }
 }

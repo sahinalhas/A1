@@ -181,10 +181,10 @@ export async function updateUserPassword(req: Request, res: Response) {
       });
     }
 
-    const isAdmin = authReq.user.role === 'admin';
+    const isCounselor = authReq.user.role === 'counselor';
     const isSelf = authReq.user.id === id;
 
-    if (!isAdmin && !isSelf) {
+    if (!isCounselor && !isSelf) {
       logger.warn('Unauthorized password change attempt', 'UpdatePasswordRoute', {
         requestedUserId: id,
         authenticatedUserId: authReq.user.id,
@@ -192,7 +192,7 @@ export async function updateUserPassword(req: Request, res: Response) {
       });
       return res.status(403).json({
         success: false,
-        error: 'Sadece kendi şifrenizi veya admin olarak başkalarının şifresini değiştirebilirsiniz'
+        error: 'Sadece kendi şifrenizi veya rehber öğretmen olarak başkalarının şifresini değiştirebilirsiniz'
       });
     }
 

@@ -12,12 +12,12 @@ console.log('[USERS ROUTER] authRateLimiter === requireSecureAuth:', authRateLim
 router.post('/login', authRateLimiter, usersRoutes.login);
 router.post('/logout', requireSecureAuth, authRateLimiter, usersRoutes.logout);
 router.get('/current', requireSecureAuth, authRateLimiter, usersRoutes.getCurrentUser);
-router.post('/', requireSecureAuth, requireRoleSecure(['admin']), simpleRateLimit(10, 60 * 60 * 1000), usersRoutes.createUser);
-router.get('/', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(100, 15 * 60 * 1000), usersRoutes.getAllUsers);
-router.get('/count', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(100, 15 * 60 * 1000), usersRoutes.getUsersCount);
-router.get('/:id', requireSecureAuth, requireRoleSecure(['admin', 'counselor']), simpleRateLimit(100, 15 * 60 * 1000), usersRoutes.getUserById);
-router.put('/:id', requireSecureAuth, requireRoleSecure(['admin']), simpleRateLimit(50, 15 * 60 * 1000), usersRoutes.updateUser);
+router.post('/', requireSecureAuth, requireRoleSecure(['counselor']), simpleRateLimit(10, 60 * 60 * 1000), usersRoutes.createUser);
+router.get('/', requireSecureAuth, requireRoleSecure(['counselor']), simpleRateLimit(100, 15 * 60 * 1000), usersRoutes.getAllUsers);
+router.get('/count', requireSecureAuth, requireRoleSecure(['counselor']), simpleRateLimit(100, 15 * 60 * 1000), usersRoutes.getUsersCount);
+router.get('/:id', requireSecureAuth, requireRoleSecure(['counselor']), simpleRateLimit(100, 15 * 60 * 1000), usersRoutes.getUserById);
+router.put('/:id', requireSecureAuth, requireRoleSecure(['counselor']), simpleRateLimit(50, 15 * 60 * 1000), usersRoutes.updateUser);
 router.put('/:id/password', requireSecureAuth, simpleRateLimit(10, 60 * 60 * 1000), usersRoutes.updateUserPassword);
-router.delete('/:id', requireSecureAuth, requireRoleSecure(['admin']), simpleRateLimit(10, 60 * 60 * 1000), usersRoutes.deactivateUser);
+router.delete('/:id', requireSecureAuth, requireRoleSecure(['counselor']), simpleRateLimit(10, 60 * 60 * 1000), usersRoutes.deactivateUser);
 
 export default router;

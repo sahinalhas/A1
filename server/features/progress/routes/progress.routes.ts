@@ -30,12 +30,12 @@ export const saveProgressHandler: RequestHandler = (req, res) => {
       return res.status(400).json({ error: ERROR_MESSAGES.EXPECTED_ARRAY_OF_PROGRESS });
     }
     
-    // Allow students to save their own progress, admins/counselors/teachers can save anyone's
+    // Allow students to save their own progress, counselors/teachers can save anyone's
     const userRole = (req as any).user?.role;
-    const isAdmin = ['admin', 'counselor', 'teacher'].includes(userRole);
+    const isCounselorOrTeacher = ['counselor', 'teacher'].includes(userRole);
     
-    if (!isAdmin) {
-      // If not admin, verify all progress records belong to current user
+    if (!isCounselorOrTeacher) {
+      // If not counselor or teacher, verify all progress records belong to current user
       const userId = (req as any).user?.id;
       const allOwnProgress = progress.every(p => p.studentId === userId);
       if (!allOwnProgress) {

@@ -18,7 +18,7 @@ export default function Register() {
  email: '',
  password: '',
  confirmPassword: '',
- role: 'counselor' as 'admin' | 'counselor' | 'teacher' | 'observer',
+ role: 'counselor' as 'counselor' | 'teacher' | 'observer',
  institution: ''
  });
  const [showPassword, setShowPassword] = useState(false);
@@ -108,8 +108,7 @@ export default function Register() {
  };
 
  const roleDescriptions = {
- admin: 'Tüm sistem yetkilerine sahip',
- counselor: 'Rehber öğretmen - Tüm öğrenci verilerine erişim',
+ counselor: 'Rehber öğretmen - Tüm sistem yetkilerine ve öğrenci verilerine erişim',
  teacher: 'Öğretmen - Kendi sınıflarına erişim',
  observer: 'Gözlemci - Sadece genel raporlara erişim'
  };
@@ -339,7 +338,7 @@ export default function Register() {
  </Label>
  <Select
  value={formData.role}
- onValueChange={(value: 'admin' | 'counselor' | 'teacher' | 'observer') => 
+ onValueChange={(value: 'counselor' | 'teacher' | 'observer') => 
  setFormData({ ...formData, role: value })
  }
  disabled={isLoading}
@@ -350,7 +349,6 @@ export default function Register() {
  <SelectContent>
  <SelectItem value="counselor">Rehber Öğretmen</SelectItem>
  <SelectItem value="teacher">Öğretmen</SelectItem>
- <SelectItem value="admin">Yönetici</SelectItem>
  <SelectItem value="observer">Gözlemci</SelectItem>
  </SelectContent>
  </Select>

@@ -13,7 +13,7 @@ import interventionAIRoutes from './routes/intervention-ai.routes.js';
 const router = Router();
 
 router.use(requireSecureAuth);
-router.use(requireRoleSecure(['admin', 'counselor']));
+router.use(requireRoleSecure(['counselor']));
 
 router.get('/', simpleRateLimit(200, 15 * 60 * 1000), counselingSessionsRoutes.getAllCounselingSessions);
 router.get('/active', simpleRateLimit(200, 15 * 60 * 1000), counselingSessionsRoutes.getActiveCounselingSessions);
