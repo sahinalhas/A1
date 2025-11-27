@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import { guidanceTipsService } from '../services/guidance-tips.service.js';
+import { guidanceTipsBatchService } from '../services/guidance-tips-batch.service.js';
 import { triggerManualGeneration } from '../services/guidance-tips-scheduler.service.js';
 import { GUIDANCE_TIP_CATEGORIES, CATEGORY_GROUPS } from '../types/guidance-tips.types.js';
 import { logger } from '../../../utils/logger.js';
@@ -311,6 +312,25 @@ router.post('/reset-views', async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: 'Failed to reset views'
+    });
+  }
+});
+
+// Get batch stats for user (debug endpoint)
+router.get('/batch-stats', async (req: Request, res: Response) => {
+  try {
+    const userId = extractUserId(req);
+    const stats = guidanceTipsBatchService.getBatchStats(userId);
+    
+    res.json({
+      success: true,
+      data: stats || { message: 'No batch cache found' }
+    });
+  } catch (error) {
+    logger.error('Failed to get batch stats', 'GuidanceTipsRoutes', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get batch stats'
     });
   }
 });

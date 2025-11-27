@@ -1,5 +1,6 @@
 import { guidanceTipsRepository } from '../repository/guidance-tips.repository.js';
 import { guidanceTipsAIService } from './guidance-tips-ai.service.js';
+import { guidanceTipsBatchService } from './guidance-tips-batch.service.js';
 import type { GuidanceTip, GuidanceTipCategory, UserCategoryPreferences } from '../types/guidance-tips.types.js';
 import { GUIDANCE_TIP_CATEGORIES } from '../types/guidance-tips.types.js';
 import { logger } from '../../../utils/logger.js';
@@ -24,6 +25,10 @@ class GuidanceTipsService {
     }
   }
 
+  async generateBatchOfTips(userId: string, enabledCategories: GuidanceTipCategory[] | undefined): Promise<void> {
+    await guidanceTipsBatchService.getNextTip(userId, enabledCategories);
+  }
+
   getUserPreferences(userId: string): UserCategoryPreferences | null {
     return guidanceTipsRepository.getUserPreferences(userId);
   }
@@ -41,35 +46,16 @@ class GuidanceTipsService {
       const preferences = guidanceTipsRepository.getUserPreferences(userId);
       const enabledCategories = preferences?.enabledCategories;
       
-      // If forceNew is true, always generate a fresh AI tip
+      // If forceNew is true, regenerate entire batch
       if (forceNew) {
-        logger.info(`Force generating new tip for user ${userId}`, 'GuidanceTipsService');
-        const randomCategory = enabledCategories && enabledCategories.length > 0
-          ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
-          : undefined;
-        const newTip = await this.generateNewTip(randomCategory);
-        if (newTip) {
-          guidanceTipsRepository.markTipAsViewed(newTip.id, userId);
-          return newTip;
-        }
+        logger.info(`Force regenerating batch for user ${userId}`, 'GuidanceTipsService');
+        guidanceTipsBatchService.clearUserCache(userId);
       }
       
-      // Try to get an unseen tip first
-      let tip = guidanceTipsRepository.getRandomUnseenTipWithPreferences(userId, enabledCategories);
+      // Use batch service to get next tip
+      // Batch service handles: generating new batch if needed, serving tips one by one
+      const tip = await guidanceTipsBatchService.getNextTip(userId, enabledCategories);
       
-      if (!tip) {
-        // No unseen tips - generate a new one
-        logger.info(`No unseen tips for user ${userId}, generating new one`, 'GuidanceTipsService');
-        const randomCategory = enabledCategories && enabledCategories.length > 0
-          ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
-          : undefined;
-        tip = await this.generateNewTip(randomCategory);
-      }
-
-      if (tip) {
-        guidanceTipsRepository.markTipAsViewed(tip.id, userId);
-      }
-
       return tip;
     } catch (error) {
       logger.error('Failed to get next tip for user', 'GuidanceTipsService', error);
