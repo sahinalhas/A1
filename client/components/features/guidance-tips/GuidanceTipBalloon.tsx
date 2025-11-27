@@ -271,11 +271,11 @@ export default function GuidanceTipBalloon({
               'overflow-hidden'
             )}>
               <div className={cn(
-                'flex items-start gap-3 p-4',
+                'flex items-center gap-3 p-4',
                 groupColors.bg
               )}>
                 <div className={cn(
-                  'p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 flex-shrink-0 mt-0.5',
+                  'p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 flex-shrink-0',
                   groupColors.text
                 )}>
                   <CategoryIcon className="h-5 w-5" />
