@@ -424,10 +424,37 @@ export default function GuidanceTipBalloon({
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 space-y-4">
-                      <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {tip.content}
-                      </p>
+                    <div className="p-4 space-y-3">
+                      <div className="text-xs text-gray-600 dark:text-gray-300 space-y-2 max-h-96 overflow-y-auto">
+                        {tip.content.split('\n').map((line, idx) => {
+                          const numMatch = line.match(/^(\d+)\.\s*\*\*(.*?)\*\*:\s*(.*)/);
+                          const boldMatch = line.match(/^\*\*(.*?)\*\*:\s*(.*)/);
+                          const normalLine = line.trim();
+                          
+                          if (numMatch) {
+                            const [, num, title, desc] = numMatch;
+                            return (
+                              <div key={idx} className="pl-3 border-l-2 border-blue-300 dark:border-blue-700">
+                                <p className="font-semibold text-gray-900 dark:text-white">{num}. {title}</p>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-300 mt-1">{desc}</p>
+                              </div>
+                            );
+                          } else if (boldMatch && normalLine.startsWith('**')) {
+                            return (
+                              <div key={idx} className="font-semibold text-gray-900 dark:text-white">
+                                {boldMatch[1]}
+                              </div>
+                            );
+                          } else if (normalLine.length > 0) {
+                            return (
+                              <p key={idx} className="leading-relaxed text-gray-600 dark:text-gray-300">
+                                {normalLine}
+                              </p>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
                       
                       <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
                         <div className="flex items-center gap-1">
@@ -467,8 +494,8 @@ export default function GuidanceTipBalloon({
                     animate={{ opacity: 1 }}
                     className="p-4"
                   >
-                    <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
-                      {tip.content}
+                    <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-3">
+                      {tip.content.split('\n')[0]}
                     </p>
                     <Button
                       variant="ghost"
