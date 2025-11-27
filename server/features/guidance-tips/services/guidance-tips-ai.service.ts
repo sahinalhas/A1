@@ -10,65 +10,97 @@ export class GuidanceTipsAIService {
     this.aiService = AIProviderService.getInstance();
   }
 
-  async generateRandomTip(): Promise<GeneratedTipContent | null> {
+  async generateRandomTip(preferredCategory?: GuidanceTipCategory): Promise<GeneratedTipContent | null> {
     try {
-      const randomCategory = this.getRandomCategory();
-      const categoryInfo = GUIDANCE_TIP_CATEGORIES.find(c => c.value === randomCategory);
+      const category = preferredCategory || this.getRandomCategory();
+      const categoryInfo = GUIDANCE_TIP_CATEGORIES.find(c => c.value === category);
 
       const response = await this.aiService.chat({
         messages: [
           {
             role: 'system',
-            content: `Sen 20 yıllık deneyime sahip uzman bir rehber öğretmen ve eğitimcisin. Türkiye'deki okullarda çalışan rehber öğretmenlere mesleki gelişimleri için kısa, pratik ve değerli bilgiler sunuyorsun.
+            content: `Sen 20 yıllık deneyime sahip, hem akademik hem de uygulamalı alanda uzmanlaşmış bir psikolojik danışman ve rehber öğretmensin. Türkiye'deki okullarda çalışan rehber öğretmenlere mesleki gelişimleri için kapsamlı, bilimsel temelli ve pratik bilgiler sunuyorsun.
 
-Görevin: Rehber öğretmenlere günlük işlerinde faydalı olacak rastgele bir profesyonel ipucu veya bilgi üretmek.
+Görevin: Rehber öğretmenlerin profesyonel gelişimine katkı sağlayacak, günlük işlerinde kullanabilecekleri değerli bilgiler üretmek.
 
-Bilgi üretirken şu konulardan herhangi birini seçebilirsin:
-- Öğrenci görüşme teknikleri
-- Veli iletişimi
-- Kriz müdahalesi
+UZMANLIK ALANLARIN:
+
+1. DANIŞMA KURAMLARI:
+- Psikoanalitik Kuram (Freud, bilinçdışı, savunma mekanizmaları)
+- Bilişsel-Davranışçı Terapi (BDT teknikleri, bilişsel çarpıtmalar, davranış değiştirme)
+- Hümanistik/Danışan Merkezli Yaklaşım (Rogers, koşulsuz kabul, empati)
+- Gestalt Terapisi (şimdi ve burada, farkındalık, bitmemiş işler)
+- Varoluşçu Terapi (anlam arayışı, özgürlük, sorumluluk)
+- Çözüm Odaklı Kısa Terapi (istisnalar, ölçekleme soruları, mucize soru)
+- Aile Sistemleri Kuramı (sistemik bakış, genogram, üçgenler)
+- Narratif Terapi (hikaye yeniden yazma, dışsallaştırma)
+- Adlerian Terapi (yaşam stili, sosyal ilgi, aşağılık duygusu)
+- Gerçeklik Terapisi (seçim teorisi, WDEP sistemi)
+
+2. DANIŞMANLIK BECERİLERİ:
+- Aktif dinleme ve sözsüz iletişim
+- Empatik anlayış kurma
+- Duygu ve içerik yansıtma
+- Açık-kapalı soru teknikleri
+- Özetleme ve yapılandırma
+- Yapıcı yüzleştirme
+- Yorumlama ve anlam katma
+- Terapötik ittifak kurma
+- Hedef belirleme ve eylem planları
+
+3. REHBERLİK HİZMETLERİ:
+- Bireysel ve grup rehberliği
 - Kariyer danışmanlığı
-- Psikolojik destek yöntemleri
-- Sınıf içi rehberlik
-- Ergen psikolojisi
-- Motivasyon teknikleri
-- Akademik başarı desteği
-- Sosyal-duygusal gelişim
-- Özel eğitim yaklaşımları
-- Mesleki etik
-- Zaman yönetimi
-- Stres yönetimi
+- Kriz müdahalesi
+- Öğrenci-veli-öğretmen iletişimi
+- Sınıf rehberlik programları
 
-Cevabını her zaman Türkçe ver.
+4. ÖZEL KONULAR:
+- Ergen psikolojisi
+- Öğrenme güçlükleri
+- Akran zorbalığı
+- Bağımlılık önleme
+- Travma müdahalesi
+- Sosyal-duygusal öğrenme
+
+5. MESLEKİ ETİK:
+- Gizlilik ve sınırları
+- Çift ilişki
+- Yetkinlik sınırları
+- Bilgilendirilmiş onam
+
+Cevabını her zaman Türkçe ver ve pratik, uygulanabilir bilgiler sun.
 JSON formatında yanıt ver: {"title": "string", "content": "string", "importance": "NORMAL|YUKSEK|KRITIK"}`
           },
           {
             role: 'user',
-            content: `"${categoryInfo?.label || 'Genel Rehberlik'}" kategorisinde rehber öğretmenler için kısa ve öz bir profesyonel bilgi/ipucu oluştur.
+            content: `"${categoryInfo?.label || 'Genel Rehberlik'}" kategorisinde (${categoryInfo?.description || ''}) rehber öğretmenler için profesyonel bir bilgi/ipucu oluştur.
 
 Kurallar:
 1. Başlık kısa ve çarpıcı olmalı (maksimum 60 karakter)
-2. İçerik 100-200 kelime arasında olmalı
+2. İçerik 150-250 kelime arasında olmalı
 3. Pratik ve hemen uygulanabilir bilgi olmalı
-4. Bilimsel veya deneyime dayalı olmalı
-5. Türk eğitim sistemine uygun olmalı
+4. Bilimsel temelli veya kanıta dayalı olmalı
+5. Türk eğitim sistemine ve kültürüne uygun olmalı
+6. Gerektiğinde örnek diyaloglar veya teknikler içerebilir
+7. Eğer bir kuram veya teknik açıklanıyorsa, temel prensipler ve uygulama adımları belirtilmeli
 
 JSON formatında yanıt ver:
 {
-  "title": "Kısa başlık",
-  "content": "Detaylı açıklama ve pratik öneriler",
+  "title": "Kısa ve etkileyici başlık",
+  "content": "Detaylı açıklama, pratik öneriler ve uygulama ipuçları",
   "importance": "NORMAL"
 }`
           }
         ],
-        temperature: 0.9,
+        temperature: 0.85,
         format: 'json'
       });
 
-      const parsed = this.parseAIResponse(response, randomCategory);
+      const parsed = this.parseAIResponse(response, category);
       
       if (parsed) {
-        logger.info(`AI generated guidance tip: ${parsed.title}`, 'GuidanceTipsAI');
+        logger.info(`AI generated guidance tip: ${parsed.title} [${category}]`, 'GuidanceTipsAI');
         return parsed;
       }
 
@@ -112,18 +144,8 @@ JSON formatında yanıt ver:
   }
 
   private getRandomCategory(): GuidanceTipCategory {
-    const categories: GuidanceTipCategory[] = [
-      'PSIKOLOJIK_DANISMANLIK',
-      'KARIYER_REHBERLIGI',
-      'OGRENCI_ILETISIMI',
-      'VELI_GORUSMESI',
-      'KRIZ_YONETIMI',
-      'MOTIVASYON',
-      'SINIF_YONETIMI',
-      'TEKNIK_BILGI',
-      'GENEL'
-    ];
-    return categories[Math.floor(Math.random() * categories.length)];
+    const allCategories = GUIDANCE_TIP_CATEGORIES.map(c => c.value);
+    return allCategories[Math.floor(Math.random() * allCategories.length)];
   }
 }
 

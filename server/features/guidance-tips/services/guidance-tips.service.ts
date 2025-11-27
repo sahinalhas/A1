@@ -1,12 +1,13 @@
 import { guidanceTipsRepository } from '../repository/guidance-tips.repository.js';
 import { guidanceTipsAIService } from './guidance-tips-ai.service.js';
 import { logger } from '../../../utils/logger.js';
-import type { GuidanceTip } from '../types/guidance-tips.types.js';
+import type { GuidanceTip, GuidanceTipCategory, UserCategoryPreferences } from '../types/guidance-tips.types.js';
+import { GUIDANCE_TIP_CATEGORIES } from '../types/guidance-tips.types.js';
 
 class GuidanceTipsService {
-  async generateNewTip(): Promise<GuidanceTip | null> {
+  async generateNewTip(category?: GuidanceTipCategory): Promise<GuidanceTip | null> {
     try {
-      const generatedContent = await guidanceTipsAIService.generateRandomTip();
+      const generatedContent = await guidanceTipsAIService.generateRandomTip(category);
       
       if (!generatedContent) {
         logger.warn('AI failed to generate tip content', 'GuidanceTipsService');
@@ -23,15 +24,33 @@ class GuidanceTipsService {
     }
   }
 
+  getUserPreferences(userId: string): UserCategoryPreferences | null {
+    return guidanceTipsRepository.getUserPreferences(userId);
+  }
+
+  saveUserPreferences(userId: string, categories: GuidanceTipCategory[]): UserCategoryPreferences {
+    return guidanceTipsRepository.saveUserPreferences(userId, categories);
+  }
+
+  getDefaultCategories(): GuidanceTipCategory[] {
+    return GUIDANCE_TIP_CATEGORIES.map(c => c.value);
+  }
+
   async getNextTipForUser(userId: string): Promise<GuidanceTip | null> {
     try {
-      let tip = guidanceTipsRepository.getRandomUnseenTip(userId);
+      const preferences = guidanceTipsRepository.getUserPreferences(userId);
+      const enabledCategories = preferences?.enabledCategories;
+      
+      let tip = guidanceTipsRepository.getRandomUnseenTipWithPreferences(userId, enabledCategories);
       
       if (!tip) {
         const totalTips = guidanceTipsRepository.getTipCount();
         
         if (totalTips < 5) {
-          tip = await this.generateNewTip();
+          const randomCategory = enabledCategories && enabledCategories.length > 0
+            ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
+            : undefined;
+          tip = await this.generateNewTip(randomCategory);
         } else {
           tip = guidanceTipsRepository.getLatestTip();
         }

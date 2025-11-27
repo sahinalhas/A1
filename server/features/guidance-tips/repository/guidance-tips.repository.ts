@@ -1,8 +1,99 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getDatabase } from '../../../lib/database/connection.js';
-import type { GuidanceTip, GuidanceTipUserView, GeneratedTipContent } from '../types/guidance-tips.types.js';
+import type { GuidanceTip, GuidanceTipUserView, GeneratedTipContent, GuidanceTipCategory, UserCategoryPreferences, GUIDANCE_TIP_CATEGORIES } from '../types/guidance-tips.types.js';
 
 class GuidanceTipsRepository {
+  constructor() {
+    this.ensurePreferencesTable();
+  }
+
+  private ensurePreferencesTable(): void {
+    try {
+      const db = getDatabase();
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS guidance_tips_preferences (
+          id TEXT PRIMARY KEY,
+          userId TEXT UNIQUE NOT NULL,
+          enabledCategories TEXT NOT NULL DEFAULT '[]',
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+        )
+      `);
+    } catch (error) {
+      console.error('Failed to create preferences table:', error);
+    }
+  }
+
+  getUserPreferences(userId: string): UserCategoryPreferences | null {
+    const db = getDatabase();
+    const row = db.prepare(`
+      SELECT * FROM guidance_tips_preferences WHERE userId = ?
+    `).get(userId) as Record<string, unknown> | undefined;
+
+    if (!row) return null;
+
+    return {
+      userId: row.userId as string,
+      enabledCategories: JSON.parse(row.enabledCategories as string),
+      updatedAt: row.updated_at as string
+    };
+  }
+
+  saveUserPreferences(userId: string, categories: GuidanceTipCategory[]): UserCategoryPreferences {
+    const db = getDatabase();
+    const now = new Date().toISOString();
+    const categoriesJson = JSON.stringify(categories);
+
+    const existing = db.prepare(`SELECT id FROM guidance_tips_preferences WHERE userId = ?`).get(userId);
+
+    if (existing) {
+      db.prepare(`
+        UPDATE guidance_tips_preferences 
+        SET enabledCategories = ?, updated_at = ?
+        WHERE userId = ?
+      `).run(categoriesJson, now, userId);
+    } else {
+      const id = uuidv4();
+      db.prepare(`
+        INSERT INTO guidance_tips_preferences (id, userId, enabledCategories, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(id, userId, categoriesJson, now, now);
+    }
+
+    return {
+      userId,
+      enabledCategories: categories,
+      updatedAt: now
+    };
+  }
+
+  getRandomUnseenTipWithPreferences(userId: string, enabledCategories?: GuidanceTipCategory[]): GuidanceTip | null {
+    const db = getDatabase();
+    
+    let query = `
+      SELECT gt.* FROM guidance_tips gt
+      WHERE gt.isActive = 1
+      AND gt.id NOT IN (
+        SELECT tipId FROM guidance_tips_user_views WHERE userId = ? AND dismissed = 1
+      )
+    `;
+    
+    const params: (string | number)[] = [userId];
+    
+    if (enabledCategories && enabledCategories.length > 0) {
+      const placeholders = enabledCategories.map(() => '?').join(',');
+      query += ` AND gt.category IN (${placeholders})`;
+      params.push(...enabledCategories);
+    }
+    
+    query += ` ORDER BY RANDOM() LIMIT 1`;
+
+    const row = db.prepare(query).get(...params) as Record<string, unknown> | undefined;
+
+    if (!row) return null;
+
+    return this.mapRowToTip(row);
+  }
   createTip(tip: GeneratedTipContent): GuidanceTip {
     const db = getDatabase();
     const id = uuidv4();
