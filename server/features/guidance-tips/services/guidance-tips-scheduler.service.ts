@@ -6,28 +6,38 @@ let cleanupInterval: NodeJS.Timeout | null = null;
 
 const TIP_GENERATION_INTERVAL = 4 * 60 * 60 * 1000;
 const CLEANUP_INTERVAL = 24 * 60 * 60 * 1000;
-const MIN_TIPS_THRESHOLD = 10;
-const MAX_TIPS_COUNT = 100;
+const MIN_TIPS_THRESHOLD = 5;
+const MAX_TIPS_COUNT = 50;
 
 async function generateTipsIfNeeded(): Promise<void> {
   try {
     const currentCount = guidanceTipsService.getTipCount();
     
     if (currentCount < MIN_TIPS_THRESHOLD) {
-      logger.info(`Tip count (${currentCount}) below threshold, generating new tips...`, 'GuidanceTipsScheduler');
+      logger.info(`Tip count (${currentCount}) below threshold, attempting to generate new tips via AI...`, 'GuidanceTipsScheduler');
       
-      const tipsToGenerate = Math.min(5, MIN_TIPS_THRESHOLD - currentCount);
+      const tipsToGenerate = Math.min(3, MIN_TIPS_THRESHOLD - currentCount);
+      let generatedCount = 0;
       
       for (let i = 0; i < tipsToGenerate; i++) {
-        await guidanceTipsService.generateNewTip();
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const tip = await guidanceTipsService.generateNewTip();
+        if (tip) {
+          generatedCount++;
+        }
+        await new Promise(resolve => setTimeout(resolve, 3000));
       }
       
-      logger.info(`Generated ${tipsToGenerate} new tips`, 'GuidanceTipsScheduler');
+      if (generatedCount > 0) {
+        logger.info(`Successfully generated ${generatedCount} new tips from AI`, 'GuidanceTipsScheduler');
+      } else {
+        logger.warn('AI unavailable - no tips generated this cycle. Will retry next interval.', 'GuidanceTipsScheduler');
+      }
     } else if (currentCount < MAX_TIPS_COUNT) {
       const tip = await guidanceTipsService.generateNewTip();
       if (tip) {
         logger.info(`Generated periodic tip: ${tip.title}`, 'GuidanceTipsScheduler');
+      } else {
+        logger.info('AI unavailable for periodic tip generation. Will retry next interval.', 'GuidanceTipsScheduler');
       }
     } else {
       logger.info(`Tip count (${currentCount}) at maximum, skipping generation`, 'GuidanceTipsScheduler');

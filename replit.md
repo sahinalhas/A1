@@ -29,11 +29,11 @@ The primary database is SQLite, located at `./data/database.db`. Schema migratio
 Implemented periodic informational balloon notifications for guidance counselors:
 
 - **Database Schema**: `guidance_tips` and `guidance_tips_user_views` tables for tip storage and view tracking
-- **AI Service**: Generates random educational tips using configured AI provider (OpenAI/Gemini/Ollama)
-- **Fallback Mechanism**: 12 pre-defined Turkish professional tips ensure system works without AI connection
-- **Scheduler**: Background service runs every 4 hours, maintains minimum 5 active tips
+- **Pure AI Generation**: Tips are generated entirely by AI acting as an experienced educator - NO static data or program content used
+- **AI Behavior**: AI acts as a 20-year experienced guidance counselor, providing random professional tips on various topics (counseling techniques, parent communication, crisis management, motivation, etc.)
+- **Scheduler**: Background service runs every 4 hours, maintains minimum 5 active tips. If AI unavailable, waits for next cycle
 - **Frontend Component**: Animated balloon with Framer Motion, appears bottom-right every 30 seconds
-- **Categories**: MEVZUAT (Legislation), TEKNIK (Technical), GORUSME (Counseling), VELI (Parent), OGRENCI (Student), ARAC (Tools), ETIK (Ethics), GENEL (General)
+- **Categories**: Psikolojik Danışmanlık, Kariyer Rehberliği, Öğrenci İletişimi, Veli Görüşmesi, Kriz Yönetimi, Motivasyon, Sınıf Yönetimi, Teknik Bilgi, Genel
 - **Files**: `server/features/guidance-tips/`, `client/components/features/guidance-tips/GuidanceTipBalloon.tsx`
 
 ## Previous Changes (2025-11-25)
