@@ -56,7 +56,7 @@ export default function Login() {
  setIsLoading(true);
 
  try {
- const success = await login('admin@okul.edu.tr', 'admin123');
+ const success = await login('rehber@okul.edu.tr', 'rehber123');
  
  if (success) {
  navigate('/');
@@ -225,7 +225,7 @@ export default function Login() {
  disabled={isLoading}
  >
  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
- 🔑 Admin Hızlı Giriş
+ 🔑 Rehber Hızlı Giriş
  </Button>
 
  <div className="relative my-6">
