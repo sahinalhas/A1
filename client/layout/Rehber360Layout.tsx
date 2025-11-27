@@ -60,6 +60,7 @@ import { useIsMobile } from "@/hooks/utils/mobile.utils";
 import { cn } from "@/lib/utils";
 import { prefetchRoute } from "@/hooks/usePrefetchRoutes";
 import GuidanceTipBalloon from "@/components/features/guidance-tips/GuidanceTipBalloon";
+import { useGuidanceTipQueue } from "@/hooks/useGuidanceTipQueue";
 
 // 2025 Ultra Minimalist Logo
 function AppLogo({ collapsed }: { collapsed?: boolean }) {
@@ -143,6 +144,7 @@ export default function Rehber360Layout() {
  const isMobile = useIsMobile();
  const crumbs = useBreadcrumbs();
  const navigate = useNavigate();
+ const tipQueueStatus = useGuidanceTipQueue();
 
  const initials = useMemo(() => {
  const n = account?.displayName ||"";
@@ -612,11 +614,16 @@ export default function Rehber360Layout() {
  <Button
  variant="ghost"
  size="icon"
- className="h-7 w-7"
+ className="h-7 w-7 relative"
  onClick={() => setShowTipNotification(true)}
- title="Rehberlik İpuçlarını Göster"
+ title={tipQueueStatus.hasQueue ? `${tipQueueStatus.remainingTips} bilgi pakette` : "Rehberlik İpuçlarını Göster"}
  >
  <Lightbulb className="h-3.5 w-3.5" />
+ {tipQueueStatus.hasQueue && tipQueueStatus.remainingTips > 0 && (
+   <span className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-primary-foreground">
+     {tipQueueStatus.remainingTips > 99 ? '99+' : tipQueueStatus.remainingTips}
+   </span>
+ )}
  </Button>
 
  <DropdownMenu>

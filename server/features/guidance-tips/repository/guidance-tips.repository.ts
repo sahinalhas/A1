@@ -94,6 +94,34 @@ class GuidanceTipsRepository {
 
     return this.mapRowToTip(row);
   }
+
+  getUnseenTipsForUser(userId: string, limit: number = 15, enabledCategories?: GuidanceTipCategory[]): GuidanceTip[] {
+    const db = getDatabase();
+    
+    let query = `
+      SELECT gt.* FROM guidance_tips gt
+      WHERE gt.isActive = 1
+      AND gt.id NOT IN (
+        SELECT tipId FROM guidance_tips_user_views WHERE userId = ?
+      )
+    `;
+    
+    const params: (string | number)[] = [userId];
+    
+    if (enabledCategories && enabledCategories.length > 0) {
+      const placeholders = enabledCategories.map(() => '?').join(',');
+      query += ` AND gt.category IN (${placeholders})`;
+      params.push(...enabledCategories);
+    }
+    
+    query += ` ORDER BY generatedAt DESC LIMIT ?`;
+    params.push(limit);
+
+    const rows = db.prepare(query).all(...params) as Record<string, unknown>[];
+
+    return rows.map(row => this.mapRowToTip(row));
+  }
+
   createTip(tip: GeneratedTipContent): GuidanceTip {
     const db = getDatabase();
     const id = uuidv4();

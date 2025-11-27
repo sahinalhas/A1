@@ -41,11 +41,10 @@ router.get('/next', async (req: Request, res: Response) => {
     const userId = extractUserId(req);
     const forceNew = req.query.forceNew === 'true';
     
-    // Set session cookie for anonymous users
     if (!req.cookies?.guidance_session_id && !req.cookies?.session_token) {
       res.cookie('guidance_session_id', userId, {
         httpOnly: true,
-        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
+        maxAge: 365 * 24 * 60 * 60 * 1000,
         sameSite: 'lax'
       });
     }
@@ -68,6 +67,74 @@ router.get('/next', async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: 'Failed to get tip'
+    });
+  }
+});
+
+router.get('/batch', async (req: Request, res: Response) => {
+  try {
+    const userId = extractUserId(req);
+    const forceNew = req.query.forceNew === 'true';
+    
+    if (!req.cookies?.guidance_session_id && !req.cookies?.session_token) {
+      res.cookie('guidance_session_id', userId, {
+        httpOnly: true,
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+        sameSite: 'lax'
+      });
+    }
+    
+    logger.info(`Batch request from user ${userId}, forceNew: ${forceNew}`, 'GuidanceTipsRoutes');
+    
+    const batchResult = await guidanceTipsService.getOrGenerateBatch(userId, forceNew);
+    
+    if (batchResult.tips.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'No tips available'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: batchResult
+    });
+  } catch (error) {
+    logger.error('Failed to get batch tips', 'GuidanceTipsRoutes', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get batch tips'
+    });
+  }
+});
+
+router.post('/batch/mark-viewed', async (req: Request, res: Response) => {
+  try {
+    const userId = extractUserId(req);
+    const { tipIds } = req.body;
+    
+    if (!Array.isArray(tipIds)) {
+      return res.status(400).json({
+        success: false,
+        error: 'tipIds must be an array'
+      });
+    }
+
+    for (const tipId of tipIds) {
+      guidanceTipsService.dismissTip(tipId, userId);
+    }
+    
+    logger.info(`Marked ${tipIds.length} tips as viewed for user ${userId}`, 'GuidanceTipsRoutes');
+
+    res.json({
+      success: true,
+      message: `${tipIds.length} tips marked as viewed`
+    });
+  } catch (error) {
+    logger.error('Failed to mark tips as viewed', 'GuidanceTipsRoutes', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to mark tips as viewed'
     });
   }
 });

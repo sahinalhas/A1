@@ -4,7 +4,107 @@ import type { GuidanceTip, GuidanceTipCategory, UserCategoryPreferences } from '
 import { GUIDANCE_TIP_CATEGORIES } from '../types/guidance-tips.types.js';
 import { logger } from '../../../utils/logger.js';
 
+export interface TipBatchResponse {
+  tips: GuidanceTip[];
+  totalCount: number;
+  remainingInQueue: number;
+  batchId: string;
+  generatedAt: string;
+}
+
 class GuidanceTipsService {
+  private readonly DEFAULT_BATCH_SIZE = 15;
+  private readonly MIN_QUEUE_THRESHOLD = 3;
+
+  async generateBatchTips(
+    userId: string, 
+    count: number = this.DEFAULT_BATCH_SIZE
+  ): Promise<TipBatchResponse> {
+    const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const generatedAt = new Date().toISOString();
+    
+    try {
+      const preferences = guidanceTipsRepository.getUserPreferences(userId);
+      const enabledCategories = preferences?.enabledCategories;
+
+      const result = await guidanceTipsAIService.generateBatchTips(count, enabledCategories);
+      
+      const savedTips: GuidanceTip[] = [];
+      for (const tipContent of result.tips) {
+        const tip = guidanceTipsRepository.createTip(tipContent);
+        savedTips.push(tip);
+      }
+
+      logger.info(`Batch generated ${savedTips.length} tips for user ${userId} (batchId: ${batchId})`, 'GuidanceTipsService');
+
+      return {
+        tips: savedTips,
+        totalCount: savedTips.length,
+        remainingInQueue: savedTips.length,
+        batchId,
+        generatedAt
+      };
+    } catch (error) {
+      logger.error('Failed to generate batch tips', 'GuidanceTipsService', error);
+      return {
+        tips: [],
+        totalCount: 0,
+        remainingInQueue: 0,
+        batchId,
+        generatedAt
+      };
+    }
+  }
+
+  async getOrGenerateBatch(
+    userId: string, 
+    forceNew: boolean = false
+  ): Promise<TipBatchResponse> {
+    const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const generatedAt = new Date().toISOString();
+    
+    try {
+      const preferences = guidanceTipsRepository.getUserPreferences(userId);
+      const enabledCategories = preferences?.enabledCategories;
+
+      const unseenTips = guidanceTipsRepository.getUnseenTipsForUser(userId, this.DEFAULT_BATCH_SIZE, enabledCategories);
+      
+      if (!forceNew && unseenTips.length >= this.MIN_QUEUE_THRESHOLD) {
+        logger.info(`Returning ${unseenTips.length} unseen tips for user ${userId}`, 'GuidanceTipsService');
+        return {
+          tips: unseenTips,
+          totalCount: unseenTips.length,
+          remainingInQueue: unseenTips.length,
+          batchId,
+          generatedAt
+        };
+      }
+
+      logger.info(`Not enough unseen tips (${unseenTips.length}), generating new batch for user ${userId}`, 'GuidanceTipsService');
+      
+      const batchResult = await this.generateBatchTips(userId, this.DEFAULT_BATCH_SIZE);
+      
+      const allTips = [...unseenTips, ...batchResult.tips];
+      
+      return {
+        tips: allTips,
+        totalCount: allTips.length,
+        remainingInQueue: allTips.length,
+        batchId,
+        generatedAt
+      };
+    } catch (error) {
+      logger.error('Failed to get or generate batch', 'GuidanceTipsService', error);
+      return {
+        tips: [],
+        totalCount: 0,
+        remainingInQueue: 0,
+        batchId,
+        generatedAt
+      };
+    }
+  }
+
   async generateNewTip(preferredCategory?: GuidanceTipCategory): Promise<GuidanceTip | null> {
     try {
       const generatedContent = await guidanceTipsAIService.generateRandomTip(preferredCategory);

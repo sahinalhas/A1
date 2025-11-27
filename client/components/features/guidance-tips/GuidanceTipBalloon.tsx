@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Lightbulb, Star, ChevronRight, RefreshCw, BookOpen, Users, Heart, Briefcase, 
@@ -7,11 +7,13 @@ import {
   FileWarning, Trophy, Clock, MessageCircle, Puzzle, CheckCircle, Gem, Smartphone,
   Layers, Cpu, Sparkles, Circle, Compass, Target, Network, BookText, UserCircle,
   Focus, HelpCircle, FileText, AlertCircle, Search, MessageSquare, Flag, Handshake,
-  ClipboardList, FileEdit, ChevronDown, ChevronUp
+  ClipboardList, FileEdit, ChevronDown, ChevronUp, Package
 } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Switch } from '@/components/atoms/Switch';
 import { ScrollArea } from '@/components/organisms/ScrollArea';
+import { Badge } from '@/components/atoms/Badge';
+import { Progress } from '@/components/atoms/Progress';
 import { cn } from '@/lib/utils';
 
 interface GuidanceTip {
@@ -20,6 +22,14 @@ interface GuidanceTip {
   title: string;
   content: string;
   importance: 'DUSUK' | 'NORMAL' | 'YUKSEK' | 'KRITIK';
+}
+
+interface BatchResponse {
+  tips: GuidanceTip[];
+  totalCount: number;
+  remainingInQueue: number;
+  batchId: string;
+  generatedAt: string;
 }
 
 interface CategoryInfo {
@@ -63,6 +73,17 @@ const IMPORTANCE_STYLES: Record<string, string> = {
   'KRITIK': 'border-red-300 shadow-red-100 animate-pulse',
 };
 
+const STORAGE_KEY = 'guidance_tips_queue';
+const LOW_QUEUE_THRESHOLD = 3;
+
+interface StoredQueue {
+  tips: GuidanceTip[];
+  currentIndex: number;
+  viewedTipIds: string[];
+  batchId: string;
+  fetchedAt: string;
+}
+
 interface GuidanceTipBalloonProps {
   autoShow?: boolean;
   showInterval?: number;
@@ -76,10 +97,13 @@ export default function GuidanceTipBalloon({
   position = 'bottom-right',
   onDismiss
 }: GuidanceTipBalloonProps) {
-  const [tip, setTip] = useState<GuidanceTip | null>(null);
+  const [tipQueue, setTipQueue] = useState<GuidanceTip[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [viewedTipIds, setViewedTipIds] = useState<string[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingBatch, setIsFetchingBatch] = useState(false);
   const [rating, setRating] = useState<number>(0);
   const [showSettings, setShowSettings] = useState(false);
   const [categories, setCategories] = useState<CategoryInfo[]>([]);
@@ -87,63 +111,140 @@ export default function GuidanceTipBalloon({
   const [enabledCategories, setEnabledCategories] = useState<string[]>([]);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [totalTipsViewed, setTotalTipsViewed] = useState(0);
+  const fetchingRef = useRef(false);
 
-  useEffect(() => {
-    fetch('/api/guidance-tips/categories')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setCategories(data.data);
-          setGroups(data.groups || []);
-        }
-      })
-      .catch(console.error);
+  const tip = tipQueue[currentIndex] || null;
+  const remainingTips = tipQueue.length - currentIndex;
 
-    fetch('/api/guidance-tips/preferences')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.data.enabledCategories) {
-          setEnabledCategories(data.data.enabledCategories);
+  const loadFromStorage = useCallback(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const data: StoredQueue = JSON.parse(stored);
+        if (data.tips && data.tips.length > 0) {
+          setTipQueue(data.tips);
+          setCurrentIndex(data.currentIndex || 0);
+          setViewedTipIds(data.viewedTipIds || []);
+          setTotalTipsViewed(data.viewedTipIds?.length || 0);
+          return true;
         }
-      })
-      .catch(console.error);
+      }
+    } catch (error) {
+      console.error('Failed to load tips from storage:', error);
+    }
+    return false;
   }, []);
 
-  const fetchNextTip = useCallback(async (forceNew: boolean = false) => {
-    setIsLoading(true);
+  const saveToStorage = useCallback((tips: GuidanceTip[], index: number, viewed: string[], batchId: string = '') => {
     try {
-      const url = forceNew ? '/api/guidance-tips/next?forceNew=true' : '/api/guidance-tips/next';
+      const data: StoredQueue = {
+        tips,
+        currentIndex: index,
+        viewedTipIds: viewed,
+        batchId,
+        fetchedAt: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      window.dispatchEvent(new CustomEvent('tipQueueUpdated'));
+    } catch (error) {
+      console.error('Failed to save tips to storage:', error);
+    }
+  }, []);
+
+  const fetchBatch = useCallback(async (forceNew: boolean = false) => {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+    setIsFetchingBatch(true);
+    
+    try {
+      const url = forceNew ? '/api/guidance-tips/batch?forceNew=true' : '/api/guidance-tips/batch';
       const response = await fetch(url);
       const data = await response.json();
       
       if (data.success && data.data) {
-        setTip(data.data);
-        setIsVisible(true);
-        setIsExpanded(false);
-        setRating(0);
-        setShowSettings(false);
+        const batchData: BatchResponse = data.data;
+        
+        if (batchData.tips.length > 0) {
+          const newViewed: string[] = [];
+          setTipQueue(batchData.tips);
+          setCurrentIndex(0);
+          setViewedTipIds(newViewed);
+          saveToStorage(batchData.tips, 0, newViewed, batchData.batchId);
+          
+          if (!isVisible) {
+            setIsVisible(true);
+            setIsExpanded(false);
+            setRating(0);
+          }
+          
+          console.log(`Fetched new batch: ${batchData.tips.length} tips`);
+        }
       }
     } catch (error) {
-      console.error('Failed to fetch guidance tip:', error);
+      console.error('Failed to fetch batch tips:', error);
     } finally {
+      setIsFetchingBatch(false);
+      fetchingRef.current = false;
+    }
+  }, [isVisible, saveToStorage]);
+
+  const showNextTip = useCallback(async () => {
+    if (isLoading) return;
+    
+    const currentTip = tipQueue[currentIndex];
+    if (currentTip && !viewedTipIds.includes(currentTip.id)) {
+      const newViewed = [...viewedTipIds, currentTip.id];
+      setViewedTipIds(newViewed);
+      setTotalTipsViewed(prev => prev + 1);
+      
+      try {
+        await fetch(`/api/guidance-tips/dismiss/${currentTip.id}`, { method: 'POST' });
+      } catch (error) {
+        console.error('Failed to mark tip as viewed:', error);
+      }
+    }
+    
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex < tipQueue.length) {
+      setCurrentIndex(nextIndex);
+      setIsExpanded(false);
+      setRating(0);
+      saveToStorage(tipQueue, nextIndex, viewedTipIds, '');
+      
+      const newRemaining = tipQueue.length - nextIndex;
+      if (newRemaining <= LOW_QUEUE_THRESHOLD && !fetchingRef.current) {
+        console.log(`Low queue (${newRemaining} remaining), fetching new batch...`);
+        fetchBatch(true);
+      }
+    } else {
+      console.log('Queue exhausted, fetching new batch...');
+      setIsLoading(true);
+      await fetchBatch(true);
       setIsLoading(false);
     }
-  }, []);
+  }, [currentIndex, tipQueue, viewedTipIds, isLoading, saveToStorage, fetchBatch]);
 
   const dismissTip = useCallback(async () => {
     if (!tip) return;
     
-    try {
-      await fetch(`/api/guidance-tips/dismiss/${tip.id}`, { method: 'POST' });
-    } catch (error) {
-      console.error('Failed to dismiss tip:', error);
+    if (!viewedTipIds.includes(tip.id)) {
+      const newViewed = [...viewedTipIds, tip.id];
+      setViewedTipIds(newViewed);
+      setTotalTipsViewed(prev => prev + 1);
+      
+      try {
+        await fetch(`/api/guidance-tips/dismiss/${tip.id}`, { method: 'POST' });
+      } catch (error) {
+        console.error('Failed to dismiss tip:', error);
+      }
     }
     
     setIsVisible(false);
-    setTip(null);
     setShowSettings(false);
     onDismiss?.();
-  }, [tip, onDismiss]);
+  }, [tip, viewedTipIds, onDismiss]);
 
   const rateTip = useCallback(async (value: number) => {
     if (!tip) return;
@@ -168,12 +269,17 @@ export default function GuidanceTipBalloon({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabledCategories: newCategories })
       });
+      localStorage.removeItem(STORAGE_KEY);
+      setTipQueue([]);
+      setCurrentIndex(0);
+      setViewedTipIds([]);
+      await fetchBatch(true);
     } catch (error) {
       console.error('Failed to save preferences:', error);
     } finally {
       setIsSaving(false);
     }
-  }, []);
+  }, [fetchBatch]);
 
   const toggleCategory = (categoryValue: string) => {
     const newCategories = enabledCategories.includes(categoryValue)
@@ -221,26 +327,59 @@ export default function GuidanceTipBalloon({
   };
 
   useEffect(() => {
-    if (!autoShow) return;
+    fetch('/api/guidance-tips/categories')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCategories(data.data);
+          setGroups(data.groups || []);
+        }
+      })
+      .catch(console.error);
 
-    const timer = setTimeout(() => {
-      fetchNextTip();
-    }, 5000);
-
-    const interval = setInterval(() => {
-      fetchNextTip();
-    }, showInterval);
-
-    return () => {
-      clearTimeout(timer);
-      clearInterval(interval);
-    };
-  }, [autoShow, showInterval, fetchNextTip]);
+    fetch('/api/guidance-tips/preferences')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.enabledCategories) {
+          setEnabledCategories(data.data.enabledCategories);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   useEffect(() => {
-    if (autoShow) return;
-    fetchNextTip();
-  }, [autoShow, fetchNextTip]);
+    const hasStoredData = loadFromStorage();
+    
+    if (!hasStoredData) {
+      const timer = setTimeout(() => {
+        fetchBatch();
+      }, autoShow ? 3000 : 0);
+      return () => clearTimeout(timer);
+    } else {
+      if (!autoShow) {
+        setIsVisible(true);
+      } else {
+        const timer = setTimeout(() => {
+          setIsVisible(true);
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [loadFromStorage, fetchBatch, autoShow]);
+
+  useEffect(() => {
+    if (!autoShow) return;
+
+    const interval = setInterval(() => {
+      if (!isVisible && tipQueue.length > currentIndex) {
+        setIsVisible(true);
+        setIsExpanded(false);
+        setRating(0);
+      }
+    }, showInterval);
+
+    return () => clearInterval(interval);
+  }, [autoShow, showInterval, isVisible, tipQueue.length, currentIndex]);
 
   const positionClasses = {
     'bottom-right': 'bottom-20 right-6',
@@ -260,6 +399,8 @@ export default function GuidanceTipBalloon({
 
   const { Icon: CategoryIcon, groupColors, categoryInfo } = tip ? getCategoryConfig(tip.category) : { Icon: Lightbulb, groupColors: GROUP_COLORS.temel, categoryInfo: null };
 
+  const progressPercentage = tipQueue.length > 0 ? ((currentIndex) / tipQueue.length) * 100 : 0;
+
   return (
     <>
       <AnimatePresence>
@@ -272,7 +413,7 @@ export default function GuidanceTipBalloon({
             className={cn(
               'fixed z-50',
               positionClasses[position],
-              showSettings ? 'max-w-lg w-full' : 'max-w-lg w-full'
+              'max-w-lg w-full'
             )}
           >
             <div className={cn(
@@ -291,9 +432,15 @@ export default function GuidanceTipBalloon({
                   <CategoryIcon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={cn('text-[11px] font-medium', groupColors.text)}>
-                    {categoryInfo?.label || tip.category}
-                  </p>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <p className={cn('text-[11px] font-medium', groupColors.text)}>
+                      {categoryInfo?.label || tip.category}
+                    </p>
+                    <Badge variant="secondary" className="text-[9px] px-1.5 py-0 h-4 bg-white/60 dark:bg-gray-800/60">
+                      <Package className="h-2.5 w-2.5 mr-1" />
+                      {remainingTips} kaldı
+                    </Badge>
+                  </div>
                   <h3 className="font-semibold text-sm text-gray-900 dark:text-white line-clamp-2">
                     {tip.title}
                   </h3>
@@ -321,6 +468,17 @@ export default function GuidanceTipBalloon({
                 </div>
               </div>
 
+              {tipQueue.length > 1 && (
+                <div className="px-4 pt-2">
+                  <div className="flex items-center gap-2">
+                    <Progress value={progressPercentage} className="h-1 flex-1" />
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                      {currentIndex + 1}/{tipQueue.length}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <AnimatePresence mode="wait">
                 {showSettings ? (
                   <motion.div
@@ -346,7 +504,7 @@ export default function GuidanceTipBalloon({
                         <div className="space-y-2">
                           {groups.map(group => {
                             const groupCats = categories.filter(c => c.group === group.id);
-                            const isExpanded = expandedGroups.includes(group.id);
+                            const isExpandedGroup = expandedGroups.includes(group.id);
                             const groupColor = GROUP_COLORS[group.id] || GROUP_COLORS.temel;
                             const allEnabled = isGroupEnabled(group.id);
                             const partialEnabled = isGroupPartiallyEnabled(group.id);
@@ -361,7 +519,7 @@ export default function GuidanceTipBalloon({
                                   onClick={() => toggleGroup(group.id)}
                                 >
                                   <div className="flex items-center gap-2">
-                                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                    {isExpandedGroup ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                                     <div>
                                       <span className={cn("font-medium text-sm", groupColor.text)}>{group.label}</span>
                                       <span className="text-xs text-muted-foreground ml-2">({groupCats.length})</span>
@@ -377,7 +535,7 @@ export default function GuidanceTipBalloon({
                                   />
                                 </div>
                                 
-                                {isExpanded && (
+                                {isExpandedGroup && (
                                   <div className="p-2 space-y-1 bg-white/50 dark:bg-gray-900/50">
                                     {groupCats.map(cat => {
                                       const CatIcon = ICON_MAP[cat.icon] || Lightbulb;
@@ -410,8 +568,9 @@ export default function GuidanceTipBalloon({
                       </ScrollArea>
                       
                       {isSaving && (
-                        <div className="mt-3 text-xs text-center text-muted-foreground">
-                          Tercihler kaydediliyor...
+                        <div className="mt-3 text-xs text-center text-muted-foreground flex items-center justify-center gap-2">
+                          <RefreshCw className="h-3 w-3 animate-spin" />
+                          Tercihler kaydediliyor ve yeni paket yükleniyor...
                         </div>
                       )}
                     </div>
@@ -476,24 +635,12 @@ export default function GuidanceTipBalloon({
                         <Button
                           variant="ghost"
                           size="sm"
-                          disabled={isLoading}
-                          onClick={async () => {
-                            if (isLoading) return;
-                            if (tip) {
-                              try {
-                                await fetch(`/api/guidance-tips/dismiss/${tip.id}`, { method: 'POST' });
-                              } catch (error) {
-                                console.error('Failed to dismiss tip:', error);
-                              }
-                            }
-                            setIsExpanded(false);
-                            setRating(0);
-                            await fetchNextTip(true);
-                          }}
+                          disabled={isLoading || isFetchingBatch}
+                          onClick={showNextTip}
                           className="text-xs gap-1"
                         >
-                          <RefreshCw className={cn("h-3 w-3", isLoading && "animate-spin")} />
-                          {isLoading ? 'Yükleniyor...' : 'Sonraki'}
+                          <RefreshCw className={cn("h-3 w-3", (isLoading || isFetchingBatch) && "animate-spin")} />
+                          {isLoading || isFetchingBatch ? 'Yükleniyor...' : `Sonraki (${remainingTips - 1})`}
                         </Button>
                       </div>
                     </div>
@@ -520,6 +667,15 @@ export default function GuidanceTipBalloon({
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {isFetchingBatch && !isLoading && (
+                <div className="px-4 pb-3">
+                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
+                    <RefreshCw className="h-3 w-3 animate-spin" />
+                    Yeni bilgi paketi hazırlanıyor...
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
