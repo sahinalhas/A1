@@ -44,16 +44,11 @@ class GuidanceTipsService {
       let tip = guidanceTipsRepository.getRandomUnseenTipWithPreferences(userId, enabledCategories);
       
       if (!tip) {
-        const totalTips = guidanceTipsRepository.getTipCount();
-        
-        if (totalTips < 5) {
-          const randomCategory = enabledCategories && enabledCategories.length > 0
-            ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
-            : undefined;
-          tip = await this.generateNewTip(randomCategory);
-        } else {
-          tip = guidanceTipsRepository.getLatestTip();
-        }
+        // Always generate a new tip when there are no unseen tips
+        const randomCategory = enabledCategories && enabledCategories.length > 0
+          ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
+          : undefined;
+        tip = await this.generateNewTip(randomCategory);
       }
 
       if (tip) {
