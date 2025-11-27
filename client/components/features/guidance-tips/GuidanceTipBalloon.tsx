@@ -485,30 +485,6 @@ export default function GuidanceTipBalloon({
           </motion.div>
         )}
       </AnimatePresence>
-
-      {!isVisible && (
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={fetchNextTip}
-          disabled={isLoading}
-          className={cn(
-            'fixed z-50',
-            positionClasses[position],
-            'p-4 rounded-full bg-primary text-primary-foreground shadow-lg',
-            'hover:shadow-xl transition-shadow',
-            isLoading && 'opacity-50 cursor-not-allowed'
-          )}
-        >
-          {isLoading ? (
-            <RefreshCw className="h-6 w-6 animate-spin" />
-          ) : (
-            <Lightbulb className="h-6 w-6" />
-          )}
-        </motion.button>
-      )}
     </>
   );
 }
