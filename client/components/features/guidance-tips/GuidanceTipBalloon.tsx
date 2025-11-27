@@ -262,7 +262,7 @@ export default function GuidanceTipBalloon({
             className={cn(
               'fixed z-50',
               positionClasses[position],
-              showSettings ? 'max-w-md w-full' : 'max-w-sm w-full'
+              showSettings ? 'max-w-lg w-full' : 'max-w-lg w-full'
             )}
           >
             <div className={cn(
@@ -271,11 +271,11 @@ export default function GuidanceTipBalloon({
               'overflow-hidden'
             )}>
               <div className={cn(
-                'flex items-center gap-3 p-4',
+                'flex items-start gap-3 p-4',
                 groupColors.bg
               )}>
                 <div className={cn(
-                  'p-2 rounded-xl bg-white/80 dark:bg-gray-800/80',
+                  'p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 flex-shrink-0 mt-0.5',
                   groupColors.text
                 )}>
                   <CategoryIcon className="h-5 w-5" />
@@ -284,7 +284,7 @@ export default function GuidanceTipBalloon({
                   <p className={cn('text-xs font-medium', groupColors.text)}>
                     {categoryInfo?.label || tip.category}
                   </p>
-                  <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+                  <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2">
                     {tip.title}
                   </h3>
                 </div>
