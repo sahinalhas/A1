@@ -246,7 +246,7 @@ export default function GuidanceTipBalloon({
     'bottom-left': 'bottom-20 left-6',
     'top-right': 'top-20 right-6',
     'top-left': 'top-20 left-6',
-    'header-right': 'top-11 right-2 md:right-4',
+    'header-right': 'top-10 right-2 md:right-5',
   };
 
   const getCategoryConfig = (category: string) => {
