@@ -18,7 +18,7 @@ export default function Register() {
  email: '',
  password: '',
  confirmPassword: '',
- role: 'counselor' as 'counselor' | 'teacher' | 'observer',
+ role: 'counselor' as 'counselor' | 'teacher' | 'student' | 'parent',
  institution: ''
  });
  const [showPassword, setShowPassword] = useState(false);
@@ -110,7 +110,8 @@ export default function Register() {
  const roleDescriptions = {
  counselor: 'Rehber öğretmen - Tüm sistem yetkilerine ve öğrenci verilerine erişim',
  teacher: 'Öğretmen - Kendi sınıflarına erişim',
- observer: 'Gözlemci - Sadece genel raporlara erişim'
+ student: 'Öğrenci - Kendi verilerine ve rehberlik seanslarına erişim',
+ parent: 'Veli - Çocuğunun verilerine ve haberleşmeye erişim'
  };
 
  const prefersReducedMotion = typeof window !== 'undefined' 
@@ -338,7 +339,7 @@ export default function Register() {
  </Label>
  <Select
  value={formData.role}
- onValueChange={(value: 'counselor' | 'teacher' | 'observer') => 
+ onValueChange={(value: 'counselor' | 'teacher' | 'student' | 'parent') => 
  setFormData({ ...formData, role: value })
  }
  disabled={isLoading}
@@ -349,7 +350,8 @@ export default function Register() {
  <SelectContent>
  <SelectItem value="counselor">Rehber Öğretmen</SelectItem>
  <SelectItem value="teacher">Öğretmen</SelectItem>
- <SelectItem value="observer">Gözlemci</SelectItem>
+ <SelectItem value="student">Öğrenci</SelectItem>
+ <SelectItem value="parent">Veli</SelectItem>
  </SelectContent>
  </Select>
  <p className="text-sm text-muted-foreground">

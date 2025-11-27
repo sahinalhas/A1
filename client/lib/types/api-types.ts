@@ -37,7 +37,7 @@ export interface UserRegisterRequest {
  name: string;
  email: string;
  password: string;
- role: 'counselor' | 'teacher' | 'observer';
+ role: 'counselor' | 'teacher' | 'student' | 'parent';
  institution: string;
 }
 
@@ -45,7 +45,7 @@ export interface UserPublic {
  id: string;
  name: string;
  email: string;
- role: 'counselor' | 'teacher' | 'observer';
+ role: 'counselor' | 'teacher' | 'student' | 'parent';
  institution: string;
  permissions: string[];
 }

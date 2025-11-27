@@ -5,17 +5,6 @@ import { sanitizeString } from '../../../middleware/validation.js';
 import type { LoginRequest, LoginResponse, UserPublic, CreateUserRequest } from '../types/users.types.js';
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-  admin: [
-    'view_all_analytics',
-    'export_all_data',
-    'manage_system',
-    'view_predictive_analysis',
-    'view_comparative_reports',
-    'view_progress_charts',
-    'view_early_warnings',
-    'manage_interventions',
-    'view_sensitive_data'
-  ],
   counselor: [
     'view_all_analytics',
     'export_filtered_data',
@@ -33,9 +22,15 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     'view_early_warnings',
     'view_own_students'
   ],
-  observer: [
-    'view_general_analytics',
-    'view_comparative_reports'
+  student: [
+    'view_own_progress',
+    'view_own_sessions',
+    'view_own_records'
+  ],
+  parent: [
+    'view_child_progress',
+    'view_child_sessions',
+    'message_school'
   ]
 };
 

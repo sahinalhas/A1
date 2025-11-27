@@ -4,7 +4,7 @@ import { apiClient } from './api/core/client';
 
 // =================== TYPES ===================
 
-export type UserRole = 'admin' | 'counselor' | 'teacher' | 'observer';
+export type UserRole = 'counselor' | 'teacher' | 'student' | 'parent';
 
 export interface User {
  id: string;
@@ -28,17 +28,6 @@ export interface AuthContextType {
 // =================== ROLE PERMISSIONS ===================
 
 const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
- admin: [
- 'view_all_analytics',
- 'export_all_data',
- 'manage_system',
- 'view_predictive_analysis',
- 'view_comparative_reports',
- 'view_progress_charts',
- 'view_early_warnings',
- 'manage_interventions',
- 'view_sensitive_data'
- ],
  counselor: [
  'view_all_analytics',
  'export_filtered_data',
@@ -56,9 +45,15 @@ const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
  'view_early_warnings',
  'view_own_students'
  ],
- observer: [
- 'view_general_analytics',
- 'view_comparative_reports'
+ student: [
+ 'view_own_progress',
+ 'view_own_sessions',
+ 'view_own_records'
+ ],
+ parent: [
+ 'view_child_progress',
+ 'view_child_sessions',
+ 'message_school'
  ]
 };
 
@@ -262,15 +257,17 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
 
 export function getRoleBasedStudentFilter(userRole: UserRole, userId: string): (studentId: string) => boolean {
  switch (userRole) {
- case 'admin':
  case 'counselor':
  return () => true; // Can see all students
  
  case 'teacher':
  return () => true; // Teachers can see all students in their assigned classes
  
- case 'observer':
- return () => false; // Cannot see individual student details
+ case 'student':
+ return (studentId: string) => studentId === userId; // Can only see themselves
+ 
+ case 'parent':
+ return () => false; // Parents see through different interface
  
  default:
  return () => false;
@@ -284,13 +281,6 @@ export function getExportPermissions(userRole: UserRole): {
  maxRecords?: number;
 } {
  switch (userRole) {
- case 'admin':
- return {
- canExportAll: true,
- canExportFiltered: true,
- allowedFormats: ['json', 'csv'],
- };
- 
  case 'counselor':
  return {
  canExportAll: false,
@@ -307,7 +297,14 @@ export function getExportPermissions(userRole: UserRole): {
  maxRecords: 100,
  };
  
- case 'observer':
+ case 'student':
+ return {
+ canExportAll: false,
+ canExportFiltered: false,
+ allowedFormats: [],
+ };
+ 
+ case 'parent':
  return {
  canExportAll: false,
  canExportFiltered: false,

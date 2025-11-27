@@ -8,7 +8,7 @@ export function createUsersTable(db: Database.Database): void {
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       passwordHash TEXT NOT NULL,
-      role TEXT NOT NULL CHECK(role IN ('counselor', 'teacher', 'observer')),
+      role TEXT NOT NULL CHECK(role IN ('counselor', 'teacher', 'student', 'parent')),
       institution TEXT NOT NULL,
       isActive BOOLEAN DEFAULT TRUE,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
