@@ -475,9 +475,17 @@ export default function GuidanceTipBalloon({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => {
-                            dismissTip();
-                            setTimeout(fetchNextTip, 500);
+                          onClick={async () => {
+                            if (tip) {
+                              try {
+                                await fetch(`/api/guidance-tips/dismiss/${tip.id}`, { method: 'POST' });
+                              } catch (error) {
+                                console.error('Failed to dismiss tip:', error);
+                              }
+                            }
+                            setIsExpanded(false);
+                            setRating(0);
+                            await fetchNextTip();
                           }}
                           className="text-xs gap-1"
                         >
