@@ -33,7 +33,10 @@ Implemented periodic informational balloon notifications for guidance counselors
 - **AI Behavior**: AI acts as a 20-year experienced guidance counselor, providing random professional tips on various topics (counseling techniques, parent communication, crisis management, motivation, etc.)
 - **Scheduler**: Background service runs every 4 hours, maintains minimum 5 active tips. If AI unavailable, waits for next cycle
 - **Frontend Component**: Animated balloon with Framer Motion, appears bottom-right every 30 seconds
-- **Categories**: Psikolojik Danışmanlık, Kariyer Rehberliği, Öğrenci İletişimi, Veli Görüşmesi, Kriz Yönetimi, Motivasyon, Sınıf Yönetimi, Teknik Bilgi, Genel
+- **54 Categories in 8 Groups**: Temel Rehberlik (10), Psikolojik Destek (10), Eğitim Desteği (3), Kişisel Gelişim (2), Yaşam Becerileri (5), Danışma Kuramları (10), Danışmanlık Becerileri (10), Etik ve Mesleki Gelişim (4)
+- **User Session Tracking**: Session token for authenticated users, unique session cookie for anonymous users
+- **forceNew Parameter**: "Sonraki" button always generates fresh AI content for variety
+- **Formatted Content**: AI generates numbered lists with bold titles for elegant display
 - **Files**: `server/features/guidance-tips/`, `client/components/features/guidance-tips/GuidanceTipBalloon.tsx`
 
 ## Previous Changes (2025-11-25)
