@@ -66,7 +66,7 @@ const IMPORTANCE_STYLES: Record<string, string> = {
 interface GuidanceTipBalloonProps {
   autoShow?: boolean;
   showInterval?: number;
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'header-right';
   onDismiss?: () => void;
 }
 
@@ -246,6 +246,7 @@ export default function GuidanceTipBalloon({
     'bottom-left': 'bottom-20 left-6',
     'top-right': 'top-20 right-6',
     'top-left': 'top-20 left-6',
+    'header-right': 'top-11 right-2 md:right-4',
   };
 
   const getCategoryConfig = (category: string) => {

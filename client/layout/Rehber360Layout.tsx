@@ -671,7 +671,7 @@ export default function Rehber360Layout() {
  {showTipNotification && (
    <GuidanceTipBalloon 
      autoShow={false}
-     position="top-right"
+     position="header-right"
      onDismiss={() => setShowTipNotification(false)}
    />
  )}
