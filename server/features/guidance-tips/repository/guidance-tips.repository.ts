@@ -74,7 +74,7 @@ class GuidanceTipsRepository {
       SELECT gt.* FROM guidance_tips gt
       WHERE gt.isActive = 1
       AND gt.id NOT IN (
-        SELECT tipId FROM guidance_tips_user_views WHERE userId = ? AND dismissed = 1
+        SELECT tipId FROM guidance_tips_user_views WHERE userId = ?
       )
     `;
     
@@ -125,7 +125,7 @@ class GuidanceTipsRepository {
       SELECT gt.* FROM guidance_tips gt
       WHERE gt.isActive = 1
       AND gt.id NOT IN (
-        SELECT tipId FROM guidance_tips_user_views WHERE userId = ? AND dismissed = 1
+        SELECT tipId FROM guidance_tips_user_views WHERE userId = ?
       )
       ORDER BY RANDOM()
       LIMIT 1
