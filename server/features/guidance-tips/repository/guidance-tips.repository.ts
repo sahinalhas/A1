@@ -255,6 +255,11 @@ class GuidanceTipsRepository {
     return result.changes;
   }
 
+  resetUserViews(userId: string): void {
+    const db = getDatabase();
+    db.prepare(`DELETE FROM guidance_tips_user_views WHERE userId = ?`).run(userId);
+  }
+
   private mapRowToTip(row: Record<string, unknown>): GuidanceTip {
     return {
       id: row.id as string,

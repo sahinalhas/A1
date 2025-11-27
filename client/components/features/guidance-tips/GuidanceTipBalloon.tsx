@@ -109,10 +109,11 @@ export default function GuidanceTipBalloon({
       .catch(console.error);
   }, []);
 
-  const fetchNextTip = useCallback(async () => {
+  const fetchNextTip = useCallback(async (forceNew: boolean = false) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/guidance-tips/next');
+      const url = forceNew ? '/api/guidance-tips/next?forceNew=true' : '/api/guidance-tips/next';
+      const response = await fetch(url);
       const data = await response.json();
       
       if (data.success && data.data) {
@@ -485,7 +486,7 @@ export default function GuidanceTipBalloon({
                             }
                             setIsExpanded(false);
                             setRating(0);
-                            await fetchNextTip();
+                            await fetchNextTip(true);
                           }}
                           className="text-xs gap-1"
                         >

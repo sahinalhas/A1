@@ -1,13 +1,13 @@
 import { guidanceTipsRepository } from '../repository/guidance-tips.repository.js';
 import { guidanceTipsAIService } from './guidance-tips-ai.service.js';
-import { logger } from '../../../utils/logger.js';
 import type { GuidanceTip, GuidanceTipCategory, UserCategoryPreferences } from '../types/guidance-tips.types.js';
 import { GUIDANCE_TIP_CATEGORIES } from '../types/guidance-tips.types.js';
+import { logger } from '../../../utils/logger.js';
 
 class GuidanceTipsService {
-  async generateNewTip(category?: GuidanceTipCategory): Promise<GuidanceTip | null> {
+  async generateNewTip(preferredCategory?: GuidanceTipCategory): Promise<GuidanceTip | null> {
     try {
-      const generatedContent = await guidanceTipsAIService.generateRandomTip(category);
+      const generatedContent = await guidanceTipsAIService.generateRandomTip(preferredCategory);
       
       if (!generatedContent) {
         logger.warn('AI failed to generate tip content', 'GuidanceTipsService');
@@ -36,15 +36,30 @@ class GuidanceTipsService {
     return GUIDANCE_TIP_CATEGORIES.map(c => c.value);
   }
 
-  async getNextTipForUser(userId: string): Promise<GuidanceTip | null> {
+  async getNextTipForUser(userId: string, forceNew: boolean = false): Promise<GuidanceTip | null> {
     try {
       const preferences = guidanceTipsRepository.getUserPreferences(userId);
       const enabledCategories = preferences?.enabledCategories;
       
+      // If forceNew is true, always generate a fresh AI tip
+      if (forceNew) {
+        logger.info(`Force generating new tip for user ${userId}`, 'GuidanceTipsService');
+        const randomCategory = enabledCategories && enabledCategories.length > 0
+          ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
+          : undefined;
+        const newTip = await this.generateNewTip(randomCategory);
+        if (newTip) {
+          guidanceTipsRepository.markTipAsViewed(newTip.id, userId);
+          return newTip;
+        }
+      }
+      
+      // Try to get an unseen tip first
       let tip = guidanceTipsRepository.getRandomUnseenTipWithPreferences(userId, enabledCategories);
       
       if (!tip) {
-        // Always generate a new tip when there are no unseen tips
+        // No unseen tips - generate a new one
+        logger.info(`No unseen tips for user ${userId}, generating new one`, 'GuidanceTipsService');
         const randomCategory = enabledCategories && enabledCategories.length > 0
           ? enabledCategories[Math.floor(Math.random() * enabledCategories.length)]
           : undefined;
@@ -91,12 +106,9 @@ class GuidanceTipsService {
     return guidanceTipsRepository.getTipCount();
   }
 
-  cleanupOldTips(daysOld: number = 90): number {
-    const deleted = guidanceTipsRepository.deleteOldTips(daysOld);
-    if (deleted > 0) {
-      logger.info(`Cleaned up ${deleted} old tips`, 'GuidanceTipsService');
-    }
-    return deleted;
+  resetUserViews(userId: string): void {
+    guidanceTipsRepository.resetUserViews(userId);
+    logger.info(`View history reset for user ${userId}`, 'GuidanceTipsService');
   }
 }
 

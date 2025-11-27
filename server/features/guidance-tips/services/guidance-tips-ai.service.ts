@@ -76,19 +76,42 @@ JSON formatında yanıt ver: {"title": "string", "content": "string", "importanc
             role: 'user',
             content: `"${categoryInfo?.label || 'Genel Rehberlik'}" kategorisinde (${categoryInfo?.description || ''}) rehber öğretmenler için profesyonel bir bilgi/ipucu oluştur.
 
-Kurallar:
+KURALLAR:
 1. Başlık kısa ve çarpıcı olmalı (maksimum 60 karakter)
-2. İçerik 150-250 kelime arasında olmalı
+2. İçerik 180-250 kelime arasında olmalı
 3. Pratik ve hemen uygulanabilir bilgi olmalı
 4. Bilimsel temelli veya kanıta dayalı olmalı
 5. Türk eğitim sistemine ve kültürüne uygun olmalı
-6. Gerektiğinde örnek diyaloglar veya teknikler içerebilir
-7. Eğer bir kuram veya teknik açıklanıyorsa, temel prensipler ve uygulama adımları belirtilmeli
+
+İÇERİK FORMATI (ÇOK ÖNEMLİ):
+- Kısa bir giriş paragrafı yaz (2-3 cümle)
+- Ardından NUMARALANDIRILMIŞ ADIMLAR veya MADDELER halinde yaz:
+  Örnek format:
+  "Giriş açıklaması...
+
+  1. **Birinci Adım:** Açıklama...
+  2. **İkinci Adım:** Açıklama...
+  3. **Üçüncü Adım:** Açıklama..."
+
+- Her maddeyi kalın başlık ve açıklama şeklinde yaz
+- 3-5 madde olsun
+- Kısa bir kapanış cümlesi ekle
+
+ÖRNEK İÇERİK YAPISI:
+"Aktif dinleme, danışan ile güven ilişkisi kurmanın temel taşıdır.
+
+1. **Göz Teması Kurun:** Danışanla göz temasını koruyarak onun söylediklerine odaklandığınızı gösterin.
+
+2. **Yansıtma Yapın:** "Anlıyorum ki..." veya "Demek istediğiniz..." gibi ifadelerle danışanın söylediklerini yansıtın.
+
+3. **Soru Sorun:** Açık uçlu sorularla danışanın düşüncelerini derinleştirmesine yardımcı olun.
+
+Bu teknikleri kullanarak danışanlarınızla daha etkili bir iletişim kurabilirsiniz."
 
 JSON formatında yanıt ver:
 {
   "title": "Kısa ve etkileyici başlık",
-  "content": "Detaylı açıklama, pratik öneriler ve uygulama ipuçları",
+  "content": "Yapılandırılmış içerik (giriş + numaralı maddeler + kapanış)",
   "importance": "NORMAL"
 }`
           }
