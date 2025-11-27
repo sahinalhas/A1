@@ -23,7 +23,20 @@ The backend is built with Express 5.1.0 on Node.js 22, using TypeScript. It leve
 
 The primary database is SQLite, located at `./data/database.db`. Schema migrations are managed via versioned SQL files. Key data models include `students`, `counseling_sessions`, `survey_templates`, `academic_records`, `risk_assessments`, `interventions`, `exam_sessions`, `guidance_categories`, `guidance_items`, and specific tables for the Coaching System such as `academic_goals`, `multiple_intelligence`, `learning_styles`, `smart_goals`, `coaching_recommendations`, `evaluations_360`, `achievements`, `self_assessments`, `parent_meetings`, `home_visits`, and `family_participation`. The system supports manual and automatic backups.
 
-## Recent Changes (2025-11-25)
+## Recent Changes (2025-11-27)
+
+### Guidance Tips Feature - AI-Powered Professional Development
+Implemented periodic informational balloon notifications for guidance counselors:
+
+- **Database Schema**: `guidance_tips` and `guidance_tips_user_views` tables for tip storage and view tracking
+- **AI Service**: Generates random educational tips using configured AI provider (OpenAI/Gemini/Ollama)
+- **Fallback Mechanism**: 12 pre-defined Turkish professional tips ensure system works without AI connection
+- **Scheduler**: Background service runs every 4 hours, maintains minimum 5 active tips
+- **Frontend Component**: Animated balloon with Framer Motion, appears bottom-right every 30 seconds
+- **Categories**: MEVZUAT (Legislation), TEKNIK (Technical), GORUSME (Counseling), VELI (Parent), OGRENCI (Student), ARAC (Tools), ETIK (Ethics), GENEL (General)
+- **Files**: `server/features/guidance-tips/`, `client/components/features/guidance-tips/GuidanceTipBalloon.tsx`
+
+## Previous Changes (2025-11-25)
 
 ### Hybrid Save Architecture - Auto-Save for Profiles, Manual for Settings
 Implemented professional-grade form submission system with two complementary patterns for optimal UX:
