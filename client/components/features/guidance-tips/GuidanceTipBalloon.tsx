@@ -234,8 +234,8 @@ export default function GuidanceTipBalloon({
   }, [autoShow, showInterval, fetchNextTip]);
 
   const positionClasses = {
-    'bottom-right': 'bottom-6 right-6',
-    'bottom-left': 'bottom-6 left-6',
+    'bottom-right': 'bottom-20 right-6',
+    'bottom-left': 'bottom-20 left-6',
     'top-right': 'top-20 right-6',
     'top-left': 'top-20 left-6',
   };
@@ -281,10 +281,10 @@ export default function GuidanceTipBalloon({
                   <CategoryIcon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={cn('text-xs font-medium', groupColors.text)}>
+                  <p className={cn('text-[11px] font-medium', groupColors.text)}>
                     {categoryInfo?.label || tip.category}
                   </p>
-                  <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2">
+                  <h3 className="font-semibold text-sm text-gray-900 dark:text-white line-clamp-2">
                     {tip.title}
                   </h3>
                 </div>
@@ -323,12 +323,12 @@ export default function GuidanceTipBalloon({
                   >
                     <div className="p-4 border-t border-gray-100 dark:border-gray-800">
                       <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-semibold text-sm text-gray-900 dark:text-white">Bilgi Kategorileri</h4>
-                        <span className="text-xs text-muted-foreground">
+                        <h4 className="font-semibold text-xs text-gray-900 dark:text-white">Bilgi Kategorileri</h4>
+                        <span className="text-[11px] text-muted-foreground">
                           {enabledCategories.length}/{categories.length} aktif
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-4">
+                      <p className="text-[11px] text-muted-foreground mb-4">
                         Hangi alanlardan bilgi almak istediğinizi seçin
                       </p>
                       
@@ -416,7 +416,7 @@ export default function GuidanceTipBalloon({
                     className="overflow-hidden"
                   >
                     <div className="p-4 space-y-4">
-                      <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                      <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
                         {tip.content}
                       </p>
                       
@@ -458,7 +458,7 @@ export default function GuidanceTipBalloon({
                     animate={{ opacity: 1 }}
                     className="p-4"
                   >
-                    <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
                       {tip.content}
                     </p>
                     <Button
